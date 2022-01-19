@@ -46,7 +46,7 @@ stages:
             inputs:
               packageType: sdk
               useGlobalJson: true
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API'
+              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
 
           - task: DotNetCoreCLI@2
             displayName: ".Net Core - NuGet restore non test projects only"
@@ -58,14 +58,14 @@ stages:
               feedsToUse: config
               noCache: true
               nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API'
-              packagesDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API\packages'
+              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
+              packagesDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API\packages'
 
           - task: CmdLine@1
             displayName: "Run OWASP Dependency Checker"
             inputs:
               filename: 'dependency-check.bat'
-              arguments: '--project "External-Notification-Service - $(Build.SourceBranchName)" --scan "$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API" --out "$(Build.ArtifactStagingDirectory)\DCReport" --suppression $(Build.SourcesDirectory)\NVDSuppressions.xml --noupdate'
+              arguments: '--project "External-Notification-Service - $(Build.SourceBranchName)" --scan "$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API" --out "$(Build.ArtifactStagingDirectory)\DCReport" --suppression $(Build.SourcesDirectory)\NVDSuppressions.xml --noupdate'
 
           - task: PublishBuildArtifacts@1
             displayName: "Publish Artifact: OWASP Dependency Checker Report"
@@ -92,14 +92,14 @@ stages:
             inputs:
               targetType: filePath
               filePath: '$(Build.SourcesDirectory)\Apply-AssemblyVersionAndDefaults.ps1'
-              arguments: '-buildNumber "$(Build.BuildNumber)" -solutionDirectory "$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API\" -UKHOAssemblyCompany "$env:UKHOAssemblyCompany" -UKHOAssemblyCopyright "$(UKHOAssemblyCopyright)" -UKHOAssemblyVersionPrefix "$env:UKHOAssemblyVersionPrefix" -UKHOAssemblyProduct "$env:UKHOAssemblyProduct"'
+              arguments: '-buildNumber "$(Build.BuildNumber)" -solutionDirectory "$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API\" -UKHOAssemblyCompany "$env:UKHOAssemblyCompany" -UKHOAssemblyCopyright "$(UKHOAssemblyCopyright)" -UKHOAssemblyVersionPrefix "$env:UKHOAssemblyVersionPrefix" -UKHOAssemblyProduct "$env:UKHOAssemblyProduct"'
 
           - task: UseDotNet@2
             displayName: 'Use .NET Core 6.0.x sdk'
             inputs:
               packageType: sdk
               useGlobalJson: true
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API'
+              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
 
           - task: DotNetCoreCLI@2
             displayName: ".Net Core - NuGet restore"
@@ -110,7 +110,7 @@ stages:
               feedsToUse: config
               noCache: true
               nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API'
+              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
 
           - task: DotNetCoreCLI@2
             displayName: "dotnet build task"
@@ -124,7 +124,7 @@ stages:
             inputs:
               command: "publish"
               publishWebProjects: false
-              projects: '**/*UKHO.ExternalNotifcationService.API.csproj'
+              projects: '**/*UKHO.ExternalNotificationService.API.csproj'
               arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\ExternalNotificationServiceWebAPI'
               zipAfterPublish: true
               modifyOutputPath: true
