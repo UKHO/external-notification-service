@@ -1,1 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: System.Threading.Tasks.Extensions.dll
+   Suppressing this CVE Because it relates to a mobile "Tasks" application (Astrid Tasks) version before 9.7.3. ESS is not a mobile application.
+   ]]>
+    </notes>
+    <cve>CVE-2020-22475</cve>
+  </suppress>
+</suppressions>
