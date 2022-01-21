@@ -33,12 +33,10 @@ namespace UKHO.ExternalNotificationService.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers()
-                .AddNewtonsoftJson();
+            services.AddControllers().AddNewtonsoftJson();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IEventHubLoggingHealthClient, EventHubLoggingHealthClient>();
-            services.AddHealthChecks()
-            .AddCheck<EventHubLoggingHealthCheck>("EventHubLoggingHealthCheck");
+            services.AddHealthChecks().AddCheck<EventHubLoggingHealthCheck>("EventHubLoggingHealthCheck");
             services.Configure<EventHubLoggingConfiguration>(_configuration.GetSection("EventHubLoggingConfiguration"));
         }
 
@@ -46,6 +44,7 @@ namespace UKHO.ExternalNotificationService.API
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IHttpContextAccessor httpContextAccessor, IOptions<EventHubLoggingConfiguration> eventHubLoggingConfiguration)
         {
             ConfigureLogging(app, loggerFactory, httpContextAccessor, eventHubLoggingConfiguration);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
