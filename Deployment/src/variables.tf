@@ -5,16 +5,16 @@ variable "location" {
 
 variable "resource_group_name" {
   type    = string
-  default = "ess"
+  default = "ens"
 }
 
 locals {
   env_name				= lower(terraform.workspace)
-  service_name			= "ess"
+  service_name			= "ens"
   web_app_name		    = "${local.service_name}-${local.env_name}-webapp"
   key_vault_name		= "${local.service_name}-ukho-${local.env_name}-kv"
   tags = {
-    SERVICE          = "Exchange Set Service"
+    SERVICE          = "External Notification Service"
     ENVIRONMENT      = local.env_name
     SERVICE_OWNER    = "UKHO"
     RESPONSIBLE_TEAM = "Mastek"
@@ -28,6 +28,7 @@ variable "allowed_ips" {
   type = list
 }
 
+/////////////
 variable "spoke_rg" {
   type = string
 }
@@ -39,7 +40,7 @@ variable "spoke_vnet_name" {
 variable "spoke_subnet_name" {
   type = string
 }
-
+//////////////////
 variable "app_service_sku" {
   type = map(any)
   default = {
@@ -58,6 +59,7 @@ variable "app_service_sku" {
   }
 }
 
+//////////////////
 variable "agent_rg" {
   type = string
 }
@@ -73,3 +75,4 @@ variable "agent_subnet_name" {
 variable "agent_subscription_id" {
   type = string
 }
+//////////////////////

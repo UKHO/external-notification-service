@@ -1,3 +1,4 @@
+////////////
 data "azurerm_subnet" "main_subnet" {
   name                 = var.spoke_subnet_name
   virtual_network_name = var.spoke_vnet_name
@@ -10,7 +11,7 @@ data "azurerm_subnet" "agent_subnet" {
   virtual_network_name = var.agent_vnet_name
   resource_group_name  = var.agent_rg
 }
-
+////////////
 module "user_identity" {
   source              = "./Modules/UserIdentity"
   resource_group_name = azurerm_resource_group.rg.name
@@ -44,8 +45,8 @@ module "webapp_service" {
   name                      = local.web_app_name
   resource_group_name       = azurerm_resource_group.rg.name
   location                  = azurerm_resource_group.rg.location
-  subnet_id                 = data.azurerm_subnet.main_subnet.id
-  user_assigned_identity    = module.user_identity.ess_service_identity_id
+  subnet_id                 = data.azurerm_subnet.main_subnet.id ---?
+  user_assigned_identity    = module.user_identity.ens_service_identity_id
   app_service_sku           = var.app_service_sku[local.env_name]
   app_settings = {
     "EventHubLoggingConfiguration:Environment"             = local.env_name
@@ -60,46 +61,6 @@ module "webapp_service" {
   allowed_ips               = var.allowed_ips
 }
 
-module "fulfilment_webapp" {
-  source                        = "./Modules/FulfilmentWebapps"
-  resource_group_name           = azurerm_resource_group.rg.name
-  location                      = azurerm_resource_group.rg.location
-  small_exchange_set_subnets    = data.azurerm_subnet.small_exchange_set_subnet[*].id
-  medium_exchange_set_subnets   = data.azurerm_subnet.medium_exchange_set_subnet[*].id
-  large_exchange_set_subnets    = data.azurerm_subnet.large_exchange_set_subnet[*].id
-  exchange_set_config           = local.config_data.ESSFulfilmentConfiguration
-  env_name                      = local.env_name
-  service_name                  = local.service_name
-  user_assigned_identity        = module.user_identity.ess_service_identity_id
-  app_service_sku               = var.app_service_sku[local.env_name]
-  app_settings = {
-    "EventHubLoggingConfiguration:Environment"             = local.env_name
-    "EventHubLoggingConfiguration:MinimumLoggingLevel"     = "Warning"
-    "EventHubLoggingConfiguration:UkhoMinimumLoggingLevel" = "Information"
-    "APPINSIGHTS_INSTRUMENTATIONKEY"                       = module.app_insights.instrumentation_key
-    "ASPNETCORE_ENVIRONMENT"                               = local.env_name
-    "WEBSITE_RUN_FROM_PACKAGE"                             = "1"
-    "WEBSITE_ENABLE_SYNC_UPDATE_SITE"                      = "true"
-  }
-  tags = local.tags
-}
-
-module "fulfilment_storage" {
-  source                                = "./Modules/FulfilmentStorage"
-  resource_group_name                   = azurerm_resource_group.rg.name
-  allowed_ips                           = var.allowed_ips
-  location                              = var.location
-  tags                                  = local.tags
-  small_exchange_set_subnets            = data.azurerm_subnet.small_exchange_set_subnet[*].id
-  medium_exchange_set_subnets           = data.azurerm_subnet.medium_exchange_set_subnet[*].id
-  large_exchange_set_subnets            = data.azurerm_subnet.large_exchange_set_subnet[*].id
-  m_spoke_subnet                        = data.azurerm_subnet.main_subnet.id
-  agent_subnet                          = data.azurerm_subnet.agent_subnet.id
-  exchange_set_config                   = local.config_data.ESSFulfilmentConfiguration
-  env_name                              = local.env_name
-  service_name                          = local.service_name
-}
-
 module "key_vault" {
   source              = "./Modules/KeyVault"
   name                = local.key_vault_name
@@ -107,9 +68,9 @@ module "key_vault" {
   env_name            = local.env_name
   tenant_id           = module.user_identity.ess_service_identity_tenant_id
   location            = azurerm_resource_group.rg.location
-  allowed_ips         = var.allowed_ips
-  subnet_id           = data.azurerm_subnet.main_subnet.id
-  agent_subnet        = data.azurerm_subnet.agent_subnet.id
+  allowed_ips         = var.allowed_ips--?
+  subnet_id           = data.azurerm_subnet.main_subnet.id--?
+  agent_subnet        = data.azurerm_subnet.agent_subnet.id--?
   read_access_objects = {
     "ess_service_identity" = module.user_identity.ess_service_identity_principal_id
   }
@@ -133,50 +94,6 @@ module "key_vault" {
   tags                                         = local.tags
 }
 
-module "fulfilment_keyvaults" {
-  source                                    = "./Modules/FulfilmentKeyVault"
-  service_name                              = local.service_name
-  resource_group_name                       = azurerm_resource_group.rg.name
-  env_name                                  = local.env_name
-  tenant_id                                 = module.user_identity.ess_service_identity_tenant_id
-  location                                  = azurerm_resource_group.rg.location
-  allowed_ips                               = var.allowed_ips
-  small_exchange_set_subnets                = data.azurerm_subnet.small_exchange_set_subnet[*].id
-  medium_exchange_set_subnets               = data.azurerm_subnet.medium_exchange_set_subnet[*].id
-  large_exchange_set_subnets                = data.azurerm_subnet.large_exchange_set_subnet[*].id
-  agent_subnet                              = data.azurerm_subnet.agent_subnet.id
-    read_access_objects = {
-        "ess_service_identity" = module.user_identity.ess_service_identity_principal_id
-  }
-  small_exchange_set_secrets = {
-    "EventHubLoggingConfiguration--ConnectionString"            = module.eventhub.log_primary_connection_string
-    "EventHubLoggingConfiguration--EntityPath"                  = module.eventhub.entity_path
-    "ESSFulfilmentStorageConfiguration--StorageAccountName"     = module.fulfilment_storage.small_exchange_set_name
-    "ESSFulfilmentStorageConfiguration--StorageAccountKey"      = module.fulfilment_storage.small_exchange_set_primary_access_key
-    "AzureWebJobsStorage"                                       = module.fulfilment_storage.small_exchange_set_connection_string
-    "CacheConfiguration--CacheStorageAccountName"               = module.cache_storage.cache_storage_name
-    "CacheConfiguration--CacheStorageAccountKey"                = module.cache_storage.cache_storage_primary_access_key
-  }
-  medium_exchange_set_secrets = {
-    "EventHubLoggingConfiguration--ConnectionString"            = module.eventhub.log_primary_connection_string
-    "EventHubLoggingConfiguration--EntityPath"                  = module.eventhub.entity_path
-    "ESSFulfilmentStorageConfiguration--StorageAccountName"     = module.fulfilment_storage.medium_exchange_set_name
-    "ESSFulfilmentStorageConfiguration--StorageAccountKey"      = module.fulfilment_storage.medium_exchange_set_primary_access_key
-    "AzureWebJobsStorage"                                       = module.fulfilment_storage.medium_exchange_set_connection_string
-    "CacheConfiguration--CacheStorageAccountName"               = module.cache_storage.cache_storage_name
-    "CacheConfiguration--CacheStorageAccountKey"                = module.cache_storage.cache_storage_primary_access_key
-  }
-  large_exchange_set_secrets = {
-    "EventHubLoggingConfiguration--ConnectionString"            = module.eventhub.log_primary_connection_string
-    "EventHubLoggingConfiguration--EntityPath"                  = module.eventhub.entity_path
-    "ESSFulfilmentStorageConfiguration--StorageAccountName"     = module.fulfilment_storage.large_exchange_set_name
-    "ESSFulfilmentStorageConfiguration--StorageAccountKey"      = module.fulfilment_storage.large_exchange_set_primary_access_key
-    "AzureWebJobsStorage"                                       = module.fulfilment_storage.large_exchange_set_connection_string
-    "CacheConfiguration--CacheStorageAccountName"               = module.cache_storage.cache_storage_name
-    "CacheConfiguration--CacheStorageAccountKey"                = module.cache_storage.cache_storage_primary_access_key
-  }
-  tags                                      = local.tags
-}
 
 module "azure-dashboard" {
   source         = "./Modules/azuredashboard"
@@ -185,18 +102,4 @@ module "azure-dashboard" {
   environment    = local.env_name
   resource_group = azurerm_resource_group.rg
   tags           = local.tags
-}
-module "cache_storage" {
-  source                                = "./Modules/CacheStorage"
-  resource_group_name                   = azurerm_resource_group.rg.name
-  allowed_ips                           = var.allowed_ips
-  location                              = var.location
-  tags                                  = local.tags
-  small_exchange_set_subnets            = data.azurerm_subnet.small_exchange_set_subnet[*].id
-  medium_exchange_set_subnets           = data.azurerm_subnet.medium_exchange_set_subnet[*].id
-  large_exchange_set_subnets            = data.azurerm_subnet.large_exchange_set_subnet[*].id
-  m_spoke_subnet                        = data.azurerm_subnet.main_subnet.id
-  agent_subnet                          = data.azurerm_subnet.agent_subnet.id
-  env_name                              = local.env_name
-  service_name                          = local.service_name
 }
