@@ -81,6 +81,7 @@ stages:
               inlineScript: |
                 param($ReportLocation)
                 Invoke-VulnerabilityCheck -ReportLocation $ReportLocation
+
       - job: UnitTestsAndCodeCoverage
         workspace:
           clean: all
@@ -91,7 +92,7 @@ stages:
             inputs:
               packageType: sdk
               useGlobalJson: true
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API'
+              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
 
           - task: DotNetCoreCLI@2
             displayName: ".Net Core - NuGet restore test projects only"
@@ -125,6 +126,7 @@ stages:
             inputs:
               PathtoPublish: "$(Build.ArtifactStagingDirectory)/codecoveragereport"
               ArtifactName: codecoveragereport
+
       - job: BuildAndPublishAPI
         workspace:
           clean: all
@@ -177,6 +179,7 @@ stages:
             inputs:
               PathtoPublish: '$(Build.ArtifactStagingDirectory)\ExternalNotificationServiceWebAPI'
               ArtifactName: ExternalNotificationServiceWebAPI
+
       - job: PublishFunctionalTestsAndTerraform
         workspace:
           clean: all
@@ -187,7 +190,7 @@ stages:
             inputs:
               packageType: sdk
               useGlobalJson: true
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API'
+              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
 
           - task: DotNetCoreCLI@2
             displayName: ".Net Core - NuGet restore"
