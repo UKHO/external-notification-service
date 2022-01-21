@@ -102,8 +102,8 @@ stages:
               feedsToUse: config
               noCache: true
               nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API'
-              packagesDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API\packagesForTests'
+              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
+              packagesDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API\packagesForTests'
 
           - task: DotNetCoreCLI@2
             displayName: "dotnet test - Perform Unit Tests"
@@ -201,27 +201,27 @@ stages:
               feedsToUse: config
               noCache: true
               nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API'
+              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
 
           - task: DotNetCoreCLI@2
             displayName: "Publish functional test"
             inputs:
               command: "publish"
               publishWebProjects: false
-              projects: "**/*UKHO.ExternalNotifcationService.API.FunctionalTests.csproj"
-              arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\UKHO.ExternalNotifcationService.API.FunctionalTests'
+              projects: "**/*UKHO.ExternalNotificationService.API.FunctionalTests.csproj"
+              arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\UKHO.ExternalNotificationService.API.FunctionalTests'
               zipAfterPublish: false
 
           - task: PublishBuildArtifacts@1
             displayName: "Publish Functional test Artifact"
             inputs:
-              PathtoPublish: '$(Build.ArtifactStagingDirectory)\UKHO.ExternalNotifcationService.API.FunctionalTests'
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)\UKHO.ExternalNotificationService.API.FunctionalTests'
               ArtifactName: functionaltests
 
           - task: CopyFiles@2
-            displayName: Copy ExternalNotifcationService Config
+            displayName: Copy ExternalNotificationService Config
             inputs:
-              SourceFolder: '$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API\UKHO.ExternalNotifcationService.API\'
+              SourceFolder: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API\UKHO.ExternalNotificationService.API\'
               Contents: 'appsettings.json'
               TargetFolder: '$(Build.SourcesDirectory)\Deployment\src'
 
