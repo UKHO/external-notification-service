@@ -45,6 +45,7 @@ namespace UKHO.ExternalNotificationService.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IHttpContextAccessor httpContextAccessor, IOptions<EventHubLoggingConfiguration> eventHubLoggingConfiguration)
         {
+            ConfigureLogging(app, loggerFactory, httpContextAccessor, eventHubLoggingConfiguration);
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -71,6 +72,13 @@ namespace UKHO.ExternalNotificationService.API
 
             builder.AddEnvironmentVariables();
 
+            var tempConfig = builder.Build();
+            string kvServiceUri = tempConfig["KeyVaultSettings:ServiceUri"];
+
+            if (!string.IsNullOrWhiteSpace(kvServiceUri))
+            {
+                builder.AddAzureKeyVault(new Uri(kvServiceUri), new DefaultAzureCredential());
+            }
 #if DEBUG
             builder.AddJsonFile("appsettings.local.overrides.json", true, true);
 #endif
