@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UKHO.ExternalNotificationSe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UKHO.ExternalNotificationService.API.FunctionalTests", "UKHO.ExternalNotificationService.API.FunctionalTests\UKHO.ExternalNotificationService.API.FunctionalTests.csproj", "{E5A1C34E-1148-4A4D-827B-CFE3F99B2B84}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UKHO.ExternalNotificationService.Common", "UKHO.ExternalNotificationService.Common\UKHO.ExternalNotificationService.Common.csproj", "{45035E15-5A20-4E8D-973D-2EE0A2D11646}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{E5A1C34E-1148-4A4D-827B-CFE3F99B2B84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5A1C34E-1148-4A4D-827B-CFE3F99B2B84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5A1C34E-1148-4A4D-827B-CFE3F99B2B84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45035E15-5A20-4E8D-973D-2EE0A2D11646}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45035E15-5A20-4E8D-973D-2EE0A2D11646}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45035E15-5A20-4E8D-973D-2EE0A2D11646}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45035E15-5A20-4E8D-973D-2EE0A2D11646}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

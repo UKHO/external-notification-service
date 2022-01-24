@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
+using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using UKHO.ExternalNotificationService.API.Controllers;
@@ -10,11 +12,13 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
     public class SubscriptionControllerTests
     {
         private SubscriptionController _controller;
+        private ILogger<SubscriptionController> fakeLogger;
 
         [SetUp]
         public void Setup()
         {
-            _controller = new SubscriptionController();
+            fakeLogger = A.Fake<ILogger<SubscriptionController>>();
+            _controller = new SubscriptionController(fakeLogger);
         }
 
         [Test]
