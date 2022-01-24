@@ -9,7 +9,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
     [TestFixture]
     public class SubscriptionControllerTests
     {
-        private SubscriptionController controller;
+        private SubscriptionController _controller;
 
         [SetUp]
         public void Setup()
