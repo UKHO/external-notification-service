@@ -9,13 +9,6 @@ resource "azurerm_key_vault" "kv" {
 
   sku_name = "standard"
 
-  network_acls {
-    default_action             = "Deny"
-    bypass                     = "AzureServices"
-    ip_rules                   = concat(var.allowed_ips, var.trusted_ips)
-    virtual_network_subnet_ids = var.allowed_subnet_ids
-  }
-
   tags = var.tags
 
 }
@@ -62,16 +55,6 @@ resource "azurerm_key_vault_secret" "passed_in_secrets" {
   for_each     = var.secrets
   name         = each.key
   value        = each.value
-  key_vault_id = azurerm_key_vault.kv.id
-  tags         = var.tags
-
-  depends_on = [azurerm_key_vault_access_policy.kv_access_terraform]
-}
-
-resource "azurerm_key_vault_secret" "buisiness_unit_passed_in_secrets" {
-  count        = length(var.storage_business_units_name_primary_key_list)
-  name         = var.storage_business_units_name_primary_key_list[count.index].name
-  value        = var.storage_business_units_name_primary_key_list[count.index].primarykey
   key_vault_id = azurerm_key_vault.kv.id
   tags         = var.tags
 

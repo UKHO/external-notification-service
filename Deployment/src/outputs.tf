@@ -13,7 +13,3 @@ output "keyvault_uri"{
 output "web_app_resource_group" {
    value = azurerm_resource_group.rg.name
 }
-
-output "ens_managed_user_identity_client_id"{
-    value = module.user_identity.ens_service_client_id
-}
