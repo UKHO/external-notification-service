@@ -21,7 +21,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         public async Task TestSubscription()
         {
             dynamic jsonObject = new JObject();
-            var result = await controller.Post(jsonObject);
+            var result = await _controller.Post(jsonObject);
             Assert.IsInstanceOf<OkResult>(result);
         }
     }
