@@ -9,19 +9,19 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
     [TestFixture]
     public class SubscriptionControllerTests
     {
-        private SubscriptionController controller;
+        private SubscriptionController _controller;
 
         [SetUp]
         public void Setup()
         {
-            controller = new SubscriptionController();
+            _controller = new SubscriptionController();
         }
 
         [Test]
         public async Task TestSubscription()
         {
             dynamic jsonObject = new JObject();
-            var result = await controller.Post(jsonObject);
+            var result = await _controller.Post(jsonObject);
             Assert.IsInstanceOf<OkResult>(result);
         }
     }
