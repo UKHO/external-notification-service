@@ -24,14 +24,7 @@ steps:
       ARM_CLIENT_SECRET: $(TERRAFORM-CLIENT-SECRET)
       ARM_TENANT_ID: $(TERRAFORM-TENANT-ID)
       ARM_SUBSCRIPTION_ID: $(TERRAFORM-SUBSCRIPTION-ID)
-      TF_VAR_allowed_ips: $(whiteListedIps)
-      TF_VAR_spoke_rg: $(spokeRG)
-      TF_VAR_spoke_vnet_name: $(spokeVnetName)
-      TF_VAR_spoke_subnet_name: $(spokeSubnetName)
-      TF_VAR_agent_rg: $(agentRG)
-      TF_VAR_agent_vnet_name: $(agentVnetName)
-      TF_VAR_agent_subnet_name: $(agentSubnetName)
-      TF_VAR_agent_subscription_id: $(agentSubscriptionId)
+
 
   - task: FileTransform@1
     displayName: "File Transform: WebAppSettings"
@@ -46,24 +39,8 @@ steps:
       azureSubscription: "${{ parameters.AzureSubscription }}"
       appType: webApp
       appName: "$(WEB_APP_NAME)"
-      package: "$(Pipeline.Workspace)/ExchangeSetServiceWebAPI/UKHO.ExternalNotificationService.API.zip"
-///////////
-  - task: FileTransform@1
-    displayName: "File Transform: WebJob"
-    inputs:
-      folderPath: '$(Pipeline.Workspace)/ExchangeSetService/*.zip'
-      fileType: 'json'
-      targetFiles: '**/appsettings.json'
+      package: "$(Pipeline.Workspace)/ExternalNotificationServiceWebAPI/UKHO.ExternalNotificationService.API.zip"
 
-  - task: AzureCLI@2
-    displayName: "Azure Fulfilment Webjob Deployment"
-    inputs:
-      azureSubscription: "${{ parameters.AzureSubscription }}"
-      scriptType: 'pscore'
-      scriptLocation: 'scriptPath'
-      scriptPath: '$(Pipeline.Workspace)/terraformartifact/fulfilment_webjob_deployment.ps1'
-      arguments: '-terraformJsonOutputFile $(Pipeline.Workspace)/terraformartifact/terraform_output.json -packagePath "$(Pipeline.Workspace)/ExchangeSetService" -packageName "ExchangeSetFulFilmentService.zip"'
-//////////////////
   - task: PowerShell@2
     displayName: "Check the status of Service"
     inputs:

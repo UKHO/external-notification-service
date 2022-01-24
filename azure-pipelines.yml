@@ -24,7 +24,7 @@ variables:
   - name: UKHOAssemblyVersionPrefix
     value: "1.0."
   - name: UKHOAssemblyProduct
-    value: "Exchange Set Service"
+    value: "External Notification Service"
   - name: UKHOAssemblyCopyright
     value: "Copyright © UK Hydrographic Office"
   - name: Container
@@ -244,24 +244,6 @@ stages:
         variables:
           - group: "ENS-Deployment-Variables-DEV"
           - group: "ENS-Dev-Variables"
-          - name: "ESSAzureADConfiguration.ClientId"
-            value: $(ESSClientId)
-          - name: "ESSAzureADConfiguration.TenantId"
-            value: $(TenantId)
-          - name: "EssAuthorizationConfiguration.TenantId"
-            value: $(TenantId)
-          - name: "EssAuthorizationConfiguration.AutoTestClientId"
-            value: $(AutoTestClientId_Authed)
-          - name: "EssAuthorizationConfiguration.AutoTestClientSecret"
-            value: $(AutoTestClientSecret_Authed)
-          - name: "EssAuthorizationConfiguration.EssClientId"
-            value: $(ESSClientId)
-          - name: "EssAuthorizationConfiguration.AutoTestClientIdNoAuth"
-            value: $(AutoTestClientId_NoAuth)
-          - name: "EssAuthorizationConfiguration.AutoTestClientSecretNoAuth"
-            value: $(AutoTestClientSecret_NoAuth)
-          - name: "AzureAdB2CTestConfiguration.ClientSecret"
-            value: $(AUTOTEST-ESS-SECRET)
         strategy:
           runOnce:
             deploy:
