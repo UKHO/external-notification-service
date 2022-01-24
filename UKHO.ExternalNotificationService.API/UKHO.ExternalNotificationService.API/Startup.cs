@@ -54,7 +54,7 @@ namespace UKHO.ExternalNotificationService.API
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory,
                             IHttpContextAccessor httpContextAccessor, IOptions<EventHubLoggingConfiguration> eventHubLoggingConfiguration)
         {
-            ConfigureLogging(app, env, loggerFactory, httpContextAccessor, eventHubLoggingConfiguration);
+            ConfigureLogging(app, loggerFactory, httpContextAccessor, eventHubLoggingConfiguration);
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -95,7 +95,7 @@ namespace UKHO.ExternalNotificationService.API
         }
 
         [SuppressMessage("Major Code Smell", "S1172:Unused method parameters should be removed", Justification = "httpContextAccessor is used in action delegate")]
-        private void ConfigureLogging(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory,
+        private void ConfigureLogging(IApplicationBuilder app, ILoggerFactory loggerFactory,
                                     IHttpContextAccessor httpContextAccessor, IOptions<EventHubLoggingConfiguration> eventHubLoggingConfiguration)
         {
             if (!string.IsNullOrWhiteSpace(eventHubLoggingConfiguration?.Value.ConnectionString))
@@ -104,7 +104,7 @@ namespace UKHO.ExternalNotificationService.API
                 {
                     if (httpContextAccessor.HttpContext != null)
                     {
-                        additionalValues["_Environment"] = env.EnvironmentName;
+                        additionalValues["_Environment"] = eventHubLoggingConfiguration.Value.Environment;
                         additionalValues["_System"] = eventHubLoggingConfiguration.Value.System;
                         additionalValues["_Service"] = eventHubLoggingConfiguration.Value.Service;
                         additionalValues["_NodeName"] = eventHubLoggingConfiguration.Value.NodeName;

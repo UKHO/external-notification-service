@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace UKHO.ExternalNotificationService.Common.Configuration
 {
+    [ExcludeFromCodeCoverage]
     public class EventHubLoggingConfiguration
     {
         public string MinimumLoggingLevel { get; set; }
