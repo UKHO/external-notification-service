@@ -46,7 +46,7 @@ stages:
             inputs:
               packageType: sdk
               useGlobalJson: true
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API'
+              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
 
           - task: DotNetCoreCLI@2
             displayName: ".Net Core - NuGet restore non test projects only"
@@ -58,14 +58,14 @@ stages:
               feedsToUse: config
               noCache: true
               nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API'
-              packagesDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API\packages'
+              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
+              packagesDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API\packages'
 
           - task: CmdLine@1
             displayName: "Run OWASP Dependency Checker"
             inputs:
               filename: 'dependency-check.bat'
-              arguments: '--project "External-Notification-Service - $(Build.SourceBranchName)" --scan "$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API" --out "$(Build.ArtifactStagingDirectory)\DCReport" --suppression $(Build.SourcesDirectory)\NVDSuppressions.xml --noupdate'
+              arguments: '--project "External-Notification-Service - $(Build.SourceBranchName)" --scan "$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API" --out "$(Build.ArtifactStagingDirectory)\DCReport" --suppression $(Build.SourcesDirectory)\NVDSuppressions.xml --noupdate'
 
           - task: PublishBuildArtifacts@1
             displayName: "Publish Artifact: OWASP Dependency Checker Report"
@@ -81,6 +81,7 @@ stages:
               inlineScript: |
                 param($ReportLocation)
                 Invoke-VulnerabilityCheck -ReportLocation $ReportLocation
+
       - job: UnitTestsAndCodeCoverage
         workspace:
           clean: all
@@ -91,7 +92,7 @@ stages:
             inputs:
               packageType: sdk
               useGlobalJson: true
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API'
+              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
 
           - task: DotNetCoreCLI@2
             displayName: ".Net Core - NuGet restore test projects only"
@@ -101,8 +102,8 @@ stages:
               feedsToUse: config
               noCache: true
               nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API'
-              packagesDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API\packagesForTests'
+              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
+              packagesDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API\packagesForTests'
 
           - task: DotNetCoreCLI@2
             displayName: "dotnet test - Perform Unit Tests"
@@ -136,14 +137,14 @@ stages:
             inputs:
               targetType: filePath
               filePath: '$(Build.SourcesDirectory)\Apply-AssemblyVersionAndDefaults.ps1'
-              arguments: '-buildNumber "$(Build.BuildNumber)" -solutionDirectory "$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API\" -UKHOAssemblyCompany "$env:UKHOAssemblyCompany" -UKHOAssemblyCopyright "$(UKHOAssemblyCopyright)" -UKHOAssemblyVersionPrefix "$env:UKHOAssemblyVersionPrefix" -UKHOAssemblyProduct "$env:UKHOAssemblyProduct"'
+              arguments: '-buildNumber "$(Build.BuildNumber)" -solutionDirectory "$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API\" -UKHOAssemblyCompany "$env:UKHOAssemblyCompany" -UKHOAssemblyCopyright "$(UKHOAssemblyCopyright)" -UKHOAssemblyVersionPrefix "$env:UKHOAssemblyVersionPrefix" -UKHOAssemblyProduct "$env:UKHOAssemblyProduct"'
 
           - task: UseDotNet@2
             displayName: 'Use .NET Core 6.0.x sdk'
             inputs:
               packageType: sdk
               useGlobalJson: true
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API'
+              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
 
           - task: DotNetCoreCLI@2
             displayName: ".Net Core - NuGet restore"
@@ -154,7 +155,7 @@ stages:
               feedsToUse: config
               noCache: true
               nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API'
+              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
 
           - task: DotNetCoreCLI@2
             displayName: "dotnet build task"
@@ -168,16 +169,16 @@ stages:
             inputs:
               command: "publish"
               publishWebProjects: false
-              projects: '**/*UKHO.ExternalNotifcationService.API.csproj'
-              arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\ExchangeSetServiceWebAPI'
+              projects: '**/*UKHO.ExternalNotificationService.API.csproj'
+              arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\ExternalNotificationServiceWebAPI'
               zipAfterPublish: true
               modifyOutputPath: true
 
           - task: PublishBuildArtifacts@1
             displayName: "Publish WebAPI Artifact"
             inputs:
-              PathtoPublish: '$(Build.ArtifactStagingDirectory)\ExchangeSetServiceWebAPI'
-              ArtifactName: ExchangeSetServiceWebAPI
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)\ExternalNotificationServiceWebAPI'
+              ArtifactName: ExternalNotificationServiceWebAPI
 
       - job: PublishFunctionalTestsAndTerraform
         workspace:
@@ -189,7 +190,7 @@ stages:
             inputs:
               packageType: sdk
               useGlobalJson: true
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API'
+              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
 
           - task: DotNetCoreCLI@2
             displayName: ".Net Core - NuGet restore"
@@ -200,27 +201,27 @@ stages:
               feedsToUse: config
               noCache: true
               nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API'
+              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
 
           - task: DotNetCoreCLI@2
             displayName: "Publish functional test"
             inputs:
               command: "publish"
               publishWebProjects: false
-              projects: "**/*UKHO.ExternalNotifcationService.API.FunctionalTests.csproj"
-              arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\UKHO.ExternalNotifcationService.API.FunctionalTests'
+              projects: "**/*UKHO.ExternalNotificationService.API.FunctionalTests.csproj"
+              arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\UKHO.ExternalNotificationService.API.FunctionalTests'
               zipAfterPublish: false
 
           - task: PublishBuildArtifacts@1
             displayName: "Publish Functional test Artifact"
             inputs:
-              PathtoPublish: '$(Build.ArtifactStagingDirectory)\UKHO.ExternalNotifcationService.API.FunctionalTests'
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)\UKHO.ExternalNotificationService.API.FunctionalTests'
               ArtifactName: functionaltests
 
           - task: CopyFiles@2
-            displayName: Copy ExternalNotifcationService Config
+            displayName: Copy ExternalNotificationService Config
             inputs:
-              SourceFolder: '$(Build.SourcesDirectory)\UKHO.ExternalNotifcationService.API\UKHO.ExternalNotifcationService.API\'
+              SourceFolder: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API\UKHO.ExternalNotificationService.API\'
               Contents: 'appsettings.json'
               TargetFolder: '$(Build.SourcesDirectory)\Deployment\src'
 
@@ -229,18 +230,3 @@ stages:
             inputs:
               PathtoPublish: '$(Build.SourcesDirectory)\Deployment'
               ArtifactName: terraformartifact
-          
-          - task: ArchiveFiles@2
-            displayName: "Zip Load Tests"
-            inputs:
-              rootFolderOrFile: '$(Build.SourcesDirectory)/UKHO.ExternalNotifcationService.API/UKHO.ExchangeSetService.LoadTests'
-              includeRootFolder: false
-              archiveType: 'zip'
-              archiveFile: '$(Build.ArtifactStagingDirectory)/loadtests/loadtests.zip'
-              replaceExistingArchive: true
-
-          - task: PublishBuildArtifacts@1
-            displayName: "Publish Load Tests"
-            inputs:
-              PathtoPublish: '$(Build.ArtifactStagingDirectory)/loadtests/'
-              ArtifactName: LoadTests
