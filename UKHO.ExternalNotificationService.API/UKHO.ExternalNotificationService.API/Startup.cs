@@ -35,6 +35,7 @@ namespace UKHO.ExternalNotificationService.API
         {
             services.AddControllers()
                 .AddNewtonsoftJson();
+            services.Configure<EventHubLoggingConfiguration>(_configuration.GetSection("EventHubLoggingConfiguration"));
             services.AddApplicationInsightsTelemetry();
             services.AddLogging(loggingBuilder =>
             {
