@@ -14,7 +14,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         [SetUp]
         public void Setup()
         {
-            controller = new SubscriptionController();
+            _controller = new SubscriptionController();
         }
 
         [Test]
