@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -13,19 +9,19 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
     [TestFixture]
     public class SubscriptionControllerTests
     {
-        private SubscriptionController controller;
+        private SubscriptionController _controller;
 
         [SetUp]
         public void Setup()
         {
-            controller = new SubscriptionController();
+            _controller = new SubscriptionController();
         }
 
         [Test]
         public async Task TestSubscription()
         {
             dynamic jsonObject = new JObject();
-            var result = await controller.Post(jsonObject);
+            var result = await _controller.Post(jsonObject);
             Assert.IsInstanceOf<OkResult>(result);
         }
     }
