@@ -36,18 +36,18 @@ steps:
   - task: FileTransform@1
     displayName: "File Transform: WebAppSettings"
     inputs:
-      folderPath: '$(Pipeline.Workspace)/ExchangeSetServiceWebAPI/*.zip'
+      folderPath: '$(Pipeline.Workspace)/ExternalNotificationServiceWebAPI/*.zip'
       fileType: 'json'
       targetFiles: '**/appsettings.json'
 
   - task: AzureWebApp@1
-    displayName: "Azure App Deploy: ess-$(Environment)-webapp"
+    displayName: "Azure App Deploy: ens-$(Environment)-webapp"
     inputs:
       azureSubscription: "${{ parameters.AzureSubscription }}"
       appType: webApp
       appName: "$(WEB_APP_NAME)"
-      package: "$(Pipeline.Workspace)/ExchangeSetServiceWebAPI/UKHO.ExchangeSetService.API.zip"
-
+      package: "$(Pipeline.Workspace)/ExchangeSetServiceWebAPI/UKHO.ExternalNotificationService.API.zip"
+///////////
   - task: FileTransform@1
     displayName: "File Transform: WebJob"
     inputs:
@@ -63,7 +63,7 @@ steps:
       scriptLocation: 'scriptPath'
       scriptPath: '$(Pipeline.Workspace)/terraformartifact/fulfilment_webjob_deployment.ps1'
       arguments: '-terraformJsonOutputFile $(Pipeline.Workspace)/terraformartifact/terraform_output.json -packagePath "$(Pipeline.Workspace)/ExchangeSetService" -packageName "ExchangeSetFulFilmentService.zip"'
-
+//////////////////
   - task: PowerShell@2
     displayName: "Check the status of Service"
     inputs:
