@@ -90,7 +90,7 @@ namespace UKHO.ExternalNotificationService.API
             if (!string.IsNullOrWhiteSpace(kvServiceUri))
             {
                 builder.AddAzureKeyVault(new Uri(kvServiceUri),
-                    new DefaultAzureCredential(new DefaultAzureCredentialOptions { ManagedIdentityClientId = tempConfig["ESSManagedIdentity:ClientId"] }));
+                    new DefaultAzureCredential(new DefaultAzureCredentialOptions { ManagedIdentityClientId = tempConfig["ENSManagedIdentity:ClientId"] }));
             }
 
 #if DEBUG

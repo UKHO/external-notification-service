@@ -18,11 +18,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         private readonly IHttpContextAccessor httpContextAccessor;
         protected readonly ILogger<T> Logger;
         protected new HttpContext HttpContext => httpContextAccessor.HttpContext;
-        public const string LastModifiedDateHeaderKey = "Last-Modified";
         public const string InternalServerError = "Internal Server Error";
-        public const string NotModified = "Not Modified";
-        protected string TokenAudience => httpContextAccessor.HttpContext.User.FindFirstValue("aud");
-        protected string TokenIssuer => httpContextAccessor.HttpContext.User.FindFirstValue("iss");
 
         protected BaseController(IHttpContextAccessor httpContextAccessor, ILogger<T> logger)
         {
@@ -78,19 +74,9 @@ namespace UKHO.ExternalNotificationService.API.Controllers
                 case HttpStatusCode.BadRequest:
                     return BuildBadRequestErrorResponse(errors);
 
-                case HttpStatusCode.NotModified:
-                    return BuildNotModifiedResponse(model);
-
                 default:
                     return BuildInternalServerErrorResponse();
             }
-        }
-
-        private IActionResult BuildNotModifiedResponse(ExternalNotificationServiceResponse model)
-        {
-            LogInfo(EventIds.NotModified.ToEventId(), "NotModified", GetCurrentCorrelationId());
-            
-            return new StatusCodeResult(StatusCodes.Status304NotModified);
         }
 
         private IActionResult BuildOkResponse(ExternalNotificationServiceResponse model)

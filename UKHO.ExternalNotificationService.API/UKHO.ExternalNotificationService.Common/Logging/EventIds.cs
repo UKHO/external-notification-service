@@ -33,7 +33,7 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         OK = 900007,
         /// <summary>
-        /// 900007 - The requested resource responded with Accepted.
+        /// 900008 - The requested resource responded with Accepted.
         /// </summary>
         Accepted = 900008
     }
