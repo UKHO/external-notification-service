@@ -81,7 +81,7 @@ namespace UKHO.ExternalNotificationService.API
         {
             IConfigurationBuilder builder = new ConfigurationBuilder()
                 .SetBasePath(hostingEnvironment.ContentRootPath)
-                .AddJsonFile("appsettings.json", false, true);
+                .AddJsonFile("appsettings.json", false, true);                
 
             builder.AddEnvironmentVariables();
             var tempConfig = builder.Build();
@@ -99,7 +99,6 @@ namespace UKHO.ExternalNotificationService.API
             return builder.Build();
         }
 
-        [SuppressMessage("Major Code Smell", "S1172:Unused method parameters should be removed", Justification = "httpContextAccessor is used in action delegate")]
         private void ConfigureLogging(IApplicationBuilder app, ILoggerFactory loggerFactory,
                                     IHttpContextAccessor httpContextAccessor, IOptions<EventHubLoggingConfiguration> eventHubLoggingConfiguration)
         {
