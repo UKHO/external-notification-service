@@ -67,7 +67,7 @@ namespace UKHO.ExternalNotificationService.API
         {
             IConfigurationBuilder builder = new ConfigurationBuilder()
                 .SetBasePath(hostingEnvironment.ContentRootPath)
-                .AddJsonFile("appsettings.json", false, true);
+                .AddJsonFile("appsettings.json", false, true);                
 
             builder.AddEnvironmentVariables();
 
