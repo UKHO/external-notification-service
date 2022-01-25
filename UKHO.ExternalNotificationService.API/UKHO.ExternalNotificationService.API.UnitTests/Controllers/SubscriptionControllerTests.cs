@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using FakeItEasy;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
@@ -13,12 +14,15 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
     {
         private SubscriptionController _controller;
         private ILogger<SubscriptionController> fakeLogger;
+        private IHttpContextAccessor fakeHttpContextAccessor;
 
         [SetUp]
         public void Setup()
         {
+            fakeHttpContextAccessor = A.Fake<IHttpContextAccessor>();
             fakeLogger = A.Fake<ILogger<SubscriptionController>>();
-            _controller = new SubscriptionController(fakeLogger);
+            A.CallTo(() => fakeHttpContextAccessor.HttpContext).Returns(new DefaultHttpContext());
+            _controller = new SubscriptionController(fakeHttpContextAccessor, fakeLogger);
         }
 
         [Test]
