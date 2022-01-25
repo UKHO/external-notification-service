@@ -1,27 +1,24 @@
-$reportFolder=$env:BUILD_ARTIFACTSTAGINGDIRECTORY
-$source=$env:BUILD_SOURCESDIRECTORY
+param (
+    [Parameter(Mandatory = $true)] [string] $reportFolder,
+    [Parameter(Mandatory = $true)] [string] $sourceFolder
+)
 
-$ReportGenerator=dotnet tool list -g | ForEach-Object { if($_ -match "dotnet-reportgenerator-globaltool") {$_}}
+try {
+    reportgenerator "-reports:$sourceFolder/**/coverage.cobertura.xml" "-targetdir:$reportFolder\codecoveragereport" "-reporttypes:HtmlInline_AzurePipelines;Cobertura";
+    write-host 'CoverageReport Published - '  $reportFolder\codecoveragereport;
 
-if ([string]::IsNullOrWhiteSpace($ReportGenerator))
-{
-	echo "Report Generator not present Installing it ..."
-	dotnet tool install --global dotnet-reportgenerator-globaltool --version 4.8.13
-} else
-{
-	echo "Report Generator present checking version ..."
-	$ReportGeneratorVersion = ($ReportGenerator.split() | Where-Object {-not [string]::IsNullOrEmpty($_)})[1]
-
-	echo "Report Generator Version: $ReportGeneratorVersion is Installed ..."
-
-	if ( $ReportGeneratorVersion -ne "4.8.13" )
-	{
-		echo "Report Generator Version: $ReportGeneratorVersion is Installed required 4.8.13 replacing it ..."
-		dotnet tool uninstall -g dotnet-reportgenerator-globaltool
-		dotnet tool install --global dotnet-reportgenerator-globaltool --version 4.8.13
-	}
 }
+catch [System.Management.Automation.CommandNotFoundException] {
+    write-host "report generator not present installing and re-attempting to generate report.";
+    dotnet tool install -g dotnet-reportgenerator-globaltool;
 
-echo "Generating code coverage report ..."
-reportgenerator "-reports:$source\**\coverage.cobertura.xml" "-targetdir:$reportFolder\codecoveragereport" "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
-echo "CoverageReport generated and published in $reportFolder\codecoveragereport folder
+    reportgenerator "-reports:$sourceFolder/**/coverage.cobertura.xml" "-targetdir:$reportFolder\codecoveragereport" "-reporttypes:HtmlInline_AzurePipelines;Cobertura";
+    write-host 'CoverageReport Published - '  $reportFolder\codecoveragereport;
+
+}
+catch {
+
+    write-host "Caught an exception:"; 
+    write-host "Exception Type: $($_.Exception.GetType().FullName)";
+    write-host "Exception Message: $($_.Exception.Message)"; 
+}
