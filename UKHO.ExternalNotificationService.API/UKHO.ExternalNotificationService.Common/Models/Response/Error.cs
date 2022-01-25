@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace UKHO.ExternalNotificationService.Common.Response
+namespace UKHO.ExternalNotificationService.Common.Models.Response
 {
     [ExcludeFromCodeCoverage]
     public class Error

@@ -5,8 +5,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using System.Net;
 using UKHO.ExternalNotificationService.Common.Logging;
-using UKHO.ExternalNotificationService.Common.Response;
-using System;
+using UKHO.ExternalNotificationService.Common.Models.Response;
 
 namespace UKHO.ExternalNotificationService.API.Controllers
 {

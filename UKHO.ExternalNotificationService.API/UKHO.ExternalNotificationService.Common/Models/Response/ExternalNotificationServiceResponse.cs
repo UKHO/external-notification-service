@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace UKHO.ExternalNotificationService.Common.Response
+namespace UKHO.ExternalNotificationService.Common.Models.Response
 {
     public class ExternalNotificationServiceResponse
     {

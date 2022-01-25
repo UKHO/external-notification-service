@@ -5,10 +5,9 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 using UKHO.ExternalNotificationService.API.Filters;
 using UKHO.ExternalNotificationService.Common.Logging;
-using UKHO.ExternalNotificationService.Common.Response;
+using UKHO.ExternalNotificationService.Common.Models.Response;
 
 namespace UKHO.ExternalNotificationService.API.Controllers
 {
