@@ -48,6 +48,10 @@ namespace UKHO.ExternalNotificationService.API
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
+            services.AddHeaderPropagation(options =>
+            {
+                options.Headers.Add(CorrelationIdMiddleware.XCorrelationIdHeaderKey);
+            });
             services.AddApplicationInsightsTelemetry();
         }
 
