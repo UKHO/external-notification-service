@@ -1,33 +1,32 @@
-﻿
+﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Logging;
 using UKHO.ExternalNotificationService.Common.Logging;
 
 namespace UKHO.ExternalNotificationService.Common.HealthCheck
 {
     public class EventHubLoggingHealthCheck : IHealthCheck
     {
-        private readonly IEventHubLoggingHealthClient eventHubLoggingHealthClient;
-        private readonly ILogger<EventHubLoggingHealthCheck> logger;
+        private readonly IEventHubLoggingHealthClient _eventHubLoggingHealthClient;
+        private readonly ILogger<EventHubLoggingHealthCheck> _logger;
 
         public EventHubLoggingHealthCheck(IEventHubLoggingHealthClient eventHubLoggingHealthClient, ILogger<EventHubLoggingHealthCheck> logger)
         {
-            this.eventHubLoggingHealthClient = eventHubLoggingHealthClient;
-            this.logger = logger;
+            this._eventHubLoggingHealthClient = eventHubLoggingHealthClient;
+            this._logger = logger;
         }
 
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
-            var healthCheckResult = await eventHubLoggingHealthClient.CheckHealthAsync(context);
+            var healthCheckResult = await _eventHubLoggingHealthClient.CheckHealthAsync(context);
             if (healthCheckResult.Status == HealthStatus.Healthy)
             {
-                logger.LogDebug(EventIds.EventHubLoggingIsHealthy.ToEventId(), "Event hub is healthy");
+                _logger.LogDebug(EventIds.EventHubLoggingIsHealthy.ToEventId(), "Event hub is healthy");
             }
             else
             {
-                logger.LogError(EventIds.EventHubLoggingIsUnhealthy.ToEventId(), healthCheckResult.Exception, "Event hub is unhealthy responded with error {Message}", healthCheckResult.Exception.Message);
+                _logger.LogError(EventIds.EventHubLoggingIsUnhealthy.ToEventId(), healthCheckResult.Exception, "Event hub is unhealthy responded with error {Message}", healthCheckResult.Exception.Message);
             }
             return healthCheckResult;
         }
