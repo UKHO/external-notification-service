@@ -26,7 +26,7 @@ variables:
   - name: UKHOAssemblyProduct
     value: "External Notification Service"
   - name: UKHOAssemblyCopyright
-    value: "Copyright © UK Hydrographic Office"
+    value: "Copyright Â© UK Hydrographic Office"
   - name: Container
     value: "ukhydrographicoffice/terraform-azure-powershell-unzip:0.14.9"
   - name: DeploymentPool
@@ -251,7 +251,7 @@ stages:
                 - template: Deployment/templates/continuous-deployment.yml
                   parameters:
                     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "External-Notification-Service-Dev-A-008-02"
+                    AzureSubscription: "pipeline-ENS-Dev"
                   
                 - task: DownloadBuildArtifacts@0
                   displayName: "Download Functional test Artifact"
