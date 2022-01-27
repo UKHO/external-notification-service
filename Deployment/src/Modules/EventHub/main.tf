@@ -62,4 +62,3 @@ resource "azurerm_storage_account" "logstashStorage" {
   allow_blob_public_access  = false
  
   }
-}
