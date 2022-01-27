@@ -53,4 +53,4 @@ write-output "Set JSON output into pipeline variables"
 Write-Host "##vso[task.setvariable variable=WEB_APP_NAME]$($terraformOutput.web_app_name.value)"
 Write-Host "##vso[task.setvariable variable=EnsApiUrl]$env:SERVICE_DNS_URL"
 
-$terraformOutput | ConvertTo-Json -Depth 5 > $terraformJsonOutputFile ?????
+$terraformOutput | ConvertTo-Json -Depth 5 > $terraformJsonOutputFile
