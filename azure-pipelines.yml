@@ -282,7 +282,7 @@ stages:
                       **/*FunctionalTest*.dll
                       !**/*TestAdapter.dll
                       !**/obj/**
-                     testRunTitle: "Dev-AutomationTests"
+                    testRunTitle: "Dev-AutomationTests"
                     workingDirectory: '$(Build.SourcesDirectory)/functionaltests'
 
   - stage: QAdeploy
@@ -346,7 +346,7 @@ stages:
     jobs:
       - deployment: LiveDeployApp
         displayName: Live - deploy terraform and dotnet App
-        environment: "Ens-Live"
+        environment: "Ess-Live"
         pool: $(DeploymentPool)
         container: ${{variables.Container}}
         workspace:
@@ -354,7 +354,7 @@ stages:
         variables:
           - group: "ENS-Live-TF-Variables"
           - group: "ENS-Live-Variables"
-         strategy:
+        strategy:
           runOnce:
             deploy:
               steps:
