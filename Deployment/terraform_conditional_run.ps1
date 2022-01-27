@@ -49,12 +49,12 @@ if ( !$? ) { echo "Something went wrong during terraform apply" ; throw "Error" 
 Write-output "Terraform output as json"
 $terraformOutput = terraform output -json | ConvertFrom-Json
 Write-output "$terraformOutput"
-$terraformOutput "test"
+"
 
 write-output "Set JSON output into pipeline variables"
 Write-Host "##vso[task.setvariable variable=WEB_APP_NAME]$($terraformOutput.web_app_name.value)"
 Write-Host "##vso[task.setvariable variable=EnsApiUrl]$env:SERVICE_DNS_URL"
-
+write-output "test
 $terraformOutput | ConvertTo-Json -Depth 5 > $terraformJsonOutputFile
 cat "$terraformJsonOutputFile"
 write-output "print"
