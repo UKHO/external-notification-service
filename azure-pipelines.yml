@@ -242,7 +242,7 @@ stages:
         workspace:
           clean: all
         variables:
-          - group: "ENS-Deployment-Variables-DEV"
+          - group: "ENS-Dev-TF-Variables"
           - group: "ENS-Dev-Variables"
         strategy:
           runOnce:
