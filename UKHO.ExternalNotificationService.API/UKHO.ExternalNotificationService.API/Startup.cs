@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -79,6 +81,11 @@ namespace UKHO.ExternalNotificationService.API
 
         protected IConfigurationRoot BuildConfiguration(IWebHostEnvironment hostingEnvironment)
         {
+            var azureServiceTokenProvider = new AzureServiceTokenProvider();
+            var keyVaultClient = new KeyVaultClient(
+                new KeyVaultClient.AuthenticationCallback(
+                    azureServiceTokenProvider.KeyVaultTokenCallback));
+
             IConfigurationBuilder builder = new ConfigurationBuilder()
                 .SetBasePath(hostingEnvironment.ContentRootPath)
                 .AddJsonFile("appsettings.json", false, true);                
@@ -89,8 +96,7 @@ namespace UKHO.ExternalNotificationService.API
 
             if (!string.IsNullOrWhiteSpace(kvServiceUri))
             {
-                builder.AddAzureKeyVault(new Uri(kvServiceUri),
-                    new DefaultAzureCredential(new DefaultAzureCredentialOptions { ManagedIdentityClientId = tempConfig["ENSManagedIdentity:ClientId"] }));
+                builder.AddAzureKeyVault(new Uri(kvServiceUri), new DefaultAzureCredential());
             }
 
 #if DEBUG
@@ -119,7 +125,9 @@ namespace UKHO.ExternalNotificationService.API
                             httpContextAccessor.HttpContext.Request.Headers?[CorrelationIdMiddleware.XCorrelationIdHeaderKey].FirstOrDefault() ?? string.Empty;
 
                         if (httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+                        {
                             additionalValues["_UserId"] = httpContextAccessor.HttpContext.User.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier");
+                        }
                     }
                 }
 
