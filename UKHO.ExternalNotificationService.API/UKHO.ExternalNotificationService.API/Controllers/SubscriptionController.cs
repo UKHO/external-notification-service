@@ -1,21 +1,29 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
+using System.Net;
+using UKHO.ExternalNotificationService.Common.Logging;
+using UKHO.ExternalNotificationService.Common.Models.Response;
 
 namespace UKHO.ExternalNotificationService.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class SubscriptionController : ControllerBase
+    public class SubscriptionController : BaseController<SubscriptionController>
     {
-        public SubscriptionController()
+        private readonly ILogger<SubscriptionController> _logger;
+
+        public SubscriptionController(IHttpContextAccessor contextAccessor, ILogger<SubscriptionController> logger):base(contextAccessor, logger)
         {
+            _logger = logger;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] JObject jobj)
+        public async virtual Task<IActionResult> Post([FromBody] JObject jobj)
         {
-            return Ok();
+            _logger.LogInformation(EventIds.LogRequest.ToEventId(), "Subcription request Accepted", jobj);
+            return GetEnsResponse(new ExternalNotificationServiceResponse { HttpStatusCode = HttpStatusCode.OK });
         }
     }
 }

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    
+
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -12,13 +12,13 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="FakeItEasy" Version="7.3.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="NUnit" Version="3.13.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\UKHO.ExternalNotificationService.API\UKHO.ExternalNotificationService.API.csproj" />
+    <ProjectReference Include="..\UKHO.ExternalNotificationService.Common\UKHO.ExternalNotificationService.Common.csproj" />
   </ItemGroup>
 
 </Project>

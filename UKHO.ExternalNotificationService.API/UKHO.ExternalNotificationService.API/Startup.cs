@@ -2,6 +2,7 @@ using Azure.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -13,7 +14,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
-using UKHO.ExternalNotificationService.API.Filter;
+using UKHO.ExternalNotificationService.API.Filters;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.HealthCheck;
 using UKHO.Logging.EventHubLogProvider;
@@ -34,10 +35,27 @@ namespace UKHO.ExternalNotificationService.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers().AddNewtonsoftJson();
+            services.Configure<EventHubLoggingConfiguration>(_configuration.GetSection("EventHubLoggingConfiguration"));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IEventHubLoggingHealthClient, EventHubLoggingHealthClient>();
             services.AddHealthChecks().AddCheck<EventHubLoggingHealthCheck>("EventHubLoggingHealthCheck");
-            services.Configure<EventHubLoggingConfiguration>(_configuration.GetSection("EventHubLoggingConfiguration"));
+            services.AddApplicationInsightsTelemetry();
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddConfiguration(_configuration.GetSection("Logging"));
+                loggingBuilder.AddConsole();
+                loggingBuilder.AddDebug();
+                loggingBuilder.AddAzureWebAppDiagnostics();
+            });
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+            services.AddHeaderPropagation(options =>
+            {
+                options.Headers.Add(CorrelationIdMiddleware.XCorrelationIdHeaderKey);
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,31 +88,34 @@ namespace UKHO.ExternalNotificationService.API
                 .AddJsonFile("appsettings.json", false, true);                
 
             builder.AddEnvironmentVariables();
-
             var tempConfig = builder.Build();
             string kvServiceUri = tempConfig["KeyVaultSettings:ServiceUri"];
 
             if (!string.IsNullOrWhiteSpace(kvServiceUri))
             {
-                builder.AddAzureKeyVault(new Uri(kvServiceUri), new DefaultAzureCredential());
+                builder.AddAzureKeyVault(new Uri(kvServiceUri),
+                    new DefaultAzureCredential(new DefaultAzureCredentialOptions { ManagedIdentityClientId = tempConfig["ENSManagedIdentity:ClientId"] }));
             }
+
 #if DEBUG
             builder.AddJsonFile("appsettings.local.overrides.json", true, true);
 #endif
             return builder.Build();
         }
 
-        [SuppressMessage("Major Code Smell", "S1172:Unused method parameters should be removed", Justification = "httpContextAccessor is used in action delegate")]
         private void ConfigureLogging(IApplicationBuilder app, ILoggerFactory loggerFactory,
-                                   IHttpContextAccessor httpContextAccessor, IOptions<EventHubLoggingConfiguration> eventHubLoggingConfiguration)
+                                    IHttpContextAccessor httpContextAccessor, IOptions<EventHubLoggingConfiguration> eventHubLoggingConfiguration)
         {
-
             if (!string.IsNullOrWhiteSpace(eventHubLoggingConfiguration?.Value.ConnectionString))
             {
                 void ConfigAdditionalValuesProvider(IDictionary<string, object> additionalValues)
                 {
                     if (httpContextAccessor.HttpContext != null)
                     {
+                        additionalValues["_Environment"] = eventHubLoggingConfiguration.Value.Environment;
+                        additionalValues["_System"] = eventHubLoggingConfiguration.Value.System;
+                        additionalValues["_Service"] = eventHubLoggingConfiguration.Value.Service;
+                        additionalValues["_NodeName"] = eventHubLoggingConfiguration.Value.NodeName;
                         additionalValues["_RemoteIPAddress"] = httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
                         additionalValues["_User-Agent"] = httpContextAccessor.HttpContext.Request.Headers["User-Agent"].FirstOrDefault() ?? string.Empty;
                         additionalValues["_AssemblyVersion"] = Assembly.GetExecutingAssembly().GetCustomAttributes<AssemblyFileVersionAttribute>().Single().Version;
@@ -122,6 +143,14 @@ namespace UKHO.ExternalNotificationService.API
                                              config.AdditionalValuesProvider = ConfigAdditionalValuesProvider;
                                          });
             }
+#if (DEBUG)
+            //Add file based logger for development
+            loggerFactory.AddFile(_configuration.GetSection("Logging"));
+#endif
+            app.UseLogAllRequestsAndResponses(loggerFactory);
+
+            app.UseCorrelationIdMiddleware()
+               .UseErrorLogging(loggerFactory);
         }
     }
 }
