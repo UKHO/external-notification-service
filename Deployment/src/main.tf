@@ -44,7 +44,6 @@ module "key_vault" {
     "webapp_service" = module.webapp_service.web_app_object_id
   }
   secrets = {
-        "EventHubLoggingConfiguration--ConnectionString1"            = module.eventhub.log_primary_connection_string
         "EventHubLoggingConfiguration--ConnectionString"            = module.eventhub.log_primary_connection_string
         "EventHubLoggingConfiguration--EntityPath"                  = module.eventhub.entity_path
       }
