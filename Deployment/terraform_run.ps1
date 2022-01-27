@@ -3,8 +3,4 @@
 & terraform workspace select dev 
 & terraform validate
 & terraform plan -out "terraform.deployment.tfplan"
-<<<<<<< HEAD
 #& terraform apply terraform.deployment.tfplan
-=======
-#& terraform apply terraform.deployment.tfplan
->>>>>>> origin/Feature/24141-ENS-Azure-DevOps-initial-CI-Build
