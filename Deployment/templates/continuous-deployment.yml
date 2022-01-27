@@ -46,4 +46,4 @@ steps:
     inputs:
       targetType: filePath
       filePath: "$(Pipeline.Workspace)/terraformartifact/check_service_status.ps1"
-      arguments: "-healthEndPointUrl $(EssApiUrl)/health -waitTimeInMinute $(waitTimeInMinute)"
+      arguments: "-healthEndPointUrl $(EnsApiUrl)/health -waitTimeInMinute $(waitTimeInMinute)"
