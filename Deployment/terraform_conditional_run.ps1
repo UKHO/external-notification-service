@@ -57,5 +57,5 @@ write-output "test
 $terraformOutput | ConvertTo-Json -Depth 5 > $terraformJsonOutputFile
 cat "$terraformJsonOutputFile"
 write-output "print"
-$terraformOutput | ConvertTo-Json -Depth 2 > terraformJsonOutputFile1
-cat "terraformJsonOutputFile1"
+$terraformOutput | ConvertTo-Json -Depth 2 > $terraformJsonOutputFile
+cat "$terraformJsonOutputFile"
