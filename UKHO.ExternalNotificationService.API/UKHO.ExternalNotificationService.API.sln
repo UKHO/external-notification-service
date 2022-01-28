@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.32112.339
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31321.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UKHO.ExternalNotificationService.API", "UKHO.ExternalNotificationService.API\UKHO.ExternalNotificationService.API.csproj", "{1B0EC182-C682-40FC-854A-6A08AFDF8CFF}"
 EndProject
@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UKHO.ExternalNotificationSe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UKHO.ExternalNotificationService.Common", "UKHO.ExternalNotificationService.Common\UKHO.ExternalNotificationService.Common.csproj", "{189426CA-6A03-4B03-B23D-070515CED765}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UKHO.ExternalNotificationService.API.Common.UnitTests", "UKHO.ExternalNotificationService.API.Common.UnitTests\UKHO.ExternalNotificationService.API.Common.UnitTests.csproj", "{247FAFFE-E156-4806-884E-AF9E20E5DB86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UKHO.ExternalNotificationService.Common.UnitTests", "UKHO.ExternalNotificationService.API.Common.UnitTests\UKHO.ExternalNotificationService.Common.UnitTests.csproj", "{247FAFFE-E156-4806-884E-AF9E20E5DB86}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
