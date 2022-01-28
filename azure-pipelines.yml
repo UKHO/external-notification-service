@@ -346,7 +346,7 @@ stages:
     jobs:
       - deployment: LiveDeployApp
         displayName: Live - deploy terraform and dotnet App
-        environment: "Ess-Live"
+        environment: "Ens-Live"
         pool: $(DeploymentPool)
         container: ${{variables.Container}}
         workspace:
