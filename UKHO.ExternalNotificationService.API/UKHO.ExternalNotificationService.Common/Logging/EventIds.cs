@@ -38,15 +38,15 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         Accepted = 900008,
         /// <summary>
-        /// 900009 - Event hub for exchange set service is healthy.
+        /// 900009 - Event hub for external notification service is healthy.
         /// </summary>
         EventHubLoggingIsHealthy = 900009,
         /// <summary>
-        /// 900010 - Event hub for exchange set service is unhealthy.
+        /// 900010 - Event hub for external notification service is unhealthy.
         /// </summary>
         EventHubLoggingIsUnhealthy = 900010,
         /// <summary>
-        /// 900011 -  Event data for exchange set service event hub health check.
+        /// 900011 -  Event data for external notification service event hub health check.
         /// </summary>
         EventHubLoggingEventDataForHealthCheck = 900011
     }
