@@ -18,6 +18,7 @@ using System.Reflection;
 using System.Security.Claims;
 using UKHO.ExternalNotificationService.API.Filters;
 using UKHO.ExternalNotificationService.Common.Configuration;
+using UKHO.ExternalNotificationService.Common.HealthCheck;
 using UKHO.Logging.EventHubLogProvider;
 
 namespace UKHO.ExternalNotificationService.API
@@ -55,6 +56,9 @@ namespace UKHO.ExternalNotificationService.API
                 options.Headers.Add(CorrelationIdMiddleware.XCorrelationIdHeaderKey);
             });
             services.AddApplicationInsightsTelemetry();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IEventHubLoggingHealthClient, EventHubLoggingHealthClient>();
+            services.AddHealthChecks().AddCheck<EventHubLoggingHealthCheck>("EventHubLoggingHealthCheck");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -76,6 +80,7 @@ namespace UKHO.ExternalNotificationService.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
             });
         }
 

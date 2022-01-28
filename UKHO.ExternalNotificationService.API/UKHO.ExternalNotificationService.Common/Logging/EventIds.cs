@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿
+using Microsoft.Extensions.Logging;
 
 namespace UKHO.ExternalNotificationService.Common.Logging
 {
@@ -35,7 +36,19 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900008 - The requested resource responded with Accepted.
         /// </summary>
-        Accepted = 900008
+        Accepted = 900008,
+        /// <summary>
+        /// 900009 - Event hub for external notification service is healthy.
+        /// </summary>
+        EventHubLoggingIsHealthy = 900009,
+        /// <summary>
+        /// 900010 - Event hub for external notification service is unhealthy.
+        /// </summary>
+        EventHubLoggingIsUnhealthy = 900010,
+        /// <summary>
+        /// 900011 -  Event data for external notification service event hub health check.
+        /// </summary>
+        EventHubLoggingEventDataForHealthCheck = 900011
     }
 
     public static class EventIdExtensions
