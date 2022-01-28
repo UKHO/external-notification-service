@@ -1,4 +1,6 @@
-﻿using Microsoft.Azure.EventHubs;
+﻿
+using Azure.Messaging.EventHubs;
+using Azure.Messaging.EventHubs.Producer;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using System;
@@ -23,16 +25,12 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
 
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
-            var connectionStringBuilder = new EventHubsConnectionStringBuilder(_eventHubLoggingConfiguration.Value.ConnectionString)
-            {
-                EntityPath = _eventHubLoggingConfiguration.Value.EntityPath
-            };
-
-            EventHubClient eventHubClient = EventHubClient.CreateFromConnectionString(connectionStringBuilder.ToString());
-
+            var eventHubProducerClient = new EventHubProducerClient(_eventHubLoggingConfiguration.Value.ConnectionString, _eventHubLoggingConfiguration.Value.EntityPath);
+            using EventDataBatch eventBatch = await eventHubProducerClient.CreateBatchAsync();
+            eventBatch.TryAdd(new EventData(Encoding.UTF8.GetBytes(EventIds.EventHubLoggingEventDataForHealthCheck.ToEventId() + " of Event Hub")));
             try
-            {
-                await eventHubClient.SendAsync(new EventData(Encoding.UTF8.GetBytes(EventIds.EventHubLoggingEventDataForHealthCheck.ToEventId() + " of Event Hub")));
+            {         
+                await eventHubProducerClient.SendAsync(eventBatch);
                 return HealthCheckResult.Healthy("Event hub is healthy");
             }
             catch (Exception ex)
@@ -41,7 +39,7 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
             }
             finally
             {
-                await eventHubClient.CloseAsync();
+                await eventHubProducerClient.CloseAsync();
             }
         }
     }
