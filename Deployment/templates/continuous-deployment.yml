@@ -7,14 +7,14 @@ parameters:
 
 steps:
   - task: FileTransform@1
-    displayName: "File Transform: Ens Config" #Replace exchange set instance value from pipeline 
+    displayName: "File Transform: Ens Config" #Replace ens instance value from pipeline 
     inputs:
       folderPath: '$(Pipeline.Workspace)/terraformartifact/src'
       fileType: 'json'
       targetFiles: 'appsettings.json'
 
   - task: PowerShell@2
-    displayName: "terraform devdeploy"
+    displayName: "terraform $(Environment)deploy"
     inputs:
       targetType: filePath
       filePath: '$(Pipeline.Workspace)/terraformartifact/terraform_conditional_run.ps1'

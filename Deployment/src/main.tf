@@ -22,6 +22,7 @@ module "webapp_service" {
   location                  = azurerm_resource_group.rg.location
   app_service_sku           = var.app_service_sku[local.env_name]
   app_settings = {
+    "KeyVaultSettings:ServiceUri" = module.kv.keyvault_uri
     "EventHubLoggingConfiguration:Environment"             = local.env_name
     "EventHubLoggingConfiguration:MinimumLoggingLevel"     = "Warning"
     "EventHubLoggingConfiguration:UkhoMinimumLoggingLevel" = "Information"

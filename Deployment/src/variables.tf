@@ -9,10 +9,10 @@ variable "resource_group_name" {
 }
 
 locals {
-  env_name				= lower(terraform.workspace)
-  service_name			= "ens"
-  web_app_name		    = "${local.service_name}-${local.env_name}-webapp"
-  key_vault_name		= "${local.service_name}-ukho-${local.env_name}-kv"
+  env_name           = lower(terraform.workspace)
+  service_name       = "ens"
+  web_app_name       = "${local.service_name}-${local.env_name}-webapp"
+  key_vault_name     = "${local.service_name}-ukho-${local.env_name}-kv"
   tags = {
     SERVICE          = "External Notification Service"
     ENVIRONMENT      = local.env_name
@@ -21,7 +21,7 @@ locals {
     CALLOUT_TEAM     = "On-Call_N/A"
     COST_CENTRE      = "A.008.02"
   }
-  config_data = jsondecode(file("${path.module}/appsettings.json"))
+  config_data        = jsondecode(file("${path.module}/appsettings.json"))
 }
 
 
@@ -36,7 +36,7 @@ variable "app_service_sku" {
 	    tier = "PremiumV3"
 	    size = "P1v3"
         }
-    "prod"   = {
+    "live"   = {
 	    tier = "PremiumV3"
 	    size = "P1v3"
         }
