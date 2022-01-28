@@ -13,16 +13,16 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
     public class SubscriptionControllerTests
     {
         private SubscriptionController _controller;
-        private ILogger<SubscriptionController> fakeLogger;
-        private IHttpContextAccessor fakeHttpContextAccessor;
+        private ILogger<SubscriptionController> _fakeLogger;
+        private IHttpContextAccessor _fakeHttpContextAccessor;
 
         [SetUp]
         public void Setup()
         {
-            fakeHttpContextAccessor = A.Fake<IHttpContextAccessor>();
-            fakeLogger = A.Fake<ILogger<SubscriptionController>>();
-            A.CallTo(() => fakeHttpContextAccessor.HttpContext).Returns(new DefaultHttpContext());
-            _controller = new SubscriptionController(fakeHttpContextAccessor, fakeLogger);
+            _fakeHttpContextAccessor = A.Fake<IHttpContextAccessor>();
+            _fakeLogger = A.Fake<ILogger<SubscriptionController>>();
+            A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(new DefaultHttpContext());
+            _controller = new SubscriptionController(_fakeHttpContextAccessor, _fakeLogger);
         }
 
         [Test]

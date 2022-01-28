@@ -21,8 +21,8 @@ namespace UKHO.ExternalNotificationService.API.Filters
     {
         private const string RedactedValue = "********";
         private static readonly string[] HeadersToRedact = { "userpass", "token" };
-        private const int maxBodyCharSize = 1000;
-        private const int truncatedBodyCharSize = 987;
+        private const int MaxBodyCharSize = 1000;
+        private const int TruncatedBodyCharSize = 987;
 
         public static IApplicationBuilder UseErrorLogging(this IApplicationBuilder appBuilder, ILoggerFactory loggerFactory)
         {
@@ -128,9 +128,9 @@ namespace UKHO.ExternalNotificationService.API.Filters
                     }
                 }
 
-                if (bodyAsString.Length > maxBodyCharSize)
+                if (bodyAsString.Length > MaxBodyCharSize)
                 {
-                    bodyAsString = bodyAsString.Remove(truncatedBodyCharSize) + "... Truncated";
+                    bodyAsString = bodyAsString.Remove(TruncatedBodyCharSize) + "... Truncated";
                 }
             }
 
