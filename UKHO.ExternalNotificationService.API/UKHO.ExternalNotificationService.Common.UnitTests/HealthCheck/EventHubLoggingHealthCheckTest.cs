@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using UKHO.ExternalNotificationService.Common.HealthCheck;
 
-namespace UKHO.ExternalNotificationService.API.UnitTests.HealthCheck
+namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
 {
     [TestFixture]
     public class EventHubLoggingHealthCheckTest
