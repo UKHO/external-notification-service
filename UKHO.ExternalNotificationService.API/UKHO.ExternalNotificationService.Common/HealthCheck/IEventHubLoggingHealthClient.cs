@@ -7,6 +7,6 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
 {
     public interface IEventHubLoggingHealthClient
     {
-        public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default);
+        Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default);
     }
 }
