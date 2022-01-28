@@ -22,7 +22,7 @@ module "webapp_service" {
   location                  = azurerm_resource_group.rg.location
   app_service_sku           = var.app_service_sku[local.env_name]
   app_settings = {
-    "KeyVaultSettings:ServiceUri" = module.kv.keyvault_uri
+    "KeyVaultSettings:ServiceUri"                          = "https://${local.key_vault_name}.vault.azure.net/"
     "EventHubLoggingConfiguration:Environment"             = local.env_name
     "EventHubLoggingConfiguration:MinimumLoggingLevel"     = "Warning"
     "EventHubLoggingConfiguration:UkhoMinimumLoggingLevel" = "Information"
@@ -42,11 +42,11 @@ module "key_vault" {
   tenant_id           = module.webapp_service.web_app_tenant_id
   location            = azurerm_resource_group.rg.location
   read_access_objects = {
-    "webapp_service" = module.webapp_service.web_app_object_id
+     "webapp_service" = module.webapp_service.web_app_object_id
   }
   secrets = {
         "EventHubLoggingConfiguration--ConnectionString"            = module.eventhub.log_primary_connection_string
         "EventHubLoggingConfiguration--EntityPath"                  = module.eventhub.entity_path
       }
-  tags                                         = local.tags
+  tags                = local.tags
 }
