@@ -56,11 +56,11 @@ stages:
         - checkout: self
           submodules: recursive
         - task: UseDotNet@2
-          displayName: 'Use .NET Core sdk'
+          displayName: 'Use .NET Core 6.0.x sdk'
           inputs:
             packageType: sdk
-            version: 3.1.x
-            installationPath: $(Agent.ToolsDirectory)/dotnet
+            useGlobalJson: true
+            workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
         - checkout: covscan
         - template: dotnet-cov.yml@covScan
           parameters:
