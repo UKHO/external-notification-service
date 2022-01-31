@@ -49,26 +49,28 @@ stages:
     pool:
       name: $(coverityPool)
     jobs:
-      - job: Coverity
-        workspace:
-          clean: all
-        steps:
-          - task: UseDotNet@2
-            displayName: 'Use .NET Core 6.0.x sdk'
-            inputs:
-              packageType: sdk
-              useGlobalJson: true
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
-          - checkout: covscan
-          - template: dotnet-cov.yml@covScan
-            parameters:
-              CovHostUrl: "$(CovHostUrl)"
-              CovUser: "$(CovUser)"
-              CovPwd: "$(CovPwd)"
-              StreamName: "external-notification-service"
-              BuildCommand: "$(Build.Repository.LocalPath)/external-notification-service/UKHO.ExternalNotificationService.API/UKHO.ExternalNotificationService.API/UKHO.ExternalNotificationService.API.csproj"
-              StripPath: $(Build.Repository.LocalPath)/external-notification-service
-              CoverityScanPath: $(Build.Repository.LocalPath)/coverityscan-buildtemplates
+    - job: Coverity
+      workspace:
+        clean: all
+      steps:
+        - checkout: self
+          submodules: recursive
+        - task: UseDotNet@2
+          displayName: 'Use .NET 6.0.x sdk'
+          inputs:
+            packageType: sdk
+            version: 6.0.x
+            installationPath: $(Agent.ToolsDirectory)/dotnet
+        - checkout: covscan
+        - template: dotnet-cov.yml@covScan
+          parameters:
+            CovHostUrl: "$(CovHostUrl)"
+            CovUser: "$(CovUser)"
+            CovPwd: "$(CovPwd)"
+            StreamName: "external-notification-service"
+            BuildCommand: "$(Build.Repository.LocalPath)/external-notification-service/UKHO.ExternalNotificationService.API/UKHO.ExternalNotificationService.API/UKHO.ExternalNotificationService.API.csproj"
+            StripPath: $(Build.Repository.LocalPath)/external-notification-service
+            CoverityScanPath: $(Build.Repository.LocalPath)/coverityscan-buildtemplates
 
   - stage: PERFORM_DEPENDENCYCHECK_DOTNETBUILD_DOTNETTEST_AND_PUBLISH
     displayName: "Build (inc DependencyChecker, Dotnet Build , dotnet test and publish artifact )"
@@ -80,7 +82,7 @@ stages:
         displayName: "Dependencychecker"
         steps:
           - task: UseDotNet@2
-            displayName: 'Use .NET Core 6.0.x sdk'
+            displayName: 'Use .NET 6.0.x sdk'
             inputs:
               packageType: sdk
               useGlobalJson: true
@@ -126,7 +128,7 @@ stages:
         displayName: "Dotnet Test and Publish Code Coverage"
         steps:
           - task: UseDotNet@2
-            displayName: 'Use .NET Core 6.0.x sdk'
+            displayName: 'Use .NET 6.0.x sdk'
             inputs:
               packageType: sdk
               useGlobalJson: true
@@ -178,7 +180,7 @@ stages:
               arguments: '-buildNumber "$(Build.BuildNumber)" -solutionDirectory "$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API\" -UKHOAssemblyCompany "$env:UKHOAssemblyCompany" -UKHOAssemblyCopyright "$(UKHOAssemblyCopyright)" -UKHOAssemblyVersionPrefix "$env:UKHOAssemblyVersionPrefix" -UKHOAssemblyProduct "$env:UKHOAssemblyProduct"'
 
           - task: UseDotNet@2
-            displayName: 'Use .NET Core 6.0.x sdk'
+            displayName: 'Use .NET 6.0.x sdk'
             inputs:
               packageType: sdk
               useGlobalJson: true
@@ -224,7 +226,7 @@ stages:
         displayName: "Publish Functional Tests And Terraform"
         steps:
           - task: UseDotNet@2
-            displayName: 'Use .NET Core 6.0.x sdk'
+            displayName: 'Use .NET 6.0.x sdk'
             inputs:
               packageType: sdk
               useGlobalJson: true
@@ -307,7 +309,7 @@ stages:
                     targetFiles: '**/appsettings.json'
 
                 - task: UseDotNet@2
-                  displayName: 'Use .NET Core sdk'
+                  displayName: 'Use .NET 6.0.x sdk'
                   inputs:
                     packageType: sdk
                     version: 6.0.x
