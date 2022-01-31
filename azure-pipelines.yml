@@ -41,6 +41,7 @@ resources:
 
 stages:
   - stage: CoverityScan
+    displayName: "Coverity Scan"
     pool:
       name: $(coverityPool)
     jobs:
