@@ -67,7 +67,7 @@ stages:
             CovHostUrl: "$(CovHostUrl)"
             CovUser: "$(CovUser)"
             CovPwd: "$(CovPwd)"
-            StreamName: "file-share-service"
+            StreamName: "external-notification-service"
             BuildCommand: "$(Build.Repository.LocalPath)/external-notification-service/UKHO.ExternalNotificationService.API/UKHO.ExternalNotificationService.API/UKHO.ExternalNotificationService.API.csproj"
             StripPath: $(Build.Repository.LocalPath)/external-notification-service
             CoverityScanPath: $(Build.Repository.LocalPath)/coverityscan-buildtemplates
