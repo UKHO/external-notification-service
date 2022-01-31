@@ -1,0 +1,50 @@
+parameters:
+  - name: ContinueEvenIfResourcesAreGettingDestroyed
+    type: boolean
+    default: false
+  - name: AzureSubscription
+    type: string
+
+steps:
+  - task: FileTransform@1
+    displayName: "File Transform: Ens Config" #Replace ens instance value from pipeline 
+    inputs:
+      folderPath: '$(Pipeline.Workspace)/terraformartifact/src'
+      fileType: 'json'
+      targetFiles: 'appsettings.json'
+
+  - task: PowerShell@2
+    displayName: "terraform $(Environment)deploy"
+    inputs:
+      targetType: filePath
+      filePath: '$(Pipeline.Workspace)/terraformartifact/terraform_conditional_run.ps1'
+      arguments: '-deploymentResourceGroupName $(DeploymentResourceGroupName) -deploymentStorageAccountName $(DeploymentStorageAccountName) -workSpace $(Environment) -continueEvenIfResourcesAreGettingDestroyed $${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }} -terraformJsonOutputFile $(Pipeline.Workspace)/terraformartifact/terraform_output.json'
+    env:
+      ARM_CLIENT_ID: $(TERRAFORM-CLIENT-ID)
+      ARM_CLIENT_SECRET: $(TERRAFORM-CLIENT-SECRET)
+      ARM_TENANT_ID: $(TERRAFORM-TENANT-ID)
+      ARM_SUBSCRIPTION_ID: $(TERRAFORM-SUBSCRIPTION-ID)
+
+
+  - task: FileTransform@1
+    displayName: "File Transform: WebAppSettings"
+    inputs:
+      folderPath: '$(Pipeline.Workspace)/ExternalNotificationServiceWebAPI/*.zip'
+      fileType: 'json'
+      targetFiles: '**/appsettings.json'
+
+  - task: AzureWebApp@1
+    displayName: "Azure App Deploy: ens-$(Environment)-webapp"
+    inputs:
+      azureSubscription: "${{ parameters.AzureSubscription }}"
+      appType: webApp
+      appName: "$(WEB_APP_NAME)"
+      package: "$(Pipeline.Workspace)/ExternalNotificationServiceWebAPI/UKHO.ExternalNotificationService.API.zip"
+
+  - task: PowerShell@2
+    displayName: "Check the status of Service"
+    inputs:
+      targetType: filePath
+      filePath: "$(Pipeline.Workspace)/terraformartifact/check_service_status.ps1"
+      arguments: "-healthEndPointUrl $(EnsApiUrl)/health -waitTimeInMinute $(waitTimeInMinute)"
+
