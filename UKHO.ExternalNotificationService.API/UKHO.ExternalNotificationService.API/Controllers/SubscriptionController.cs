@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
+using UKHO.ExternalNotificationService.API.Models;
 using UKHO.ExternalNotificationService.Common.Logging;
 using UKHO.ExternalNotificationService.Common.Models.Response;
 
@@ -20,10 +20,10 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         }
 
         [HttpPost]
-        public async virtual Task<IActionResult> Post([FromBody] JObject jobj)
+        public async virtual Task<IActionResult> Post([FromBody] D365Payload objPayload)
         {
-            _logger.LogInformation(EventIds.LogRequest.ToEventId(), "Subscription request Accepted", jobj);
-            return GetEnsResponse(new ExternalNotificationServiceResponse { HttpStatusCode = HttpStatusCode.OK });
+            _logger.LogInformation(EventIds.Accepted.ToEventId(), "Subscription request Accepted", objPayload);
+            return GetEnsResponse(new ExternalNotificationServiceResponse { HttpStatusCode = HttpStatusCode.Accepted });
         }
     }
 }
