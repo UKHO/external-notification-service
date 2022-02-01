@@ -90,14 +90,9 @@ namespace UKHO.ExternalNotificationService.API
 
         protected IConfigurationRoot BuildConfiguration(IWebHostEnvironment hostingEnvironment)
         {
-            var azureServiceTokenProvider = new AzureServiceTokenProvider();
-            var keyVaultClient = new KeyVaultClient(
-                new KeyVaultClient.AuthenticationCallback(
-                    azureServiceTokenProvider.KeyVaultTokenCallback));
-
             IConfigurationBuilder builder = new ConfigurationBuilder()
-                .SetBasePath(hostingEnvironment.ContentRootPath)
-                .AddJsonFile("appsettings.json", false, true);                
+                 .SetBasePath(hostingEnvironment.ContentRootPath)
+                 .AddJsonFile("appsettings.json", false, true);
 
             builder.AddEnvironmentVariables();
             var tempConfig = builder.Build();
