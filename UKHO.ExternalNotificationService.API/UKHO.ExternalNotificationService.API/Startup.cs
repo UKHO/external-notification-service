@@ -17,6 +17,8 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
 using UKHO.ExternalNotificationService.API.Filters;
+using UKHO.ExternalNotificationService.API.Services;
+using UKHO.ExternalNotificationService.API.Validation;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.HealthCheck;
 using UKHO.Logging.EventHubLogProvider;
@@ -59,6 +61,8 @@ namespace UKHO.ExternalNotificationService.API
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IEventHubLoggingHealthClient, EventHubLoggingHealthClient>();
             services.AddHealthChecks().AddCheck<EventHubLoggingHealthCheck>("EventHubLoggingHealthCheck");
+            services.AddScoped<ID365PayloadValidator, D365PayloadValidator>();
+            services.AddScoped<ISubscriptionService, SubscriptionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
