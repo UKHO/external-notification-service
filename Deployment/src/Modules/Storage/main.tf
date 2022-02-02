@@ -15,7 +15,7 @@ resource "azurerm_storage_queue" "ens_storage_queue" {
 }
 
 resource "azurerm_role_assignment" "storage_account_role" {
-  scope                = azurerm_storage_account.storage.id
+  scope                = azurerm_storage_account.ens_storage.id
   role_definition_name = "Storage Account Contributor"
   principal_id         = var.webapp_principal_id
 }
