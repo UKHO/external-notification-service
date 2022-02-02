@@ -66,6 +66,7 @@ module "eventgriddomain" {
   location            = azurerm_resource_group.rg.location
   env_name            = local.env_name
   tags                = local.tags
+  webapp_principal_id = module.webapp_service.web_app_object_id
 }
 
 module "storage" {
