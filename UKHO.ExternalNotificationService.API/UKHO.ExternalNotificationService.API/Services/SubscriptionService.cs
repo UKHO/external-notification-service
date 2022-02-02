@@ -10,15 +10,22 @@ namespace UKHO.ExternalNotificationService.API.Services
     public class SubscriptionService : ISubscriptionService
     {
         private readonly ID365PayloadValidator _d365PayloadValidator;
+        private readonly ISubscriptionRequestMessageValidator _subscriptionRequestMessageValidator;
 
-        public SubscriptionService(ID365PayloadValidator d365PayloadValidator)
+        public SubscriptionService(ID365PayloadValidator d365PayloadValidator, ISubscriptionRequestMessageValidator subscriptionRequestMessageValidator)
         {
             _d365PayloadValidator = d365PayloadValidator;
+            _subscriptionRequestMessageValidator = subscriptionRequestMessageValidator;
         }
 
-        public Task<ValidationResult> ValidateSubscriptionRequest(D365Payload d365Payload)
+        public Task<ValidationResult> ValidateD365PayloadRequest(D365Payload d365Payload)
         {
             return _d365PayloadValidator.Validate(d365Payload);
+        }
+
+        public Task<ValidationResult> ValidateSubscriptionRequest(SubscriptionRequest subscriptionRequest)
+        {
+            return _subscriptionRequestMessageValidator.Validate(subscriptionRequest);
         }
 
         public SubscriptionRequest ConvertToSubscriptionRequestModel(D365Payload payload)

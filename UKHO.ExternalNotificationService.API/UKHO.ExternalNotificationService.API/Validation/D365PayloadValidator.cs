@@ -14,8 +14,13 @@ namespace UKHO.ExternalNotificationService.API.Validation
     {
         public D365PayloadValidator()
         {
-            RuleFor(p => p.InputParameters).NotEmpty().NotNull()
-              .WithErrorCode(HttpStatusCode.OK.ToString());
+            RuleFor(v => v.InputParameters).NotNull()
+                .WithErrorCode(HttpStatusCode.BadRequest.ToString())
+                .WithMessage("inputParameters cannot be null.");
+
+            RuleFor(v => v.PostEntityImages).NotNull()
+               .WithErrorCode(HttpStatusCode.BadRequest.ToString())
+               .WithMessage("postEntityImages cannot be null.");
         }
         Task<ValidationResult> ID365PayloadValidator.Validate(D365Payload d365Payload)
         {

@@ -62,6 +62,7 @@ namespace UKHO.ExternalNotificationService.API
             services.AddScoped<IEventHubLoggingHealthClient, EventHubLoggingHealthClient>();
             services.AddHealthChecks().AddCheck<EventHubLoggingHealthCheck>("EventHubLoggingHealthCheck");
             services.AddScoped<ID365PayloadValidator, D365PayloadValidator>();
+            services.AddScoped<ISubscriptionRequestMessageValidator, SubscriptionRequestMessageValidator>();
             services.AddScoped<ISubscriptionService, SubscriptionService>();
         }
 

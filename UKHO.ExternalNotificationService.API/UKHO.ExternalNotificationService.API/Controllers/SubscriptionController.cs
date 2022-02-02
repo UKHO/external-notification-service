@@ -7,6 +7,8 @@ using UKHO.ExternalNotificationService.Common.Models.Response;
 using System.Net;
 using UKHO.ExternalNotificationService.Common.Logging;
 using UKHO.ExternalNotificationService.Common.Models.Request;
+using System.Collections.Generic;
+using UKHO.ExternalNotificationService.API.Extensions;
 
 namespace UKHO.ExternalNotificationService.API.Controllers
 {
@@ -24,11 +26,47 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         [HttpPost]
         public async virtual Task<IActionResult> Post([FromBody] D365Payload d365Payload)
         {
+            if (d365Payload.OperationCreatedOn == null && d365Payload.InputParameters == null && d365Payload.PostEntityImages == null && d365Payload.CorrelationId == null)
+            {
+                var error = new List<Error>
+                        {
+                            new Error()
+                            {
+                                Source = "requestBody",
+                                Description = "Either body is null or malformed."
+                            }
+                        };
+                return BuildBadRequestErrorResponse(error);
+            }
+
+            var validationD365PayloadResult = await _subscriptionService.ValidateD365PayloadRequest(d365Payload);
+
+            if (!validationD365PayloadResult.IsValid)
+            {
+                List<Error> errors;
+
+                if (validationD365PayloadResult.HasBadRequestErrors(out errors))
+                {
+                    return BuildBadRequestErrorResponse(errors);
+                }
+            }
+
             SubscriptionRequest subscription = _subscriptionService.ConvertToSubscriptionRequestModel(d365Payload);
+
+            var validationResult = await _subscriptionService.ValidateSubscriptionRequest(subscription);
+
+            if (!validationResult.IsValid)
+            {
+                List<Error> errors;
+
+                if (validationResult.HasBadRequestErrors(out errors))
+                {
+                    return BuildBadRequestErrorResponse(errors);
+                }
+            }
 
             _logger.LogInformation(EventIds.LogRequest.ToEventId(), "Subscription request Accepted", d365Payload);
 
-            await Task.CompletedTask;
             return GetEnsResponse(new ExternalNotificationServiceResponse { HttpStatusCode = HttpStatusCode.Accepted });
         }
     }
