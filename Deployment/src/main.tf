@@ -64,7 +64,6 @@ module "eventgriddomain" {
   name                = lower("${var.service_name}${var.env_name}eventgriddomain")
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-  env_name            = local.env_name
   tags                = local.tags
   webapp_principal_id = module.webapp_service.web_app_object_id
 }
@@ -75,6 +74,5 @@ module "storage" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = var.location
   tags                = local.tags
-  env_name            = local.env_name
   webapp_principal_id = module.webapp_service.web_app_object_id
 }

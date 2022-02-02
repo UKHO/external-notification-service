@@ -14,10 +14,6 @@ variable "tags" {
 
 }
 
-variable "env_name" {
-
-}
-
 variable "webapp_principal_id" {
   type  = string
 }
