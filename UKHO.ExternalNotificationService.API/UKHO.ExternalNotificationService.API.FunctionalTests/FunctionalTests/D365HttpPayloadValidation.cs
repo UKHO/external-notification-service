@@ -61,7 +61,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             var errorMessage = await apiResponse.ReadAsTypeAsync<ErrorDescriptionModel>();
 
             Assert.IsTrue(errorMessage.Errors.Any(e => e.Source == "inputParameters"));
-            Assert.IsTrue(errorMessage.Errors.Any(e => e.Description == "inputParameters cannot be null."));
+            Assert.IsTrue(errorMessage.Errors.Any(e => e.Description == "InputParameters cannot be null."));
         }
 
         [Test]
@@ -75,7 +75,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             var errorMessage = await apiResponse.ReadAsTypeAsync<ErrorDescriptionModel>();
 
             Assert.IsTrue(errorMessage.Errors.Any(e => e.Source == "postEntityImages"));
-            Assert.IsTrue(errorMessage.Errors.Any(e => e.Description == "postEntityImages cannot be null."));
+            Assert.IsTrue(errorMessage.Errors.Any(e => e.Description == "PostEntityImages cannot be null."));
         }
     }
 }
