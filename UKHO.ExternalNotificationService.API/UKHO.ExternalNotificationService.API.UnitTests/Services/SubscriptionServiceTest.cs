@@ -16,13 +16,15 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         private ID365PayloadValidator _fakeD365PayloadValidator;
         private ISubscriptionRequestValidator _fakeISubscriptionRequestValidator;
         private SubscriptionService _subscriptionService;
-        private D365Payload _fakeD365PayloadDetails;
+        private D365Payload _fakeD365PayloadDetailsWithInputParameters;
+        private D365Payload _fakeD365PayloadDetailsWithPostEntityImages;
         private SubscriptionRequest _fakeSubscriptionRequest;
 
         [SetUp]
         public void Setup()
         {
-            _fakeD365PayloadDetails = GetD365Payload();
+            _fakeD365PayloadDetailsWithInputParameters = GetD365PayloadDetailsWithInputParameters();
+            _fakeD365PayloadDetailsWithPostEntityImages = GetD365PayloadDetailsWithPostEntityImages();
             _fakeSubscriptionRequest = GetSubscriptionRequest();
 
             _fakeD365PayloadValidator = A.Fake<ID365PayloadValidator>();
@@ -49,7 +51,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             A.CallTo(() => _fakeD365PayloadValidator.Validate(A<D365Payload>.Ignored))
                 .Returns(new ValidationResult(new List<ValidationFailure>()));
 
-            var result = await _subscriptionService.ValidateD365PayloadRequest(_fakeD365PayloadDetails);
+            var result = await _subscriptionService.ValidateD365PayloadRequest(_fakeD365PayloadDetailsWithInputParameters);
 
             Assert.IsTrue(result.IsValid);
         }
@@ -80,16 +82,27 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         }
 
         [Test]
-        public void WhenValidSubscriptionRequest_ThenConvertToSubscriptionRequestModelRequestReturnsOkrequest()
+        public void WhenValidSubscriptionRequestWithInputParameters_ThenConvertToSubscriptionRequestModelRequestReturnsOkrequest()
         {
-            var result =  _subscriptionService.ConvertToSubscriptionRequestModel(_fakeD365PayloadDetails);
+            var result =  _subscriptionService.ConvertToSubscriptionRequestModel(_fakeD365PayloadDetailsWithInputParameters);
 
             Assert.IsInstanceOf<SubscriptionRequest>(result);
             Assert.AreEqual(_fakeSubscriptionRequest.SubscriptionId, result.SubscriptionId);
             Assert.AreEqual(_fakeSubscriptionRequest.NotificationType, result.NotificationType); 
         }
 
-        private D365Payload GetD365Payload()
+
+        [Test]
+        public void WhenValidSubscriptionRequestWithPostEntityImages_ThenConvertToSubscriptionRequestModelRequestReturnsOkrequest()
+        {
+            var result = _subscriptionService.ConvertToSubscriptionRequestModel(_fakeD365PayloadDetailsWithPostEntityImages);
+
+            Assert.IsInstanceOf<SubscriptionRequest>(result);
+            Assert.AreEqual(_fakeSubscriptionRequest.SubscriptionId, result.SubscriptionId);
+            Assert.AreEqual(_fakeSubscriptionRequest.NotificationType, result.NotificationType);
+        }
+
+        private D365Payload GetD365PayloadDetailsWithInputParameters()
         {
             var d365Payload = new D365Payload()
             {
@@ -102,7 +115,30 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
                             new FormattedValue { key = "statecode", value = "Active" } },
                     } } },
                 PostEntityImages = new EntityImage[] { },
-            OperationCreatedOn = "/Date(1642149320000+0000)/"
+                OperationCreatedOn = "/Date(1642149320000+0000)/"
+            };
+
+            return d365Payload;
+        }
+
+        private D365Payload GetD365PayloadDetailsWithPostEntityImages()
+        {
+            var d365Payload = new D365Payload()
+            {
+                CorrelationId = "6ea03f10-2672-46fb-92a1-5200f6a4faaa",
+                InputParameters = new InputParameter[] { new InputParameter {
+                    value = new InputParameterValue {
+                        Attributes = new D365Attribute[] { new D365Attribute { key = "test", value = "test" }},
+                        FormattedValues =  new FormattedValue[]{ } }} },
+                PostEntityImages = new EntityImage[] { new EntityImage {
+                    key= "SubscriptionImage",
+                    value = new EntityImageValue {
+                        Attributes = new D365Attribute[] { new D365Attribute { key = "ukho_webhookurl", value = "https://abc.com" },
+                            new D365Attribute { key = "ukho_externalnotificationid", value = "246d71e7-1475-ec11-8943-002248818222" } },
+                        FormattedValues = new FormattedValue[] { new FormattedValue { key = "ukho_subscriptiontype", value = "Data test" },
+                            new FormattedValue { key = "statecode", value = "Active" } },
+                    } } },
+                OperationCreatedOn = "/Date(1642149320000+0000)/"
             };
 
             return d365Payload;
