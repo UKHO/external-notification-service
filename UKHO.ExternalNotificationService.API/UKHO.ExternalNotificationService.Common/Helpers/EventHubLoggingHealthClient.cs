@@ -25,21 +25,28 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
 
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
-            var eventHubProducerClient = new EventHubProducerClient(_eventHubLoggingConfiguration.Value.ConnectionString, _eventHubLoggingConfiguration.Value.EntityPath);
-            using EventDataBatch eventBatch = await eventHubProducerClient.CreateBatchAsync(cancellationToken);
-            eventBatch.TryAdd(new EventData(Encoding.UTF8.GetBytes(EventIds.EventHubLoggingEventDataForHealthCheck.ToEventId() + " of Event Hub")));
             try
-            {         
-                await eventHubProducerClient.SendAsync(eventBatch,cancellationToken);
-                return HealthCheckResult.Healthy("Event hub is healthy");
+            {
+                var eventHubProducerClient = new EventHubProducerClient(_eventHubLoggingConfiguration.Value.ConnectionString, _eventHubLoggingConfiguration.Value.EntityPath);
+                using EventDataBatch eventBatch = await eventHubProducerClient.CreateBatchAsync(cancellationToken);
+                eventBatch.TryAdd(new EventData(Encoding.UTF8.GetBytes(EventIds.EventHubLoggingEventDataForHealthCheck.ToEventId() + " of Event Hub")));
+                try
+                {
+                    await eventHubProducerClient.SendAsync(eventBatch, cancellationToken);
+                    return HealthCheckResult.Healthy("Event hub is healthy");
+                }
+                catch (Exception ex)
+                {
+                    return HealthCheckResult.Unhealthy("Event hub is unhealthy", new Exception(ex.Message));
+                }
+                finally
+                {
+                    await eventHubProducerClient.CloseAsync(cancellationToken);
+                }
             }
             catch (Exception ex)
             {
                 return HealthCheckResult.Unhealthy("Event hub is unhealthy", new Exception(ex.Message));
-            }
-            finally
-            {
-                await eventHubProducerClient.CloseAsync(cancellationToken);
             }
         }
     }

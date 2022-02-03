@@ -48,7 +48,15 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900011 -  Event data for external notification service event hub health check.
         /// </summary>
-        EventHubLoggingEventDataForHealthCheck = 900011
+        EventHubLoggingEventDataForHealthCheck = 900011,
+        /// <summary>
+        /// 900014 - Azure blob storage for external notification service is healthy.
+        /// </summary>
+        AzureBlobStorageIsHealthy = 900014,
+        /// <summary>
+        /// 900015 - Azure blob storage for external notification service is unhealthy.
+        /// </summary>
+        AzureBlobStorageIsUnhealthy = 900015,
     }
 
     public static class EventIdExtensions

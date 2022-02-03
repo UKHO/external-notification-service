@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.KeyVault;
-using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -19,6 +17,8 @@ using System.Security.Claims;
 using UKHO.ExternalNotificationService.API.Filters;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.HealthCheck;
+using UKHO.ExternalNotificationService.Common.Helpers;
+using UKHO.ExternalNotificationService.Common.Storage;
 using UKHO.Logging.EventHubLogProvider;
 
 namespace UKHO.ExternalNotificationService.API
@@ -39,6 +39,7 @@ namespace UKHO.ExternalNotificationService.API
             services.AddControllers()
                 .AddNewtonsoftJson();
             services.Configure<EventHubLoggingConfiguration>(_configuration.GetSection("EventHubLoggingConfiguration"));
+            services.Configure<EnsFulfilmentStorageConfiguration>(_configuration.GetSection("EnsFulfilmentStorageConfiguration"));
             services.AddApplicationInsightsTelemetry();
             services.AddLogging(loggingBuilder =>
             {
@@ -58,7 +59,15 @@ namespace UKHO.ExternalNotificationService.API
             services.AddApplicationInsightsTelemetry();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IEventHubLoggingHealthClient, EventHubLoggingHealthClient>();
-            services.AddHealthChecks().AddCheck<EventHubLoggingHealthCheck>("EventHubLoggingHealthCheck");
+            services.AddScoped<IStorageService, StorageService>();
+            services.AddScoped<IAzureBlobStorageClient, AzureBlobStorageClient>();
+            services.AddScoped<IEnsFulfilmentStorageConfiguration, EnsFulfilmentStorageConfiguration>();
+
+
+
+            services.AddHealthChecks()
+                .AddCheck<EventHubLoggingHealthCheck>("EventHubLoggingHealthCheck")
+                .AddCheck<AzureBlobStorageHealthCheck>("AzureBlobStorageHealthCheck");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
