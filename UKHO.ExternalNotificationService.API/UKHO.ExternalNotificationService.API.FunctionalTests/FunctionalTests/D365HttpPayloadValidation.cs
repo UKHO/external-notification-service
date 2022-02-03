@@ -30,7 +30,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [Test]
         public async Task WhenICallTheEnsSubscriptionApiWithAValidD365Payload_ThenAcceptedStatusIsReturned()
         {
-                    
+             
             var apiResponse = await _ensApiClient.PostEnsApiSubcriptionAsync(_d365Payload);
             Assert.AreEqual(202, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
 
@@ -39,7 +39,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [Test]
         public async Task WhenICallTheEnsSubscriptionApiWithEmptyD365Payload_ThenABadRequestStatusIsReturned()
         {
-            D365Payload d365PayloadEmpty = new D365Payload();
+            D365Payload d365PayloadEmpty = new();
 
             var apiResponse = await _ensApiClient.PostEnsApiSubcriptionAsync(d365PayloadEmpty);
             Assert.AreEqual(400, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 400.");
@@ -60,22 +60,22 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             var errorMessage = await apiResponse.ReadAsTypeAsync<ErrorDescriptionModel>();
 
-            Assert.IsTrue(errorMessage.Errors.Any(e => e.Source == "inputParameters"));
-            Assert.IsTrue(errorMessage.Errors.Any(e => e.Description == "InputParameters cannot be null."));
+            Assert.IsTrue(errorMessage.Errors.Any(e => e.Source == "d365Payload.InputParameters"));
+            Assert.IsTrue(errorMessage.Errors.Any(e => e.Description == "D365Payload InputParameters cannot be blank or null."));
         }
 
         [Test]
         public async Task WhenICallTheEnsSubscriptionApiWithMissingPostEntityImagesInD365Payload_ThenABadRequestStatusIsReturned()
         {
             _d365Payload.PostEntityImages = null;
-
+            
             var apiResponse = await _ensApiClient.PostEnsApiSubcriptionAsync(_d365Payload);
             Assert.AreEqual(400, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 400.");
 
             var errorMessage = await apiResponse.ReadAsTypeAsync<ErrorDescriptionModel>();
 
             Assert.IsTrue(errorMessage.Errors.Any(e => e.Source == "postEntityImages"));
-            Assert.IsTrue(errorMessage.Errors.Any(e => e.Description == "PostEntityImages cannot be null."));
+            Assert.IsTrue(errorMessage.Errors.Any(e => e.Description == "D365Payload PostEntityImages cannot be blank or null."));
         }
     }
 }
