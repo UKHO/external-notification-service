@@ -19,11 +19,11 @@ namespace UKHO.ExternalNotificationService.API.Controllers
     public class SubscriptionController : BaseController<SubscriptionController>
     {
         private readonly ILogger<SubscriptionController> _logger;
-        private readonly SubscriptionService _subscriptionService;
+        private readonly ISubscriptionService _subscriptionService;
         private readonly IAzureMessageQueueHelper _azureMessageQueueHelper;
         private readonly IOptions<EnsSubscriptionStorageConfiguration> _ensStorageConfiguration;
 
-        public SubscriptionController(IHttpContextAccessor contextAccessor, SubscriptionService subscriptionService, IAzureMessageQueueHelper azureMessageQueueHelper, IOptions<EnsSubscriptionStorageConfiguration> ensStorageConfiguration, ILogger<SubscriptionController> logger) : base(contextAccessor, logger)
+        public SubscriptionController(IHttpContextAccessor contextAccessor, ISubscriptionService subscriptionService, IAzureMessageQueueHelper azureMessageQueueHelper, IOptions<EnsSubscriptionStorageConfiguration> ensStorageConfiguration, ILogger<SubscriptionController> logger) : base(contextAccessor, logger)
         {
             _logger = logger;
             _subscriptionService = subscriptionService;

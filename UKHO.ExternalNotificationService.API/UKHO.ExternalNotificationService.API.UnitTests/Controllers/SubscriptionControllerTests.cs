@@ -17,7 +17,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
     public class SubscriptionControllerTests
     {
         private SubscriptionController _controller;
-        private SubscriptionService _fakeSubscriptionService;
+        private ISubscriptionService _fakeSubscriptionService;
         private ILogger<SubscriptionController> _fakeLogger;
         private IHttpContextAccessor _fakeHttpContextAccessor;
         private IAzureMessageQueueHelper _fakeAzureMessageQueueHelper;
@@ -27,7 +27,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         public void Setup()
         {
             _fakeHttpContextAccessor = A.Fake<IHttpContextAccessor>();
-            _fakeSubscriptionService = A.Fake<SubscriptionService>();
+            _fakeSubscriptionService = A.Fake<ISubscriptionService>();
             _fakeLogger = A.Fake<ILogger<SubscriptionController>>();
             _fakeAzureMessageQueueHelper = A.Fake<IAzureMessageQueueHelper>();
             _fakeEnsStorageConfiguration = A.Fake<IOptions<EnsSubscriptionStorageConfiguration>>();
@@ -39,6 +39,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         public async Task TestSubscription()
         {
             dynamic jsonObject = new JObject();
+            A.CallTo(() => _fakeSubscriptionService.GetStorageAccountConnectionString(A<string>.Ignored, A<string>.Ignored))
+                            .Returns("");
             var result = await _controller.Post(jsonObject);
             Assert.IsInstanceOf<OkResult>(result);
         }

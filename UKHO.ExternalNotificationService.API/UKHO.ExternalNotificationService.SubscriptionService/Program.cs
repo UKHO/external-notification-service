@@ -47,6 +47,10 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                 {
                     builder.AddJsonFile($"appsettings.{environmentName}.json", optional: true);
                 }
+#if DEBUG
+                //Add development overrides configuration
+                builder.AddJsonFile("appsettings.local.overrides.json", true, true);
+#endif
 
                 //Add environment variables
                 builder.AddEnvironmentVariables();
@@ -58,10 +62,6 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                     builder.AddAzureKeyVault(new Uri(kvServiceUri), new DefaultAzureCredential());
                 }
 
-#if DEBUG
-                //Add development overrides configuration
-                builder.AddJsonFile("appsettings.local.overrides.json", true, true);
-#endif
                 Program.ConfigurationBuilder = builder.Build();
             })
              .ConfigureLogging((hostContext, builder) =>
