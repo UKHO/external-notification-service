@@ -1,42 +1,45 @@
 ﻿namespace UKHO.ExternalNotificationService.API.Models
 {
-    public class D365Payload
+    public class D365Payload 
     {
-        public string D365CorrelationId;
-        public string OperationCreatedOn;
-        public InputParameter[] InputParameters;
-        public EntityImage[] PostEntityImages;
+        public string D365CorrelationId { get; set; }
+        public string OperationCreatedOn { get; set; }
+        public EntityImage[] PostEntityImages { get; set; }
+        public InputParameter[] InputParameters { get; set; }
     }
 
     public class InputParameter
     {
-        public InputParameterValue value;
+        public InputParameterValue value { get; set; }
     }
 
     public class InputParameterValue
     {
-        public D365Attribute[] Attributes;
-        public FormattedValue[] FormattedValues;
+        public D365Attribute[] Attributes { get; set; }
+        public FormattedValue[] FormattedValues { get; set; }
     }
+
     public class FormattedValue
     {
-        public string key;
-        public object value;
+        public string key { get; set; }
+        public object value { get; set; }
     }
 
     public class D365Attribute
     {
-        public string key;
-        public object value;
+        public string key { get; set; }
+        public object value { get; set; }
     }
+
     public class EntityImage
     {
-        public string key;
-        public EntityImageValue value;
+        public string key { get; set; }
+        public EntityImageValue ImageValue { get; set; }
     }
+
     public class EntityImageValue
     {
-        public D365Attribute[] Attributes;
-        public FormattedValue[] FormattedValues;
+        public D365Attribute[] Attributes { get; set; }
+        public FormattedValue[] FormattedValues { get; set; }
     }
 }

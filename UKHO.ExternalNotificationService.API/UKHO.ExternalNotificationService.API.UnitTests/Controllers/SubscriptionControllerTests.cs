@@ -22,6 +22,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             _fakeHttpContextAccessor = A.Fake<IHttpContextAccessor>();
             _fakeLogger = A.Fake<ILogger<SubscriptionController>>();
             A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(new DefaultHttpContext());
+
             _controller = new SubscriptionController(_fakeHttpContextAccessor, _fakeLogger);
         }
 
@@ -40,8 +41,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
                 OperationCreatedOn = "Date(1642158297000 + 0000)",
                 InputParameters = new InputParameter[] { new InputParameter { value = new InputParameterValue
                 {
-                    Attributes= new D365Attribute[] { new D365Attribute { key = "subscribedacc", value = "test" }, new D365Attribute{ key = "test_name", value = "Clay" }},
-                    FormattedValues =new FormattedValue[] { new FormattedValue { key ="state", value = "Active"}, new FormattedValue{ key = "acc", value = "A"}}
+                    Attributes = new D365Attribute[] { new D365Attribute { key = "subscribedacc", value = "test" }, new D365Attribute{ key = "test_name", value = "Clay" }},
+                    FormattedValues = new FormattedValue[] { new FormattedValue { key ="state", value = "Active"}, new FormattedValue{ key = "acc", value = "A"}}
                 }}}
             };
         }

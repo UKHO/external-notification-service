@@ -20,7 +20,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         }
 
         [HttpPost]
-        public async virtual Task<IActionResult> Post([FromBody] D365Payload objPayload)
+        public virtual async Task<IActionResult> Post([FromBody] D365Payload objPayload)
         {
             _logger.LogInformation(EventIds.Accepted.ToEventId(), "Subscription request Accepted", objPayload);
             return GetEnsResponse(new ExternalNotificationServiceResponse { HttpStatusCode = HttpStatusCode.Accepted });
