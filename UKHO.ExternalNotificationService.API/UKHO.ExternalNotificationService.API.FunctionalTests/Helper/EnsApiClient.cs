@@ -9,12 +9,12 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
 {
     public class EnsApiClient
     {
-        static HttpClient httpClient = new HttpClient();
-        private readonly string apiHost;
+        static readonly HttpClient s_httpClient = new();
+        private readonly string _apiHost;
 
         public EnsApiClient(string apiHost)
         {
-            this.apiHost = apiHost;
+            _apiHost = apiHost;
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         /// <returns></returns>
         public async Task<HttpResponseMessage> PostEnsApiSubcriptionAsync([FromBody] D365Payload d365Payload, string headerRequest = null)
         {
-            string uri = $"{apiHost}/api/subscription";
+            string uri = $"{_apiHost}/api/subscription";
             string payloadJson = JsonConvert.SerializeObject(d365Payload);
             using (var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri)
             { Content = new StringContent(payloadJson, Encoding.UTF8, "application/json") })
@@ -35,7 +35,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
                     httpRequestMessage.Headers.Add(headerRequest, string.Empty);
                 }
 
-                return await httpClient.SendAsync(httpRequestMessage);
+                return await s_httpClient.SendAsync(httpRequestMessage);
             }
         }
     }
