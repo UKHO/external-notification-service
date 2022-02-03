@@ -284,6 +284,8 @@ stages:
         variables:
           - group: "ENS-Dev-TF-Variables"
           - group: "ENS-Dev-Variables"
+          - name: "EnsEventGridDomainConfiguration.SubscriptionId"
+            value: $(ENSSubscriptionId)
         strategy:
           runOnce:
             deploy:

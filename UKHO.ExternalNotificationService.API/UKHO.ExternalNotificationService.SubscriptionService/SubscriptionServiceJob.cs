@@ -1,9 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
+using Azure.Storage.Queues.Models;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.WindowsAzure.Storage.Queue;
 using UKHO.ExternalNotificationService.Common.Logging;
 
 namespace UKHO.ExternalNotificationService.SubscriptionService
@@ -20,9 +19,9 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
             _logger = logger;
         }
 
-        public void ProcessQueueMessage([QueueTrigger("%EnsSubscriptionStorageConfiguration:QueueName%")] string message)
+        public void ProcessQueueMessage([QueueTrigger("%EnsSubscriptionStorageConfiguration:QueueName%")] QueueMessage message)
         {
-            _logger.LogInformation(EventIds.LogRequest.ToEventId(), "check web job is triggered or not using Azure Queue {message}", message);
+            _logger.LogInformation(EventIds.LogRequest.ToEventId(), "check web job is triggered or not using Azure Queue {message}", message.Body.ToString());
             System.Console.WriteLine(message);
         }
     }
