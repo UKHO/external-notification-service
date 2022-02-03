@@ -10,12 +10,12 @@ namespace UKHO.ExternalNotificationService.API.Services
     public class SubscriptionService : ISubscriptionService
     {
         private readonly ID365PayloadValidator _d365PayloadValidator;
-        private readonly ISubscriptionRequestMessageValidator _subscriptionRequestMessageValidator;
+        private readonly ISubscriptionRequestValidator _subscriptionRequestValidator;
 
-        public SubscriptionService(ID365PayloadValidator d365PayloadValidator, ISubscriptionRequestMessageValidator subscriptionRequestMessageValidator)
+        public SubscriptionService(ID365PayloadValidator d365PayloadValidator, ISubscriptionRequestValidator subscriptionRequestValidator)
         {
             _d365PayloadValidator = d365PayloadValidator;
-            _subscriptionRequestMessageValidator = subscriptionRequestMessageValidator;
+            _subscriptionRequestValidator = subscriptionRequestValidator;
         }
 
         public Task<ValidationResult> ValidateD365PayloadRequest(D365Payload d365Payload)
@@ -25,7 +25,7 @@ namespace UKHO.ExternalNotificationService.API.Services
 
         public Task<ValidationResult> ValidateSubscriptionRequest(SubscriptionRequest subscriptionRequest)
         {
-            return _subscriptionRequestMessageValidator.Validate(subscriptionRequest);
+            return _subscriptionRequestValidator.Validate(subscriptionRequest);
         }
 
         public SubscriptionRequest ConvertToSubscriptionRequestModel(D365Payload payload)
@@ -47,7 +47,7 @@ namespace UKHO.ExternalNotificationService.API.Services
                 IsActive = string.Equals(stateCode, "Active", StringComparison.InvariantCultureIgnoreCase),
                 WebhookUrl = Convert.ToString(webhookurl),
                 NotificationType = Convert.ToString(formattedSubscriptionType),
-                CorrelationId = correlationId
+                D365CorrelationId = correlationId
             };
         }
     }
