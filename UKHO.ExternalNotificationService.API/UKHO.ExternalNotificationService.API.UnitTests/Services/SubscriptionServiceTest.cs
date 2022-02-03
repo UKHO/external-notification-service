@@ -14,10 +14,9 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
     public class SubscriptionServiceTest
     {
         private ID365PayloadValidator _fakeD365PayloadValidator;
-        private ISubscriptionRequestValidator _fakeISubscriptionRequestValidator;
         private SubscriptionService _subscriptionService;
-        private D365Payload _fakeD365PayloadDetailsWithInputParameters;
-        private D365Payload _fakeD365PayloadDetailsWithPostEntityImages;
+        private D365Payload _fakeD365PayloadDetailsWithInputParameters, _fakeD365PayloadDetailsWithPostEntityImages;
+        private D365PayloadValidation _fakeD365PayloadValidation;
         private SubscriptionRequest _fakeSubscriptionRequest;
 
         [SetUp]
@@ -26,57 +25,31 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             _fakeD365PayloadDetailsWithInputParameters = GetD365PayloadDetailsWithInputParameters();
             _fakeD365PayloadDetailsWithPostEntityImages = GetD365PayloadDetailsWithPostEntityImages();
             _fakeSubscriptionRequest = GetSubscriptionRequest();
+            _fakeD365PayloadValidation = new D365PayloadValidation { D365Payload = GetD365PayloadDetailsWithInputParameters()};
 
             _fakeD365PayloadValidator = A.Fake<ID365PayloadValidator>();
-            _fakeISubscriptionRequestValidator = A.Fake<ISubscriptionRequestValidator>();
-
-            _subscriptionService = new SubscriptionService(_fakeD365PayloadValidator, _fakeISubscriptionRequestValidator);
+            _subscriptionService = new SubscriptionService(_fakeD365PayloadValidator);
         }
         [Test]
         public async Task WhenInvalidNullInputParametersInRequest_ThenValidateD365PayloadRequestReturnsBadrequest()
         {
-            A.CallTo(() => _fakeD365PayloadValidator.Validate(A<D365Payload>.Ignored))
+            A.CallTo(() => _fakeD365PayloadValidator.Validate(A<D365PayloadValidation>.Ignored))
                 .Returns(new ValidationResult(new List<ValidationFailure>
-                    {new ValidationFailure("InputParameters", "inputParameters cannot be null.")}));
+                    {new ValidationFailure("InputParameters", "D365Payload InputParameters cannot be blank or null.")}));
 
-            var result = await _subscriptionService.ValidateD365PayloadRequest(new D365Payload());
+            var result = await _subscriptionService.ValidateD365PayloadRequest(new D365PayloadValidation());
 
             Assert.IsFalse(result.IsValid);
-            Assert.AreEqual("inputParameters cannot be null.", result.Errors.Single().ErrorMessage);
+            Assert.AreEqual("D365Payload InputParameters cannot be blank or null.", result.Errors.Single().ErrorMessage);
         }
 
         [Test]
         public async Task WhenValidPayloadStructureInRequest_ThenValidateD365PayloadRequestReturnsOkResponse()
         {
-            A.CallTo(() => _fakeD365PayloadValidator.Validate(A<D365Payload>.Ignored))
+            A.CallTo(() => _fakeD365PayloadValidator.Validate(A<D365PayloadValidation>.Ignored))
                 .Returns(new ValidationResult(new List<ValidationFailure>()));
 
-            var result = await _subscriptionService.ValidateD365PayloadRequest(_fakeD365PayloadDetailsWithInputParameters);
-
-            Assert.IsTrue(result.IsValid);
-        }
-
-
-        [Test]
-        public async Task WhenInvalidNullSubscriptionIdInRequest_ThenValidateSubscriptionRequestReturnsBadrequest()
-        {
-            A.CallTo(() => _fakeISubscriptionRequestValidator.Validate(A<SubscriptionRequest>.Ignored))
-                .Returns(new ValidationResult(new List<ValidationFailure>
-                    {new ValidationFailure("SubscriptionId", "subscriptionId cannot be blank or null.")}));
-
-            var result = await _subscriptionService.ValidateSubscriptionRequest(new SubscriptionRequest());
-
-            Assert.IsFalse(result.IsValid);
-            Assert.AreEqual("subscriptionId cannot be blank or null.", result.Errors.Single().ErrorMessage);
-        }
-
-        [Test]
-        public async Task WhenValidSubscriptionRequest_ThenValidateSubscriptionRequestReturnsOkResponse()
-        {
-            A.CallTo(() => _fakeISubscriptionRequestValidator.Validate(A<SubscriptionRequest>.Ignored))
-                .Returns(new ValidationResult(new List<ValidationFailure>()));
-
-            var result = await _subscriptionService.ValidateSubscriptionRequest(_fakeSubscriptionRequest);
+            var result = await _subscriptionService.ValidateD365PayloadRequest(_fakeD365PayloadValidation);
 
             Assert.IsTrue(result.IsValid);
         }

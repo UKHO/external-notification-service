@@ -46,7 +46,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
                 ErrorCode = HttpStatusCode.BadRequest.ToString()
             };
 
-            A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored))
+            A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365PayloadValidation>.Ignored))
                            .Returns(new ValidationResult(new List<ValidationFailure> { validationMessage }));
 
             var result = (BadRequestObjectResult)await _controller.Post(new D365Payload());
@@ -59,47 +59,27 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         [Test]
         public async Task WhenInvalidNullInputParametersInRequest_ThenPostReturnsBadRequest()
         {
-            var validationMessage = new ValidationFailure("InputParameters", "inputParameters cannot be null.")
+            var validationMessage = new ValidationFailure("InputParameters", "D365Payload InputParameters cannot be blank or null.")
             {
                 ErrorCode = HttpStatusCode.BadRequest.ToString()
             };
 
-            A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure> { validationMessage }));
+            A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365PayloadValidation>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure> { validationMessage }));
 
             var result = (BadRequestObjectResult)await _controller.Post(_fakeD365PayloadDetails);
             var errors = (ErrorDescription)result.Value;
 
             Assert.AreEqual(400, result.StatusCode);
-            Assert.AreEqual("inputParameters cannot be null.", errors.Errors.Single().Description);
-        }
-
-        [Test]
-        public async Task WhenInvalidNullSubscriptionIdInPayloadRequest_ThenPostReturnsBadRequest()
-        {
-            var validationMessage = new ValidationFailure("SubscriptionId", "subscriptionId cannot be blank or null.")
-            {
-                ErrorCode = HttpStatusCode.BadRequest.ToString()
-            };
-            A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
-
-            A.CallTo(() => _fakeSubscriptionService.ValidateSubscriptionRequest(A<SubscriptionRequest>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure> { validationMessage }));
-
-            var result = (BadRequestObjectResult)await _controller.Post(_fakeD365PayloadDetails);
-            var errors = (ErrorDescription)result.Value;
-
-            Assert.AreEqual(400, result.StatusCode);
-            Assert.AreEqual("subscriptionId cannot be blank or null.", errors.Errors.Single().Description);
+            Assert.AreEqual("D365Payload InputParameters cannot be blank or null.", errors.Errors.Single().Description);
         }
 
         [Test]
         public async Task WhenValidSubscriptionRequest_ThenPostReturnsAcceptedResponse()
         {
-            A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
+            A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365PayloadValidation>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
 
             A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
-
-            A.CallTo(() => _fakeSubscriptionService.ValidateSubscriptionRequest(A<SubscriptionRequest>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
-
+            
             var result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
 
             Assert.AreEqual(StatusCodes.Status202Accepted, result.StatusCode);

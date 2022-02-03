@@ -28,7 +28,10 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         [HttpPost]
         public async virtual Task<IActionResult> Post([FromBody] D365Payload d365Payload)
         {
-            if (d365Payload.InputParameters == null && d365Payload.PostEntityImages == null && d365Payload.CorrelationId == null)
+            D365PayloadValidation d365PayloadValidation = new D365PayloadValidation(); 
+            d365PayloadValidation.D365Payload = d365Payload;
+
+            if (d365Payload.CorrelationId == null && d365Payload.InputParameters == null && d365Payload.PostEntityImages == null)
             {
                 var error = new List<Error>
                         {
@@ -41,7 +44,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
                 return BuildBadRequestErrorResponse(error);
             }
 
-            var validationD365PayloadResult = await _subscriptionService.ValidateD365PayloadRequest(d365Payload);
+            var validationD365PayloadResult = await _subscriptionService.ValidateD365PayloadRequest(d365PayloadValidation);
 
             if (!validationD365PayloadResult.IsValid && validationD365PayloadResult.HasBadRequestErrors(out _errors))
             {
@@ -49,13 +52,6 @@ namespace UKHO.ExternalNotificationService.API.Controllers
             }
 
             SubscriptionRequest subscription = _subscriptionService.ConvertToSubscriptionRequestModel(d365Payload);
-
-            var validationResult = await _subscriptionService.ValidateSubscriptionRequest(subscription);
-
-            if (!validationResult.IsValid && validationResult.HasBadRequestErrors(out _errors))
-            {
-                return BuildBadRequestErrorResponse(_errors);
-            }
 
             _logger.LogInformation(EventIds.LogRequest.ToEventId(), "Subscription request Accepted", d365Payload);
 
