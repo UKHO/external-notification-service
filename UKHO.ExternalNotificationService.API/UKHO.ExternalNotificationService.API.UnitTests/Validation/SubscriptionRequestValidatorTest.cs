@@ -9,10 +9,20 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
     public class SubscriptionRequestValidatorTest
     {
         private SubscriptionRequestValidator _subscriptionRequestValidator;
+        private SubscriptionRequest _subscriptionRequest;
 
         [SetUp]
         public void Setup()
         {
+            _subscriptionRequest = new SubscriptionRequest
+            {
+                D365CorrelationId = "6ea03f10-2672-46fb-92a1-5200f6a4fabc",
+                IsActive = true,
+                NotificationType = "Data test",
+                SubscriptionId = "246d71e7-1475-ec11-8943-002248818222",
+                WebhookUrl = "https://abc.com"
+            };
+
             _subscriptionRequestValidator = new SubscriptionRequestValidator();
         }
 
@@ -131,16 +141,14 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         [Test]
         public void WhenValidSubscriptionRequest_ThenReturnSuccess()
         {
-            var model = new SubscriptionRequest
-            {
-                D365CorrelationId = "6ea03f10-2672-46fb-92a1-5200f6a4fabc",
-                IsActive = true,
-                NotificationType = "Data test",
-                SubscriptionId = "246d71e7-1475-ec11-8943-002248818222",
-                WebhookUrl = "https://abc.com"
-            };
+            var result = _subscriptionRequestValidator.TestValidate(_subscriptionRequest);
+            Assert.AreEqual(0, result.Errors.Count);
+        }
 
-            var result = _subscriptionRequestValidator.TestValidate(model);
+        [Test]
+        public void WhenValidSubscriptionRequest_ThenValidateReturnSuccess()
+        {
+            var result = _subscriptionRequestValidator.Validate(_subscriptionRequest);
             Assert.AreEqual(0, result.Errors.Count);
         }
     }

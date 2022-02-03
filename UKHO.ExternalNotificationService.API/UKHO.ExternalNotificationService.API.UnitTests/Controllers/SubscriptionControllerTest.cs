@@ -49,7 +49,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored))
                            .Returns(new ValidationResult(new List<ValidationFailure> { validationMessage }));
 
-            var result = (BadRequestObjectResult)await _controller.Post(_fakeD365PayloadDetails);
+            var result = (BadRequestObjectResult)await _controller.Post(new D365Payload());
             var errors = (ErrorDescription)result.Value;
 
             Assert.AreEqual(400, result.StatusCode);
