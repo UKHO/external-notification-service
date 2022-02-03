@@ -2,7 +2,7 @@
 {
     public class D365Payload 
     {
-        public string D365CorrelationId { get; set; }
+        public string CorrelationId { get; set; }
         public string OperationCreatedOn { get; set; }
         public EntityImage[] PostEntityImages { get; set; }
         public InputParameter[] InputParameters { get; set; }
