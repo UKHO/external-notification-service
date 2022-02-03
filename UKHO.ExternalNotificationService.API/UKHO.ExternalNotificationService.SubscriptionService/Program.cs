@@ -48,22 +48,20 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                     builder.AddJsonFile($"appsettings.{environmentName}.json", optional: true);
                 }
 
+                //Add environment variables
+                builder.AddEnvironmentVariables();
+
                 var tempConfig = builder.Build();
                 string kvServiceUri = tempConfig["KeyVaultSettings:ServiceUri"];
                 if (!string.IsNullOrWhiteSpace(kvServiceUri))
                 {
-                    var secretClient = new SecretClient(new Uri(kvServiceUri), new DefaultAzureCredential());
-                    builder.AddAzureKeyVault(secretClient, new KeyVaultSecretManager());
+                    builder.AddAzureKeyVault(new Uri(kvServiceUri), new DefaultAzureCredential());
                 }
 
 #if DEBUG
                 //Add development overrides configuration
                 builder.AddJsonFile("appsettings.local.overrides.json", true, true);
 #endif
-
-                //Add environment variables
-                builder.AddEnvironmentVariables();
-
                 Program.ConfigurationBuilder = builder.Build();
             })
              .ConfigureLogging((hostContext, builder) =>
@@ -86,7 +84,6 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                  {
                      builder.AddApplicationInsightsWebJobs(o => o.InstrumentationKey = instrumentationKey);
                  }
-
                  EventHubLoggingConfiguration eventhubConfig = ConfigurationBuilder.GetSection("EventHubLoggingConfiguration").Get<EventHubLoggingConfiguration>();
 
                  if (!string.IsNullOrWhiteSpace(eventhubConfig.ConnectionString))
@@ -113,16 +110,12 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
              })
               .ConfigureServices((hostContext, services) =>
               {
-                  var buildServiceProvider = services.BuildServiceProvider();
-
                   services.Configure<EnsSubscriptionStorageConfiguration>(ConfigurationBuilder.GetSection("EnsSubscriptionStorageConfiguration"));
                   services.Configure<QueuesOptions>(ConfigurationBuilder.GetSection("QueuesOptions"));
-
               })
               .ConfigureWebJobs(b =>
               {
                   b.AddAzureStorageCoreServices();
-                  ////  AddAzureStorage();
                   b.AddAzureStorageQueues();
               });
 
