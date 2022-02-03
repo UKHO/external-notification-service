@@ -14,13 +14,17 @@ namespace UKHO.ExternalNotificationService.API.Validation
     {
         public D365PayloadValidator()
         {
+            RuleFor(v => v.CorrelationId).NotNull().NotEmpty()
+              .WithErrorCode(HttpStatusCode.BadRequest.ToString())
+              .WithMessage("CorrelationId cannot be blank or null.");
+
             RuleFor(v => v.InputParameters).NotNull()
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
-                .WithMessage("inputParameters cannot be null.");
+                .WithMessage("InputParameters cannot be null.");
 
             RuleFor(v => v.PostEntityImages).NotNull()
                .WithErrorCode(HttpStatusCode.BadRequest.ToString())
-               .WithMessage("postEntityImages cannot be null.");
+               .WithMessage("PostEntityImages cannot be null.");
         }
         Task<ValidationResult> ID365PayloadValidator.Validate(D365Payload d365Payload)
         {

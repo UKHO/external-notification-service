@@ -17,6 +17,8 @@ namespace UKHO.ExternalNotificationService.API.Controllers
     {
         private readonly ILogger<SubscriptionController> _logger;
         private readonly ISubscriptionService _subscriptionService;
+        private List<Error> _errors = null;
+
         public SubscriptionController(IHttpContextAccessor contextAccessor, ILogger<SubscriptionController> logger, ISubscriptionService subscriptionService) : base(contextAccessor, logger)
         {
             _logger = logger;
@@ -26,7 +28,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         [HttpPost]
         public async virtual Task<IActionResult> Post([FromBody] D365Payload d365Payload)
         {
-            if (d365Payload.OperationCreatedOn == null && d365Payload.InputParameters == null && d365Payload.PostEntityImages == null && d365Payload.CorrelationId == null)
+            if (d365Payload.InputParameters == null && d365Payload.PostEntityImages == null && d365Payload.CorrelationId == null)
             {
                 var error = new List<Error>
                         {
@@ -41,28 +43,18 @@ namespace UKHO.ExternalNotificationService.API.Controllers
 
             var validationD365PayloadResult = await _subscriptionService.ValidateD365PayloadRequest(d365Payload);
 
-            if (!validationD365PayloadResult.IsValid)
+            if (!validationD365PayloadResult.IsValid && validationD365PayloadResult.HasBadRequestErrors(out _errors))
             {
-                List<Error> errors;
-
-                if (validationD365PayloadResult.HasBadRequestErrors(out errors))
-                {
-                    return BuildBadRequestErrorResponse(errors);
-                }
+                return BuildBadRequestErrorResponse(_errors);
             }
 
             SubscriptionRequest subscription = _subscriptionService.ConvertToSubscriptionRequestModel(d365Payload);
 
             var validationResult = await _subscriptionService.ValidateSubscriptionRequest(subscription);
 
-            if (!validationResult.IsValid)
+            if (!validationResult.IsValid && validationResult.HasBadRequestErrors(out _errors))
             {
-                List<Error> errors;
-
-                if (validationResult.HasBadRequestErrors(out errors))
-                {
-                    return BuildBadRequestErrorResponse(errors);
-                }
+                return BuildBadRequestErrorResponse(_errors);
             }
 
             _logger.LogInformation(EventIds.LogRequest.ToEventId(), "Subscription request Accepted", d365Payload);

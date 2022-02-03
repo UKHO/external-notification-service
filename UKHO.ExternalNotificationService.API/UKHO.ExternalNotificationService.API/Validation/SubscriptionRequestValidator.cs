@@ -6,38 +6,43 @@ using UKHO.ExternalNotificationService.Common.Models.Request;
 
 namespace UKHO.ExternalNotificationService.API.Validation
 {
-    public interface ISubscriptionRequestMessageValidator
+    public interface ISubscriptionRequestValidator
     {
         Task<ValidationResult> Validate(SubscriptionRequest subscriptionRequest);
     }
-    public class SubscriptionRequestMessageValidator : AbstractValidator<SubscriptionRequest>, ISubscriptionRequestMessageValidator
+    public class SubscriptionRequestValidator : AbstractValidator<SubscriptionRequest>, ISubscriptionRequestValidator
     {
-        public SubscriptionRequestMessageValidator()
+        public SubscriptionRequestValidator()
         {
+            RuleFor(p => p.D365CorrelationId).NotEmpty().NotNull()
+                .Must(ru => !string.IsNullOrWhiteSpace(ru))
+                .When(ru => ru != null)
+                .WithErrorCode(HttpStatusCode.BadRequest.ToString())
+                .WithMessage("D365CorrelationId cannot be blank or null.");
+
             RuleFor(p => p.SubscriptionId).NotEmpty().NotNull()
                 .Must(ru => !string.IsNullOrWhiteSpace(ru))
                 .When(ru => ru != null)
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
-                .WithMessage("subscriptionId cannot be blank or null.");
+                .WithMessage("SubscriptionId cannot be blank or null.");
 
             RuleFor(p => p.NotificationType).NotEmpty().NotNull()
                 .Must(ru => !string.IsNullOrWhiteSpace(ru))
                 .When(ru => ru != null)
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
-                .WithMessage("notificationType cannot be blank or null.");
+                .WithMessage("NotificationType cannot be blank or null.");
 
             RuleFor(p => p.IsActive).NotEmpty().NotNull()
-                .Must(x => x == false || x == true)
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
-                .WithMessage("isActive cannot be blank or null.");
+                .WithMessage("IsActive cannot be blank or null.");
 
             RuleFor(p => p.WebhookUrl).NotEmpty().NotNull()
                 .Must(ru => !string.IsNullOrWhiteSpace(ru))
                 .When(ru => ru != null)
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
-                .WithMessage("webhookUrl cannot be blank or null.");
+                .WithMessage("WebhookUrl cannot be blank or null.");
         }
-        Task<ValidationResult> ISubscriptionRequestMessageValidator.Validate(SubscriptionRequest subscriptionRequest)
+        Task<ValidationResult> ISubscriptionRequestValidator.Validate(SubscriptionRequest subscriptionRequest)
         {
             return ValidateAsync(subscriptionRequest);
         }
