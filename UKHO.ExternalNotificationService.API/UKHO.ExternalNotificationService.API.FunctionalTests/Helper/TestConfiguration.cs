@@ -17,7 +17,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
                                 .AddJsonFile("appsettings.json", false)
                                 .Build();
 
-            ensApiBaseUrl = ConfigurationRoot.GetSection("EnsApiBaseUrl").Value;
+            ensApiBaseUrl = ConfigurationRoot.GetSection("EnsApiUrl").Value;
             payloadFolder = ConfigurationRoot.GetSection("PayloadFolder").Value;
             payloadFileName = ConfigurationRoot.GetSection("PayloadFileName").Value;
             
