@@ -6,7 +6,7 @@ using UKHO.ExternalNotificationService.Common.Configuration;
 
 namespace UKHO.ExternalNotificationService.API.Services
 {
-    public class SubscriptionService
+    public class SubscriptionService : ISubscriptionService
     {
         private readonly IOptions<EnsSubscriptionStorageConfiguration> _ensStorageConfiguration;
 
