@@ -54,23 +54,10 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         }
 
         [Test]
-        public void WhenValidRequestWithEmptyInputParameters_ThenConvertToSubscriptionRequestReturnsOkrequest()
+        public void WhenValidRequestWithEmptyInputParametersValue_ThenConvertToSubscriptionRequestReturnsOkrequest()
         {
             _fakeD365PayloadDetails.InputParameters[0].value.Attributes = new D365Attribute[] { };
             _fakeD365PayloadDetails.InputParameters[0].value.FormattedValues = new FormattedValue[] { };
-
-            var result = _subscriptionService.ConvertToSubscriptionRequestModel(_fakeD365PayloadDetails);
-
-            Assert.IsInstanceOf<SubscriptionRequest>(result);
-            Assert.AreEqual(_fakeSubscriptionRequest.SubscriptionId, result.SubscriptionId);
-            Assert.AreEqual(_fakeSubscriptionRequest.NotificationType, result.NotificationType);
-        }
-
-        [Test]
-        public void WhenValidRequestWithEmptyPostEntityImagesValue_ThenConvertToSubscriptionRequestReturnsOkrequest()
-        {
-            _fakeD365PayloadDetails.PostEntityImages[0].value.Attributes = new D365Attribute[] { };
-            _fakeD365PayloadDetails.PostEntityImages[0].value.FormattedValues = new FormattedValue[] { };
 
             var result = _subscriptionService.ConvertToSubscriptionRequestModel(_fakeD365PayloadDetails);
 
@@ -91,9 +78,10 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         }
 
         [Test]
-        public void WhenValidRequestWithEmptyPostEntityImagesAttributes_ThenConvertToSubscriptionRequestReturnsOkrequest()
+        public void WhenValidRequestWithEmptyPostEntityImagesValue_ThenConvertToSubscriptionRequestReturnsOkrequest()
         {
             _fakeD365PayloadDetails.PostEntityImages[0].value.Attributes = new D365Attribute[] { new D365Attribute { } };
+            _fakeD365PayloadDetails.PostEntityImages[0].value.FormattedValues = new FormattedValue[] { new FormattedValue { } };
             var result = _subscriptionService.ConvertToSubscriptionRequestModel(_fakeD365PayloadDetails);
 
             Assert.IsInstanceOf<SubscriptionRequest>(result);

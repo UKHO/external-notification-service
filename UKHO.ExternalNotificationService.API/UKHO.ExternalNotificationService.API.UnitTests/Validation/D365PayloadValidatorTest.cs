@@ -81,12 +81,60 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         }
 
         [Test]
-        public void WhenNullSubscriptionIdInRequest_ThenReturnBadRequest()
+        public void WhenNullSubscriptionIdInInputParameters_ThenReturnBadRequest()
         {
             var model = new D365PayloadValidation
             {
-                D365Payload = new D365Payload { InputParameters = new InputParameter[] { }, PostEntityImages = new EntityImage[] { } }
+                D365Payload = _d365Payload
             };
+            model.D365Payload.InputParameters[0].value.Attributes[1].value = null;
+
+            var result = _d365PayloadValidator.TestValidate(model);
+            result.ShouldHaveValidationErrorFor("SubscriptionId");
+
+            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "SubscriptionId cannot be blank or null."));
+        }
+
+        [Test]
+        public void WhenEmptySubscriptionIdInInputParameters_ThenReturnBadRequest()
+        {
+            var model = new D365PayloadValidation
+            {
+                D365Payload = _d365Payload
+            };
+            model.D365Payload.InputParameters[0].value.Attributes[1].value = string.Empty;
+
+            var result = _d365PayloadValidator.TestValidate(model);
+            result.ShouldHaveValidationErrorFor("SubscriptionId");
+
+            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "SubscriptionId cannot be blank or null."));
+        }
+
+        [Test]
+        public void WhenNullSubscriptionIdInPostEntityImages_ThenReturnBadRequest()
+        {
+            var model = new D365PayloadValidation
+            {
+                D365Payload = _d365Payload
+            };
+            model.D365Payload.InputParameters[0] = new InputParameter{ };
+            model.D365Payload.PostEntityImages[0].value.Attributes[1].value = null;
+
+            var result = _d365PayloadValidator.TestValidate(model);
+            result.ShouldHaveValidationErrorFor("SubscriptionId");
+
+            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "SubscriptionId cannot be blank or null."));
+        }
+
+        [Test]
+        public void WhenEmptySubscriptionIdInPostEntityImages_ThenReturnBadRequest()
+        {
+            var model = new D365PayloadValidation
+            {
+                D365Payload = _d365Payload
+            };
+            model.D365Payload.InputParameters[0] = new InputParameter { };
+            model.D365Payload.PostEntityImages[0].value.Attributes[1].value = string.Empty;
 
             var result = _d365PayloadValidator.TestValidate(model);
             result.ShouldHaveValidationErrorFor("SubscriptionId");
@@ -99,7 +147,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             var model = new D365PayloadValidation
             {
-                D365Payload = new D365Payload { InputParameters = new InputParameter[] { }, PostEntityImages = new EntityImage[] { } }
+                D365Payload = new D365Payload { InputParameters = new InputParameter[0] { }, PostEntityImages = new EntityImage[] { } }
             };
 
             var result = _d365PayloadValidator.TestValidate(model);
@@ -109,12 +157,59 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         }
 
         [Test]
-        public void WhenNullWebhookUrlInRequest_ThenReturnBadRequest()
+        public void WhenNullWebhookUrlInInputParameters_ThenReturnBadRequest()
         {
             var model = new D365PayloadValidation
             {
-                D365Payload = new D365Payload {InputParameters = new InputParameter[] { } , PostEntityImages = new EntityImage[] { } }
+                D365Payload = _d365Payload
             };
+            model.D365Payload.InputParameters[0].value.Attributes[0].value = null;
+
+            var result = _d365PayloadValidator.TestValidate(model);
+            result.ShouldHaveValidationErrorFor("WebhookUrl");
+
+            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "WebhookUrl cannot be blank or null."));
+        }
+
+        [Test]
+        public void WhenEmptyWebhookUrlInInputParameters_ThenReturnBadRequest()
+        {
+            var model = new D365PayloadValidation
+            {
+                D365Payload = _d365Payload
+            };
+            model.D365Payload.InputParameters[0].value.Attributes[0].value = string.Empty;
+
+            var result = _d365PayloadValidator.TestValidate(model);
+            result.ShouldHaveValidationErrorFor("WebhookUrl");
+
+            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "WebhookUrl cannot be blank or null."));
+        }
+
+        public void WhenNullWebhookUrlPostEntityImages_ThenReturnBadRequest()
+        {
+            var model = new D365PayloadValidation
+            {
+                D365Payload = _d365Payload
+            };
+            model.D365Payload.InputParameters[0] = new InputParameter { };
+            model.D365Payload.PostEntityImages[0].value.Attributes[0].value = null;
+
+            var result = _d365PayloadValidator.TestValidate(model);
+            result.ShouldHaveValidationErrorFor("WebhookUrl");
+
+            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "WebhookUrl cannot be blank or null."));
+        }
+
+        [Test]
+        public void WhenEmptyWebhookUrlInPostEntityImages_ThenReturnBadRequest()
+        {
+            var model = new D365PayloadValidation
+            {
+                D365Payload = _d365Payload
+            };
+            model.D365Payload.InputParameters[0] = new InputParameter { };
+            model.D365Payload.PostEntityImages[0].value.Attributes[0].value = string.Empty;
 
             var result = _d365PayloadValidator.TestValidate(model);
             result.ShouldHaveValidationErrorFor("WebhookUrl");
@@ -148,7 +243,12 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
                                                                                new D365Attribute { key = "ukho_externalnotificationid", value = "246d71e7-1475-ec11-8943-002248818222" } },
                                                                 FormattedValues = new FormattedValue[] { new FormattedValue { key = "ukho_subscriptiontype", value = "Data test" },
                                                                                   new FormattedValue { key = "statecode", value = "Active" } }} } },
-                PostEntityImages = new EntityImage[] { },
+                PostEntityImages = new EntityImage[] { new EntityImage {
+                                                            value = new EntityImageValue {
+                                                                Attributes =   new D365Attribute[] { new D365Attribute { key = "ukho_webhookurl", value = "https://abc.com" },
+                                                                               new D365Attribute { key = "ukho_externalnotificationid", value = "246d71e7-1475-ec11-8943-002248818222" } },
+                                                                FormattedValues = new FormattedValue[] { new FormattedValue { key = "ukho_subscriptiontype", value = "Data test" },
+                                                                                  new FormattedValue { key = "statecode", value = "Active" } }} } },
                 OperationCreatedOn = "/Date(1642149320000+0000)/"
             };
         }
