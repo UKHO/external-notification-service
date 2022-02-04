@@ -30,9 +30,9 @@ module "webapp_service" {
     "ASPNETCORE_ENVIRONMENT"                                   = local.env_name
     "WEBSITE_RUN_FROM_PACKAGE"                                 = "1"
     "WEBSITE_ENABLE_SYNC_UPDATE_SITE"                          = "true"
-    "EnsEventGridDomainConfiguration:ResourceGroup"            = azurerm_resource_group.rg.name
-    "EnsEventGridDomainConfiguration:EventGridDomainName"      = module.eventgriddomain.event_grid_domain_name
-    "EnsEventGridDomainConfiguration:EventGridDomainEndpoint"  = module.eventgriddomain.event_grid_domain_endpoint
+    "EventGridDomainConfiguration:ResourceGroup"            = azurerm_resource_group.rg.name
+    "EventGridDomainConfiguration:EventGridDomainName"      = module.eventgriddomain.event_grid_domain_name
+    "EventGridDomainConfiguration:EventGridDomainEndpoint"  = module.eventgriddomain.event_grid_domain_endpoint
   }
   tags                      = local.tags
 }
@@ -50,11 +50,11 @@ module "key_vault" {
   secrets = {
         "EventHubLoggingConfiguration--ConnectionString"               = module.eventhub.log_primary_connection_string
         "EventHubLoggingConfiguration--EntityPath"                     = module.eventhub.entity_path
-        "EnsSubscriptionStorageConfiguration--StorageAccountName"      = module.storage.name
-        "EnsSubscriptionStorageConfiguration--StorageAccountKey"       = module.storage.primary_access_key
-        "EnsSubscriptionStorageConfiguration--StorageConnectionString" = module.storage.connection_string
-        "EnsSubscriptionStorageConfiguration--QueueName"               = module.storage.event_storage_queue
-        "EnsEventGridDomainConfiguration--EventGridDomainAccessKey"    = module.eventgriddomain.event_grid_domain_primary_access_key
+        "SubscriptionStorageConfiguration--StorageAccountName"      = module.storage.name
+        "SubscriptionStorageConfiguration--StorageAccountKey"       = module.storage.primary_access_key
+        "SubscriptionStorageConfiguration--StorageConnectionString" = module.storage.connection_string
+        "SubscriptionStorageConfiguration--QueueName"               = module.storage.event_storage_queue
+        "EventGridDomainConfiguration--EventGridDomainAccessKey"    = module.eventgriddomain.event_grid_domain_primary_access_key
       }
   tags                = local.tags
 }
