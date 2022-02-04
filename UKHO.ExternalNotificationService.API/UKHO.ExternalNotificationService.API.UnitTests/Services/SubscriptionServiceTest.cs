@@ -54,9 +54,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         }
 
         [Test]
-        public void WhenValidRequestWithEmptyInputParametersAttributes_ThenConvertToSubscriptionRequestReturnsOkrequest()
+        public void WhenValidRequestWithEmptyInputParameters_ThenConvertToSubscriptionRequestReturnsOkrequest()
         {
-            _fakeD365PayloadDetails.InputParameters[0].value.Attributes = new D365Attribute[] { new D365Attribute { } };
+            _fakeD365PayloadDetails.InputParameters[0].value.Attributes = new D365Attribute[] { };
+            _fakeD365PayloadDetails.InputParameters[0].value.FormattedValues = new FormattedValue[] { };
+
             var result = _subscriptionService.ConvertToSubscriptionRequestModel(_fakeD365PayloadDetails);
 
             Assert.IsInstanceOf<SubscriptionRequest>(result);
@@ -65,9 +67,9 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         }
 
         [Test]
-        public void WhenValidRequestWithEmptyInputParametersFormattedValues_ThenConvertToSubscriptionRequestReturnsOkrequest()
+        public void WhenValidRequestWithEmptyPostEntity_ThenConvertToSubscriptionRequestReturnsOkrequest()
         {
-            _fakeD365PayloadDetails.InputParameters[0].value.FormattedValues = new FormattedValue[] { new FormattedValue { } };
+            _fakeD365PayloadDetails.PostEntityImages = new EntityImage[]{ } ;
             var result = _subscriptionService.ConvertToSubscriptionRequestModel(_fakeD365PayloadDetails);
 
             Assert.IsInstanceOf<SubscriptionRequest>(result);
