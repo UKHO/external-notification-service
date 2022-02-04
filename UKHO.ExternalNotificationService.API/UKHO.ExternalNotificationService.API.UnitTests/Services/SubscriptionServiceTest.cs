@@ -67,6 +67,19 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         }
 
         [Test]
+        public void WhenValidRequestWithEmptyPostEntityImagesValue_ThenConvertToSubscriptionRequestReturnsOkrequest()
+        {
+            _fakeD365PayloadDetails.PostEntityImages[0].value.Attributes = new D365Attribute[] { };
+            _fakeD365PayloadDetails.PostEntityImages[0].value.FormattedValues = new FormattedValue[] { };
+
+            var result = _subscriptionService.ConvertToSubscriptionRequestModel(_fakeD365PayloadDetails);
+
+            Assert.IsInstanceOf<SubscriptionRequest>(result);
+            Assert.AreEqual(_fakeSubscriptionRequest.SubscriptionId, result.SubscriptionId);
+            Assert.AreEqual(_fakeSubscriptionRequest.NotificationType, result.NotificationType);
+        }
+
+        [Test]
         public void WhenValidRequestWithEmptyPostEntity_ThenConvertToSubscriptionRequestReturnsOkrequest()
         {
             _fakeD365PayloadDetails.PostEntityImages = new EntityImage[]{ } ;
