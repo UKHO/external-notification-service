@@ -85,7 +85,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             var model = new D365PayloadValidation
             {
-                D365Payload = new D365Payload { }
+                D365Payload = new D365Payload { InputParameters = new InputParameter[] { }, PostEntityImages = new EntityImage[] { } }
             };
 
             var result = _d365PayloadValidator.TestValidate(model);
@@ -99,7 +99,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             var model = new D365PayloadValidation
             {
-                D365Payload = new D365Payload { }
+                D365Payload = new D365Payload { InputParameters = new InputParameter[] { }, PostEntityImages = new EntityImage[] { } }
             };
 
             var result = _d365PayloadValidator.TestValidate(model);
@@ -113,7 +113,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             var model = new D365PayloadValidation
             {
-                D365Payload = new D365Payload { }
+                D365Payload = new D365Payload {InputParameters = new InputParameter[] { } , PostEntityImages = new EntityImage[] { } }
             };
 
             var result = _d365PayloadValidator.TestValidate(model);
