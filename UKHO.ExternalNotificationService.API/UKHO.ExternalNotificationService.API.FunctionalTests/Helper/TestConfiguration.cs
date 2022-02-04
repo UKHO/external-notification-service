@@ -9,8 +9,6 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         public string payloadFolder;
         public string payloadFileName;
 
-
-
         public TestConfiguration()
         {
             ConfigurationRoot = new ConfigurationBuilder()
