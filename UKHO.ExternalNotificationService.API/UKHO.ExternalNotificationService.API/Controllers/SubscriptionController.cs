@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using UKHO.ExternalNotificationService.API.Models;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using UKHO.ExternalNotificationService.API.Services;
@@ -12,8 +14,6 @@ using UKHO.ExternalNotificationService.Common.Helper;
 using UKHO.ExternalNotificationService.Common.Logging;
 using UKHO.ExternalNotificationService.Common.Models.Response;
 using UKHO.ExternalNotificationService.Common.Storage;
-using UKHO.ExternalNotificationService.API.Models;
-using UKHO.ExternalNotificationService.Common.Models.Request;
 
 namespace UKHO.ExternalNotificationService.API.Controllers
 {
@@ -36,18 +36,18 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         }
 
         [HttpPost]
-        public async virtual Task<IActionResult> Post([FromBody] JObject jobj)
+        public virtual async Task<IActionResult> Post([FromBody] D365Payload objPayload)
         {
-            SubscriptionRequest subscription = ConvertToSubscriptionRequestModel(jobj);
+            SubscriptionRequest subscription = ConvertToSubscriptionRequestModel(objPayload);
             var subscriptionMessage = _subscriptionService.GetSubscriptionRequestMessage(subscription);
 
             string storageAccountConnectionString = _subscriptionStorageService.GetStorageAccountConnectionString(_ensStorageConfiguration.Value.StorageAccountName, _ensStorageConfiguration.Value.StorageAccountKey);
             await _azureMessageQueueHelper.AddQueueMessage(storageAccountConnectionString, _ensStorageConfiguration.Value.QueueName, subscriptionMessage, GetCurrentCorrelationId());
-
-            _logger.LogInformation(EventIds.LogRequest.ToEventId(), "Subscription request Accepted", jobj);
+            _logger.LogInformation(EventIds.Accepted.ToEventId(), "Subscription request Accepted for D365Payload:{JsonConvert.SerializeObject(objPayload)} with _X-Correlation-ID:{correlationId}", JsonConvert.SerializeObject(objPayload), GetCurrentCorrelationId());
             return GetEnsResponse(new ExternalNotificationServiceResponse { HttpStatusCode = HttpStatusCode.Accepted });
         }
-        private static SubscriptionRequest ConvertToSubscriptionRequestModel(JObject jobj)
+
+        private static SubscriptionRequest ConvertToSubscriptionRequestModel(D365Payload objPayload)
         {
             return new SubscriptionRequest()
             {
@@ -55,8 +55,8 @@ namespace UKHO.ExternalNotificationService.API.Controllers
                 IsActive = true,
                 WebhookUrl = Convert.ToString(""),
                 NotificationType = Convert.ToString(""),
-                CorrelationId = ""
+                CorrelationId = objPayload.CorrelationId
             };
-        }      
+        }
     }
 }

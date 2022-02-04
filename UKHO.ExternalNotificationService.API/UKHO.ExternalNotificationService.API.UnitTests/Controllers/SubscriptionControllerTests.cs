@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using UKHO.ExternalNotificationService.API.Controllers;
 using UKHO.ExternalNotificationService.Common.Helper;
@@ -12,6 +11,7 @@ using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Storage;
 using UKHO.ExternalNotificationService.Common.Models.Request;
+using UKHO.ExternalNotificationService.API.Models;
 
 namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 {
@@ -42,14 +42,32 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         }
 
         [Test]
-        public async Task TestSubscription()
+        public async Task WhenPostValidPayload_ThenRecieveSuccessfulResponse()
         {
-            dynamic jsonObject = new JObject();
             A.CallTo(() => _fakeSubscriptionStorageService.GetStorageAccountConnectionString(A<string>.Ignored, A<string>.Ignored))
-                            .Returns("");
+                           .Returns("");
             A.CallTo(() => _fakeAzureMessageQueueHelper.AddQueueMessage(A<string>.Ignored, A<string>.Ignored, A<SubscriptionRequestMessage>.Ignored, A<string>.Ignored));
-            var result = (StatusCodeResult)await _controller.Post(jsonObject);
+            var result = (StatusCodeResult)await _controller.Post(GetD365Payload());
             Assert.AreEqual(StatusCodes.Status202Accepted, result.StatusCode);
+        }
+
+        private static D365Payload GetD365Payload()
+        {
+            return new D365Payload
+            {
+                CorrelationId = "7b4cdb10-ddfd-4ed6-b2be-d1543d8b7272",
+                OperationCreatedOn = "Date(1000097000 + 0000)",
+                InputParameters = new InputParameter[] { new InputParameter { Value = new InputParameterValue
+                {
+                    Attributes = new D365Attribute[] { new D365Attribute { Key = "subscribedacc", Value = "test" }, new D365Attribute{ Key = "test_name", Value = "Clay" }},
+                    FormattedValues = new FormattedValue[] { new FormattedValue { Key ="state", Value = "Active"}, new FormattedValue{ Key = "acc", Value = "A"}}
+                }}},
+                PostEntityImages = new EntityImage[] { new EntityImage { Key = "AsynchronousTestName" , ImageValue = new EntityImageValue
+                {
+                    Attributes = new D365Attribute[] { new D365Attribute { Key = "subscribedacc", Value = "test" }, new D365Attribute{ Key = "test_name", Value = "Clay" }},
+                    FormattedValues = new FormattedValue[] { new FormattedValue { Key ="state", Value = "Active"}, new FormattedValue{ Key = "acc", Value = "A"}}
+                }}}
+            };
         }
     }
 }
