@@ -54,7 +54,29 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         }
 
         [Test]
-        public void WhenValidRequestWithNullPostEntityImagesAttributes_ThenConvertToSubscriptionRequestModelRequestReturnsOkrequest()
+        public void WhenValidRequestWithEmptyInputParametersAttributes_ThenConvertToSubscriptionRequestReturnsOkrequest()
+        {
+            _fakeD365PayloadDetails.InputParameters[0].value.Attributes = new D365Attribute[] { new D365Attribute { } };
+            var result = _subscriptionService.ConvertToSubscriptionRequestModel(_fakeD365PayloadDetails);
+
+            Assert.IsInstanceOf<SubscriptionRequest>(result);
+            Assert.AreEqual(_fakeSubscriptionRequest.SubscriptionId, result.SubscriptionId);
+            Assert.AreEqual(_fakeSubscriptionRequest.NotificationType, result.NotificationType);
+        }
+
+        [Test]
+        public void WhenValidRequestWithEmptyInputParametersFormattedValues_ThenConvertToSubscriptionRequestReturnsOkrequest()
+        {
+            _fakeD365PayloadDetails.InputParameters[0].value.FormattedValues = new FormattedValue[] { new FormattedValue { } };
+            var result = _subscriptionService.ConvertToSubscriptionRequestModel(_fakeD365PayloadDetails);
+
+            Assert.IsInstanceOf<SubscriptionRequest>(result);
+            Assert.AreEqual(_fakeSubscriptionRequest.SubscriptionId, result.SubscriptionId);
+            Assert.AreEqual(_fakeSubscriptionRequest.NotificationType, result.NotificationType);
+        }
+
+        [Test]
+        public void WhenValidRequestWithEmptyPostEntityImagesAttributes_ThenConvertToSubscriptionRequestReturnsOkrequest()
         {
             _fakeD365PayloadDetails.PostEntityImages[0].value.Attributes = new D365Attribute[] { new D365Attribute { } };
             var result = _subscriptionService.ConvertToSubscriptionRequestModel(_fakeD365PayloadDetails);
@@ -65,7 +87,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         }
 
         [Test]
-        public void WhenValidRequestWithNullPostEntityImagesFormattedValues_ThenConvertToSubscriptionRequestModelRequestReturnsOkrequest()
+        public void WhenValidRequestWithEmptyPostEntityImagesFormattedValues_ThenConvertToSubscriptionRequestReturnsOkrequest()
         {
             _fakeD365PayloadDetails.PostEntityImages[0].value.FormattedValues = new FormattedValue[] { new FormattedValue { } };
             var result = _subscriptionService.ConvertToSubscriptionRequestModel(_fakeD365PayloadDetails);
@@ -76,7 +98,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         }
 
         [Test]
-        public void WhenValidSubscriptionRequest_ThenConvertToSubscriptionRequestModelRequestReturnsOkrequest()
+        public void WhenValidSubscriptionRequest_ThenConvertToSubscriptionRequestReturnsOkrequest()
         {
             var result =  _subscriptionService.ConvertToSubscriptionRequestModel(_fakeD365PayloadDetails);
 
