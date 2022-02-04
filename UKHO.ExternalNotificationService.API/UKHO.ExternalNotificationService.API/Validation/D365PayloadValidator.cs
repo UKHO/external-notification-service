@@ -19,7 +19,7 @@ namespace UKHO.ExternalNotificationService.API.Validation
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("D365Payload CorrelationId cannot be blank or null.");
 
-            RuleFor(v => v.D365Payload.InputParameters).NotNull()
+            RuleFor(v => v.D365Payload.InputParameters).NotNull().OverridePropertyName("InputParameters")
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("D365Payload InputParameters cannot be blank or null.");
 
@@ -27,19 +27,19 @@ namespace UKHO.ExternalNotificationService.API.Validation
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("D365Payload PostEntityImages cannot be blank or null.");
 
-            RuleFor(v => v.D365Payload).NotNull().OverridePropertyName("SubscriptionId")
+            RuleFor(v => v.D365Payload).NotNull().NotEmpty().OverridePropertyName("SubscriptionId")
                 .Must(x => x.IsValidSubscriptionId())
                 .When(ru => ru != null)
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("SubscriptionId cannot be blank or null.");
 
-            RuleFor(v => v.D365Payload).NotNull().OverridePropertyName("NotificationType")
+            RuleFor(v => v.D365Payload).NotNull().NotEmpty().OverridePropertyName("NotificationType")
                 .Must(x => x.IsValidNotificationType())
                 .When(ru => ru != null)
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("NotificationType cannot be blank or null.");
 
-            RuleFor(v => v.D365Payload).NotNull().OverridePropertyName("WebhookUrl")
+            RuleFor(v => v.D365Payload).NotNull().NotEmpty().OverridePropertyName("WebhookUrl")
                 .Must(x => x.IsValidWebhookUrl())
                 .When(ru => ru != null)
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())

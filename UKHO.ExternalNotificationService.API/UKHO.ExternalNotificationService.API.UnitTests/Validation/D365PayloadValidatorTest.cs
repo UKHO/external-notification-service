@@ -33,7 +33,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             };
 
             var result = _d365PayloadValidator.TestValidate(model);
-            ////result.ShouldHaveValidationErrorFor(fb => fb.D365Payload.CorrelationId);
+            result.ShouldHaveValidationErrorFor("CorrelationId");
 
             Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "D365Payload CorrelationId cannot be blank or null."));
         }
@@ -47,7 +47,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             };
 
             var result = _d365PayloadValidator.TestValidate(model);
-            ////result.ShouldHaveValidationErrorFor(fb => fb.D365Payload.CorrelationId);
+            result.ShouldHaveValidationErrorFor("CorrelationId");
 
             Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "D365Payload CorrelationId cannot be blank or null."));
         }
@@ -61,8 +61,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             };
 
             var result = _d365PayloadValidator.TestValidate(model);
-            result.ShouldHaveValidationErrorFor(fb => fb.D365Payload.InputParameters);
-            
+            result.ShouldHaveValidationErrorFor("InputParameters");
+
             Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "D365Payload InputParameters cannot be blank or null."));
         }
 
@@ -75,8 +75,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             };
 
             var result = _d365PayloadValidator.TestValidate(model);
+            result.ShouldHaveValidationErrorFor("PostEntityImages");
 
-            result.ShouldHaveValidationErrorFor(fb => fb.D365Payload.InputParameters);
             Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "D365Payload PostEntityImages cannot be blank or null."));
         }
 
@@ -103,9 +103,9 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
                 InputParameters = new InputParameter[] { new InputParameter {
                                                             value = new InputParameterValue {
                                                                 Attributes =   new D365Attribute[] { new D365Attribute { key = "ukho_webhookurl", value = "https://abc.com" },
-                                                                                new D365Attribute { key = "ukho_externalnotificationid", value = "246d71e7-1475-ec11-8943-002248818222" } },
+                                                                               new D365Attribute { key = "ukho_externalnotificationid", value = "246d71e7-1475-ec11-8943-002248818222" } },
                                                                 FormattedValues = new FormattedValue[] { new FormattedValue { key = "ukho_subscriptiontype", value = "Data test" },
-                                                                                    new FormattedValue { key = "statecode", value = "Active" } }} } },
+                                                                                  new FormattedValue { key = "statecode", value = "Active" } }} } },
                 PostEntityImages = new EntityImage[] { },
                 OperationCreatedOn = "/Date(1642149320000+0000)/"
             };

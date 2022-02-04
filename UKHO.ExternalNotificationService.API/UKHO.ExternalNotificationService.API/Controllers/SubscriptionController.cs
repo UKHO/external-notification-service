@@ -28,8 +28,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         [HttpPost]
         public async virtual Task<IActionResult> Post([FromBody] D365Payload d365Payload)
         {
-            D365PayloadValidation d365PayloadValidation = new D365PayloadValidation(); 
-            d365PayloadValidation.D365Payload = d365Payload;
+            var d365PayloadValidation = new D365PayloadValidation(){D365Payload = d365Payload};
 
             if (d365Payload.CorrelationId == null && d365Payload.InputParameters == null && d365Payload.PostEntityImages == null)
             {
