@@ -1,4 +1,6 @@
-﻿namespace UKHO.ExternalNotificationService.API.Models
+﻿using System.Text.Json.Serialization;
+
+namespace UKHO.ExternalNotificationService.API.Models
 {
     public class D365Payload 
     {
@@ -10,7 +12,8 @@
 
     public class InputParameter
     {
-        public InputParameterValue value { get; set; }
+        [JsonPropertyName("value")]
+        public InputParameterValue Value { get; set; }
     }
 
     public class InputParameterValue
@@ -21,19 +24,25 @@
 
     public class FormattedValue
     {
-        public string key { get; set; }
-        public object value { get; set; }
+        [JsonPropertyName("key")]
+        public string Key { get; set; }
+        [JsonPropertyName("value")]
+        public object Value { get; set; }
     }
 
     public class D365Attribute
     {
-        public string key { get; set; }
-        public object value { get; set; }
+        [JsonPropertyName("key")]
+        public string Key { get; set; }
+
+        [JsonPropertyName("value")]
+        public object Value { get; set; }
     }
 
     public class EntityImage
     {
-        public string key { get; set; }
+        [JsonPropertyName("key")]
+        public string Key { get; set; }
         public EntityImageValue ImageValue { get; set; }
     }
 

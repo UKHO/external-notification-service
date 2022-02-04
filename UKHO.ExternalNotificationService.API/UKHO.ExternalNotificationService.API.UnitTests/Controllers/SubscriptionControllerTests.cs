@@ -39,15 +39,15 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             {
                 CorrelationId = "7b4cdb10-ddfd-4ed6-b2be-d1543d8b7272",
                 OperationCreatedOn = "Date(1000097000 + 0000)",
-                InputParameters = new InputParameter[] { new InputParameter { value = new InputParameterValue
+                InputParameters = new InputParameter[] { new InputParameter { Value = new InputParameterValue
                 {
-                    Attributes = new D365Attribute[] { new D365Attribute { key = "subscribedacc", value = "test" }, new D365Attribute{ key = "test_name", value = "Clay" }},
-                    FormattedValues = new FormattedValue[] { new FormattedValue { key ="state", value = "Active"}, new FormattedValue{ key = "acc", value = "A"}}
+                    Attributes = new D365Attribute[] { new D365Attribute { Key = "subscribedacc", Value = "test" }, new D365Attribute{ Key = "test_name", Value = "Clay" }},
+                    FormattedValues = new FormattedValue[] { new FormattedValue { Key ="state", Value = "Active"}, new FormattedValue{ Key = "acc", Value = "A"}}
                 }}},
-                PostEntityImages = new EntityImage[] { new EntityImage { key = "AsynchronousTestName" , ImageValue = new EntityImageValue
+                PostEntityImages = new EntityImage[] { new EntityImage { Key = "AsynchronousTestName" , ImageValue = new EntityImageValue
                 {
-                    Attributes = new D365Attribute[] { new D365Attribute { key = "subscribedacc", value = "test" }, new D365Attribute{ key = "test_name", value = "Clay" }},
-                    FormattedValues = new FormattedValue[] { new FormattedValue { key ="state", value = "Active"}, new FormattedValue{ key = "acc", value = "A"}}
+                    Attributes = new D365Attribute[] { new D365Attribute { Key = "subscribedacc", Value = "test" }, new D365Attribute{ Key = "test_name", Value = "Clay" }},
+                    FormattedValues = new FormattedValue[] { new FormattedValue { Key ="state", Value = "Active"}, new FormattedValue{ Key = "acc", Value = "A"}}
                 }}}
             };
         }
