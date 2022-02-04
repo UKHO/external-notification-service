@@ -27,7 +27,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         }
 
         [Test]
-        public async Task TestSubscription()
+        public async Task WhenPostValidPayload_ThenRecieveSuccessfulResponse()
         {
             var result = (StatusCodeResult)await _controller.Post(GetD365Payload());
             Assert.AreEqual(StatusCodes.Status202Accepted, result.StatusCode);
