@@ -57,6 +57,14 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// 900015 - Azure blob storage for external notification service is unhealthy.
         /// </summary>
         AzureBlobStorageIsUnhealthy = 900015,
+        /// <summary>
+        /// 900016 - Azure message queue for external notification service is healthy.
+        /// </summary>
+        AzureMessageQueueIsHealthy = 900016,
+        /// <summary>
+        /// 900017 - Azure message queue for external notification service is unhealthy.
+        /// </summary>
+        AzureMessageQueueIsUnhealthy = 900017,
     }
 
     public static class EventIdExtensions

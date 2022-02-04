@@ -4,7 +4,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace UKHO.ExternalNotificationService.Common.Helpers
 {
-    public interface IAzureBlobStorageClient
+    public interface IAzureBlobStorageHelper
     {
         Task<HealthCheckResult> CheckBlobContainerHealth(string storageAccountConnectionString, string containerName);
     }

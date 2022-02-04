@@ -1,5 +1,4 @@
 ﻿
-
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
@@ -9,7 +8,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 namespace UKHO.ExternalNotificationService.Common.Helpers
 {
     [ExcludeFromCodeCoverage]
-    public class AzureBlobStorageClient : IAzureBlobStorageClient
+    public class AzureBlobStorageHelper : IAzureBlobStorageHelper
     {
         public async Task<HealthCheckResult> CheckBlobContainerHealth(string storageAccountConnectionString, string containerName)
         {

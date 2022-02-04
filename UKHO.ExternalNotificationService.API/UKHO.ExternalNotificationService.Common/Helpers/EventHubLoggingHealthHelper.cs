@@ -14,11 +14,11 @@ using UKHO.ExternalNotificationService.Common.Logging;
 namespace UKHO.ExternalNotificationService.Common.HealthCheck
 {
     [ExcludeFromCodeCoverage]
-    public class EventHubLoggingHealthClient : IEventHubLoggingHealthClient
+    public class EventHubLoggingHealthHelper : IEventHubLoggingHealthHelper
     {
         private readonly IOptions<EventHubLoggingConfiguration> _eventHubLoggingConfiguration;
 
-        public EventHubLoggingHealthClient(IOptions<EventHubLoggingConfiguration> eventHubLoggingConfiguration)
+        public EventHubLoggingHealthHelper(IOptions<EventHubLoggingConfiguration> eventHubLoggingConfiguration)
         {
             _eventHubLoggingConfiguration = eventHubLoggingConfiguration;
         }

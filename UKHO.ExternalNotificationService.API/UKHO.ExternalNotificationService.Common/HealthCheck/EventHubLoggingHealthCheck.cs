@@ -8,18 +8,18 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
 {
     public class EventHubLoggingHealthCheck : IHealthCheck
     {
-        private readonly IEventHubLoggingHealthClient _eventHubLoggingHealthClient;
+        private readonly IEventHubLoggingHealthHelper _eventHubLoggingHealthHelper;
         private readonly ILogger<EventHubLoggingHealthCheck> _logger;
 
-        public EventHubLoggingHealthCheck(IEventHubLoggingHealthClient eventHubLoggingHealthClient, ILogger<EventHubLoggingHealthCheck> logger)
+        public EventHubLoggingHealthCheck(IEventHubLoggingHealthHelper eventHubLoggingHealthClient, ILogger<EventHubLoggingHealthCheck> logger)
         {
-            _eventHubLoggingHealthClient = eventHubLoggingHealthClient;
+            _eventHubLoggingHealthHelper = eventHubLoggingHealthClient;
             _logger = logger;
         }
 
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
-            var healthCheckResult = await _eventHubLoggingHealthClient.CheckHealthAsync(context,cancellationToken);
+            var healthCheckResult = await _eventHubLoggingHealthHelper.CheckHealthAsync(context,cancellationToken);
             if (healthCheckResult.Status == HealthStatus.Healthy)
             {
                 _logger.LogDebug(EventIds.EventHubLoggingIsHealthy.ToEventId(), "Event hub is healthy");

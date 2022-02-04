@@ -6,6 +6,7 @@ namespace UKHO.ExternalNotificationService.Common.Configuration
          string StorageAccountName { get; set; }
          string StorageAccountKey { get; set; }
          string StorageContainerName { get; set; }
-       
+         string QueueName { get; set; }
+
     }
 }

@@ -58,16 +58,17 @@ namespace UKHO.ExternalNotificationService.API
             });
             services.AddApplicationInsightsTelemetry();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddScoped<IEventHubLoggingHealthClient, EventHubLoggingHealthClient>();
+            services.AddScoped<IEventHubLoggingHealthHelper, EventHubLoggingHealthHelper>();
             services.AddScoped<IStorageService, StorageService>();
-            services.AddScoped<IAzureBlobStorageClient, AzureBlobStorageClient>();
+            services.AddScoped<IAzureBlobStorageHelper, AzureBlobStorageHelper>();
             services.AddScoped<IEnsFulfilmentStorageConfiguration, EnsFulfilmentStorageConfiguration>();
-
+            services.AddScoped<IAzureMessageQueueHelper, AzureMessageQueueHelper>();
 
 
             services.AddHealthChecks()
                 .AddCheck<EventHubLoggingHealthCheck>("EventHubLoggingHealthCheck")
-                .AddCheck<AzureBlobStorageHealthCheck>("AzureBlobStorageHealthCheck");
+                .AddCheck<AzureBlobStorageHealthCheck>("AzureBlobStorageHealthCheck")
+                .AddCheck<AzureMessageQueueHealthCheck>("AzureMessageQueueHealthCheck");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

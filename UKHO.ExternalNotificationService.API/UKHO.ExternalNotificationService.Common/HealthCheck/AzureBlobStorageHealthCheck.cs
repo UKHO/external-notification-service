@@ -14,18 +14,18 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
 {
     public class AzureBlobStorageHealthCheck : IHealthCheck
     {
-        private readonly IAzureBlobStorageClient _azureBlobStorageClient;
-        private readonly IStorageService _scsStorageService;
+        private readonly IAzureBlobStorageHelper _azureBlobStorageHelper;
+        private readonly IStorageService _storageService;
         private readonly IOptions<EnsFulfilmentStorageConfiguration> _ensFulfilmentStorageConfiguration;
         private readonly ILogger<AzureBlobStorageHealthCheck> _logger;
 
-        public AzureBlobStorageHealthCheck(IAzureBlobStorageClient azureBlobStorageClient,
-                                           IStorageService scsStorageService,
+        public AzureBlobStorageHealthCheck(IAzureBlobStorageHelper azureBlobStorageHelper,
+                                           IStorageService storageService,
                                            IOptions<EnsFulfilmentStorageConfiguration> ensFulfilmentStorageConfiguration,
                                            ILogger<AzureBlobStorageHealthCheck> logger)
         {
-            _azureBlobStorageClient = azureBlobStorageClient;
-            _scsStorageService = scsStorageService;
+            _azureBlobStorageHelper = azureBlobStorageHelper;
+            _storageService = storageService;
             _ensFulfilmentStorageConfiguration = ensFulfilmentStorageConfiguration;
             _logger = logger;
         }
@@ -37,8 +37,8 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
                 string storageAccountConnectionString = string.Empty;
                 HealthCheckResult azureBlobStorageHealthStatus = new HealthCheckResult(HealthStatus.Healthy, "Azure blob storage is healthy");
 
-                storageAccountConnectionString = _scsStorageService.GetStorageAccountConnectionString(_ensFulfilmentStorageConfiguration.Value.StorageAccountName, _ensFulfilmentStorageConfiguration.Value.StorageAccountKey);
-                azureBlobStorageHealthStatus = await _azureBlobStorageClient.CheckBlobContainerHealth(storageAccountConnectionString, _ensFulfilmentStorageConfiguration.Value.StorageContainerName);
+                storageAccountConnectionString = _storageService.GetStorageAccountConnectionString(_ensFulfilmentStorageConfiguration.Value.StorageAccountName, _ensFulfilmentStorageConfiguration.Value.StorageAccountKey);
+                azureBlobStorageHealthStatus = await _azureBlobStorageHelper.CheckBlobContainerHealth(storageAccountConnectionString, _ensFulfilmentStorageConfiguration.Value.StorageContainerName);
 
                 if (azureBlobStorageHealthStatus.Status == HealthStatus.Unhealthy)
                 {

@@ -13,7 +13,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
     [TestFixture]
     public class EventHubLoggingHealthCheckTest
     {
-        private IEventHubLoggingHealthClient _fakeEventHubLoggingHealthClient;
+        private IEventHubLoggingHealthHelper _fakeEventHubLoggingHealthHelper;
         private EventHubLoggingHealthCheck _eventHubLoggingHealthCheck;
         private ILogger<EventHubLoggingHealthCheck> _fakeLogger;
 
@@ -21,15 +21,15 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         public void Setup()
         {
             _fakeLogger = A.Fake<ILogger<EventHubLoggingHealthCheck>>();
-            _fakeEventHubLoggingHealthClient = A.Fake<IEventHubLoggingHealthClient>();
+            _fakeEventHubLoggingHealthHelper = A.Fake<IEventHubLoggingHealthHelper>();
 
-            _eventHubLoggingHealthCheck = new EventHubLoggingHealthCheck(_fakeEventHubLoggingHealthClient, _fakeLogger);
+            _eventHubLoggingHealthCheck = new EventHubLoggingHealthCheck(_fakeEventHubLoggingHealthHelper, _fakeLogger);
         }
 
         [Test]
         public async Task WhenEventHubLoggingIsHealthy_ThenReturnsHealthy()
         {
-            A.CallTo(() => _fakeEventHubLoggingHealthClient.CheckHealthAsync(A<HealthCheckContext>.Ignored, A<CancellationToken>.Ignored)).Returns(new HealthCheckResult(HealthStatus.Healthy));
+            A.CallTo(() => _fakeEventHubLoggingHealthHelper.CheckHealthAsync(A<HealthCheckContext>.Ignored, A<CancellationToken>.Ignored)).Returns(new HealthCheckResult(HealthStatus.Healthy));
 
             var response = await _eventHubLoggingHealthCheck.CheckHealthAsync(new HealthCheckContext());
 
@@ -39,7 +39,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         [Test]
         public async Task WhenEventHubLoggingIsUnhealthy_ThenReturnsUnhealthy()
         {
-            A.CallTo(() => _fakeEventHubLoggingHealthClient.CheckHealthAsync(A<HealthCheckContext>.Ignored, A<CancellationToken>.Ignored)).Returns(new HealthCheckResult(HealthStatus.Unhealthy, "Event hub is unhealthy", new Exception("Event hub is unhealthy")));
+            A.CallTo(() => _fakeEventHubLoggingHealthHelper.CheckHealthAsync(A<HealthCheckContext>.Ignored, A<CancellationToken>.Ignored)).Returns(new HealthCheckResult(HealthStatus.Unhealthy, "Event hub is unhealthy", new Exception("Event hub is unhealthy")));
 
             var response = await _eventHubLoggingHealthCheck.CheckHealthAsync(new HealthCheckContext());
 

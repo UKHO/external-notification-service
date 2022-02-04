@@ -10,7 +10,7 @@ using UKHO.ExternalNotificationService.API.Controllers;
 namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 {
     [TestFixture]
-    public class SubscriptionControllerTests
+    public class SubscriptionControllerTest
     {
         private SubscriptionController _controller;
         private ILogger<SubscriptionController> _fakeLogger;
