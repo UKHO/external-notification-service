@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Results;
 using UKHO.ExternalNotificationService.Common.Models.Request;
-using UKHO.ExternalNotificationService.API.Extensions;
+using UKHO.ExternalNotificationService.Common.Extensions;
 
 namespace UKHO.ExternalNotificationService.API.Validation
 {

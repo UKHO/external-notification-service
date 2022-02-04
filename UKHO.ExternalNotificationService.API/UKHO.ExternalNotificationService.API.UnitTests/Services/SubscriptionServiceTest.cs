@@ -75,6 +75,29 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             Assert.AreEqual(_fakeSubscriptionRequest.NotificationType, result.NotificationType);
         }
 
+        [Test]
+        public void TestWhenValidSubscriptionRequestWithInputParameters_ThenConvertToSubscriptionRequestModelRequestReturnsOkrequest()
+        {
+            var test = Test();
+            var result = _subscriptionService.ConvertToSubscriptionRequestModel(test);
+
+            Assert.IsInstanceOf<SubscriptionRequest>(result);
+            Assert.AreEqual(_fakeSubscriptionRequest.SubscriptionId, result.SubscriptionId);
+            Assert.AreEqual(_fakeSubscriptionRequest.NotificationType, result.NotificationType);
+        }
+
+
+        [Test]
+        public void Test2WhenValidSubscriptionRequestWithInputParameters_ThenConvertToSubscriptionRequestModelRequestReturnsOkrequest()
+        {
+            var test = Test2();
+            var result = _subscriptionService.ConvertToSubscriptionRequestModel(test);
+
+            Assert.IsInstanceOf<SubscriptionRequest>(result);
+            Assert.AreEqual(_fakeSubscriptionRequest.SubscriptionId, result.SubscriptionId);
+            Assert.AreEqual(_fakeSubscriptionRequest.NotificationType, result.NotificationType);
+        }
+
         private D365Payload GetD365PayloadDetailsWithInputParameters()
         {
             var d365Payload = new D365Payload()
@@ -108,6 +131,49 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
                                         Attributes = new D365Attribute[] { new D365Attribute { key = "ukho_webhookurl", value = "https://abc.com" },
                                                                            new D365Attribute { key = "ukho_externalnotificationid", value = "246d71e7-1475-ec11-8943-002248818222" } },
                                         FormattedValues = new FormattedValue[] { new FormattedValue { key = "ukho_subscriptiontype", value = "Data test" },
+                                                                                 new FormattedValue { key = "statecode", value = "Active" }}}}},
+                OperationCreatedOn = "/Date(1642149320000+0000)/"
+            };
+            return d365Payload;
+        }
+
+        private D365Payload Test()
+        {
+            var d365Payload = new D365Payload()
+            {
+                CorrelationId = "6ea03f10-2672-46fb-92a1-5200f6a4faaa",
+                InputParameters = new InputParameter[] { new InputParameter {
+                                    value = new InputParameterValue {
+                                        Attributes = new D365Attribute[] { new D365Attribute { key = "test", value = "test" }},
+                                        FormattedValues =  new FormattedValue[]{new FormattedValue { key = "ukho_subscriptiontype", value = "Data test" },
+                                                                                 new FormattedValue { key = "statecode", value = "Active" }} } } },
+                PostEntityImages = new EntityImage[] { new EntityImage {
+                                    key= "SubscriptionImage",
+                                    value = new EntityImageValue {
+                                        Attributes = new D365Attribute[] { new D365Attribute { key = "ukho_webhookurl", value = "https://abc.com" },
+                                                                           new D365Attribute { key = "ukho_externalnotificationid", value = "246d71e7-1475-ec11-8943-002248818222" } },
+                                        FormattedValues = new FormattedValue[] { new FormattedValue { } } } } },
+                OperationCreatedOn = "/Date(1642149320000+0000)/"
+            };
+            return d365Payload;
+        }
+
+        private D365Payload Test2()
+        {
+            var d365Payload = new D365Payload()
+            {
+                CorrelationId = "6ea03f10-2672-46fb-92a1-5200f6a4faaa",
+                InputParameters = new InputParameter[] { new InputParameter {
+                                    value = new InputParameterValue {
+                                        Attributes = new D365Attribute[] { new D365Attribute { key = "ukho_webhookurl", value = "https://abc.com" },
+                                                                           new D365Attribute { key = "ukho_externalnotificationid", value = "246d71e7-1475-ec11-8943-002248818222" } },
+                                        FormattedValues =  new FormattedValue[]{new FormattedValue { key = "ukho_subscriptiontype", value = "Data test" },
+                                                                                 new FormattedValue { key = "statecode", value = "Active" }} } } },
+                PostEntityImages = new EntityImage[] { new EntityImage {
+                                    key= "SubscriptionImage",
+                                    value = new EntityImageValue {
+                                        Attributes = new D365Attribute[] { new D365Attribute { }},
+                                        FormattedValues = new FormattedValue[] {new FormattedValue { key = "ukho_subscriptiontype", value = "Data test" },
                                                                                  new FormattedValue { key = "statecode", value = "Active" }}}}},
                 OperationCreatedOn = "/Date(1642149320000+0000)/"
             };
