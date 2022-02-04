@@ -81,6 +81,48 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         }
 
         [Test]
+        public void WhenNullSubscriptionIdInRequest_ThenReturnBadRequest()
+        {
+            var model = new D365PayloadValidation
+            {
+                D365Payload = new D365Payload { }
+            };
+
+            var result = _d365PayloadValidator.TestValidate(model);
+            result.ShouldHaveValidationErrorFor("SubscriptionId");
+
+            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "SubscriptionId cannot be blank or null."));
+        }
+
+        [Test]
+        public void WhenNullNotificationTypeInRequest_ThenReturnBadRequest()
+        {
+            var model = new D365PayloadValidation
+            {
+                D365Payload = new D365Payload { }
+            };
+
+            var result = _d365PayloadValidator.TestValidate(model);
+            result.ShouldHaveValidationErrorFor("NotificationType");
+
+            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "NotificationType cannot be blank or null."));
+        }
+
+        [Test]
+        public void WhenNullWebhookUrlInRequest_ThenReturnBadRequest()
+        {
+            var model = new D365PayloadValidation
+            {
+                D365Payload = new D365Payload { }
+            };
+
+            var result = _d365PayloadValidator.TestValidate(model);
+            result.ShouldHaveValidationErrorFor("WebhookUrl");
+
+            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "WebhookUrl cannot be blank or null."));
+        }
+
+        [Test]
         public void WhenValidD365PayloadRequest_ThenTestValidateReturnSuccess()
         {
             var result = _d365PayloadValidator.TestValidate(_d365PayloadValidation);

@@ -60,7 +60,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             var errorMessage = await apiResponse.ReadAsTypeAsync<ErrorDescriptionModel>();
 
-            Assert.IsTrue(errorMessage.Errors.Any(e => e.Source == "d365Payload.InputParameters"));
+            Assert.IsTrue(errorMessage.Errors.Any(e => e.Source == "inputParameters"));
             Assert.IsTrue(errorMessage.Errors.Any(e => e.Description == "D365Payload InputParameters cannot be blank or null."));
         }
 
