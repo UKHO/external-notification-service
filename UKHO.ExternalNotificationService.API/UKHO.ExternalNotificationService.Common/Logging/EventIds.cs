@@ -48,7 +48,11 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900011 -  Event data for external notification service event hub health check.
         /// </summary>
-        EventHubLoggingEventDataForHealthCheck = 900011
+        EventHubLoggingEventDataForHealthCheck = 900011,
+        /// <summary>
+        /// 900012 -  Event data for adding message in queue.
+        /// </summary>
+        AddedMessageInQueue = 900012
     }
 
     public static class EventIdExtensions

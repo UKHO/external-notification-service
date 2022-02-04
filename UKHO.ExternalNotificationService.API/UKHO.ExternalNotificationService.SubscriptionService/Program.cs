@@ -2,9 +2,9 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-using Azure.Extensions.AspNetCore.Configuration.Secrets;
+
 using Azure.Identity;
-using Azure.Security.KeyVault.Secrets;
+
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -110,7 +110,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
              })
               .ConfigureServices((hostContext, services) =>
               {
-                  services.Configure<EnsSubscriptionStorageConfiguration>(ConfigurationBuilder.GetSection("EnsSubscriptionStorageConfiguration"));
+                  services.Configure<SubscriptionStorageConfiguration>(ConfigurationBuilder.GetSection("EnsSubscriptionStorageConfiguration"));
                   services.Configure<QueuesOptions>(ConfigurationBuilder.GetSection("QueuesOptions"));
               })
               .ConfigureWebJobs(b =>

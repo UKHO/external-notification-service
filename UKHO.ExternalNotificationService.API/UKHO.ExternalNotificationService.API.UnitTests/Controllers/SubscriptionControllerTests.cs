@@ -7,9 +7,11 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using UKHO.ExternalNotificationService.API.Controllers;
-using UKHO.ExternalNotificationService.API.Helper;
+using UKHO.ExternalNotificationService.Common.Helper;
 using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.Common.Configuration;
+using UKHO.ExternalNotificationService.Common.Storage;
+using UKHO.ExternalNotificationService.Common.Models.Request;
 
 namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 {
@@ -17,32 +19,37 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
     public class SubscriptionControllerTests
     {
         private SubscriptionController _controller;
-        private ISubscriptionService _fakeSubscriptionService;
-        private ILogger<SubscriptionController> _fakeLogger;
         private IHttpContextAccessor _fakeHttpContextAccessor;
+        private ILogger<SubscriptionController> _fakeLogger;
+        private ISubscriptionService _fakeSubscriptionService;       
         private IAzureMessageQueueHelper _fakeAzureMessageQueueHelper;
-        private IOptions<EnsSubscriptionStorageConfiguration> _fakeEnsStorageConfiguration;
+        private IOptions<SubscriptionStorageConfiguration> _fakeStorageConfiguration;
+        private ISubscriptionStorageService _fakeSubscriptionStorageService;
 
         [SetUp]
         public void Setup()
         {
             _fakeHttpContextAccessor = A.Fake<IHttpContextAccessor>();
-            _fakeSubscriptionService = A.Fake<ISubscriptionService>();
             _fakeLogger = A.Fake<ILogger<SubscriptionController>>();
+            _fakeSubscriptionService = A.Fake<ISubscriptionService>();                              
             _fakeAzureMessageQueueHelper = A.Fake<IAzureMessageQueueHelper>();
-            _fakeEnsStorageConfiguration = A.Fake<IOptions<EnsSubscriptionStorageConfiguration>>();
+            _fakeStorageConfiguration = A.Fake<IOptions<SubscriptionStorageConfiguration>>();
+            _fakeSubscriptionStorageService = A.Fake<ISubscriptionStorageService>();
+
             A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(new DefaultHttpContext());
-            _controller = new SubscriptionController(_fakeHttpContextAccessor, _fakeSubscriptionService, _fakeAzureMessageQueueHelper, _fakeEnsStorageConfiguration, _fakeLogger);
+
+            _controller = new SubscriptionController(_fakeHttpContextAccessor, _fakeLogger, _fakeSubscriptionService, _fakeAzureMessageQueueHelper, _fakeStorageConfiguration, _fakeSubscriptionStorageService);
         }
 
         [Test]
         public async Task TestSubscription()
         {
             dynamic jsonObject = new JObject();
-            A.CallTo(() => _fakeSubscriptionService.GetStorageAccountConnectionString(A<string>.Ignored, A<string>.Ignored))
+            A.CallTo(() => _fakeSubscriptionStorageService.GetStorageAccountConnectionString(A<string>.Ignored, A<string>.Ignored))
                             .Returns("");
-            var result = await _controller.Post(jsonObject);
-            Assert.IsInstanceOf<OkResult>(result);
+            A.CallTo(() => _fakeAzureMessageQueueHelper.AddQueueMessage(A<string>.Ignored, A<string>.Ignored, A<SubscriptionRequestMessage>.Ignored, A<string>.Ignored));
+            var result = (StatusCodeResult)await _controller.Post(jsonObject);
+            Assert.AreEqual(StatusCodes.Status202Accepted, result.StatusCode);
         }
     }
 }

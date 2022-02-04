@@ -1,4 +1,4 @@
-﻿namespace UKHO.ExternalNotificationService.API.Models
+﻿namespace UKHO.ExternalNotificationService.Common.Models.Request
 {
     public class SubscriptionRequestMessage
     {
