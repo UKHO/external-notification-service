@@ -64,6 +64,7 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
             finally
             {
                 await eventHubProducerClient.CloseAsync(cancellationToken);
+                await eventHubProducerClient.DisposeAsync();
             }
         }
     }
