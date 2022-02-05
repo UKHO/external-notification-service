@@ -28,9 +28,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         [HttpPost]
         public async virtual Task<IActionResult> Post([FromBody] D365Payload d365Payload)
         {
-            var d365PayloadValidation = new D365PayloadValidation(){D365Payload = d365Payload};
-
-            if (d365Payload.CorrelationId == null && d365Payload.InputParameters == null && d365Payload.PostEntityImages == null)
+            if (d365Payload == null)
             {
                 var error = new List<Error>
                         {
@@ -43,7 +41,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
                 return BuildBadRequestErrorResponse(error);
             }
 
-            var validationD365PayloadResult = await _subscriptionService.ValidateD365PayloadRequest(d365PayloadValidation);
+            var validationD365PayloadResult = await _subscriptionService.ValidateD365PayloadRequest(d365Payload);
 
             if (!validationD365PayloadResult.IsValid && validationD365PayloadResult.HasBadRequestErrors(out _errors))
             {

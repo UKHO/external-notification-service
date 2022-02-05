@@ -16,19 +16,19 @@ namespace UKHO.ExternalNotificationService.API.Services
             _d365PayloadValidator = d365PayloadValidator;
         }
 
-        public Task<ValidationResult> ValidateD365PayloadRequest(D365PayloadValidation d365PayloadValidation)
+        public Task<ValidationResult> ValidateD365PayloadRequest(D365Payload d365Payload)
         {
-            return _d365PayloadValidator.Validate(d365PayloadValidation);
+            return _d365PayloadValidator.Validate(d365Payload);
         }
 
-        public SubscriptionRequest ConvertToSubscriptionRequestModel(D365Payload payload)
+        public SubscriptionRequest ConvertToSubscriptionRequestModel(D365Payload d365Payload)
         {
-            var inputParameter = payload.InputParameters.Single();
-            var postEntityImage = payload.PostEntityImages.SingleOrDefault(i => i.key == "SubscriptionImage");
+            var inputParameter = d365Payload.InputParameters.Single();
+            var postEntityImage = d365Payload.PostEntityImages.SingleOrDefault(i => i.key == "SubscriptionImage");
             var attributes = inputParameter.value.Attributes.Concat(postEntityImage?.value?.Attributes ?? new D365Attribute[0]);
             var formattedValues = inputParameter.value.FormattedValues.Concat(postEntityImage?.value?.FormattedValues ?? new FormattedValue[0]);
 
-            string correlationId = payload.CorrelationId;
+            string correlationId = d365Payload.CorrelationId;
             string stateCode = formattedValues.FirstOrDefault(a => a.key == "statecode")?.value.ToString();
             object formattedSubscriptionType = formattedValues.FirstOrDefault(a => a.key == "ukho_subscriptiontype").value;
             var externalNotificationSubscriptionId = attributes.FirstOrDefault(a => a.key == "ukho_externalnotificationid").value;

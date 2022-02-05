@@ -6,8 +6,8 @@ namespace UKHO.ExternalNotificationService.API.Services
 {
     public interface ISubscriptionService
     {
-        Task<ValidationResult> ValidateD365PayloadRequest(D365PayloadValidation d365PayloadValidation);
+        Task<ValidationResult> ValidateD365PayloadRequest(D365Payload d365Payload);
 
-        SubscriptionRequest ConvertToSubscriptionRequestModel(D365Payload payload);
+        SubscriptionRequest ConvertToSubscriptionRequestModel(D365Payload d365Payload);
     }
 }

@@ -46,7 +46,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
                 ErrorCode = HttpStatusCode.BadRequest.ToString()
             };
 
-            A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365PayloadValidation>.Ignored))
+            A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored))
                            .Returns(new ValidationResult(new List<ValidationFailure> { validationMessage }));
 
             var result = (BadRequestObjectResult)await _controller.Post(new D365Payload());
@@ -64,7 +64,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
                 ErrorCode = HttpStatusCode.BadRequest.ToString()
             };
 
-            A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365PayloadValidation>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure> { validationMessage }));
+            A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure> { validationMessage }));
 
             var result = (BadRequestObjectResult)await _controller.Post(_fakeD365PayloadDetails);
             var errors = (ErrorDescription)result.Value;
@@ -80,7 +80,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             {
                 ErrorCode = HttpStatusCode.InternalServerError.ToString()
             };
-            A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365PayloadValidation>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure> { validationMessage }));
+            A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure> { validationMessage }));
 
             var result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
 
@@ -89,7 +89,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         [Test]
         public async Task WhenValidSubscriptionRequest_ThenPostReturnsAcceptedResponse()
         {
-            A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365PayloadValidation>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
+            A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
 
             A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
             
