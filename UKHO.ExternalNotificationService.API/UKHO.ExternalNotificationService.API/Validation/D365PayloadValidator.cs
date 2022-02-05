@@ -43,6 +43,12 @@ namespace UKHO.ExternalNotificationService.API.Validation
                 .When(ru => ru != null)
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("WebhookUrl cannot be blank or null.");
+
+            RuleFor(v => v).NotNull().NotEmpty().OverridePropertyName("StateCode")
+                .Must(x => x.IsValidStatus())
+                .When(ru => ru != null)
+                .WithErrorCode(HttpStatusCode.BadRequest.ToString())
+                .WithMessage("StateCode cannot be blank or null.");
         }
         Task<ValidationResult> ID365PayloadValidator.Validate(D365Payload d365Payload)
         {

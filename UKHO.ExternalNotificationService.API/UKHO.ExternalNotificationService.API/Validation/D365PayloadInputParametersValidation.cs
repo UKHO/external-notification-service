@@ -60,7 +60,24 @@ namespace UKHO.ExternalNotificationService.API.Validation
                 return false;
             }
         }
+        public static bool IsValidStatus(this D365Payload payload)
+        {
+            if (IgnoreRuleForValidation(payload))
+            { return true; }
+            try
+            {
+                var inputParameter = payload.InputParameters.Single();
+                var postEntityImage = payload.PostEntityImages.SingleOrDefault(i => i.key == "SubscriptionImage");
+                var formattedValues = inputParameter.value.FormattedValues.Concat(postEntityImage?.value?.FormattedValues ?? new FormattedValue[0]);
 
+                string stateCode = formattedValues.FirstOrDefault(a => a.key == "statecode")?.value.ToString();
+                return !string.IsNullOrWhiteSpace(stateCode);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
         private static bool IgnoreRuleForValidation(D365Payload payload)
         {
             return (string.IsNullOrWhiteSpace(Convert.ToString(payload.InputParameters)) || string.IsNullOrWhiteSpace(Convert.ToString(payload.PostEntityImages)));

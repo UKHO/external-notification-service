@@ -96,7 +96,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
 
         #region WebhookUrl
         [Test]
-        public void WhenNullWebhookUrlInInputParameters_ThenReturnBadRequest()
+        public void WhenNullWebhookUrlInRequest_ThenReturnBadRequest()
         {
             var d365Payload = new D365Payload { InputParameters = new InputParameter[0] { }, PostEntityImages = new EntityImage[] { } };
             
@@ -104,6 +104,19 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             result.ShouldHaveValidationErrorFor("WebhookUrl");
 
             Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "WebhookUrl cannot be blank or null."));
+        }
+        #endregion
+
+        #region StateCode
+        [Test]
+        public void WhenNullStateCodeInRequest_ThenReturnBadRequest()
+        {
+            var d365Payload = new D365Payload { InputParameters = new InputParameter[0] { }, PostEntityImages = new EntityImage[] { } };
+
+            var result = _d365PayloadValidator.TestValidate(d365Payload);
+            result.ShouldHaveValidationErrorFor("StateCode");
+
+            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "StateCode cannot be blank or null."));
         }
         #endregion
 
