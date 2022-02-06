@@ -63,6 +63,8 @@ namespace UKHO.ExternalNotificationService.API
             services.AddHealthChecks().AddCheck<EventHubLoggingHealthCheck>("EventHubLoggingHealthCheck");
             services.AddScoped<ID365PayloadValidator, D365PayloadValidator>();
             services.AddScoped<ISubscriptionService, SubscriptionService>();
+
+            services.Configure<D365PayloadKeyConfiguration>(_configuration.GetSection("D365PayloadKeyConfiguration"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

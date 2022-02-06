@@ -38,8 +38,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             _controller = new SubscriptionController(_fakeHttpContextAccessor, _fakeLogger, _fakeSubscriptionService);
         }
 
-        [Test]
-        public async Task WhenInvalidNullPayloadRequest_ThenPostReturnsBadRequest()
+        [Test] 
+        public async Task WhenPostInvalidNullPayload_ThenRecieveBadRequest()
         {
             D365Payload d365Payload = null;
 
@@ -50,8 +50,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             Assert.AreEqual("Either body is null or malformed.", errors.Errors.Single().Description);
         }
 
-        [Test]
-        public async Task WhenInvalidNullInputParametersInRequest_ThenPostReturnsBadRequest()
+        [Test] 
+        public async Task WhenPostInvalidNullInputParameters_ThenRecieveBadRequest()
         {
             var validationMessage = new ValidationFailure("InputParameters", "D365Payload InputParameters cannot be blank or null.")
             {
@@ -68,7 +68,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         }
 
         [Test]
-        public async Task WhenInvalidSubscriptionRequest_ThenPostReturnsInternalServerError()
+        public async Task WhenPostInvalidRequest_ThenRecieveInternalServerError()
         {
             var validationMessage = new ValidationFailure("InputParameters", "D365Payload InputParameters cannot be blank or null.")
             {
@@ -81,7 +81,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             Assert.AreEqual(202, result.StatusCode);
         }
         [Test]
-        public async Task WhenValidSubscriptionRequest_ThenPostReturnsAcceptedResponse()
+        public async Task WhenPostValidPayload_ThenRecieveSuccessfulResponse()
         {
             A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
 

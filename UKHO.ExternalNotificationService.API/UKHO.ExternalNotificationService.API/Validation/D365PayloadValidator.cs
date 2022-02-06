@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.Extensions.Options;
+using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 
 namespace UKHO.ExternalNotificationService.API.Validation
@@ -12,7 +14,7 @@ namespace UKHO.ExternalNotificationService.API.Validation
     }
     public class D365PayloadValidator : AbstractValidator<D365Payload>, ID365PayloadValidator
     {
-        public D365PayloadValidator()
+        public D365PayloadValidator(IOptions<D365PayloadKeyConfiguration> d365PayloadKeyConfiguration)
         {
             RuleFor(v => v.CorrelationId).NotNull().NotEmpty()
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
@@ -27,25 +29,25 @@ namespace UKHO.ExternalNotificationService.API.Validation
                 .WithMessage("D365Payload PostEntityImages cannot be blank or null.");
 
             RuleFor(v => v).NotNull().NotEmpty().OverridePropertyName("SubscriptionId")
-                .Must(x => x.IsValidSubscriptionId())
+                .Must(x => x.IsValidSubscriptionId(d365PayloadKeyConfiguration))
                 .When(ru => ru != null)
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("SubscriptionId cannot be blank or null.");
 
             RuleFor(v => v).NotNull().NotEmpty().OverridePropertyName("NotificationType")
-                .Must(x => x.IsValidNotificationType())
+                .Must(x => x.IsValidNotificationType(d365PayloadKeyConfiguration))
                 .When(ru => ru != null)
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("NotificationType cannot be blank or null.");
 
             RuleFor(v => v).NotNull().NotEmpty().OverridePropertyName("WebhookUrl")
-                .Must(x => x.IsValidWebhookUrl())
+                .Must(x => x.IsValidWebhookUrl(d365PayloadKeyConfiguration))
                 .When(ru => ru != null)
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("WebhookUrl cannot be blank or null.");
 
             RuleFor(v => v).NotNull().NotEmpty().OverridePropertyName("StateCode")
-                .Must(x => x.IsValidStatus())
+                .Must(x => x.IsValidStatus(d365PayloadKeyConfiguration))
                 .When(ru => ru != null)
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("StateCode cannot be blank or null.");

@@ -29,6 +29,8 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         [HttpPost]
         public async virtual Task<IActionResult> Post([FromBody] D365Payload d365Payload)
         {
+            _logger.LogInformation(EventIds.ENSPostRequestStart.ToEventId(), "Subscription request for D365Payload:{JsonConvert.SerializeObject(objPayload)} with _X-Correlation-ID:{correlationId}", JsonConvert.SerializeObject(d365Payload), GetCurrentCorrelationId());
+
             if (d365Payload == null)
             {
                 var error = new List<Error>
@@ -51,7 +53,8 @@ namespace UKHO.ExternalNotificationService.API.Controllers
 
             SubscriptionRequest subscription = _subscriptionService.ConvertToSubscriptionRequestModel(d365Payload);
 
-            _logger.LogInformation(EventIds.Accepted.ToEventId(), "Subscription request Accepted for D365Payload:{JsonConvert.SerializeObject(objPayload)} with _X-Correlation-ID:{correlationId}", JsonConvert.SerializeObject(d365Payload), GetCurrentCorrelationId());
+            _logger.LogInformation(EventIds.Accepted.ToEventId(), "Subscription request Accepted for D365Payload:{JsonConvert.SerializeObject(objPayload)} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{correlationId}", JsonConvert.SerializeObject(d365Payload), d365Payload.CorrelationId, GetCurrentCorrelationId());
+
             return GetEnsResponse(new ExternalNotificationServiceResponse { HttpStatusCode = HttpStatusCode.Accepted });
         }
     }
