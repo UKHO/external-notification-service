@@ -41,15 +41,9 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         [Test]
         public async Task WhenInvalidNullPayloadRequest_ThenPostReturnsBadRequest()
         {
-            var validationMessage = new ValidationFailure("RequestBody", "Either body is null or malformed.")
-            {
-                ErrorCode = HttpStatusCode.BadRequest.ToString()
-            };
+            D365Payload d365Payload = null;
 
-            A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored))
-                           .Returns(new ValidationResult(new List<ValidationFailure> { validationMessage }));
-
-            var result = (BadRequestObjectResult)await _controller.Post(new D365Payload());
+            var result = (BadRequestObjectResult)await _controller.Post(d365Payload);
             var errors = (ErrorDescription)result.Value;
 
             Assert.AreEqual(400, result.StatusCode);

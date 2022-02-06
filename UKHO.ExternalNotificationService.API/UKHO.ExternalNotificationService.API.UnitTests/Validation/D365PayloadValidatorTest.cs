@@ -69,11 +69,23 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
 
         #region SubscriptionId
         [Test]
+        public void WhenSubscriptionIdKeyNotInInputParameters_ThenReturnBadRequest()
+        {
+            _d365Payload.InputParameters[0].value.Attributes[1] = null;
+            _d365Payload.PostEntityImages[0].value.Attributes[1] = null;
+
+            var result = _d365PayloadValidator.TestValidate(_d365Payload);
+            result.ShouldHaveValidationErrorFor("SubscriptionId");
+
+            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "SubscriptionId cannot be blank or null."));
+        }
+
+        [Test]
         public void WhenNullSubscriptionIdInInputParameters_ThenReturnBadRequest()
         {
-            var d365Payload = new D365Payload { InputParameters = new InputParameter[0] { }, PostEntityImages = new EntityImage[] { } };
-            
-            var result = _d365PayloadValidator.TestValidate(d365Payload);
+            _d365Payload.InputParameters[0].value.Attributes[1].value = "";
+
+            var result = _d365PayloadValidator.TestValidate(_d365Payload);
             result.ShouldHaveValidationErrorFor("SubscriptionId");
 
             Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "SubscriptionId cannot be blank or null."));
@@ -85,9 +97,9 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         [Test]
         public void WhenNullNotificationTypeInRequest_ThenReturnBadRequest()
         {
-            var d365Payload = new D365Payload { InputParameters = new InputParameter[0] { }, PostEntityImages = new EntityImage[] { } };
+            _d365Payload.InputParameters[0].value.FormattedValues[0].value = null;
 
-            var result = _d365PayloadValidator.TestValidate(d365Payload);
+            var result = _d365PayloadValidator.TestValidate(_d365Payload);
             result.ShouldHaveValidationErrorFor("NotificationType");
 
             Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "NotificationType cannot be blank or null."));
@@ -98,9 +110,9 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         [Test]
         public void WhenNullWebhookUrlInRequest_ThenReturnBadRequest()
         {
-            var d365Payload = new D365Payload { InputParameters = new InputParameter[0] { }, PostEntityImages = new EntityImage[] { } };
-            
-            var result = _d365PayloadValidator.TestValidate(d365Payload);
+            _d365Payload.InputParameters[0].value.Attributes[0].value = null;
+
+            var result = _d365PayloadValidator.TestValidate(_d365Payload);
             result.ShouldHaveValidationErrorFor("WebhookUrl");
 
             Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "WebhookUrl cannot be blank or null."));
@@ -111,9 +123,9 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         [Test]
         public void WhenNullStateCodeInRequest_ThenReturnBadRequest()
         {
-            var d365Payload = new D365Payload { InputParameters = new InputParameter[0] { }, PostEntityImages = new EntityImage[] { } };
+            _d365Payload.InputParameters[0].value.FormattedValues[1].value = null;
 
-            var result = _d365PayloadValidator.TestValidate(d365Payload);
+            var result = _d365PayloadValidator.TestValidate(_d365Payload);
             result.ShouldHaveValidationErrorFor("StateCode");
 
             Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "StateCode cannot be blank or null."));

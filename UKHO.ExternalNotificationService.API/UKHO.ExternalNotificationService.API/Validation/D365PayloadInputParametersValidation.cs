@@ -17,7 +17,7 @@ namespace UKHO.ExternalNotificationService.API.Validation
                 var attributes = inputParameter.value.Attributes.Concat(postEntityImage?.value?.Attributes ?? new D365Attribute[0]);
 
                 var externalNotificationSubscriptionKey = attributes.FirstOrDefault(a => a.key == "ukho_externalnotificationid");
-                return (externalNotificationSubscriptionKey != null && !string.IsNullOrWhiteSpace(Convert.ToString(attributes.FirstOrDefault(a => a.key == "ukho_externalnotificationid").value)));
+                return (externalNotificationSubscriptionKey != null && !string.IsNullOrWhiteSpace(attributes.FirstOrDefault(a => a.key == "ukho_externalnotificationid").value.ToString()));
             }
             catch (Exception)
             {
@@ -35,7 +35,7 @@ namespace UKHO.ExternalNotificationService.API.Validation
                 var formattedValues = inputParameter.value.FormattedValues.Concat(postEntityImage?.value?.FormattedValues ?? new FormattedValue[0]);
 
                 object formattedSubscriptionType = formattedValues.FirstOrDefault(a => a.key == "ukho_subscriptiontype");
-                return (formattedSubscriptionType != null && !string.IsNullOrWhiteSpace(Convert.ToString(formattedValues.FirstOrDefault(a => a.key == "ukho_subscriptiontype").value)));
+                return (formattedSubscriptionType != null && !string.IsNullOrWhiteSpace(formattedValues.FirstOrDefault(a => a.key == "ukho_subscriptiontype").value.ToString()));
             }
             catch (Exception)
             {
@@ -53,7 +53,7 @@ namespace UKHO.ExternalNotificationService.API.Validation
                 var attributes = inputParameter.value.Attributes.Concat(postEntityImage?.value?.Attributes ?? new D365Attribute[0]);
 
                 var webhookurl = attributes.FirstOrDefault(a => a.key == "ukho_webhookurl");
-                return (webhookurl != null && !string.IsNullOrWhiteSpace(Convert.ToString(attributes.FirstOrDefault(a => a.key == "ukho_webhookurl").value)));
+                return (webhookurl != null && !string.IsNullOrWhiteSpace(attributes.FirstOrDefault(a => a.key == "ukho_webhookurl").value.ToString()));
             }
             catch (Exception)
             {
