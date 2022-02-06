@@ -13,11 +13,11 @@ namespace UKHO.ExternalNotificationService.API.Validation
             try
             {
                 var inputParameter = payload.InputParameters.Single();
-                var postEntityImage = payload.PostEntityImages.SingleOrDefault(i => i.key == "SubscriptionImage");
-                var attributes = inputParameter.value.Attributes.Concat(postEntityImage?.value?.Attributes ?? new D365Attribute[0]);
+                var postEntityImage = payload.PostEntityImages.SingleOrDefault(i => i.Key == "SubscriptionImage");
+                var attributes = inputParameter.Value.Attributes.Concat(postEntityImage?.ImageValue?.Attributes ?? new D365Attribute[0]);
 
-                var externalNotificationSubscriptionKey = attributes.FirstOrDefault(a => a.key == "ukho_externalnotificationid");
-                return (externalNotificationSubscriptionKey != null && !string.IsNullOrWhiteSpace(attributes.FirstOrDefault(a => a.key == "ukho_externalnotificationid").value.ToString()));
+                var externalNotificationSubscriptionKey = attributes.FirstOrDefault(a => a.Key == "ukho_externalnotificationid");
+                return (externalNotificationSubscriptionKey != null && !string.IsNullOrWhiteSpace(attributes.FirstOrDefault(a => a.Key == "ukho_externalnotificationid").Value.ToString()));
             }
             catch (Exception)
             {
@@ -31,11 +31,11 @@ namespace UKHO.ExternalNotificationService.API.Validation
             try
             {
                 var inputParameter = payload.InputParameters.Single();
-                var postEntityImage = payload.PostEntityImages.SingleOrDefault(i => i.key == "SubscriptionImage");
-                var formattedValues = inputParameter.value.FormattedValues.Concat(postEntityImage?.value?.FormattedValues ?? new FormattedValue[0]);
+                var postEntityImage = payload.PostEntityImages.SingleOrDefault(i => i.Key == "SubscriptionImage");
+                var formattedValues = inputParameter.Value.FormattedValues.Concat(postEntityImage?.ImageValue?.FormattedValues ?? new FormattedValue[0]);
 
-                object formattedSubscriptionType = formattedValues.FirstOrDefault(a => a.key == "ukho_subscriptiontype");
-                return (formattedSubscriptionType != null && !string.IsNullOrWhiteSpace(formattedValues.FirstOrDefault(a => a.key == "ukho_subscriptiontype").value.ToString()));
+                object formattedSubscriptionType = formattedValues.FirstOrDefault(a => a.Key == "ukho_subscriptiontype");
+                return (formattedSubscriptionType != null && !string.IsNullOrWhiteSpace(formattedValues.FirstOrDefault(a => a.Key == "ukho_subscriptiontype").Value.ToString()));
             }
             catch (Exception)
             {
@@ -49,11 +49,11 @@ namespace UKHO.ExternalNotificationService.API.Validation
             try
             {
                 var inputParameter = payload.InputParameters.Single();
-                var postEntityImage = payload.PostEntityImages.SingleOrDefault(i => i.key == "SubscriptionImage");
-                var attributes = inputParameter.value.Attributes.Concat(postEntityImage?.value?.Attributes ?? new D365Attribute[0]);
+                var postEntityImage = payload.PostEntityImages.SingleOrDefault(i => i.Key == "SubscriptionImage");
+                var attributes = inputParameter.Value.Attributes.Concat(postEntityImage?.ImageValue?.Attributes ?? new D365Attribute[0]);
 
-                var webhookurl = attributes.FirstOrDefault(a => a.key == "ukho_webhookurl");
-                return (webhookurl != null && !string.IsNullOrWhiteSpace(attributes.FirstOrDefault(a => a.key == "ukho_webhookurl").value.ToString()));
+                var webhookurl = attributes.FirstOrDefault(a => a.Key == "ukho_webhookurl");
+                return (webhookurl != null && !string.IsNullOrWhiteSpace(attributes.FirstOrDefault(a => a.Key == "ukho_webhookurl").Value.ToString()));
             }
             catch (Exception)
             {
@@ -67,10 +67,10 @@ namespace UKHO.ExternalNotificationService.API.Validation
             try
             {
                 var inputParameter = payload.InputParameters.Single();
-                var postEntityImage = payload.PostEntityImages.SingleOrDefault(i => i.key == "SubscriptionImage");
-                var formattedValues = inputParameter.value.FormattedValues.Concat(postEntityImage?.value?.FormattedValues ?? new FormattedValue[0]);
+                var postEntityImage = payload.PostEntityImages.SingleOrDefault(i => i.Key == "SubscriptionImage");
+                var formattedValues = inputParameter.Value.FormattedValues.Concat(postEntityImage?.ImageValue?.FormattedValues ?? new FormattedValue[0]);
 
-                string stateCode = formattedValues.FirstOrDefault(a => a.key == "statecode")?.value.ToString();
+                string stateCode = formattedValues.FirstOrDefault(a => a.Key == "statecode")?.Value.ToString();
                 return !string.IsNullOrWhiteSpace(stateCode);
             }
             catch (Exception)

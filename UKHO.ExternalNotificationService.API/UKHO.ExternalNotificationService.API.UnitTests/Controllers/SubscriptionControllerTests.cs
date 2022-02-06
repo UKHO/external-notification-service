@@ -16,7 +16,7 @@ using UKHO.ExternalNotificationService.Common.Models.Response;
 namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 {
     [TestFixture]
-    public class SubscriptionControllerTest
+    public class SubscriptionControllerTests
     {
         private SubscriptionController _controller;
         private ILogger<SubscriptionController> _fakeLogger;

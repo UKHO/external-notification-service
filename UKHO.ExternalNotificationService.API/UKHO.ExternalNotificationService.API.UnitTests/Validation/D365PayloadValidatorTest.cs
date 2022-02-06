@@ -71,8 +71,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         [Test]
         public void WhenRequestWithoutSubscriptionIdKey_ThenReturnBadRequest()
         {
-            _d365Payload.InputParameters[0].value.Attributes = new D365Attribute[] { new D365Attribute { key = "ukho_webhookurl", value = "https://input.com" } };
-            _d365Payload.PostEntityImages[0].value.Attributes = null;
+            _d365Payload.InputParameters[0].Value.Attributes = new D365Attribute[] { new D365Attribute { Key = "ukho_webhookurl", Value = "https://input.com" } };
+            _d365Payload.PostEntityImages[0].ImageValue.Attributes = null;
 
             var result = _d365PayloadValidator.TestValidate(_d365Payload);
             result.ShouldHaveValidationErrorFor("SubscriptionId");
@@ -83,7 +83,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         [Test]
         public void WhenRequesWithNullSubscriptionId_ThenReturnBadRequest()
         {
-            _d365Payload.InputParameters[0].value.Attributes[1].value = null;
+            _d365Payload.InputParameters[0].Value.Attributes[1].Value = null;
 
             var result = _d365PayloadValidator.TestValidate(_d365Payload);
             result.ShouldHaveValidationErrorFor("SubscriptionId");
@@ -97,8 +97,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         [Test]
         public void WhenRequestWithoutNotificationTypeKey_ThenReturnBadRequest()
         {
-            _d365Payload.InputParameters[0].value.FormattedValues = new FormattedValue[] { new FormattedValue { key = "statecode", value = "Active" } };
-            _d365Payload.PostEntityImages[0].value.FormattedValues = null;
+            _d365Payload.InputParameters[0].Value.FormattedValues = new FormattedValue[] { new FormattedValue { Key = "statecode", Value = "Active" } };
+            _d365Payload.PostEntityImages[0].ImageValue.FormattedValues = null;
 
             var result = _d365PayloadValidator.TestValidate(_d365Payload);
             result.ShouldHaveValidationErrorFor("NotificationType");
@@ -109,7 +109,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         [Test]
         public void WhenRequestWithNullNotificationType_ThenReturnBadRequest()
         {
-            _d365Payload.InputParameters[0].value.FormattedValues[0].value = null;
+            _d365Payload.InputParameters[0].Value.FormattedValues[0].Value = null;
 
             var result = _d365PayloadValidator.TestValidate(_d365Payload);
             result.ShouldHaveValidationErrorFor("NotificationType");
@@ -122,8 +122,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         [Test]
         public void WhenRequestWithoutWebhookUrlKey_ThenReturnBadRequest()
         {
-            _d365Payload.InputParameters[0].value.Attributes = new D365Attribute[] { new D365Attribute { key = "ukho_externalnotificationid", value = "246d71e7-1475-ec11-8943-002248818222" } };
-            _d365Payload.PostEntityImages[0].value.Attributes = null;
+            _d365Payload.InputParameters[0].Value.Attributes = new D365Attribute[] { new D365Attribute { Key = "ukho_externalnotificationid", Value = "246d71e7-1475-ec11-8943-002248818222" } };
+            _d365Payload.PostEntityImages[0].ImageValue.Attributes = null;
 
             var result = _d365PayloadValidator.TestValidate(_d365Payload);
             result.ShouldHaveValidationErrorFor("WebhookUrl");
@@ -134,7 +134,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         [Test]
         public void WhenRequestWithNullWebhookUrl_ThenReturnBadRequest()
         {
-            _d365Payload.InputParameters[0].value.Attributes[0].value = null;
+            _d365Payload.InputParameters[0].Value.Attributes[0].Value = null;
 
             var result = _d365PayloadValidator.TestValidate(_d365Payload);
             result.ShouldHaveValidationErrorFor("WebhookUrl");
@@ -147,8 +147,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         [Test]
         public void WhenRequestWithoutStateCodeKey_ThenReturnBadRequest()
         {
-            _d365Payload.InputParameters[0].value.FormattedValues = new FormattedValue[] { new FormattedValue { key = "ukho_subscriptiontype", value = "Data test" } };
-            _d365Payload.PostEntityImages[0].value.FormattedValues = null;
+            _d365Payload.InputParameters[0].Value.FormattedValues = new FormattedValue[] { new FormattedValue { Key = "ukho_subscriptiontype", Value = "Data test" } };
+            _d365Payload.PostEntityImages[0].ImageValue.FormattedValues = null;
 
             var result = _d365PayloadValidator.TestValidate(_d365Payload);
             result.ShouldHaveValidationErrorFor("StateCode");
@@ -159,7 +159,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         [Test]
         public void WhenRequestWithNullStateCode_ThenReturnBadRequest()
         {
-            _d365Payload.InputParameters[0].value.FormattedValues[1].value = null;
+            _d365Payload.InputParameters[0].Value.FormattedValues[1].Value = null;
 
             var result = _d365PayloadValidator.TestValidate(_d365Payload);
             result.ShouldHaveValidationErrorFor("StateCode");
@@ -189,7 +189,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         [Test]
         public void WhenValidRequestWithNullPostEntityImagesValue_ThenTestValidateReturnSuccess()
         {
-            _d365Payload.PostEntityImages[0].value = null;
+            _d365Payload.PostEntityImages[0].ImageValue = null;
 
             var result = _d365PayloadValidator.TestValidate(_d365Payload);
 
@@ -204,18 +204,18 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             {
                 CorrelationId = "6ea03f10-2672-46fb-92a1-5200f6a4faaa",
                 InputParameters = new InputParameter[] { new InputParameter {
-                                                            value = new InputParameterValue {
-                                                                Attributes =   new D365Attribute[] { new D365Attribute { key = "ukho_webhookurl", value = "https://input.com" },
-                                                                               new D365Attribute { key = "ukho_externalnotificationid", value = "246d71e7-1475-ec11-8943-002248818222" } },
-                                                                FormattedValues = new FormattedValue[] { new FormattedValue { key = "ukho_subscriptiontype", value = "Data test" },
-                                                                                  new FormattedValue { key = "statecode", value = "Active" } }} } },
+                                                            Value = new InputParameterValue {
+                                                                Attributes =   new D365Attribute[] { new D365Attribute { Key = "ukho_webhookurl", Value = "https://input.com" },
+                                                                               new D365Attribute { Key = "ukho_externalnotificationid", Value = "246d71e7-1475-ec11-8943-002248818222" } },
+                                                                FormattedValues = new FormattedValue[] { new FormattedValue { Key = "ukho_subscriptiontype", Value = "Data test" },
+                                                                                  new FormattedValue { Key = "statecode", Value = "Active" } }} } },
                 PostEntityImages = new EntityImage[] { new EntityImage {
-                                                            key= "SubscriptionImage",
-                                                            value = new EntityImageValue {
-                                                                Attributes =   new D365Attribute[] { new D365Attribute { key = "ukho_webhookurl", value = "https://abc.com" },
-                                                                               new D365Attribute { key = "ukho_externalnotificationid", value = "246d71e7-1475-ec11-8943-002248818222" } },
-                                                                FormattedValues = new FormattedValue[] { new FormattedValue { key = "ukho_subscriptiontype", value = "Data test" },
-                                                                                  new FormattedValue { key = "statecode", value = "Active" } }} } },
+                                                            Key= "SubscriptionImage",
+                                                            ImageValue = new EntityImageValue {
+                                                                Attributes =   new D365Attribute[] { new D365Attribute { Key = "ukho_webhookurl", Value = "https://abc.com" },
+                                                                               new D365Attribute { Key = "ukho_externalnotificationid", Value = "246d71e7-1475-ec11-8943-002248818222" } },
+                                                                FormattedValues = new FormattedValue[] { new FormattedValue { Key = "ukho_subscriptiontype", Value = "Data test" },
+                                                                                  new FormattedValue { Key = "statecode", Value = "Active" } }} } },
                 OperationCreatedOn = "/Date(1642149320000+0000)/"
             };
         }
