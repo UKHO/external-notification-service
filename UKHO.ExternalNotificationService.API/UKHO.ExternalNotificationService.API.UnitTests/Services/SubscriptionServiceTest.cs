@@ -57,7 +57,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         #region ConvertToSubscriptionRequest
 
         [Test]
-        public void WhenInvalidRequestWithNoStateCode_ThenConvertToSubscriptionRequestReturnsFalseIsActive()
+        public void WhenInvalidRequestWithoutStateCodeKey_ThenConvertToSubscriptionRequestReturnsFalseIsActive()
         {
             _fakeD365PayloadDetails.InputParameters[0].value.FormattedValues= new FormattedValue[]{ new FormattedValue { key = "ukho_subscriptiontype", value = "Data test" }};
             _fakeD365PayloadDetails.PostEntityImages = new EntityImage[] { };
