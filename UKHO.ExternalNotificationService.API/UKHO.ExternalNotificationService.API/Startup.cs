@@ -15,6 +15,7 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
 using UKHO.ExternalNotificationService.API.Filters;
+using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.HealthCheck;
 using UKHO.ExternalNotificationService.Common.Helpers;
@@ -63,6 +64,8 @@ namespace UKHO.ExternalNotificationService.API
             services.AddScoped<IAzureBlobStorageHelper, AzureBlobStorageHelper>();
             services.AddScoped<ISubscriptionStorageConfiguration, SubscriptionStorageConfiguration>();
             services.AddScoped<IAzureMessageQueueHelper, AzureMessageQueueHelper>();
+            services.AddScoped<ISubscriptionService, SubscriptionService>();
+            services.AddScoped<ISubscriptionStorageService, SubscriptionStorageService>();
 
 
             services.AddHealthChecks()

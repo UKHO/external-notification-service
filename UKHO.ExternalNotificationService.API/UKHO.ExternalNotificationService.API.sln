@@ -15,6 +15,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UKHO.ExternalNotificationSe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UKHO.ExternalNotificationService.Common.UnitTests", "UKHO.ExternalNotificationService.Common.UnitTests\UKHO.ExternalNotificationService.Common.UnitTests.csproj", "{0BDEA4E1-513C-4735-8F5E-A4D7E5062F7A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UKHO.ExternalNotificationService.SubscriptionService", "UKHO.ExternalNotificationService.SubscriptionService\UKHO.ExternalNotificationService.SubscriptionService.csproj", "{9F21241E-CBEF-4AE6-9FA9-8AD6433E90C5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebJobs", "WebJobs", "{99315EB4-D2FD-4ED9-83F6-3AC9F2BD5AC2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +45,10 @@ Global
 		{0BDEA4E1-513C-4735-8F5E-A4D7E5062F7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BDEA4E1-513C-4735-8F5E-A4D7E5062F7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BDEA4E1-513C-4735-8F5E-A4D7E5062F7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F21241E-CBEF-4AE6-9FA9-8AD6433E90C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F21241E-CBEF-4AE6-9FA9-8AD6433E90C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F21241E-CBEF-4AE6-9FA9-8AD6433E90C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F21241E-CBEF-4AE6-9FA9-8AD6433E90C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,6 +57,7 @@ Global
 		{95D96A2A-D592-416D-A1A5-C117014A0C4C} = {769A0B7A-C612-4B9C-ABF1-570440D9F2CD}
 		{E5A1C34E-1148-4A4D-827B-CFE3F99B2B84} = {769A0B7A-C612-4B9C-ABF1-570440D9F2CD}
 		{0BDEA4E1-513C-4735-8F5E-A4D7E5062F7A} = {769A0B7A-C612-4B9C-ABF1-570440D9F2CD}
+		{9F21241E-CBEF-4AE6-9FA9-8AD6433E90C5} = {99315EB4-D2FD-4ED9-83F6-3AC9F2BD5AC2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {89FDA2AA-B8BC-4B29-B441-85F2C5F6CB91}

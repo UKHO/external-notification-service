@@ -7,5 +7,6 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
     public interface IAzureMessageQueueHelper
     {
         Task<HealthCheckResult> CheckMessageQueueHealth(string storageAccountConnectionString, string queueName);
+        Task AddQueueMessage<SubscriptionRequestMessage>(string storageConnectionString, string queueName, SubscriptionRequestMessage subscriptionRequestMessage, string correlationId);
     }
 }

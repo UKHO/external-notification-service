@@ -65,6 +65,10 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// 900017 - Azure message queue for external notification service is unhealthy.
         /// </summary>
         AzureMessageQueueIsUnhealthy = 900017,
+        /// <summary>
+        /// 900018 -  Event data for adding message in queue.
+        /// </summary>
+        AddedMessageInQueue = 900018
     }
 
     public static class EventIdExtensions
