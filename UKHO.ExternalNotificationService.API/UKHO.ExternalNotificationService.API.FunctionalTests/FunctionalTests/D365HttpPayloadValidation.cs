@@ -39,7 +39,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [Test]
         public async Task WhenICallTheEnsSubscriptionApiWithEmptyD365Payload_ThenABadRequestStatusIsReturned()
         {
-            D365Payload d365PayloadEmpty = new();
+            D365Payload d365PayloadEmpty = null;
 
             var apiResponse = await _ensApiClient.PostEnsApiSubcriptionAsync(d365PayloadEmpty);
             Assert.AreEqual(400, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 400.");
