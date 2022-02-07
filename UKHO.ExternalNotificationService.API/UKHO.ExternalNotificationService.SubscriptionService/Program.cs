@@ -110,7 +110,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
              })
               .ConfigureServices((hostContext, services) =>
               {
-                  services.Configure<SubscriptionStorageConfiguration>(ConfigurationBuilder.GetSection("EnsSubscriptionStorageConfiguration"));
+                  services.Configure<SubscriptionStorageConfiguration>(ConfigurationBuilder.GetSection("SubscriptionStorageConfiguration"));
                   services.Configure<QueuesOptions>(ConfigurationBuilder.GetSection("QueuesOptions"));
               })
               .ConfigureWebJobs(b =>

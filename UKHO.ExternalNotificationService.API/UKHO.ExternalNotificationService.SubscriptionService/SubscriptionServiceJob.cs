@@ -19,7 +19,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
             _logger = logger;
         }
 
-        public void ProcessQueueMessage([QueueTrigger("%EnsSubscriptionStorageConfiguration:QueueName%")] QueueMessage message)
+        public void ProcessQueueMessage([QueueTrigger("%SubscriptionStorageConfiguration:QueueName%")] QueueMessage message)
         {
             _logger.LogInformation(EventIds.LogRequest.ToEventId(), "check web job is triggered or not using Azure Queue {message}", message.Body.ToString());
             System.Console.WriteLine(message);
