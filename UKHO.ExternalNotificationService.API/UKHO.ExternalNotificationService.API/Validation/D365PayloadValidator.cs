@@ -29,25 +29,25 @@ namespace UKHO.ExternalNotificationService.API.Validation
                 .WithMessage("D365Payload PostEntityImages cannot be blank or null.");
 
             RuleFor(v => v).NotNull().NotEmpty().OverridePropertyName("SubscriptionId")
-                .Must(x => x.IsValidSubscriptionId(d365PayloadKeyConfiguration))
+                .Must(x => x.IsValidAttribute(d365PayloadKeyConfiguration.Value.PostEntityImageKey,d365PayloadKeyConfiguration.Value.SubscriptionIdKey))
                 .When(ru => ru != null)
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("SubscriptionId cannot be blank or null.");
 
             RuleFor(v => v).NotNull().NotEmpty().OverridePropertyName("NotificationType")
-                .Must(x => x.IsValidNotificationType(d365PayloadKeyConfiguration))
+                .Must(x => x.IsValidFormatted(d365PayloadKeyConfiguration.Value.PostEntityImageKey, d365PayloadKeyConfiguration.Value.NotificationTypeKey))
                 .When(ru => ru != null)
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("NotificationType cannot be blank or null.");
 
             RuleFor(v => v).NotNull().NotEmpty().OverridePropertyName("WebhookUrl")
-                .Must(x => x.IsValidWebhookUrl(d365PayloadKeyConfiguration))
+                .Must(x => x.IsValidAttribute(d365PayloadKeyConfiguration.Value.PostEntityImageKey, d365PayloadKeyConfiguration.Value.WebhookUrlKey))
                 .When(ru => ru != null)
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("WebhookUrl cannot be blank or null.");
 
             RuleFor(v => v).NotNull().NotEmpty().OverridePropertyName("StateCode")
-                .Must(x => x.IsValidStatus(d365PayloadKeyConfiguration))
+                .Must(x => x.IsValidFormatted(d365PayloadKeyConfiguration.Value.PostEntityImageKey, d365PayloadKeyConfiguration.Value.IsActiveKey))
                 .When(ru => ru != null)
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("StateCode cannot be blank or null.");

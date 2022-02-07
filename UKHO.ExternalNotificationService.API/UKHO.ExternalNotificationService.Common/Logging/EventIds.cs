@@ -52,7 +52,7 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900012 - Request for external notification service post endpoint is started.
         /// </summary>
-        ENSPostRequestStart = 900012
+        ENSSubscriptionRequestStart = 900012
     }
 
     public static class EventIdExtensions

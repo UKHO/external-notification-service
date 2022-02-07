@@ -29,18 +29,18 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         [HttpPost]
         public async virtual Task<IActionResult> Post([FromBody] D365Payload d365Payload)
         {
-            _logger.LogInformation(EventIds.ENSPostRequestStart.ToEventId(), "Subscription request for D365Payload:{JsonConvert.SerializeObject(objPayload)} with _X-Correlation-ID:{correlationId}", JsonConvert.SerializeObject(d365Payload), GetCurrentCorrelationId());
+            _logger.LogInformation(EventIds.ENSSubscriptionRequestStart.ToEventId(), "Subscription request for D365Payload:{JsonConvert.SerializeObject(objPayload)} with _X-Correlation-ID:{correlationId}", JsonConvert.SerializeObject(d365Payload), GetCurrentCorrelationId());
 
             if (d365Payload == null)
             {
                 var error = new List<Error>
-                        {
-                            new Error()
-                            {
-                                Source = "requestBody",
-                                Description = "Either body is null or malformed."
-                            }
-                        };
+                {
+                    new Error()
+                    {
+                        Source = "requestBody",
+                        Description = "Either body is null or malformed."
+                    }
+                };
                 return BuildBadRequestErrorResponse(error);
             }
 
