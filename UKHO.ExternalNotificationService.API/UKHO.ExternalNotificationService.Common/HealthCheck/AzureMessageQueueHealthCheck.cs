@@ -14,17 +14,17 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
 {
     public class AzureMessageQueueHealthCheck : IHealthCheck
     {
-        private readonly IOptions<EnsFulfilmentStorageConfiguration> _ensFulfilmentStorageConfiguration;
+        private readonly IOptions<SubscriptionStorageConfiguration> _subscriptionStorageConfiguration;
         private readonly ILogger<AzureMessageQueueHelper> _logger;
         private readonly IStorageService _storageService;
         private readonly IAzureMessageQueueHelper _azureMessageQueueHelper;
 
-        public AzureMessageQueueHealthCheck(IOptions<EnsFulfilmentStorageConfiguration> ensFulfilmentStorageConfiguration,
+        public AzureMessageQueueHealthCheck(IOptions<SubscriptionStorageConfiguration> subscriptionStorageConfiguration,
                                             ILogger<AzureMessageQueueHelper> logger,
                                             IStorageService storageService,
                                             IAzureMessageQueueHelper azureMessageQueueHelper)
         {
-            _ensFulfilmentStorageConfiguration = ensFulfilmentStorageConfiguration;
+            _subscriptionStorageConfiguration = subscriptionStorageConfiguration;
             _logger = logger;
             _storageService = storageService;
             _azureMessageQueueHelper = azureMessageQueueHelper;
@@ -59,8 +59,8 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
             string storageAccountConnectionString = string.Empty;
             HealthCheckResult messageQueueHealthStatus = new HealthCheckResult(HealthStatus.Healthy, "Azure message queue is healthy");
 
-            storageAccountConnectionString = _storageService.GetStorageAccountConnectionString(_ensFulfilmentStorageConfiguration.Value.StorageAccountName, _ensFulfilmentStorageConfiguration.Value.StorageAccountKey);
-            messageQueueHealthStatus = await _azureMessageQueueHelper.CheckMessageQueueHealth(storageAccountConnectionString, _ensFulfilmentStorageConfiguration.Value.QueueName);
+            storageAccountConnectionString = _storageService.GetStorageAccountConnectionString(_subscriptionStorageConfiguration.Value.StorageAccountName, _subscriptionStorageConfiguration.Value.StorageAccountKey);
+            messageQueueHealthStatus = await _azureMessageQueueHelper.CheckMessageQueueHealth(storageAccountConnectionString, _subscriptionStorageConfiguration.Value.QueueName);
             return messageQueueHealthStatus;
         }
     }

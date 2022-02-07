@@ -7,8 +7,8 @@ namespace UKHO.ExternalNotificationService.Common.Storage
 {
     public class StorageService : IStorageService
     {
-        private readonly IOptions<EnsFulfilmentStorageConfiguration> _storageConfig;
-        public StorageService(IOptions<EnsFulfilmentStorageConfiguration> storageConfig)
+        private readonly IOptions<SubscriptionStorageConfiguration> _storageConfig;
+        public StorageService(IOptions<SubscriptionStorageConfiguration> storageConfig)
         {
             _storageConfig = storageConfig;
         }

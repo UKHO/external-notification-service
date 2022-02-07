@@ -17,7 +17,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
     {
         private IAzureBlobStorageHelper _fakeAzureBlobStorageHelper;
         private IStorageService _fakeStorageService;
-        private IOptions<EnsFulfilmentStorageConfiguration> _fakeEnsFulfilmentStorageConfiguration;
+        private IOptions<SubscriptionStorageConfiguration> _fakeSubscriptionStorageConfiguration;
         private ILogger<AzureBlobStorageHealthCheck> _fakeLogger;
         private AzureBlobStorageHealthCheck _azureBlobStorageHealthCheck;
         
@@ -27,10 +27,10 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         {
             _fakeAzureBlobStorageHelper = A.Fake<IAzureBlobStorageHelper>();
             _fakeStorageService= A.Fake<IStorageService>();
-            _fakeEnsFulfilmentStorageConfiguration = A.Fake<IOptions<EnsFulfilmentStorageConfiguration>>();
+            _fakeSubscriptionStorageConfiguration = A.Fake<IOptions<SubscriptionStorageConfiguration>>();
             _fakeLogger = A.Fake<ILogger<AzureBlobStorageHealthCheck>>();
 
-            _azureBlobStorageHealthCheck = new AzureBlobStorageHealthCheck(_fakeAzureBlobStorageHelper, _fakeStorageService,_fakeEnsFulfilmentStorageConfiguration,_fakeLogger);
+            _azureBlobStorageHealthCheck = new AzureBlobStorageHealthCheck(_fakeAzureBlobStorageHelper, _fakeStorageService, _fakeSubscriptionStorageConfiguration, _fakeLogger);
         }
 
         [Test]

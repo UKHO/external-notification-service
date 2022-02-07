@@ -14,7 +14,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
 {
     public class AzureMessageQueueHealthCheckTest
     {
-        private IOptions<EnsFulfilmentStorageConfiguration> _fakeEnsFulfilmentStorageConfiguration;
+        private IOptions<SubscriptionStorageConfiguration> _fakeSubscriptionStorageConfiguration;
         private ILogger<AzureMessageQueueHelper> _fakeLogger;
         private IStorageService _fakeStorageService;
         private IAzureMessageQueueHelper _fakeAzureMessageQueueHelper;
@@ -24,12 +24,12 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         [SetUp]
         public void Setup()
         {
-            _fakeEnsFulfilmentStorageConfiguration = A.Fake<IOptions<EnsFulfilmentStorageConfiguration>>();
+            _fakeSubscriptionStorageConfiguration = A.Fake<IOptions<SubscriptionStorageConfiguration>>();
             _fakeLogger = A.Fake<ILogger<AzureMessageQueueHelper>>();
             _fakeStorageService = A.Fake<IStorageService>();
             _fakeAzureMessageQueueHelper = A.Fake<IAzureMessageQueueHelper>();
 
-            _azureMessageQueueHealthCheck = new AzureMessageQueueHealthCheck(_fakeEnsFulfilmentStorageConfiguration,_fakeLogger,_fakeStorageService,_fakeAzureMessageQueueHelper);
+            _azureMessageQueueHealthCheck = new AzureMessageQueueHealthCheck(_fakeSubscriptionStorageConfiguration, _fakeLogger,_fakeStorageService,_fakeAzureMessageQueueHelper);
         }
 
         [Test]

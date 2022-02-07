@@ -39,7 +39,7 @@ namespace UKHO.ExternalNotificationService.API
             services.AddControllers()
                 .AddNewtonsoftJson();
             services.Configure<EventHubLoggingConfiguration>(_configuration.GetSection("EventHubLoggingConfiguration"));
-            services.Configure<EnsFulfilmentStorageConfiguration>(_configuration.GetSection("EnsFulfilmentStorageConfiguration"));
+            services.Configure<SubscriptionStorageConfiguration>(_configuration.GetSection("SubscriptionStorageConfiguration"));
             services.AddApplicationInsightsTelemetry();
             services.AddLogging(loggingBuilder =>
             {
@@ -61,7 +61,7 @@ namespace UKHO.ExternalNotificationService.API
             services.AddScoped<IEventHubLoggingHealthHelper, EventHubLoggingHealthHelper>();
             services.AddScoped<IStorageService, StorageService>();
             services.AddScoped<IAzureBlobStorageHelper, AzureBlobStorageHelper>();
-            services.AddScoped<IEnsFulfilmentStorageConfiguration, EnsFulfilmentStorageConfiguration>();
+            services.AddScoped<ISubscriptionStorageConfiguration, SubscriptionStorageConfiguration>();
             services.AddScoped<IAzureMessageQueueHelper, AzureMessageQueueHelper>();
 
 
