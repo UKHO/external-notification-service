@@ -68,19 +68,6 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         }
 
         [Test]
-        public async Task WhenPostInvalidRequest_ThenRecieveInternalServerError()
-        {
-            var validationMessage = new ValidationFailure("InputParameters", "D365Payload InputParameters cannot be blank or null.")
-            {
-                ErrorCode = HttpStatusCode.InternalServerError.ToString()
-            };
-            A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure> { validationMessage }));
-
-            var result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
-
-            Assert.AreEqual(202, result.StatusCode);
-        }
-        [Test]
         public async Task WhenPostValidPayload_ThenRecieveSuccessfulResponse()
         {
             A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
