@@ -30,8 +30,8 @@ namespace UKHO.ExternalNotificationService.API.Services
         {
             var inputParameter = d365Payload.InputParameters.Single();
             var postEntityImage = d365Payload.PostEntityImages.SingleOrDefault(i => i.Key == _d365PayloadKeyConfiguration.Value.PostEntityImageKey);
-            var attributes = inputParameter.Value.Attributes.Concat(postEntityImage?.ImageValue?.Attributes ?? new D365Attribute[0]);
-            var formattedValues = inputParameter.Value.FormattedValues.Concat(postEntityImage?.ImageValue?.FormattedValues ?? new FormattedValue[0]);
+            var attributes = inputParameter.Value.Attributes.Concat(postEntityImage?.Value?.Attributes ?? new D365Attribute[0]);
+            var formattedValues = inputParameter.Value.FormattedValues.Concat(postEntityImage?.Value?.FormattedValues ?? new FormattedValue[0]);
 
             string correlationId = d365Payload.CorrelationId;
             string stateCode = formattedValues.FirstOrDefault(a => a.Key == _d365PayloadKeyConfiguration.Value.IsActiveKey)?.Value.ToString();

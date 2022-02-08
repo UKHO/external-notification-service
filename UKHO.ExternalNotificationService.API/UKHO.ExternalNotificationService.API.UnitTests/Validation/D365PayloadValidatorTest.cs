@@ -84,7 +84,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             _fakeD365Payload.InputParameters[0].Value.Attributes = new D365Attribute[]
                                                                     { new D365Attribute {Key = _fakeD365PayloadKeyConfiguration.Value.WebhookUrlKey,
                                                                                          Value = "https://input.com" } };
-            _fakeD365Payload.PostEntityImages[0].ImageValue.Attributes = null;
+            _fakeD365Payload.PostEntityImages[0].Value.Attributes = null;
 
             var result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("SubscriptionId");
@@ -112,7 +112,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             _fakeD365Payload.InputParameters[0].Value.FormattedValues = new FormattedValue[]
                                                                         { new FormattedValue { Key = _fakeD365PayloadKeyConfiguration.Value.IsActiveKey,
                                                                                                Value = "Active" } };
-            _fakeD365Payload.PostEntityImages[0].ImageValue.FormattedValues = null;
+            _fakeD365Payload.PostEntityImages[0].Value.FormattedValues = null;
 
             var result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("NotificationType");
@@ -139,7 +139,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             _fakeD365Payload.InputParameters[0].Value.Attributes = new D365Attribute[]
                                                                     { new D365Attribute { Key = _fakeD365PayloadKeyConfiguration.Value.SubscriptionIdKey,
                                                                                           Value = "246d71e7-1475-ec11-8943-002248818222" } };
-            _fakeD365Payload.PostEntityImages[0].ImageValue.Attributes = null;
+            _fakeD365Payload.PostEntityImages[0].Value.Attributes = null;
 
             var result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("WebhookUrl");
@@ -166,7 +166,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             _fakeD365Payload.InputParameters[0].Value.FormattedValues = new FormattedValue[]
                                                                         { new FormattedValue { Key = _fakeD365PayloadKeyConfiguration.Value.NotificationTypeKey,
                                                                                                Value = "Data test" } };
-            _fakeD365Payload.PostEntityImages[0].ImageValue.FormattedValues = null;
+            _fakeD365Payload.PostEntityImages[0].Value.FormattedValues = null;
 
             var result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("StateCode");
@@ -207,7 +207,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         [Test]
         public void WhenValidRequestWithNullPostEntityImagesValue_ThenRecieveSuccessfulResponse()
         {
-            _fakeD365Payload.PostEntityImages[0].ImageValue = null;
+            _fakeD365Payload.PostEntityImages[0].Value = null;
 
             var result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
 
@@ -229,7 +229,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
                                                                                         new FormattedValue { Key =  _fakeD365PayloadKeyConfiguration.Value.IsActiveKey, Value = "Active" }}}}},
                 PostEntityImages = new EntityImage[] { new EntityImage {
                                     Key= _fakeD365PayloadKeyConfiguration.Value.PostEntityImageKey,
-                                    ImageValue = new EntityImageValue {
+                                    Value = new EntityImageValue {
                                         Attributes = new D365Attribute[] { new D365Attribute { Key = _fakeD365PayloadKeyConfiguration.Value.WebhookUrlKey, Value = "https://abc.com" },
                                                                            new D365Attribute { Key = _fakeD365PayloadKeyConfiguration.Value.SubscriptionIdKey, Value = "246d71e7-1475-ec11-8943-002248818222" } },
                                         FormattedValues = new FormattedValue[] { new FormattedValue { Key = _fakeD365PayloadKeyConfiguration.Value.NotificationTypeKey, Value = "Data test" },

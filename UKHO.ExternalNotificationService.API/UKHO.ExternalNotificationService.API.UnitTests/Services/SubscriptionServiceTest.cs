@@ -93,7 +93,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [Test]
         public void WhenValidPayloadWithNullPostEntityImagesValue_ThenRecieveSuccessfulSubscriptionRequest()
         {
-            _fakeD365PayloadDetails.PostEntityImages[0].ImageValue = null;
+            _fakeD365PayloadDetails.PostEntityImages[0].Value = null;
             var result = _subscriptionService.ConvertToSubscriptionRequestModel(_fakeD365PayloadDetails);
 
             Assert.IsInstanceOf<SubscriptionRequest>(result);
@@ -125,7 +125,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
                                                                                         new FormattedValue { Key =  _fakeD365PayloadKeyConfiguration.Value.IsActiveKey, Value = "Active" }}}}},
                 PostEntityImages = new EntityImage[] { new EntityImage {
                                     Key= _fakeD365PayloadKeyConfiguration.Value.PostEntityImageKey,
-                                    ImageValue = new EntityImageValue {
+                                    Value = new EntityImageValue {
                                         Attributes = new D365Attribute[] { new D365Attribute { Key = _fakeD365PayloadKeyConfiguration.Value.WebhookUrlKey, Value = "https://abc.com" },
                                                                            new D365Attribute { Key = _fakeD365PayloadKeyConfiguration.Value.SubscriptionIdKey, Value = "246d71e7-1475-ec11-8943-002248818222" } },
                                         FormattedValues = new FormattedValue[] { new FormattedValue { Key = _fakeD365PayloadKeyConfiguration.Value.NotificationTypeKey, Value = "Data test" },

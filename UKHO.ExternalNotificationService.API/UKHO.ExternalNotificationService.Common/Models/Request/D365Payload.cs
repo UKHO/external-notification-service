@@ -43,7 +43,8 @@ namespace UKHO.ExternalNotificationService.Common.Models.Request
     {
         [JsonPropertyName("key")]
         public string Key { get; set; }
-        public EntityImageValue ImageValue { get; set; }
+        [JsonPropertyName("value")]
+        public EntityImageValue Value { get; set; }
     }
 
     public class EntityImageValue
