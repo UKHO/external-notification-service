@@ -48,12 +48,11 @@ module "key_vault" {
      "webapp_service" = module.webapp_service.web_app_object_id
   }
   secrets = {
-        "EventHubLoggingConfiguration--ConnectionString"               = module.eventhub.log_primary_connection_string
-        "EventHubLoggingConfiguration--EntityPath"                     = module.eventhub.entity_path
+        "EventHubLoggingConfiguration--ConnectionString"            = module.eventhub.log_primary_connection_string
+        "EventHubLoggingConfiguration--EntityPath"                  = module.eventhub.entity_path
         "SubscriptionStorageConfiguration--StorageAccountName"      = module.storage.name
         "SubscriptionStorageConfiguration--StorageAccountKey"       = module.storage.primary_access_key
         "SubscriptionStorageConfiguration--StorageConnectionString" = module.storage.connection_string
-        "SubscriptionStorageConfiguration--QueueName"               = module.storage.event_storage_queue
         "EventGridDomainConfiguration--EventGridDomainAccessKey"    = module.eventgriddomain.event_grid_domain_primary_access_key
         "AzureWebJobsStorage"                                       = module.storage.connection_string
       }
