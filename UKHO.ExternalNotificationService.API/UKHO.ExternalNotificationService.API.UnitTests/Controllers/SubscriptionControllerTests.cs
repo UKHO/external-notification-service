@@ -24,6 +24,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         private ISubscriptionService _fakeSubscriptionService;
         private D365Payload _fakeD365PayloadDetails;
         private SubscriptionRequest _fakeSubscriptionRequest;
+        private readonly string _xmsDynamicsMsgSizeExceededHeader = "x-ms-dynamics-msg-size-exceeded";
 
         [SetUp]
         public void Setup()
@@ -76,6 +77,21 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             
             var result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
 
+            A.CallTo(_fakeLogger).Where(call => call.GetArgument<LogLevel>(0) == LogLevel.Error).MustNotHaveHappened();
+            Assert.AreEqual(StatusCodes.Status202Accepted, result.StatusCode);
+        }
+
+        [Test]
+        public async Task WhenD365HttpPayloadSizeExceeded_ThenLogError()
+        {
+            var defaultHttpContext = new DefaultHttpContext();
+            defaultHttpContext.Request.Headers.Add(_xmsDynamicsMsgSizeExceededHeader, string.Empty);
+            A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(defaultHttpContext);
+            A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
+
+            var result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
+
+            A.CallTo(_fakeLogger).Where(call => call.GetArgument<LogLevel>(0) == LogLevel.Error).MustHaveHappened();
             Assert.AreEqual(StatusCodes.Status202Accepted, result.StatusCode);
         }
 
