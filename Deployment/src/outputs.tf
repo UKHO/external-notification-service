@@ -13,3 +13,8 @@ output "keyvault_uri"{
 output "web_app_resource_group" {
    value = azurerm_resource_group.rg.name
 }
+
+output "event_storage_queue" {
+  value = module.storage.event_storage_queue
+}
+
