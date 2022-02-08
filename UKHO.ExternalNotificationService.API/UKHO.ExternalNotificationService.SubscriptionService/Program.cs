@@ -13,6 +13,8 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 using UKHO.ExternalNotificationService.Common.Configuration;
+using UKHO.ExternalNotificationService.Common.Helpers;
+using UKHO.ExternalNotificationService.SubscriptionService.Services;
 using UKHO.Logging.EventHubLogProvider;
 
 namespace UKHO.ExternalNotificationService.SubscriptionService
@@ -111,7 +113,10 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
               .ConfigureServices((hostContext, services) =>
               {
                   services.Configure<SubscriptionStorageConfiguration>(ConfigurationBuilder.GetSection("SubscriptionStorageConfiguration"));
+                  services.Configure<AzureConfiguration>(ConfigurationBuilder.GetSection("AzureConfiguration"));
                   services.Configure<QueuesOptions>(ConfigurationBuilder.GetSection("QueuesOptions"));
+                  services.AddScoped<ISubscriptionServiceData, SubscriptionServiceData>();
+                  services.AddScoped<IAzureEventGridDomainService, AzureEventGridDomainService>();
               })
               .ConfigureWebJobs(b =>
               {

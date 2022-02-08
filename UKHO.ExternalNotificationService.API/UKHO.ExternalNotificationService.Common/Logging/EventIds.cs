@@ -52,7 +52,31 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900012 -  Event data for adding message in queue.
         /// </summary>
-        AddedMessageInQueue = 900012
+        AddedMessageInQueue = 900012,
+        /// <summary>
+        /// 900013 -  Create subscription web job is started.
+        /// </summary>
+        CreateSubscriptionRequestStart = 900013,
+        /// <summary>
+        /// 900014 -  Create subscription web job is Completed.
+        /// </summary>
+        CreateSubscriptionRequestCompleted = 900014,
+        /// <summary>
+        /// 900015 -  Create subscription service is started.
+        /// </summary>
+        CreateSubscriptionServiceStart = 900015,
+        /// <summary>
+        /// 900016 -  Create subscription service is Completed.
+        /// </summary>
+        CreateSubscriptionServiceCompleted = 900016,
+        /// <summary>
+        /// 900017 -  Create or updated azure event domain topic is started.
+        /// </summary>
+        CreateOrUpdateAzureEventDomainTopicStart = 900017,
+        /// <summary>
+        /// 900018 -  Create or updated azure event domain topic is Completed.
+        /// </summary>
+        CreateOrUpdateAzureEventDomainTopicCompleted = 900018
     }
 
     public static class EventIdExtensions
