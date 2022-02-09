@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UKHO.ExternalNotificationService.Common.Configuration
 {
-    public class AzureConfiguration
+    public class EventGridDomainConfiguration
     {
         public string SubscriptionId { get; set; }
 

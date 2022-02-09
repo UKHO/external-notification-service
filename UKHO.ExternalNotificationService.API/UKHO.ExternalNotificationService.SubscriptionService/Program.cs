@@ -113,7 +113,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
               .ConfigureServices((hostContext, services) =>
               {
                   services.Configure<SubscriptionStorageConfiguration>(ConfigurationBuilder.GetSection("SubscriptionStorageConfiguration"));
-                  services.Configure<AzureConfiguration>(ConfigurationBuilder.GetSection("AzureConfiguration"));
+                  services.Configure<EventGridDomainConfiguration>(ConfigurationBuilder.GetSection("EventGridDomainConfiguration"));
                   services.Configure<QueuesOptions>(ConfigurationBuilder.GetSection("QueuesOptions"));
                   services.AddScoped<ISubscriptionServiceData, SubscriptionServiceData>();
                   services.AddScoped<IAzureEventGridDomainService, AzureEventGridDomainService>();

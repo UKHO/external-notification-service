@@ -15,12 +15,12 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
 {
     public class AzureEventGridDomainService : IAzureEventGridDomainService
     {
-        private readonly AzureConfiguration _azureConfig;
+        private readonly EventGridDomainConfiguration _eventGridDomainConfig;
         private readonly ILogger<AzureEventGridDomainService> _logger;
 
-        public AzureEventGridDomainService(IOptions<AzureConfiguration> azureConfig, ILogger<AzureEventGridDomainService> logger)
+        public AzureEventGridDomainService(IOptions<EventGridDomainConfiguration> eventGridDomainConfig, ILogger<AzureEventGridDomainService> logger)
         {
-            _azureConfig = azureConfig.Value;
+            _eventGridDomainConfig = eventGridDomainConfig.Value;
             _logger = logger;
         }
 
@@ -28,8 +28,8 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
         {
             _logger.LogInformation(EventIds.CreateOrUpdateAzureEventDomainTopicStart.ToEventId(),
                     "Create azure event domain topic started for _X-Correlation-ID:{CorrelationId} with Event domain topic {topic}", subscriptionMessage.CorrelationId, subscriptionMessage.NotificationTypeTopicName);
-            EventGridManagementClient eventGridMgmtClient = await GetEventGridClient(_azureConfig.SubscriptionId, cancellationToken);
-            DomainTopic topic = await eventGridMgmtClient.DomainTopics.CreateOrUpdateAsync(_azureConfig.ResourceGroup, _azureConfig.EventGridDomainName, subscriptionMessage.NotificationTypeTopicName, cancellationToken);
+            EventGridManagementClient eventGridMgmtClient = await GetEventGridClient(_eventGridDomainConfig.SubscriptionId, cancellationToken);
+            DomainTopic topic = await eventGridMgmtClient.DomainTopics.CreateOrUpdateAsync(_eventGridDomainConfig.ResourceGroup, _eventGridDomainConfig.EventGridDomainName, subscriptionMessage.NotificationTypeTopicName, cancellationToken);
             _logger.LogInformation(EventIds.CreateOrUpdateAzureEventDomainTopicCompleted.ToEventId(),
                     "Create azure event domain topic completed for _X-Correlation-ID:{CorrelationId} with Event domain topic {topic}", subscriptionMessage.CorrelationId, topic.Name);
             return topic.Id;
