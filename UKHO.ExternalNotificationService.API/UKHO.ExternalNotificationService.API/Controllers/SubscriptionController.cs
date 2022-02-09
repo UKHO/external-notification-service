@@ -59,7 +59,11 @@ namespace UKHO.ExternalNotificationService.API.Controllers
 
             var notificationType = _notificationRepository.GetAllNotificationTypes().FirstOrDefault(x => x.Name == subscription.NotificationType);
 
-            if (notificationType.Name != subscription.NotificationType)
+            if (notificationType == null)
+            {
+                return new BadRequestObjectResult($"NotificationType cannot be null.'");
+            }
+            else if (notificationType.Name != subscription.NotificationType)
             {
                 return new BadRequestObjectResult($"Invalid Notification Type '{subscription.NotificationType}'");
             }
