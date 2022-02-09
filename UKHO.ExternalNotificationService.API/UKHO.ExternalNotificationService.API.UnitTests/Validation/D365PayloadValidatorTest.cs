@@ -1,8 +1,8 @@
-﻿using FakeItEasy;
+﻿using System.Linq;
+using FakeItEasy;
 using FluentValidation.TestHelper;
 using Microsoft.Extensions.Options;
 using NUnit.Framework;
-using System.Linq;
 using UKHO.ExternalNotificationService.API.Validation;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Models.Request;
