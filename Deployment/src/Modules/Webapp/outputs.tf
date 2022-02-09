@@ -16,10 +16,10 @@ output "default_site_hostname" {
 
 output "webapp_scm_credentials"{
     value = merge({
-    "${var.name}-scm-username" =  webapp.site_credential.username 
+    "${var.name}-scm-username" =  azurerm_app_service.webapp_service.site_credential.username 
     },
     {
-    "${var.name}-scm-password" =  webapp.site_credential.password 
+    "${var.name}-scm-password" =  azurerm_app_service.webapp_service.site_credential.password 
     })
   sensitive = true
 }
