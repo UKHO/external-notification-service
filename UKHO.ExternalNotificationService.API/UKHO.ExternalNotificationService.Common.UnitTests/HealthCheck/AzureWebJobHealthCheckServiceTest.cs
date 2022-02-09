@@ -13,7 +13,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
     {
         private IWebJobAccessKeyProvider _fakeWebJobAccessKeyProvider;
         private IWebHostEnvironment _fakeWebHostEnvironment;
-        private IAzureWebJobsHelper _fakeAzureWebJobsHelper;
+        private IAzureWebJobHelper _fakeAzureWebJobHelper;
         private AzureWebJobHealthCheckService azureWebJobHealthCheckService;
 
         [SetUp]
@@ -21,15 +21,15 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         {
             _fakeWebJobAccessKeyProvider = A.Fake<IWebJobAccessKeyProvider>();
             _fakeWebHostEnvironment = A.Fake<IWebHostEnvironment>();
-            _fakeAzureWebJobsHelper = A.Fake<IAzureWebJobsHelper>();
+            _fakeAzureWebJobHelper = A.Fake<IAzureWebJobHelper>();
 
-            azureWebJobHealthCheckService = new AzureWebJobHealthCheckService(_fakeWebJobAccessKeyProvider, _fakeWebHostEnvironment, _fakeAzureWebJobsHelper);
+            azureWebJobHealthCheckService = new AzureWebJobHealthCheckService(_fakeWebJobAccessKeyProvider, _fakeWebHostEnvironment, _fakeAzureWebJobHelper);
         }
 
         [Test]
         public async Task WhenAzureWebJobStatusIsNotRunning_ThenReturnUnhealthy()
         {
-            A.CallTo(() => _fakeAzureWebJobsHelper.CheckWebJobsHealth(A<WebJobDetails>.Ignored))
+            A.CallTo(() => _fakeAzureWebJobHelper.CheckWebJobsHealth(A<WebJobDetails>.Ignored))
                .Returns(new HealthCheckResult(HealthStatus.Unhealthy, "Azure webjob is unhealthy"));
 
             var response = await azureWebJobHealthCheckService.CheckHealthAsync();
@@ -40,7 +40,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         [Test]
         public async Task WhenAzureWebJobStatusIsRunning_ThenReturnHealthy()
         {
-            A.CallTo(() => _fakeAzureWebJobsHelper.CheckWebJobsHealth(A<WebJobDetails>.Ignored))
+            A.CallTo(() => _fakeAzureWebJobHelper.CheckWebJobsHealth(A<WebJobDetails>.Ignored))
                .Returns(new HealthCheckResult(HealthStatus.Healthy, "Azure webjob is healthy"));
 
             var response = await azureWebJobHealthCheckService.CheckHealthAsync();

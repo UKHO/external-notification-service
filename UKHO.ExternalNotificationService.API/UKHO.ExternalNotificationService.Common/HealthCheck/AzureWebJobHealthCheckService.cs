@@ -13,11 +13,11 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
     {
         private readonly IWebJobAccessKeyProvider _webJobAccessKeyProvider;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly IAzureWebJobsHelper _azureWebJobHelper;
+        private readonly IAzureWebJobHelper _azureWebJobHelper;
 
         public AzureWebJobHealthCheckService(IWebJobAccessKeyProvider webJobAccessKeyProvider,
                                        IWebHostEnvironment webHostEnvironment,
-                                       IAzureWebJobsHelper azureWebJobsHelper)
+                                       IAzureWebJobHelper azureWebJobsHelper)
         {
             _webJobAccessKeyProvider = webJobAccessKeyProvider;
             _webHostEnvironment = webHostEnvironment;

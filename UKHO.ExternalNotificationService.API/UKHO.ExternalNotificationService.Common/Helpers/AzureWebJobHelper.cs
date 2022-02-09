@@ -14,7 +14,7 @@ using UKHO.ExternalNotificationService.Common.HealthCheck;
 namespace UKHO.ExternalNotificationService.Common.Helpers
 {
     [ExcludeFromCodeCoverage]
-    public class AzureWebJobHelper : IAzureWebJobsHelper
+    public class AzureWebJobHelper : IAzureWebJobHelper
     {
         static HttpClient httpClient = new HttpClient();
         private readonly IWebHostEnvironment _webHostEnvironment;
