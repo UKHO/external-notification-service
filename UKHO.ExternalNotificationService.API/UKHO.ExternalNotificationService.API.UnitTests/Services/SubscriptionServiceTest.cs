@@ -136,7 +136,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             return d365Payload;
         }
 
-        private SubscriptionRequest GetSubscriptionRequest()
+        private static SubscriptionRequest GetSubscriptionRequest()
         {
             return new SubscriptionRequest()
             {

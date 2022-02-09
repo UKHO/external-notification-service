@@ -1,11 +1,11 @@
-﻿using NUnit.Framework;
-using UKHO.ExternalNotificationService.API.Validation;
-using UKHO.ExternalNotificationService.Common.Models.Request;
+﻿using FakeItEasy;
 using FluentValidation.TestHelper;
-using System.Linq;
 using Microsoft.Extensions.Options;
+using NUnit.Framework;
+using System.Linq;
+using UKHO.ExternalNotificationService.API.Validation;
 using UKHO.ExternalNotificationService.Common.Configuration;
-using FakeItEasy;
+using UKHO.ExternalNotificationService.Common.Models.Request;
 
 namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
 {

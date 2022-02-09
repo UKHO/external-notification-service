@@ -19,9 +19,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         public void Setup()
         {
             _testConfig = new TestConfiguration();
-            _ensApiClient = new EnsApiClient(_testConfig.ensApiBaseUrl);
+            _ensApiClient = new EnsApiClient(_testConfig.EnsApiBaseUrl);
 
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), _testConfig.payloadFolder, _testConfig.payloadFileName);
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), _testConfig.PayloadFolder, _testConfig.PayloadFileName);
 
             _d365Payload = JsonConvert.DeserializeObject<D365Payload>(File.ReadAllText(filePath));
 

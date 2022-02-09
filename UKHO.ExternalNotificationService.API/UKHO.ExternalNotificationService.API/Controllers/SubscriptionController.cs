@@ -1,15 +1,15 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using UKHO.ExternalNotificationService.API.Services;
-using UKHO.ExternalNotificationService.Common.Models.Response;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
+using UKHO.ExternalNotificationService.API.Extensions;
+using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.Common.Logging;
 using UKHO.ExternalNotificationService.Common.Models.Request;
-using System.Collections.Generic;
-using UKHO.ExternalNotificationService.API.Extensions;
-using Newtonsoft.Json;
+using UKHO.ExternalNotificationService.Common.Models.Response;
 
 namespace UKHO.ExternalNotificationService.API.Controllers
 {
@@ -27,7 +27,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         }
 
         [HttpPost]
-        public async virtual Task<IActionResult> Post([FromBody] D365Payload d365Payload)
+        public virtual async Task<IActionResult> Post([FromBody] D365Payload d365Payload)
         {
             _logger.LogInformation(EventIds.ENSSubscriptionRequestStart.ToEventId(), "Subscription request for D365Payload:{d365Payload} with _X-Correlation-ID:{correlationId}", JsonConvert.SerializeObject(d365Payload), GetCurrentCorrelationId());
 

@@ -79,7 +79,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             Assert.AreEqual(StatusCodes.Status202Accepted, result.StatusCode);
         }
 
-        private D365Payload GetD365Payload()
+        private static D365Payload GetD365Payload()
         {
             var d365Payload = new D365Payload()
             {
@@ -92,7 +92,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             return d365Payload;
         }
 
-        private SubscriptionRequest GetSubscriptionRequest()
+        private static SubscriptionRequest GetSubscriptionRequest()
         {
             return new SubscriptionRequest()
             {

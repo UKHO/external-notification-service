@@ -14,7 +14,7 @@ namespace UKHO.ExternalNotificationService.API.Validation
             {
                 var inputParameter = payload.InputParameters.Single();
                 var postEntityImage = payload.PostEntityImages.SingleOrDefault(i => i.Key == postEntityImageKey);
-                var attributes = inputParameter.Value.Attributes.Concat(postEntityImage?.Value?.Attributes ?? new D365Attribute[0]);
+                var attributes = inputParameter.Value.Attributes.Concat(postEntityImage?.Value?.Attributes ?? Array.Empty<D365Attribute>());
 
                 var validAttributeKey = attributes.FirstOrDefault(a => a.Key == attributeKey);
                 return (validAttributeKey != null && !string.IsNullOrWhiteSpace(attributes.FirstOrDefault(a => a.Key == attributeKey).Value.ToString()));
@@ -32,7 +32,7 @@ namespace UKHO.ExternalNotificationService.API.Validation
             {
                 var inputParameter = payload.InputParameters.Single();
                 var postEntityImage = payload.PostEntityImages.SingleOrDefault(i => i.Key == postEntityImageKey);
-                var formattedValues = inputParameter.Value.FormattedValues.Concat(postEntityImage?.Value?.FormattedValues ?? new FormattedValue[0]);
+                var formattedValues = inputParameter.Value.FormattedValues.Concat(postEntityImage?.Value?.FormattedValues ?? Array.Empty<FormattedValue>());
 
                 object validFormattedKey = formattedValues.FirstOrDefault(a => a.Key == formattedKey);
                 return (validFormattedKey != null && !string.IsNullOrWhiteSpace(formattedValues.FirstOrDefault(a => a.Key == formattedKey).Value.ToString()));
