@@ -61,11 +61,15 @@ namespace UKHO.ExternalNotificationService.API.Controllers
 
             if (notificationType == null)
             {
-                return new BadRequestObjectResult($"NotificationType cannot be null.'");
-            }
-            else if (notificationType.Name != subscription.NotificationType)
-            {
-                return new BadRequestObjectResult($"Invalid Notification Type '{subscription.NotificationType}'");
+                var error = new List<Error>
+                {
+                    new Error()
+                    {
+                        Source = "notificationType",
+                        Description = $"Invalid Notification Type '{subscription.NotificationType}'"
+                    }
+                };
+                return BuildBadRequestErrorResponse(error);
             }
 
             _logger.LogInformation(EventIds.Accepted.ToEventId(), "Subscription request Accepted for D365Payload:{d365Payload} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{correlationId}", JsonConvert.SerializeObject(d365Payload), d365Payload.CorrelationId, GetCurrentCorrelationId());
