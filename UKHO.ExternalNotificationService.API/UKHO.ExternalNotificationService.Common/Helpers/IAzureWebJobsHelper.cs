@@ -7,6 +7,6 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
 {
     public interface IAzureWebJobsHelper
     {
-        public Task<HealthCheckResult> CheckAllWebJobsHealth(WebJobDetails webJob);
+        public Task<HealthCheckResult> CheckWebJobsHealth(WebJobDetails webJob);
     }
 }

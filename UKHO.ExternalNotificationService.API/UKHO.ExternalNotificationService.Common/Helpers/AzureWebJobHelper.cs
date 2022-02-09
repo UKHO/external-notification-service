@@ -14,17 +14,17 @@ using UKHO.ExternalNotificationService.Common.HealthCheck;
 namespace UKHO.ExternalNotificationService.Common.Helpers
 {
     [ExcludeFromCodeCoverage]
-    public class AzureWebJobsHelper : IAzureWebJobsHelper
+    public class AzureWebJobHelper : IAzureWebJobsHelper
     {
         static HttpClient httpClient = new HttpClient();
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public AzureWebJobsHelper(IWebHostEnvironment webHostEnvironment)
+        public AzureWebJobHelper(IWebHostEnvironment webHostEnvironment)
         {
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<HealthCheckResult> CheckAllWebJobsHealth(WebJobDetails webJob)
+        public async Task<HealthCheckResult> CheckWebJobsHealth(WebJobDetails webJob)
         {
             try
             {
@@ -33,6 +33,8 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
                 using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, webJob.WebJobUri);
                 httpClient.DefaultRequestHeaders.Accept.Clear();
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", webJob.UserPassword);
+
                 var response = await httpClient.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseHeadersRead, CancellationToken.None);
 
                 if (response.StatusCode == HttpStatusCode.OK)

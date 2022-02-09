@@ -13,7 +13,7 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
     {
         private readonly IWebJobAccessKeyProvider _webJobAccessKeyProvider;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly IAzureWebJobsHelper _azureWebJobsHelper;
+        private readonly IAzureWebJobsHelper _azureWebJobHelper;
 
         public AzureWebJobHealthCheckService(IWebJobAccessKeyProvider webJobAccessKeyProvider,
                                        IWebHostEnvironment webHostEnvironment,
@@ -21,7 +21,7 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
         {
             _webJobAccessKeyProvider = webJobAccessKeyProvider;
             _webHostEnvironment = webHostEnvironment;
-            _azureWebJobsHelper = azureWebJobsHelper;
+            _azureWebJobHelper = azureWebJobsHelper;
         }
 
         public async Task<HealthCheckResult> CheckHealthAsync(CancellationToken cancellationToken = default)
@@ -42,7 +42,7 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
                     WebJobUri = webJobUri
                 };
 
-                var webJobsHealth = _azureWebJobsHelper.CheckAllWebJobsHealth(webJobDetails);
+                var webJobsHealth = _azureWebJobHelper.CheckWebJobsHealth(webJobDetails);
                 await Task.WhenAll(webJobsHealth);
 
                 return webJobsHealth.Result;
