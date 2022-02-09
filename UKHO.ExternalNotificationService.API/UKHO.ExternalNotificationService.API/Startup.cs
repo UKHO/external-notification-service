@@ -66,12 +66,16 @@ namespace UKHO.ExternalNotificationService.API
             services.AddScoped<IAzureMessageQueueHelper, AzureMessageQueueHelper>();
             services.AddScoped<ISubscriptionService, SubscriptionService>();
             services.AddScoped<ISubscriptionStorageService, SubscriptionStorageService>();
-
+            services.AddScoped<IAzureWebJobHealthCheckService, AzureWebJobHealthCheckService>();
+            services.AddScoped<IWebJobAccessKeyProvider, WebJobAccessKeyProvider>();
+            services.AddScoped<IAzureWebJobsHelper, AzureWebJobsHelper>();
+            services.AddSingleton<IWebJobAccessKeyProvider>(s => new WebJobAccessKeyProvider(_configuration));
 
             services.AddHealthChecks()
-                .AddCheck<EventHubLoggingHealthCheck>("EventHubLoggingHealthCheck")
-                .AddCheck<AzureBlobStorageHealthCheck>("AzureBlobStorageHealthCheck")
-                .AddCheck<AzureMessageQueueHealthCheck>("AzureMessageQueueHealthCheck");
+                //.AddCheck<EventHubLoggingHealthCheck>("EventHubLoggingHealthCheck")
+                //.AddCheck<AzureBlobStorageHealthCheck>("AzureBlobStorageHealthCheck")
+                //.AddCheck<AzureMessageQueueHealthCheck>("AzureMessageQueueHealthCheck")
+                .AddCheck<AzureWebJobHealthCheck>("AzureWebJobsHealthCheck");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

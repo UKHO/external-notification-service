@@ -68,7 +68,15 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900018 -  Event data for adding message in queue.
         /// </summary>
-        AddedMessageInQueue = 900018
+        AddedMessageInQueue = 900018,
+        /// <summary>
+        /// 900019 -  Azure webjob for external notification service is healthy.
+        /// </summary>
+        AzureWebJobIsHealthy = 900019,
+        /// <summary>
+        /// 900020 -  Azure webjob for external notification service is unhealthy.
+        /// </summary>
+        AzureWebJobIsUnhealthy = 900020
     }
 
     public static class EventIdExtensions
