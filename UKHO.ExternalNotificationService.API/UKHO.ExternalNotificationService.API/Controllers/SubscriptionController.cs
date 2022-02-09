@@ -1,15 +1,17 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using UKHO.ExternalNotificationService.API.Extensions;
 using UKHO.ExternalNotificationService.API.Services;
-using UKHO.ExternalNotificationService.Common.Models.Response;
-using System.Net;
 using UKHO.ExternalNotificationService.Common.Logging;
 using UKHO.ExternalNotificationService.Common.Models.Request;
-using System.Collections.Generic;
-using UKHO.ExternalNotificationService.API.Extensions;
-using Newtonsoft.Json;
+using UKHO.ExternalNotificationService.Common.Models.Response;
+using UKHO.ExternalNotificationService.Common.Repository;
 
 namespace UKHO.ExternalNotificationService.API.Controllers
 {
@@ -19,11 +21,13 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         private readonly ILogger<SubscriptionController> _logger;
         private readonly ISubscriptionService _subscriptionService;
         private List<Error> _errors = null;
+        private readonly INotificationRepository _notificationRepository;
 
-        public SubscriptionController(IHttpContextAccessor contextAccessor, ILogger<SubscriptionController> logger, ISubscriptionService subscriptionService) : base(contextAccessor, logger)
+        public SubscriptionController(IHttpContextAccessor contextAccessor, ILogger<SubscriptionController> logger, ISubscriptionService subscriptionService, INotificationRepository notificationRepository) : base(contextAccessor, logger)
         {
             _logger = logger;
             _subscriptionService = subscriptionService;
+            _notificationRepository = notificationRepository;
         }
 
         [HttpPost]
@@ -52,6 +56,13 @@ namespace UKHO.ExternalNotificationService.API.Controllers
             }
 
             SubscriptionRequest subscription = _subscriptionService.ConvertToSubscriptionRequestModel(d365Payload);
+
+            var notificationType = _notificationRepository.GetAllNotificationTypes().FirstOrDefault(x => x.Name == subscription.NotificationType);
+
+            if (notificationType.Name != subscription.NotificationType)
+            {
+                return new BadRequestObjectResult($"Invalid Notification Type '{subscription.NotificationType}'");
+            }
 
             _logger.LogInformation(EventIds.Accepted.ToEventId(), "Subscription request Accepted for D365Payload:{d365Payload} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{correlationId}", JsonConvert.SerializeObject(d365Payload), d365Payload.CorrelationId, GetCurrentCorrelationId());
 

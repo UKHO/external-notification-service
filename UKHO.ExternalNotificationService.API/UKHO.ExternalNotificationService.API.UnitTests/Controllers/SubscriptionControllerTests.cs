@@ -12,6 +12,7 @@ using UKHO.ExternalNotificationService.API.Controllers;
 using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 using UKHO.ExternalNotificationService.Common.Models.Response;
+using UKHO.ExternalNotificationService.Common.Repository;
 
 namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 {
@@ -24,6 +25,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         private ISubscriptionService _fakeSubscriptionService;
         private D365Payload _fakeD365PayloadDetails;
         private SubscriptionRequest _fakeSubscriptionRequest;
+        private INotificationRepository _fakeNotificationRepository;
 
         [SetUp]
         public void Setup()
@@ -34,8 +36,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             _fakeHttpContextAccessor = A.Fake<IHttpContextAccessor>();
             _fakeLogger = A.Fake<ILogger<SubscriptionController>>();
             _fakeSubscriptionService = A.Fake<ISubscriptionService>();
-
-            _controller = new SubscriptionController(_fakeHttpContextAccessor, _fakeLogger, _fakeSubscriptionService);
+            _fakeNotificationRepository = A.Fake<INotificationRepository>();
+            _controller = new SubscriptionController(_fakeHttpContextAccessor, _fakeLogger, _fakeSubscriptionService, _fakeNotificationRepository);
         }
 
         [Test] 
