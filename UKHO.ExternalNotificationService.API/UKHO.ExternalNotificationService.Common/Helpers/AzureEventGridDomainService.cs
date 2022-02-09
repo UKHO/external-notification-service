@@ -27,11 +27,11 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
         public async Task<string> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionMessage, CancellationToken cancellationToken)
         {
             _logger.LogInformation(EventIds.CreateOrUpdateAzureEventDomainTopicStart.ToEventId(),
-                    "Create azure event domain topic started for _X-Correlation-ID:{CorrelationId} with Event domain topic {topic}", subscriptionMessage.CorrelationId, subscriptionMessage.NotificationTypeTopicName);
+                    "Create or update azure event domain topic started for _X-Correlation-ID:{CorrelationId} with Event domain topic {topic}", subscriptionMessage.CorrelationId, subscriptionMessage.NotificationTypeTopicName);
             EventGridManagementClient eventGridMgmtClient = await GetEventGridClient(_eventGridDomainConfig.SubscriptionId, cancellationToken);
             DomainTopic topic = await eventGridMgmtClient.DomainTopics.CreateOrUpdateAsync(_eventGridDomainConfig.ResourceGroup, _eventGridDomainConfig.EventGridDomainName, subscriptionMessage.NotificationTypeTopicName, cancellationToken);
             _logger.LogInformation(EventIds.CreateOrUpdateAzureEventDomainTopicCompleted.ToEventId(),
-                    "Create azure event domain topic completed for _X-Correlation-ID:{CorrelationId} with Event domain topic {topic}", subscriptionMessage.CorrelationId, topic.Name);
+                    "Create or update azure event domain topic completed for _X-Correlation-ID:{CorrelationId} with Event domain topic {topic}", subscriptionMessage.CorrelationId, topic.Name);
             return topic.Id;
         }
 
