@@ -34,8 +34,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
         }
 
-        [TestCase("", "NotificationType cannot be blank or null.", TestName = "Notification Type Is Blank")]
-        [TestCase("ABC", "Invalid Notification Type 'ABC'", TestName = "Notification Type Is Invalid And Not Exist In The Configuration")]
+        [TestCase("", "NotificationType cannot be blank or null.", TestName = "Notification Type Value Is Blank")]
+        [TestCase(null, "NotificationType cannot be blank or null.", TestName = "Notification Type Value Is Null")]
+        [TestCase("ABC", "Invalid Notification Type 'ABC'", TestName = "Notification Type Value Is Invalid And Not Exist In The Configuration")]
         public async Task WhenICallTheEnsSubscriptionApiWithAnInValidNotificationType_ThenABadRequestStatusIsReturned(string notificationType,string validationMessage)
         {
             _d365Payload.InputParameters[0].Value.FormattedValues[4].Value = notificationType;
