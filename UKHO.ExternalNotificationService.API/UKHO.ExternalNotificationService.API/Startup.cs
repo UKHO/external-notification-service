@@ -37,9 +37,12 @@ namespace UKHO.ExternalNotificationService.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers()
-                .AddNewtonsoftJson();
+            services.AddControllers().AddNewtonsoftJson();
             services.Configure<EventHubLoggingConfiguration>(_configuration.GetSection("EventHubLoggingConfiguration"));
+            services.Configure<EnsConfiguration>(_configuration.GetSection("EnsConfiguration"));
+            services.Configure<D365PayloadKeyConfiguration>(_configuration.GetSection("D365PayloadKeyConfiguration"));
+            services.Configure<EnsConfiguration>(_configuration.GetSection("EnsConfiguration"));
+
             services.AddApplicationInsightsTelemetry();
             services.AddLogging(loggingBuilder =>
             {
@@ -62,9 +65,6 @@ namespace UKHO.ExternalNotificationService.API
             services.AddHealthChecks().AddCheck<EventHubLoggingHealthCheck>("EventHubLoggingHealthCheck");
             services.AddScoped<ID365PayloadValidator, D365PayloadValidator>();
             services.AddScoped<ISubscriptionService, SubscriptionService>();
-            services.Configure<D365PayloadKeyConfiguration>(_configuration.GetSection("D365PayloadKeyConfiguration"));
-            services.Configure<AzureConfiguration>(_configuration.GetSection("AzureConfiguration"));
-            services.Configure<EnsConfiguration>(_configuration.GetSection("EnsConfiguration"));
             services.AddScoped<IEventHubLoggingHealthClient, EventHubLoggingHealthClient>();
             services.AddSingleton<INotificationRepository, NotificationRepository>();
         }
