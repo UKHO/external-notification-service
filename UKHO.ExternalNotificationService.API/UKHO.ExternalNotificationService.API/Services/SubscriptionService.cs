@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using Microsoft.Extensions.Options;
 using UKHO.ExternalNotificationService.API.Validation;
 using UKHO.ExternalNotificationService.Common.Configuration;
+using UKHO.ExternalNotificationService.Common.Helper;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 
 namespace UKHO.ExternalNotificationService.API.Services
@@ -28,16 +30,15 @@ namespace UKHO.ExternalNotificationService.API.Services
 
         public SubscriptionRequest ConvertToSubscriptionRequestModel(D365Payload d365Payload)
         {
-            var inputParameter = d365Payload.InputParameters.Single();
-            var postEntityImage = d365Payload.PostEntityImages.SingleOrDefault(i => i.Key == _d365PayloadKeyConfiguration.Value.PostEntityImageKey);
-            var attributes = inputParameter.Value.Attributes.Concat(postEntityImage?.ImageValue?.Attributes ?? new D365Attribute[0]);
-            var formattedValues = inputParameter.Value.FormattedValues.Concat(postEntityImage?.ImageValue?.FormattedValues ?? new FormattedValue[0]);
+            ExtractD365Payload.D365PayloadDetails(d365Payload, _d365PayloadKeyConfiguration.Value.PostEntityImageKey, out InputParameter inputParameter, out EntityImage postEntityImage);
+            IEnumerable<D365Attribute> attributes = ExtractD365Payload.D365AttributeDetails(inputParameter, postEntityImage);
+            IEnumerable<FormattedValue> formattedValues = ExtractD365Payload.FormattedValueDetails(inputParameter, postEntityImage);
 
             string correlationId = d365Payload.CorrelationId;
             string stateCode = formattedValues.FirstOrDefault(a => a.Key == _d365PayloadKeyConfiguration.Value.IsActiveKey)?.Value.ToString();
             object formattedSubscriptionType = formattedValues.FirstOrDefault(a => a.Key == _d365PayloadKeyConfiguration.Value.NotificationTypeKey).Value;
-            var externalNotificationSubscriptionId = attributes.FirstOrDefault(a => a.Key == _d365PayloadKeyConfiguration.Value.SubscriptionIdKey).Value;
-            var webhookurl = attributes.FirstOrDefault(a => a.Key == _d365PayloadKeyConfiguration.Value.WebhookUrlKey).Value;
+            object externalNotificationSubscriptionId = attributes.FirstOrDefault(a => a.Key == _d365PayloadKeyConfiguration.Value.SubscriptionIdKey).Value;
+            object webhookurl = attributes.FirstOrDefault(a => a.Key == _d365PayloadKeyConfiguration.Value.WebhookUrlKey).Value;
 
             return new SubscriptionRequest()
             {

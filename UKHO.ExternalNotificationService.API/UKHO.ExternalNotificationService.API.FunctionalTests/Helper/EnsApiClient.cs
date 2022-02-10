@@ -23,20 +23,20 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         /// <param name="d365Payload"></param>
         /// <param name="headerRequest">headerRequest, pass NULL to skip request header</param>
         /// <returns></returns>
-        public async Task<HttpResponseMessage> PostEnsApiSubcriptionAsync([FromBody] D365Payload d365Payload, string headerRequest = null)
+        public async Task<HttpResponseMessage> PostEnsApiSubscriptionAsync([FromBody] D365Payload d365Payload, string headerRequest = null)
         {
             string uri = $"{_apiHost}/api/subscription";
             string payloadJson = JsonConvert.SerializeObject(d365Payload);
-            using (var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri)
-            { Content = new StringContent(payloadJson, Encoding.UTF8, "application/json") })
+            using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri)
             {
-                if (headerRequest != null)
-                {
-                    httpRequestMessage.Headers.Add(headerRequest, string.Empty);
-                }
-
-                return await s_httpClient.SendAsync(httpRequestMessage);
+                Content = new StringContent(payloadJson, Encoding.UTF8, "application/json")
+            };
+            if (headerRequest != null)
+            {
+                httpRequestMessage.Headers.Add(headerRequest, string.Empty);
             }
+
+            return await s_httpClient.SendAsync(httpRequestMessage);
         }
     }
 }

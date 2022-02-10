@@ -1,15 +1,16 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using UKHO.ExternalNotificationService.API.Extensions;
 using UKHO.ExternalNotificationService.API.Services;
-using UKHO.ExternalNotificationService.Common.Models.Response;
-using System.Net;
 using UKHO.ExternalNotificationService.Common.Logging;
 using UKHO.ExternalNotificationService.Common.Models.Request;
-using System.Collections.Generic;
-using UKHO.ExternalNotificationService.API.Extensions;
-using Newtonsoft.Json;
+using UKHO.ExternalNotificationService.Common.Models.Response;
 
 namespace UKHO.ExternalNotificationService.API.Controllers
 {
@@ -18,8 +19,8 @@ namespace UKHO.ExternalNotificationService.API.Controllers
     {
         private readonly ILogger<SubscriptionController> _logger;
         private readonly ISubscriptionService _subscriptionService;
-        private List<Error> _errors = null;
-        private readonly string  _xmsDynamicsMsgSizeExceededHeader ="x-ms-dynamics-msg-size-exceeded";
+        private List<Error> _errors;
+        private readonly string _xmsDynamicsMsgSizeExceededHeader = "x-ms-dynamics-msg-size-exceeded";
 
         public SubscriptionController(IHttpContextAccessor contextAccessor, ILogger<SubscriptionController> logger, ISubscriptionService subscriptionService) : base(contextAccessor, logger)
         {
@@ -28,10 +29,9 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         }
 
         [HttpPost]
-        public async virtual Task<IActionResult> Post([FromBody] D365Payload d365Payload)
+        public virtual async Task<IActionResult> Post([FromBody] D365Payload d365Payload)
         {
-
-            _logger.LogInformation(EventIds.ENSSubscriptionRequestStart.ToEventId(), "Subscription request for D365Payload:{JsonConvert.SerializeObject(objPayload)} with _X-Correlation-ID:{correlationId}", JsonConvert.SerializeObject(d365Payload), GetCurrentCorrelationId());
+            _logger.LogInformation(EventIds.ENSSubscriptionRequestStart.ToEventId(), "Subscription request for D365Payload:{d365Payload} with _X-Correlation-ID:{correlationId}", JsonConvert.SerializeObject(d365Payload), GetCurrentCorrelationId());
 
             if (HttpContext.Request.Headers.ContainsKey(_xmsDynamicsMsgSizeExceededHeader))
             {
@@ -51,7 +51,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
                 return BuildBadRequestErrorResponse(error);
             }
 
-            var validationD365PayloadResult = await _subscriptionService.ValidateD365PayloadRequest(d365Payload);
+            ValidationResult validationD365PayloadResult = await _subscriptionService.ValidateD365PayloadRequest(d365Payload);
 
             if (!validationD365PayloadResult.IsValid && validationD365PayloadResult.HasBadRequestErrors(out _errors))
             {
@@ -60,7 +60,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
 
             SubscriptionRequest subscription = _subscriptionService.ConvertToSubscriptionRequestModel(d365Payload);
 
-            _logger.LogInformation(EventIds.Accepted.ToEventId(), "Subscription request Accepted for D365Payload:{JsonConvert.SerializeObject(objPayload)} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{correlationId}", JsonConvert.SerializeObject(d365Payload), d365Payload.CorrelationId, GetCurrentCorrelationId());
+            _logger.LogInformation(EventIds.Accepted.ToEventId(), "Subscription request Accepted for SubscriptionId:{subscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{correlationId}", subscription.SubscriptionId, subscription.D365CorrelationId, GetCurrentCorrelationId());
 
             return GetEnsResponse(new ExternalNotificationServiceResponse { HttpStatusCode = HttpStatusCode.Accepted });
         }

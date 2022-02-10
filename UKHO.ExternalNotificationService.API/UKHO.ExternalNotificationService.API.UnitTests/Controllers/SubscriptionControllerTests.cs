@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -40,75 +41,74 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         }
 
         [Test] 
-        public async Task WhenPostInvalidNullPayload_ThenRecieveBadRequest()
+        public async Task WhenPostInvalidNullPayload_ThenReceiveBadRequest()
         {
             D365Payload d365Payload = null;
 
-            BadRequestObjectResult result = (BadRequestObjectResult)await _controller.Post(d365Payload);
-            ErrorDescription errors = (ErrorDescription)result.Value;
+            var result = (BadRequestObjectResult)await _controller.Post(d365Payload);
+            var errors = (ErrorDescription)result.Value;
 
             Assert.AreEqual(400, result.StatusCode);
             Assert.AreEqual("Either body is null or malformed.", errors.Errors.Single().Description);
         }
 
         [Test] 
-        public async Task WhenPostInvalidNullInputParameters_ThenRecieveBadRequest()
+        public async Task WhenPostInvalidNullInputParameters_ThenReceiveBadRequest()
         {
-            ValidationFailure validationMessage = new ValidationFailure("InputParameters", "D365Payload InputParameters cannot be blank or null.")
+            var validationMessage = new ValidationFailure("InputParameters", "D365Payload InputParameters cannot be blank or null.")
             {
                 ErrorCode = HttpStatusCode.BadRequest.ToString()
             };
 
             A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure> { validationMessage }));
 
-            BadRequestObjectResult result = (BadRequestObjectResult)await _controller.Post(_fakeD365PayloadDetails);
-            ErrorDescription errors = (ErrorDescription)result.Value;
+            var result = (BadRequestObjectResult)await _controller.Post(_fakeD365PayloadDetails);
+            var errors = (ErrorDescription)result.Value;
 
             Assert.AreEqual(400, result.StatusCode);
             Assert.AreEqual("D365Payload InputParameters cannot be blank or null.", errors.Errors.Single().Description);
         }
-
-        [Test]
-        public async Task WhenPostValidPayload_ThenRecieveSuccessfulResponse()
-        {
-            A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
-
-            A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
-            
-            StatusCodeResult result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
-
-            A.CallTo(_fakeLogger).Where(call => call.GetArgument<LogLevel>(0) == LogLevel.Error).MustNotHaveHappened();
-            Assert.AreEqual(StatusCodes.Status202Accepted, result.StatusCode);
-        }
-
         [Test]
         public async Task WhenD365HttpPayloadSizeExceeded_ThenLogError()
         {
-            DefaultHttpContext defaultHttpContext = new DefaultHttpContext();
+            DefaultHttpContext defaultHttpContext = new();
             defaultHttpContext.Request.Headers.Add(_xmsDynamicsMsgSizeExceededHeader, string.Empty);
             A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(defaultHttpContext);
             A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
 
-            StatusCodeResult result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
+            var result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
 
             A.CallTo(_fakeLogger).Where(call => call.GetArgument<LogLevel>(0) == LogLevel.Error).MustHaveHappened();
             Assert.AreEqual(StatusCodes.Status202Accepted, result.StatusCode);
         }
 
-        private D365Payload GetD365Payload()
+        [Test]
+        public async Task WhenPostValidPayload_ThenReceiveSuccessfulResponse()
         {
-            D365Payload d365Payload = new D365Payload()
+            A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
+
+            A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
+            
+            var result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
+
+            A.CallTo(_fakeLogger).Where(call => call.GetArgument<LogLevel>(0) == LogLevel.Error).MustNotHaveHappened();
+            Assert.AreEqual(StatusCodes.Status202Accepted, result.StatusCode);
+    }
+
+        private static D365Payload GetD365Payload()
+        {
+            var d365Payload = new D365Payload()
             {
                 CorrelationId = "6ea03f10-2672-46fb-92a1-5200f6a4fabc",
-                InputParameters = new InputParameter[] {},
-                PostEntityImages = new EntityImage[] { },
+                InputParameters = Array.Empty<InputParameter>(),
+                PostEntityImages = Array.Empty<EntityImage>(),
                 OperationCreatedOn = "/Date(1642149320000+0000)/"
             };
 
             return d365Payload;
         }
 
-        private SubscriptionRequest GetSubscriptionRequest()
+        private static SubscriptionRequest GetSubscriptionRequest()
         {
             return new SubscriptionRequest()
             {
