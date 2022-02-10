@@ -33,7 +33,7 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
         {
             try
             {
-                var messageQueuesHealth = CheckMessageQueuesHealth();
+                Task<HealthCheckResult> messageQueuesHealth = CheckMessageQueuesHealth();
                 await Task.WhenAll(messageQueuesHealth);
 
                 if (messageQueuesHealth.Result.Status == HealthStatus.Healthy)

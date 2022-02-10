@@ -21,7 +21,7 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
 
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
-            var healthCheckResult = await _azureWebJobHealthCheckService.CheckHealthAsync();
+            HealthCheckResult healthCheckResult = await _azureWebJobHealthCheckService.CheckHealthAsync();
             if (healthCheckResult.Status == HealthStatus.Healthy)
             {
                 _logger.LogDebug(EventIds.AzureWebJobIsHealthy.ToEventId(), "Azure webjob is healthy");

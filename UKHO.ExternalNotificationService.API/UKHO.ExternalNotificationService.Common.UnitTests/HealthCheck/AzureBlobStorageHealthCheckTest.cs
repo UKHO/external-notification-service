@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Threading.Tasks;
 using FakeItEasy;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -38,7 +39,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         {
             A.CallTo(() => _fakeAzureBlobStorageHelper.CheckBlobContainerHealth(A<string>.Ignored, A<string>.Ignored)).Returns(new HealthCheckResult(HealthStatus.Healthy));
 
-            var response = await _azureBlobStorageHealthCheck.CheckHealthAsync(new HealthCheckContext());
+            HealthCheckResult response = await _azureBlobStorageHealthCheck.CheckHealthAsync(new HealthCheckContext());
 
             Assert.AreEqual(HealthStatus.Healthy, response.Status);
         }
@@ -48,7 +49,18 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         {
             A.CallTo(() => _fakeAzureBlobStorageHelper.CheckBlobContainerHealth(A<string>.Ignored, A<string>.Ignored)).Returns(new HealthCheckResult(HealthStatus.Unhealthy));
 
-            var response = await _azureBlobStorageHealthCheck.CheckHealthAsync(new HealthCheckContext());
+            HealthCheckResult response = await _azureBlobStorageHealthCheck.CheckHealthAsync(new HealthCheckContext());
+
+            Assert.AreEqual(HealthStatus.Unhealthy, response.Status);
+        }
+
+
+        [Test]
+        public async Task WhenBlobStorageWithException_ThenReturnsUnhealthy()
+        {
+            A.CallTo(() => _fakeAzureBlobStorageHelper.CheckBlobContainerHealth(A<string>.Ignored, A<string>.Ignored)).Throws(new Exception());
+
+            HealthCheckResult response = await _azureBlobStorageHealthCheck.CheckHealthAsync(new HealthCheckContext());
 
             Assert.AreEqual(HealthStatus.Unhealthy, response.Status);
         }

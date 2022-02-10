@@ -14,7 +14,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         private IWebJobAccessKeyProvider _fakeWebJobAccessKeyProvider;
         private IWebHostEnvironment _fakeWebHostEnvironment;
         private IAzureWebJobHelper _fakeAzureWebJobHelper;
-        private AzureWebJobHealthCheckService azureWebJobHealthCheckService;
+        private AzureWebJobHealthCheckService _azureWebJobHealthCheckService;
 
         [SetUp]
         public void Setup()
@@ -23,7 +23,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
             _fakeWebHostEnvironment = A.Fake<IWebHostEnvironment>();
             _fakeAzureWebJobHelper = A.Fake<IAzureWebJobHelper>();
 
-            azureWebJobHealthCheckService = new AzureWebJobHealthCheckService(_fakeWebJobAccessKeyProvider, _fakeWebHostEnvironment, _fakeAzureWebJobHelper);
+            _azureWebJobHealthCheckService = new AzureWebJobHealthCheckService(_fakeWebJobAccessKeyProvider, _fakeWebHostEnvironment, _fakeAzureWebJobHelper);
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
             A.CallTo(() => _fakeAzureWebJobHelper.CheckWebJobsHealth(A<WebJobDetails>.Ignored))
                .Returns(new HealthCheckResult(HealthStatus.Unhealthy, "Azure webjob is unhealthy"));
 
-            var response = await azureWebJobHealthCheckService.CheckHealthAsync();
+            HealthCheckResult response = await _azureWebJobHealthCheckService.CheckHealthAsync();
 
             Assert.AreEqual(HealthStatus.Unhealthy, response.Status);
         }
@@ -43,7 +43,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
             A.CallTo(() => _fakeAzureWebJobHelper.CheckWebJobsHealth(A<WebJobDetails>.Ignored))
                .Returns(new HealthCheckResult(HealthStatus.Healthy, "Azure webjob is healthy"));
 
-            var response = await azureWebJobHealthCheckService.CheckHealthAsync();
+            HealthCheckResult response = await _azureWebJobHealthCheckService.CheckHealthAsync();
 
             Assert.AreEqual(HealthStatus.Healthy, response.Status);
         }

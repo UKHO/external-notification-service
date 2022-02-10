@@ -30,26 +30,26 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             {
                 string webJobDetail, webJobStatus = string.Empty;
 
-                using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, webJob.WebJobUri);
+                using HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, webJob.WebJobUri);
                 httpClient.DefaultRequestHeaders.Accept.Clear();
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", webJob.UserPassword);
 
-                var response = await httpClient.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseHeadersRead, CancellationToken.None);
+                HttpResponseMessage response = await httpClient.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseHeadersRead, CancellationToken.None);
 
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    var webJobDetails = JsonConvert.DeserializeObject<dynamic>(await response.Content.ReadAsStringAsync());
+                    dynamic webJobDetails = JsonConvert.DeserializeObject<dynamic>(await response.Content.ReadAsStringAsync());
                     webJobStatus = webJobDetails["status"];
                     if (webJobStatus != "Running")
                     {
-                        webJobDetail = $"Webjob ess-{_webHostEnvironment.EnvironmentName} status is {webJobStatus}";
+                        webJobDetail = $"Webjob ens-{_webHostEnvironment.EnvironmentName} status is {webJobStatus}";
                         return HealthCheckResult.Unhealthy("Azure webjob is unhealthy", new Exception(webJobDetail));
                     }
                 }
                 else
                 {
-                    return HealthCheckResult.Unhealthy("Azure webjob is unhealthy", new Exception($"Webjob ess-{_webHostEnvironment.EnvironmentName} status code is {response.StatusCode}"));
+                    return HealthCheckResult.Unhealthy("Azure webjob is unhealthy", new Exception($"Webjob ens-{_webHostEnvironment.EnvironmentName} status code is {response.StatusCode}"));
                 }
                 return HealthCheckResult.Healthy("Azure webjob is healthy");
             }

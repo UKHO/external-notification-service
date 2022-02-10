@@ -72,9 +72,9 @@ namespace UKHO.ExternalNotificationService.API
             services.AddSingleton<IWebJobAccessKeyProvider>(s => new WebJobAccessKeyProvider(_configuration));
 
             services.AddHealthChecks()
-                //.AddCheck<EventHubLoggingHealthCheck>("EventHubLoggingHealthCheck")
-                //.AddCheck<AzureBlobStorageHealthCheck>("AzureBlobStorageHealthCheck")
-                //.AddCheck<AzureMessageQueueHealthCheck>("AzureMessageQueueHealthCheck")
+                .AddCheck<EventHubLoggingHealthCheck>("EventHubLoggingHealthCheck")
+                .AddCheck<AzureBlobStorageHealthCheck>("AzureBlobStorageHealthCheck")
+                .AddCheck<AzureMessageQueueHealthCheck>("AzureMessageQueueHealthCheck")
                 .AddCheck<AzureWebJobHealthCheck>("AzureWebJobsHealthCheck");
         }
 

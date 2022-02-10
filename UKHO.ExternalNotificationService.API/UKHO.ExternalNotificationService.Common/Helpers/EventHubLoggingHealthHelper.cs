@@ -27,7 +27,7 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
         {
             try
             {
-                var eventHubProducerClient = new EventHubProducerClient(_eventHubLoggingConfiguration.Value.ConnectionString, _eventHubLoggingConfiguration.Value.EntityPath);
+                EventHubProducerClient eventHubProducerClient = new EventHubProducerClient(_eventHubLoggingConfiguration.Value.ConnectionString, _eventHubLoggingConfiguration.Value.EntityPath);
                 using EventDataBatch eventBatch = await eventHubProducerClient.CreateBatchAsync(cancellationToken);
                 eventBatch.TryAdd(new EventData(Encoding.UTF8.GetBytes(EventIds.EventHubLoggingEventDataForHealthCheck.ToEventId() + " of Event Hub")));
                 try

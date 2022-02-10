@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Threading.Tasks;
 using FakeItEasy;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -37,7 +38,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         {
             A.CallTo(() => _fakeAzureMessageQueueHelper.CheckMessageQueueHealth(A<string>.Ignored, A<string>.Ignored)).Returns(new HealthCheckResult(HealthStatus.Healthy));
 
-            var response = await _azureMessageQueueHealthCheck.CheckHealthAsync(new HealthCheckContext());
+            HealthCheckResult response = await _azureMessageQueueHealthCheck.CheckHealthAsync(new HealthCheckContext());
 
             Assert.AreEqual(HealthStatus.Healthy, response.Status);
         }
@@ -47,7 +48,17 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         {
             A.CallTo(() => _fakeAzureMessageQueueHelper.CheckMessageQueueHealth(A<string>.Ignored, A<string>.Ignored)).Returns(new HealthCheckResult(HealthStatus.Unhealthy));
 
-            var response = await _azureMessageQueueHealthCheck.CheckHealthAsync(new HealthCheckContext());
+            HealthCheckResult response = await _azureMessageQueueHealthCheck.CheckHealthAsync(new HealthCheckContext());
+
+            Assert.AreEqual(HealthStatus.Unhealthy, response.Status);
+        }
+
+        [Test]
+        public async Task WhenMessageWithException_ThenReturnsUnhealthy()
+        {
+            A.CallTo(() => _fakeAzureMessageQueueHelper.CheckMessageQueueHealth(A<string>.Ignored, A<string>.Ignored)).Throws(new Exception());
+
+            HealthCheckResult response = await _azureMessageQueueHealthCheck.CheckHealthAsync(new HealthCheckContext());
 
             Assert.AreEqual(HealthStatus.Unhealthy, response.Status);
         }

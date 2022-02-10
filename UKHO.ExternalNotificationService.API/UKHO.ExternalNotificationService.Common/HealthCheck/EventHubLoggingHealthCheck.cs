@@ -19,7 +19,7 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
 
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
-            var healthCheckResult = await _eventHubLoggingHealthHelper.CheckHealthAsync(context,cancellationToken);
+            HealthCheckResult healthCheckResult = await _eventHubLoggingHealthHelper.CheckHealthAsync(context,cancellationToken);
             if (healthCheckResult.Status == HealthStatus.Healthy)
             {
                 _logger.LogDebug(EventIds.EventHubLoggingIsHealthy.ToEventId(), "Event hub is healthy");

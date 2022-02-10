@@ -22,17 +22,19 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
         {
             _logger = logger;
         }
+
         public async Task<HealthCheckResult> CheckMessageQueueHealth(string storageAccountConnectionString, string queueName)
         { 
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageAccountConnectionString);
             CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
             CloudQueue queue = queueClient.GetQueueReference(queueName);
-            var queueMessageExists = await queue.ExistsAsync();
-            if (queueMessageExists)
+            bool isQueueMessageExists = await queue.ExistsAsync();
+            if (isQueueMessageExists)
                 return HealthCheckResult.Healthy("Azure message queue is healthy");
             else
                 return HealthCheckResult.Unhealthy("Azure message queue is unhealthy", new Exception($"Azure message queue {queueName} does not exists"));
         }
+
         public async Task AddQueueMessage<SubscriptionRequestMessage>(string storageConnectionString, string queueName, SubscriptionRequestMessage subscriptionRequestMessage, string correlationId)
         {
             QueueClientOptions queueClientOptions = new()

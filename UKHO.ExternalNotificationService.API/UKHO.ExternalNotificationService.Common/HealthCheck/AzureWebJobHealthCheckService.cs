@@ -26,31 +26,24 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
 
         public async Task<HealthCheckResult> CheckHealthAsync(CancellationToken cancellationToken = default)
         {
-            try
+            string webJobUri, userNameKey, passwordKey = string.Empty;
+
+            userNameKey = $"ens-{_webHostEnvironment.EnvironmentName}-webapp-scm-username";
+            passwordKey = $"ens-{_webHostEnvironment.EnvironmentName}-webapp-scm-password";
+            webJobUri = $"https://ens-{_webHostEnvironment.EnvironmentName}-webapp.scm.azurewebsites.net/api/continuouswebjobs/SubscriptionServiceWebJob";
+            string userPassword = _webJobAccessKeyProvider.GetWebJobsAccessKey(userNameKey) + ":" + _webJobAccessKeyProvider.GetWebJobsAccessKey(passwordKey);
+            userPassword = Convert.ToBase64String(Encoding.Default.GetBytes(userPassword));
+
+            WebJobDetails webJobDetails = new WebJobDetails
             {
-                string webJobUri, userNameKey, passwordKey = string.Empty;
+                UserPassword = userPassword,
+                WebJobUri = webJobUri
+            };
 
-                userNameKey = $"ess-{_webHostEnvironment.EnvironmentName}-webapp-scm-username";
-                passwordKey = $"ess-{_webHostEnvironment.EnvironmentName}-webapp-scm-password";
-                webJobUri = $"https://ess-{_webHostEnvironment.EnvironmentName}-webapp.scm.azurewebsites.net/api/continuouswebjobs/SubscriptionServiceWebJob";
-                string userPassword = _webJobAccessKeyProvider.GetWebJobsAccessKey(userNameKey) + ":" + _webJobAccessKeyProvider.GetWebJobsAccessKey(passwordKey);
-                userPassword = Convert.ToBase64String(Encoding.Default.GetBytes(userPassword));
+            Task<HealthCheckResult> webJobsHealth = _azureWebJobHelper.CheckWebJobsHealth(webJobDetails);
+            await Task.WhenAll(webJobsHealth);
 
-                WebJobDetails webJobDetails = new WebJobDetails
-                {
-                    UserPassword = userPassword,
-                    WebJobUri = webJobUri
-                };
-
-                var webJobsHealth = _azureWebJobHelper.CheckWebJobsHealth(webJobDetails);
-                await Task.WhenAll(webJobsHealth);
-
-                return webJobsHealth.Result;
-            }
-            catch (Exception ex)
-            {
-                return HealthCheckResult.Unhealthy("Azure webjob is unhealthy", new Exception(ex.Message));
-            }
+            return webJobsHealth.Result;
         }
     }
 }
