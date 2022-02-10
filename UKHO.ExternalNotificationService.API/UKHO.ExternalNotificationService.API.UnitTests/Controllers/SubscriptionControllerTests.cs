@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -39,7 +40,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         }
 
         [Test] 
-        public async Task WhenPostInvalidNullPayload_ThenRecieveBadRequest()
+        public async Task WhenPostInvalidNullPayload_ThenReceiveBadRequest()
         {
             D365Payload d365Payload = null;
 
@@ -51,7 +52,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         }
 
         [Test] 
-        public async Task WhenPostInvalidNullInputParameters_ThenRecieveBadRequest()
+        public async Task WhenPostInvalidNullInputParameters_ThenReceiveBadRequest()
         {
             var validationMessage = new ValidationFailure("InputParameters", "D365Payload InputParameters cannot be blank or null.")
             {
@@ -68,7 +69,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         }
 
         [Test]
-        public async Task WhenPostValidPayload_ThenRecieveSuccessfulResponse()
+        public async Task WhenPostValidPayload_ThenReceiveSuccessfulResponse()
         {
             A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
 
@@ -84,8 +85,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             var d365Payload = new D365Payload()
             {
                 CorrelationId = "6ea03f10-2672-46fb-92a1-5200f6a4fabc",
-                InputParameters = new InputParameter[] {},
-                PostEntityImages = new EntityImage[] { },
+                InputParameters = Array.Empty<InputParameter>(),
+                PostEntityImages = Array.Empty<EntityImage>(),
                 OperationCreatedOn = "/Date(1642149320000+0000)/"
             };
 

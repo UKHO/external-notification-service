@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Results;
@@ -35,7 +36,7 @@ namespace UKHO.ExternalNotificationService.API.Validation
                 .WithMessage("SubscriptionId cannot be blank or null.");
 
             RuleFor(v => v).NotNull().NotEmpty().OverridePropertyName("NotificationType")
-                .Must(x => x.IsValidFormatted(d365PayloadKeyConfiguration.Value.PostEntityImageKey, d365PayloadKeyConfiguration.Value.NotificationTypeKey))
+                .Must(x => x.ContainsFormattedValue(d365PayloadKeyConfiguration.Value.PostEntityImageKey, d365PayloadKeyConfiguration.Value.NotificationTypeKey))
                 .When(ru => ru != null)
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("NotificationType cannot be blank or null.");
@@ -47,11 +48,13 @@ namespace UKHO.ExternalNotificationService.API.Validation
                 .WithMessage("WebhookUrl cannot be blank or null.");
 
             RuleFor(v => v).NotNull().NotEmpty().OverridePropertyName("StateCode")
-                .Must(x => x.IsValidFormatted(d365PayloadKeyConfiguration.Value.PostEntityImageKey, d365PayloadKeyConfiguration.Value.IsActiveKey))
+                .Must(x => x.ContainsFormattedValue(d365PayloadKeyConfiguration.Value.PostEntityImageKey, d365PayloadKeyConfiguration.Value.IsActiveKey))
                 .When(ru => ru != null)
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("StateCode cannot be blank or null.");
         }
+
+        [ExcludeFromCodeCoverage]
         Task<ValidationResult> ID365PayloadValidator.Validate(D365Payload d365Payload)
         {
             return ValidateAsync(d365Payload);
