@@ -43,9 +43,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         [Test] 
         public async Task WhenPostInvalidNullPayload_ThenReceiveBadRequest()
         {
-            D365Payload d365Payload = null;
-
-            var result = (BadRequestObjectResult)await _controller.Post(d365Payload);
+            var result = (BadRequestObjectResult)await _controller.Post(null);
             var errors = (ErrorDescription)result.Value;
 
             Assert.AreEqual(400, result.StatusCode);
@@ -68,6 +66,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             Assert.AreEqual(400, result.StatusCode);
             Assert.AreEqual("D365Payload InputParameters cannot be blank or null.", errors.Errors.Single().Description);
         }
+
         [Test]
         public async Task WhenD365HttpPayloadSizeExceeded_ThenLogError()
         {
@@ -93,7 +92,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 
             A.CallTo(_fakeLogger).Where(call => call.GetArgument<LogLevel>(0) == LogLevel.Error).MustNotHaveHappened();
             Assert.AreEqual(StatusCodes.Status202Accepted, result.StatusCode);
-    }
+        }
 
         private static D365Payload GetD365Payload()
         {

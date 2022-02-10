@@ -35,7 +35,6 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             {
                 httpRequestMessage.Headers.Add(headerRequest, string.Empty);
             }
-
             return await s_httpClient.SendAsync(httpRequestMessage);
         }
     }

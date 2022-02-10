@@ -54,9 +54,9 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         ENSSubscriptionRequestStart = 900012,
         /// <summary>
-        /// 900013 - Data truncation D365 Http Payload Size Exceeded .
+        /// 900013 - Data truncation D365 Http Payload Size Exceeded.
         /// </summary>
-        DataTruncationD365HttpPayloadSizeExceeded = 900013
+        D365PayloadSizeExceededError = 900013
     }
 
     public static class EventIdExtensions

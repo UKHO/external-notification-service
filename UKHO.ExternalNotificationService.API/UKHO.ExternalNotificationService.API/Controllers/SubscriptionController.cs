@@ -35,7 +35,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
 
             if (HttpContext.Request.Headers.ContainsKey(_xmsDynamicsMsgSizeExceededHeader))
             {
-                _logger.LogError(EventIds.DataTruncationD365HttpPayloadSizeExceeded.ToEventId(), "Data Truncation - D365 HTTP payload size exceeded, Recieved x-ms-dynamics-msg-size-exceeded header for _X-Correlation-ID:{correlationId}", GetCurrentCorrelationId());
+                _logger.LogError(EventIds.D365PayloadSizeExceededError.ToEventId(), "Data Truncation - D365 HTTP payload size exceeded, Recieved x-ms-dynamics-msg-size-exceeded header for _X-Correlation-ID:{correlationId}", GetCurrentCorrelationId());
             }
 
             if (d365Payload == null)
