@@ -44,8 +44,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         {
             D365Payload d365Payload = null;
 
-            var result = (BadRequestObjectResult)await _controller.Post(d365Payload);
-            var errors = (ErrorDescription)result.Value;
+            BadRequestObjectResult result = (BadRequestObjectResult)await _controller.Post(d365Payload);
+            ErrorDescription errors = (ErrorDescription)result.Value;
 
             Assert.AreEqual(400, result.StatusCode);
             Assert.AreEqual("Either body is null or malformed.", errors.Errors.Single().Description);
@@ -54,15 +54,15 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         [Test] 
         public async Task WhenPostInvalidNullInputParameters_ThenRecieveBadRequest()
         {
-            var validationMessage = new ValidationFailure("InputParameters", "D365Payload InputParameters cannot be blank or null.")
+            ValidationFailure validationMessage = new ValidationFailure("InputParameters", "D365Payload InputParameters cannot be blank or null.")
             {
                 ErrorCode = HttpStatusCode.BadRequest.ToString()
             };
 
             A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure> { validationMessage }));
 
-            var result = (BadRequestObjectResult)await _controller.Post(_fakeD365PayloadDetails);
-            var errors = (ErrorDescription)result.Value;
+            BadRequestObjectResult result = (BadRequestObjectResult)await _controller.Post(_fakeD365PayloadDetails);
+            ErrorDescription errors = (ErrorDescription)result.Value;
 
             Assert.AreEqual(400, result.StatusCode);
             Assert.AreEqual("D365Payload InputParameters cannot be blank or null.", errors.Errors.Single().Description);
@@ -75,7 +75,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 
             A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
             
-            var result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
+            StatusCodeResult result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
 
             A.CallTo(_fakeLogger).Where(call => call.GetArgument<LogLevel>(0) == LogLevel.Error).MustNotHaveHappened();
             Assert.AreEqual(StatusCodes.Status202Accepted, result.StatusCode);
@@ -84,12 +84,12 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         [Test]
         public async Task WhenD365HttpPayloadSizeExceeded_ThenLogError()
         {
-            var defaultHttpContext = new DefaultHttpContext();
+            DefaultHttpContext defaultHttpContext = new DefaultHttpContext();
             defaultHttpContext.Request.Headers.Add(_xmsDynamicsMsgSizeExceededHeader, string.Empty);
             A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(defaultHttpContext);
             A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
 
-            var result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
+            StatusCodeResult result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
 
             A.CallTo(_fakeLogger).Where(call => call.GetArgument<LogLevel>(0) == LogLevel.Error).MustHaveHappened();
             Assert.AreEqual(StatusCodes.Status202Accepted, result.StatusCode);
@@ -97,7 +97,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 
         private D365Payload GetD365Payload()
         {
-            var d365Payload = new D365Payload()
+            D365Payload d365Payload = new D365Payload()
             {
                 CorrelationId = "6ea03f10-2672-46fb-92a1-5200f6a4fabc",
                 InputParameters = new InputParameter[] {},
