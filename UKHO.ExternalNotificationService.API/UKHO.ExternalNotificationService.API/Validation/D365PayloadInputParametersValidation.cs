@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using UKHO.ExternalNotificationService.Common.Helper;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 
 namespace UKHO.ExternalNotificationService.API.Validation
@@ -12,39 +14,39 @@ namespace UKHO.ExternalNotificationService.API.Validation
             { return true; }
             try
             {
-                var inputParameter = payload.InputParameters.Single();
-                var postEntityImage = payload.PostEntityImages.SingleOrDefault(i => i.Key == postEntityImageKey);
-                var attributes = inputParameter.Value.Attributes.Concat(postEntityImage?.Value?.Attributes ?? new D365Attribute[0]);
+                ExtractD365Payload.D365PayloadDetails(payload, postEntityImageKey, out InputParameter inputParameter, out EntityImage postEntityImage);
+                IEnumerable<D365Attribute> attributes = ExtractD365Payload.D365AttributeDetails(inputParameter, postEntityImage);
 
-                var validAttributeKey = attributes.FirstOrDefault(a => a.Key == attributeKey);
-                return (validAttributeKey != null && !string.IsNullOrWhiteSpace(attributes.FirstOrDefault(a => a.Key == attributeKey).Value.ToString()));
+                D365Attribute validAttributeKey = attributes.FirstOrDefault(a => a.Key == attributeKey);
+                return (validAttributeKey != null && !string.IsNullOrWhiteSpace(validAttributeKey.Value.ToString()));
             }
             catch (Exception)
             {
                 return false;
             }
         }
-        public static bool IsValidFormatted(this D365Payload payload, string postEntityImageKey, string formattedKey)
+
+        public static bool ContainsFormattedValue(this D365Payload payload, string postEntityImageKey, string formattedKey)
         {
             if (IgnoreRuleForValidation(payload))
             { return true; }
             try
             {
-                var inputParameter = payload.InputParameters.Single();
-                var postEntityImage = payload.PostEntityImages.SingleOrDefault(i => i.Key == postEntityImageKey);
-                var formattedValues = inputParameter.Value.FormattedValues.Concat(postEntityImage?.Value?.FormattedValues ?? new FormattedValue[0]);
+                ExtractD365Payload.D365PayloadDetails(payload, postEntityImageKey, out InputParameter inputParameter, out EntityImage postEntityImage);
+                IEnumerable<FormattedValue> formattedValues = ExtractD365Payload.FormattedValueDetails(inputParameter, postEntityImage);
 
-                object validFormattedKey = formattedValues.FirstOrDefault(a => a.Key == formattedKey);
-                return (validFormattedKey != null && !string.IsNullOrWhiteSpace(formattedValues.FirstOrDefault(a => a.Key == formattedKey).Value.ToString()));
+                FormattedValue validFormattedKey = formattedValues.FirstOrDefault(a => a.Key == formattedKey);
+                return (validFormattedKey != null && !string.IsNullOrWhiteSpace(validFormattedKey.Value.ToString()));
             }
             catch (Exception)
             {
                 return false;
             }
         }
+
         private static bool IgnoreRuleForValidation(D365Payload payload)
         {
-            return (string.IsNullOrWhiteSpace(Convert.ToString(payload.InputParameters)) || string.IsNullOrWhiteSpace(Convert.ToString(payload.PostEntityImages)));
+            return string.IsNullOrWhiteSpace(Convert.ToString(payload.InputParameters)) || string.IsNullOrWhiteSpace(Convert.ToString(payload.PostEntityImages));
         }
     }
 }

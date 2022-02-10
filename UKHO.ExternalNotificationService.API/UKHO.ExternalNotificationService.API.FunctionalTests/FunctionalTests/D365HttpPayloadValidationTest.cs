@@ -42,7 +42,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             HttpResponseMessage apiResponse = await _ensApiClient.PostEnsApiSubscriptionAsync(null);
             Assert.AreEqual(400, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 400.");
 
-            ErrorDescriptionModel errorMessage = await apiResponse.ReadAsTypeAsync<ErrorDescriptionModel>();
+            ErrorDescriptionModel errorMessage =await apiResponse.ReadAsTypeAsync<ErrorDescriptionModel>();
 
             Assert.IsTrue(errorMessage.Errors.Any(e => e.Source == "requestBody"));
             Assert.IsTrue(errorMessage.Errors.Any(e => e.Description == "Either body is null or malformed."));

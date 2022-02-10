@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -38,11 +39,12 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             _fakeLogger = A.Fake<ILogger<SubscriptionController>>();
             _fakeSubscriptionService = A.Fake<ISubscriptionService>();
             _fakeNotificationRepository = A.Fake<INotificationRepository>();
+
             _controller = new SubscriptionController(_fakeHttpContextAccessor, _fakeLogger, _fakeSubscriptionService, _fakeNotificationRepository);
         }
 
         [Test] 
-        public async Task WhenPostInvalidNullPayload_ThenRecieveBadRequest()
+        public async Task WhenPostInvalidNullPayload_ThenReceiveBadRequest()
         {
             D365Payload d365Payload = null;
 
@@ -54,7 +56,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         }
 
         [Test] 
-        public async Task WhenPostInvalidNullInputParameters_ThenRecieveBadRequest()
+        public async Task WhenPostInvalidNullInputParameters_ThenReceiveBadRequest()
         {
             var validationMessage = new ValidationFailure("InputParameters", "D365Payload InputParameters cannot be blank or null.")
             {
@@ -87,33 +89,32 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         }
 
         [Test]
-        public async Task WhenPostValidPayload_ThenRecieveSuccessfulResponse()
+        public async Task WhenPostValidPayload_ThenReceiveSuccessfulResponse()
         {
-            var notificationType = new List<NotificationType>() { new NotificationType() { Name = "Data test", TopicName = "testTopic"}};
+            var notificationType = new List<NotificationType>() { new NotificationType() { Name = "Data test", TopicName = "testTopic" } };
 
             A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
             A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
             A.CallTo(() => _fakeNotificationRepository.GetAllNotificationTypes()).Returns(notificationType);
-
             var result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
 
             Assert.AreEqual(StatusCodes.Status202Accepted, result.StatusCode);
         }
 
-        private D365Payload GetD365Payload()
+        private static D365Payload GetD365Payload()
         {
             var d365Payload = new D365Payload()
             {
                 CorrelationId = "6ea03f10-2672-46fb-92a1-5200f6a4fabc",
-                InputParameters = new InputParameter[] {},
-                PostEntityImages = new EntityImage[] { },
+                InputParameters = Array.Empty<InputParameter>(),
+                PostEntityImages = Array.Empty<EntityImage>(),
                 OperationCreatedOn = "/Date(1642149320000+0000)/"
             };
 
             return d365Payload;
         }
 
-        private SubscriptionRequest GetSubscriptionRequest()
+        private static SubscriptionRequest GetSubscriptionRequest()
         {
             return new SubscriptionRequest()
             {

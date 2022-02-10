@@ -18,7 +18,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             EnsApiBaseUrl = ConfigurationRoot.GetSection("EnsApiUrl").Value;
             PayloadFolder = ConfigurationRoot.GetSection("PayloadFolder").Value;
             PayloadFileName = ConfigurationRoot.GetSection("PayloadFileName").Value;
-
+            
         }
     }
 }
