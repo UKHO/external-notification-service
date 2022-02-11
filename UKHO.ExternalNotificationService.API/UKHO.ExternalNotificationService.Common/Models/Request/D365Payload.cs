@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace UKHO.ExternalNotificationService.API.Models
+namespace UKHO.ExternalNotificationService.Common.Models.Request
 {
-    public class D365Payload 
+    public class D365Payload
     {
         public string CorrelationId { get; set; }
         public string OperationCreatedOn { get; set; }
@@ -43,7 +43,8 @@ namespace UKHO.ExternalNotificationService.API.Models
     {
         [JsonPropertyName("key")]
         public string Key { get; set; }
-        public EntityImageValue ImageValue { get; set; }
+        [JsonPropertyName("value")]
+        public EntityImageValue Value { get; set; }
     }
 
     public class EntityImageValue
