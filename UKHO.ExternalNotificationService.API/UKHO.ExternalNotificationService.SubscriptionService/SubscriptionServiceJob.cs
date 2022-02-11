@@ -28,7 +28,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
             _logger.LogInformation(EventIds.LogRequest.ToEventId(), "check web job is triggered or not using Azure Queue {message}", message.Body.ToString());
             SubscriptionRequestMessage subscriptionMessage = message.Body.ToObjectFromJson<SubscriptionRequestMessage>();
             _logger.LogInformation(EventIds.CreateSubscriptionRequestStart.ToEventId(),
-                    "Create Subscription web job request started for _X-Correlation-ID:{CorrelationId}", subscriptionMessage.CorrelationId);
+                    "Create Subscription web job request started for _X-Correlation-ID:{CorrelationId}", subscriptionMessage.D365CorrelationId);
 
             SubscriptionRequestResult subscriptionRequestResult = new(subscriptionMessage);
             if (subscriptionMessage.IsActive)
@@ -37,7 +37,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                 subscriptionRequestResult.ProvisioningState = "Succeeded";
             }
             _logger.LogInformation(EventIds.CreateSubscriptionRequestCompleted.ToEventId(),
-                    "Create Subscription web job request Completed for _X-Correlation-ID:{CorrelationId}", subscriptionMessage.CorrelationId);
+                    "Create Subscription web job request Completed for _X-Correlation-ID:{CorrelationId}", subscriptionMessage.D365CorrelationId);
         }
     }
 }

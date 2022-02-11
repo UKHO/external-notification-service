@@ -52,35 +52,39 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900012 - Request for external notification service post endpoint is started.
         /// </summary>
-        ENSSubscriptionRequestStart = 900012,     
+        ENSSubscriptionRequestStart = 900012,
         /// <summary>
-        /// 900013 -  Event data for adding message in queue.
+        /// 900013 - Data truncation D365 Http Payload Size Exceeded.
         /// </summary>
-        AddedMessageInQueue = 900013,
+        D365PayloadSizeExceededError = 900013,
         /// <summary>
-        /// 900014 -  Create subscription web job is started.
+        /// 900014 -  Event data for adding message in queue.
         /// </summary>
-        CreateSubscriptionRequestStart = 900014,
+        AddedMessageInQueue = 900014,
         /// <summary>
-        /// 900015 -  Create subscription web job is Completed.
+        /// 900015 -  Create subscription web job is started.
         /// </summary>
-        CreateSubscriptionRequestCompleted = 900015,
+        CreateSubscriptionRequestStart = 900015,
         /// <summary>
-        /// 900016 -  Create subscription service is started.
+        /// 900016 -  Create subscription web job is Completed.
         /// </summary>
-        CreateSubscriptionServiceStart = 900016,
+        CreateSubscriptionRequestCompleted = 900016,
         /// <summary>
-        /// 900017 -  Create subscription service is Completed.
+        /// 900017 -  Create subscription service is started.
         /// </summary>
-        CreateSubscriptionServiceCompleted = 900017,
+        CreateSubscriptionServiceStart = 900017,
         /// <summary>
-        /// 900018 -  Create or updated azure event domain topic is started.
+        /// 900018 -  Create subscription service is Completed.
         /// </summary>
-        CreateOrUpdateAzureEventDomainTopicStart = 900018,
+        CreateSubscriptionServiceCompleted = 900018,
         /// <summary>
-        /// 900019 -  Create or updated azure event domain topic is Completed.
+        /// 900019 -  Create or updated azure event domain topic is started.
         /// </summary>
-        CreateOrUpdateAzureEventDomainTopicCompleted = 900019
+        CreateOrUpdateAzureEventDomainTopicStart = 900019,
+        /// <summary>
+        /// 900020 -  Create or updated azure event domain topic is Completed.
+        /// </summary>
+        CreateOrUpdateAzureEventDomainTopicCompleted = 900020
         
     }
 

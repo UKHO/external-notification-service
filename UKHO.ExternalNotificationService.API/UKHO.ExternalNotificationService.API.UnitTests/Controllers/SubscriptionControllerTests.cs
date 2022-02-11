@@ -25,13 +25,14 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
     {
         private SubscriptionController _controller;
         private IHttpContextAccessor _fakeHttpContextAccessor;
-        private ILogger<SubscriptionController> _fakeLogger;        
+        private ILogger<SubscriptionController> _fakeLogger;
         private ISubscriptionService _fakeSubscriptionService;
         private D365Payload _fakeD365PayloadDetails;
-        private SubscriptionRequest _fakeSubscriptionRequest;               
+        private SubscriptionRequest _fakeSubscriptionRequest;
         private IAzureMessageQueueHelper _fakeAzureMessageQueueHelper;
-        private IOptions<SubscriptionStorageConfiguration> _fakeStorageConfiguration;
+        private IOptions<SubscriptionStorageConfiguration> _fakeSubscriptionStorageConfiguration;
         private ISubscriptionStorageService _fakeSubscriptionStorageService;
+        private const string XmsDynamicsMsgSizeExceededHeader = "x-ms-dynamics-msg-size-exceeded";
 
         [SetUp]
         public void Setup()
@@ -41,30 +42,28 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 
             _fakeHttpContextAccessor = A.Fake<IHttpContextAccessor>();
             _fakeLogger = A.Fake<ILogger<SubscriptionController>>();
-            _fakeSubscriptionService = A.Fake<ISubscriptionService>();                              
+            _fakeSubscriptionService = A.Fake<ISubscriptionService>();
             _fakeAzureMessageQueueHelper = A.Fake<IAzureMessageQueueHelper>();
-            _fakeStorageConfiguration = A.Fake<IOptions<SubscriptionStorageConfiguration>>();
             _fakeSubscriptionStorageService = A.Fake<ISubscriptionStorageService>();
+            _fakeSubscriptionStorageConfiguration = A.Fake<IOptions<SubscriptionStorageConfiguration>>();
 
             A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(new DefaultHttpContext());
             _fakeSubscriptionService = A.Fake<ISubscriptionService>();
 
-            _controller = new SubscriptionController(_fakeHttpContextAccessor, _fakeLogger, _fakeSubscriptionService, _fakeAzureMessageQueueHelper, _fakeStorageConfiguration, _fakeSubscriptionStorageService);
+            _controller = new SubscriptionController(_fakeHttpContextAccessor, _fakeLogger, _fakeSubscriptionService, _fakeAzureMessageQueueHelper, _fakeSubscriptionStorageConfiguration, _fakeSubscriptionStorageService);
         }
 
-        [Test] 
+        [Test]
         public async Task WhenPostInvalidNullPayload_ThenReceiveBadRequest()
         {
-            D365Payload d365Payload = null;
-
-            var result = (BadRequestObjectResult)await _controller.Post(d365Payload);
+            var result = (BadRequestObjectResult)await _controller.Post(null);
             var errors = (ErrorDescription)result.Value;
 
             Assert.AreEqual(400, result.StatusCode);
             Assert.AreEqual("Either body is null or malformed.", errors.Errors.Single().Description);
         }
 
-        [Test] 
+        [Test]
         public async Task WhenPostInvalidNullInputParameters_ThenReceiveBadRequest()
         {
             var validationMessage = new ValidationFailure("InputParameters", "D365Payload InputParameters cannot be blank or null.")
@@ -77,22 +76,39 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             var result = (BadRequestObjectResult)await _controller.Post(_fakeD365PayloadDetails);
             var errors = (ErrorDescription)result.Value;
 
-            _controller = new SubscriptionController(_fakeHttpContextAccessor, _fakeLogger, _fakeSubscriptionService, _fakeAzureMessageQueueHelper, _fakeStorageConfiguration, _fakeSubscriptionStorageService);
+            _controller = new SubscriptionController(_fakeHttpContextAccessor, _fakeLogger, _fakeSubscriptionService, _fakeAzureMessageQueueHelper, _fakeSubscriptionStorageConfiguration, _fakeSubscriptionStorageService);
             Assert.AreEqual(400, result.StatusCode);
             Assert.AreEqual("D365Payload InputParameters cannot be blank or null.", errors.Errors.Single().Description);
         }
 
         [Test]
+        public async Task WhenD365HttpPayloadSizeExceeded_ThenLogError()
+        {
+            DefaultHttpContext defaultHttpContext = new();
+            defaultHttpContext.Request.Headers.Add(XmsDynamicsMsgSizeExceededHeader, string.Empty);
+            A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(defaultHttpContext);
+            A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
+
+            var result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
+
+            A.CallTo(_fakeLogger).Where(call => call.GetArgument<LogLevel>(0) == LogLevel.Error).MustHaveHappened();
+            Assert.AreEqual(StatusCodes.Status202Accepted, result.StatusCode);
+        }
+
+        [Test]
         public async Task WhenPostValidPayload_ThenReceiveSuccessfulResponse()
         {
+            string storageAccConnectionString = "DefaultEndpointsProtocol = https; AccountName = testessdevstorage2; AccountKey =testaccountkey; EndpointSuffix = core.windows.net";
             A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
 
             A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
             A.CallTo(() => _fakeSubscriptionStorageService.GetStorageAccountConnectionString(A<string>.Ignored, A<string>.Ignored))
-                          .Returns("");
+                            .Returns(storageAccConnectionString);
+
             A.CallTo(() => _fakeAzureMessageQueueHelper.AddQueueMessage(A<string>.Ignored, A<string>.Ignored, A<SubscriptionRequestMessage>.Ignored, A<string>.Ignored));
             var result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
 
+            A.CallTo(_fakeLogger).Where(call => call.GetArgument<LogLevel>(0) == LogLevel.Error).MustNotHaveHappened();
             Assert.AreEqual(StatusCodes.Status202Accepted, result.StatusCode);
         }
 

@@ -20,6 +20,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         private IOptions<D365PayloadKeyConfiguration> _fakeD365PayloadKeyConfiguration;
         private D365Payload _fakeD365PayloadDetails;
         private SubscriptionRequest _fakeSubscriptionRequest;
+        private SubscriptionRequestMessage _fakeSubscriptionRequestMessage;
         private SubscriptionService _subscriptionService;
 
         [SetUp]
@@ -33,6 +34,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             _fakeD365PayloadKeyConfiguration.Value.WebhookUrlKey = "ukho_webhookurl";
             _fakeD365PayloadDetails = GetD365PayloadDetails();
             _fakeSubscriptionRequest = GetSubscriptionRequest();
+            _fakeSubscriptionRequestMessage = GetSubscriptionRequestMessage();
             _fakeD365PayloadValidator = A.Fake<ID365PayloadValidator>();
             
             _subscriptionService = new SubscriptionService(_fakeD365PayloadValidator, _fakeD365PayloadKeyConfiguration);
@@ -114,6 +116,19 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         }
         #endregion
 
+        [Test]
+        public void WhenValidSubscriptionRequestDetailsPassed_ThenGetSubcriptionRequestMessage()
+        {
+            SubscriptionRequestMessage result = _subscriptionService.GetSubscriptionRequestMessage(GetSubscriptionRequest());
+
+            Assert.IsInstanceOf<SubscriptionRequestMessage>(result);
+            Assert.AreEqual(_fakeSubscriptionRequestMessage.SubscriptionId, result.SubscriptionId);
+            Assert.AreEqual(_fakeSubscriptionRequestMessage.NotificationType, result.NotificationType);
+            Assert.AreEqual(_fakeSubscriptionRequestMessage.NotificationTypeTopicName, result.NotificationTypeTopicName);
+            Assert.AreEqual(_fakeSubscriptionRequestMessage.IsActive, result.IsActive);
+            Assert.AreEqual(_fakeSubscriptionRequestMessage.WebhookUrl, result.WebhookUrl);
+        }
+
         private D365Payload GetD365PayloadDetails()
         {
             var d365Payload = new D365Payload()
@@ -145,6 +160,19 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
                 D365CorrelationId = "6ea03f10-2672-46fb-92a1-5200f6a4faaa",
                 IsActive = true,
                 NotificationType = "Data test",
+                SubscriptionId = "246d71e7-1475-ec11-8943-002248818222",
+                WebhookUrl = "https://abc.com"
+            };
+        }
+
+        private static SubscriptionRequestMessage GetSubscriptionRequestMessage()
+        {
+            return new SubscriptionRequestMessage()
+            {
+                D365CorrelationId = "6ea03f10-2672-46fb-92a1-5200f6a4faaa",
+                IsActive = true,
+                NotificationType = "Data test",
+                NotificationTypeTopicName = "acc",
                 SubscriptionId = "246d71e7-1475-ec11-8943-002248818222",
                 WebhookUrl = "https://abc.com"
             };

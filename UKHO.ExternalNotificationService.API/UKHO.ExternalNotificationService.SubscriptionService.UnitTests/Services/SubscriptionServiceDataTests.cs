@@ -31,7 +31,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
             CancellationToken cancellationToken = CancellationToken.None;
             A.CallTo(() => _fakeAzureEventGridDomainService.CreateOrUpdateSubscription(A<SubscriptionRequestMessage>.Ignored, A<CancellationToken>.Ignored));
 
-            var response = await _fakeSubscriptionServiceData.CreateOrUpdateSubscription(GetSubscriptionRequestMessage(), cancellationToken);
+            string response = await _fakeSubscriptionServiceData.CreateOrUpdateSubscription(GetSubscriptionRequestMessage(), cancellationToken);
             Assert.IsInstanceOf<string>(response);
         }
 
@@ -39,7 +39,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
         {
             return new SubscriptionRequestMessage()
             {
-                CorrelationId = "",
+                D365CorrelationId = "",
                 NotificationType = "",
                 IsActive = true,
                 NotificationTypeTopicName = "",

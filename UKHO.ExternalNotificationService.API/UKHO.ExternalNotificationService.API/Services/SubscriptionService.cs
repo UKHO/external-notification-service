@@ -52,16 +52,15 @@ namespace UKHO.ExternalNotificationService.API.Services
 
         public SubscriptionRequestMessage GetSubscriptionRequestMessage(SubscriptionRequest subscriptionRequest)
         {
-            var subscriptionRequestMessage = new SubscriptionRequestMessage
+            return new SubscriptionRequestMessage
             {
                 SubscriptionId = subscriptionRequest.SubscriptionId,
                 NotificationType = subscriptionRequest.NotificationType,
                 NotificationTypeTopicName = "acc",
                 IsActive = subscriptionRequest.IsActive,
                 WebhookUrl = subscriptionRequest.WebhookUrl,
-                CorrelationId = subscriptionRequest.D365CorrelationId
-            };
-            return subscriptionRequestMessage;
+                D365CorrelationId = subscriptionRequest.D365CorrelationId
+            };            
         }
     }
 }

@@ -6,6 +6,6 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
 {
     public interface IAzureEventGridDomainService
     {
-        Task<string> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionMessage, CancellationToken cancellationToken);
+        Task<string> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionRequestMessage, CancellationToken cancellationToken);
     }
 }
