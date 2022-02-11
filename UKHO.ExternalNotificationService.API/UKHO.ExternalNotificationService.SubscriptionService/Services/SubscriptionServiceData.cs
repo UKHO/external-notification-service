@@ -22,7 +22,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
         {
             _logger.LogInformation(EventIds.CreateSubscriptionServiceStart.ToEventId(),
                     "Create Subscription service started for _X-Correlation-ID:{CorrelationId}", subscriptionMessage.CorrelationId);
-            var response = await _azureEventGridDomainService.CreateOrUpdateSubscription(subscriptionMessage, cancellationToken);
+            string response = await _azureEventGridDomainService.CreateOrUpdateSubscription(subscriptionMessage, cancellationToken);
             _logger.LogInformation(EventIds.CreateSubscriptionServiceCompleted.ToEventId(),
                     "Create Subscription service completed for _X-Correlation-ID:{CorrelationId}", subscriptionMessage.CorrelationId);
             return response;

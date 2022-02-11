@@ -37,12 +37,12 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
         private static HostBuilder BuildHostConfiguration()
         {
 
-            HostBuilder hostBuilder = new HostBuilder();
+            HostBuilder hostBuilder = new();
             hostBuilder.ConfigureAppConfiguration((hostContext, builder) =>
             {
                 builder.AddJsonFile("appsettings.json");
                 //Add environment specific configuration files.
-                var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+                string environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
                 if (!string.IsNullOrWhiteSpace(environmentName))
                 {
                     builder.AddJsonFile($"appsettings.{environmentName}.json", optional: true);
@@ -55,7 +55,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                 //Add environment variables
                 builder.AddEnvironmentVariables();
 
-                var tempConfig = builder.Build();
+                IConfigurationRoot tempConfig = builder.Build();
                 string kvServiceUri = tempConfig["KeyVaultSettings:ServiceUri"];
                 if (!string.IsNullOrWhiteSpace(kvServiceUri))
                 {

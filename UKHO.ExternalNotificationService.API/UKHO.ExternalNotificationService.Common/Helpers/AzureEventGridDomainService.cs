@@ -35,13 +35,13 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             return topic.Id;
         }
 
-        private async Task<EventGridManagementClient> GetEventGridClient(string SubscriptionId, CancellationToken cancellationToken)
+        private static async Task<EventGridManagementClient> GetEventGridClient(string SubscriptionId, CancellationToken cancellationToken)
         {
             DefaultAzureCredential azureCredential = new();
             TokenRequestContext tokenRequestContext = new(new string[] { "https://management.azure.com/.default" });
 
-            var tokenResult = await azureCredential.GetTokenAsync(tokenRequestContext, cancellationToken);
-            var credential = new TokenCredentials(tokenResult.Token);
+            AccessToken tokenResult = await azureCredential.GetTokenAsync(tokenRequestContext, cancellationToken);
+            TokenCredentials credential = new(tokenResult.Token);
 
             EventGridManagementClient _egClient = new(credential)
             {
