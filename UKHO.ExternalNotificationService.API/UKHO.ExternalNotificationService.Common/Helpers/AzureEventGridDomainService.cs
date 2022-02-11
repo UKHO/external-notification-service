@@ -24,15 +24,16 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             _logger = logger;
         }
 
-        public async Task<string> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionMessage, CancellationToken cancellationToken)
+        public async Task<string> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionRequestMessage, CancellationToken cancellationToken)
         {
             _logger.LogInformation(EventIds.CreateOrUpdateAzureEventDomainTopicStart.ToEventId(),
-                    "Create or update azure event domain topic started for _X-Correlation-ID:{CorrelationId} with Event domain topic {topic}", subscriptionMessage.CorrelationId, subscriptionMessage.NotificationTypeTopicName);
+                    "Create or update azure event domain topic started for _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId} with Event domain topic {topic}", subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId, subscriptionRequestMessage.NotificationTypeTopicName);
             EventGridManagementClient eventGridMgmtClient = await GetEventGridClient(_eventGridDomainConfig.SubscriptionId, cancellationToken);
-            DomainTopic topic = await eventGridMgmtClient.DomainTopics.CreateOrUpdateAsync(_eventGridDomainConfig.ResourceGroup, _eventGridDomainConfig.EventGridDomainName, subscriptionMessage.NotificationTypeTopicName, cancellationToken);
+            //////DomainTopic topic = await eventGridMgmtClient.DomainTopics.CreateOrUpdateAsync(_eventGridDomainConfig.ResourceGroup, _eventGridDomainConfig.EventGridDomainName, subscriptionRequestMessage.NotificationTypeTopicName, cancellationToken);
+            DomainTopic topic1 = await GetDomainTopic(eventGridMgmtClient, subscriptionRequestMessage.NotificationTypeTopicName, cancellationToken);
             _logger.LogInformation(EventIds.CreateOrUpdateAzureEventDomainTopicCompleted.ToEventId(),
-                    "Create or update azure event domain topic completed for _X-Correlation-ID:{CorrelationId} with Event domain topic {topic}", subscriptionMessage.CorrelationId, topic.Name);
-            return topic.Id;
+                    "Create or update azure event domain topic completed for _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId} with Event domain topic {topic}", subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId, topic.Name);
+            return topic1.Id;
         }
 
         private static async Task<EventGridManagementClient> GetEventGridClient(string SubscriptionId, CancellationToken cancellationToken)
@@ -49,6 +50,11 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             };
 
             return _egClient;
+        }
+
+        protected virtual async Task<DomainTopic> GetDomainTopic(EventGridManagementClient eventGridMgmtClient, string NotificationTypeTopicName, CancellationToken cancellationToken)
+        {
+            return  await eventGridMgmtClient.DomainTopics.CreateOrUpdateAsync(_eventGridDomainConfig.ResourceGroup, _eventGridDomainConfig.EventGridDomainName, NotificationTypeTopicName, cancellationToken);
         }
     }
 }

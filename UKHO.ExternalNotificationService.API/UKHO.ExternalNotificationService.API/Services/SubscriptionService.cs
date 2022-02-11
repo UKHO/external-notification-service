@@ -50,7 +50,7 @@ namespace UKHO.ExternalNotificationService.API.Services
             };            
         }
 
-        public SubscriptionRequestMessage GetSubscriptionRequestMessage(SubscriptionRequest subscriptionRequest)
+        public SubscriptionRequestMessage GetSubscriptionRequestMessage(SubscriptionRequest subscriptionRequest, string correlationId)
         {
             return new SubscriptionRequestMessage
             {
@@ -59,7 +59,8 @@ namespace UKHO.ExternalNotificationService.API.Services
                 NotificationTypeTopicName = "acc",
                 IsActive = subscriptionRequest.IsActive,
                 WebhookUrl = subscriptionRequest.WebhookUrl,
-                D365CorrelationId = subscriptionRequest.D365CorrelationId
+                D365CorrelationId = subscriptionRequest.D365CorrelationId,
+                CorrelationId = correlationId
             };            
         }
     }

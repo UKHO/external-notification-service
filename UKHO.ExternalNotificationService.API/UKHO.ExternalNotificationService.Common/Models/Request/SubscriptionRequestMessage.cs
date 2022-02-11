@@ -13,5 +13,7 @@
         public bool IsActive { get; set; }
 
         public string D365CorrelationId { get; set; }
+
+        public string CorrelationId { get; set; }
     }
 }

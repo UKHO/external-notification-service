@@ -119,7 +119,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [Test]
         public void WhenValidSubscriptionRequestDetailsPassed_ThenGetSubcriptionRequestMessage()
         {
-            SubscriptionRequestMessage result = _subscriptionService.GetSubscriptionRequestMessage(GetSubscriptionRequest());
+            string fakeCorrelationid = "6ea03f10-2672-46fb-92a1-5200f6a4faaa";
+            SubscriptionRequestMessage result = _subscriptionService.GetSubscriptionRequestMessage(GetSubscriptionRequest(), fakeCorrelationid);
 
             Assert.IsInstanceOf<SubscriptionRequestMessage>(result);
             Assert.AreEqual(_fakeSubscriptionRequestMessage.SubscriptionId, result.SubscriptionId);
@@ -174,7 +175,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
                 NotificationType = "Data test",
                 NotificationTypeTopicName = "acc",
                 SubscriptionId = "246d71e7-1475-ec11-8943-002248818222",
-                WebhookUrl = "https://abc.com"
+                WebhookUrl = "https://abc.com",
+                CorrelationId = "6a03f10-2672-46fb-92a1-5200f6a4faaa"
             };
         }
     }

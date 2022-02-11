@@ -9,6 +9,6 @@ namespace UKHO.ExternalNotificationService.API.Services
         Task<ValidationResult> ValidateD365PayloadRequest(D365Payload d365Payload);
 
         SubscriptionRequest ConvertToSubscriptionRequestModel(D365Payload d365Payload);
-        SubscriptionRequestMessage GetSubscriptionRequestMessage(SubscriptionRequest subscriptionRequest);
+        SubscriptionRequestMessage GetSubscriptionRequestMessage(SubscriptionRequest subscriptionRequest, string correlationId);
     }
 }

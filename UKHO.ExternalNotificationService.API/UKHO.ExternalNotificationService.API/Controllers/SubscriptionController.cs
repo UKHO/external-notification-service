@@ -70,7 +70,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
             }
 
             SubscriptionRequest subscription = _subscriptionService.ConvertToSubscriptionRequestModel(d365Payload);
-            SubscriptionRequestMessage subscriptionReqMessage = _subscriptionService.GetSubscriptionRequestMessage(subscription);
+            SubscriptionRequestMessage subscriptionReqMessage = _subscriptionService.GetSubscriptionRequestMessage(subscription, GetCurrentCorrelationId());
             if (subscriptionReqMessage == null)
             {
                 _logger.LogInformation(EventIds.LogRequest.ToEventId(), "Subscription Request message is null for SubscriptionId:{subscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{correlationId}", subscription.SubscriptionId, subscription.D365CorrelationId, GetCurrentCorrelationId());
