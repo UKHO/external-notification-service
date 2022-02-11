@@ -20,7 +20,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         private readonly ILogger<SubscriptionController> _logger;
         private readonly ISubscriptionService _subscriptionService;
         private List<Error> _errors;
-        private readonly string _xmsDynamicsMsgSizeExceededHeader = "x-ms-dynamics-msg-size-exceeded";
+        private const string XmsDynamicsMsgSizeExceededHeader = "x-ms-dynamics-msg-size-exceeded";
 
         public SubscriptionController(IHttpContextAccessor contextAccessor, ILogger<SubscriptionController> logger, ISubscriptionService subscriptionService) : base(contextAccessor, logger)
         {
@@ -33,7 +33,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         {
             _logger.LogInformation(EventIds.ENSSubscriptionRequestStart.ToEventId(), "Subscription request for D365Payload:{d365Payload} with _X-Correlation-ID:{correlationId}", JsonConvert.SerializeObject(d365Payload), GetCurrentCorrelationId());
 
-            if (HttpContext.Request.Headers.ContainsKey(_xmsDynamicsMsgSizeExceededHeader))
+            if (HttpContext.Request.Headers.ContainsKey(XmsDynamicsMsgSizeExceededHeader))
             {
                 _logger.LogError(EventIds.D365PayloadSizeExceededError.ToEventId(), "Data Truncation - D365 HTTP payload size exceeded, Recieved x-ms-dynamics-msg-size-exceeded header for _X-Correlation-ID:{correlationId}", GetCurrentCorrelationId());
             }
