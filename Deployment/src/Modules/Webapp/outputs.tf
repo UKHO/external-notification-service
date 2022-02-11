@@ -1,5 +1,5 @@
 output "webapp_service" {
-  value = azurerm_app_service.webapp_service
+  value = azurerm_app_service.webapp_service.name
 }
 
 output "web_app_object_id" {
@@ -12,4 +12,14 @@ output "web_app_tenant_id" {
 
 output "default_site_hostname" {
   value = azurerm_app_service.webapp_service.default_site_hostname
+}
+
+output "webapp_scm_credentials"{
+    value = merge({
+    "${var.name}-scm-username" =  azurerm_app_service.webapp_service.site_credential[0].username 
+    },
+    {
+    "${var.name}-scm-password" =  azurerm_app_service.webapp_service.site_credential[0].password 
+    })
+  sensitive = true
 }
