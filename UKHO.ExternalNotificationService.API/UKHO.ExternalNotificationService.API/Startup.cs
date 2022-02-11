@@ -39,7 +39,6 @@ namespace UKHO.ExternalNotificationService.API
         {
             services.AddControllers().AddNewtonsoftJson();
             services.Configure<EventHubLoggingConfiguration>(_configuration.GetSection("EventHubLoggingConfiguration"));
-            services.Configure<EnsConfiguration>(_configuration.GetSection("EnsConfiguration"));
             services.Configure<D365PayloadKeyConfiguration>(_configuration.GetSection("D365PayloadKeyConfiguration"));
             services.Configure<EnsConfiguration>(_configuration.GetSection("EnsConfiguration"));
 

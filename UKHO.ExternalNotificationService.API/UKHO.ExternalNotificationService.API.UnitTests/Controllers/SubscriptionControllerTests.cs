@@ -73,7 +73,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         }
 
         [Test]
-        public async Task WhenPostInvalidNotificationTypesInPayload_ThenRecieveBadRequest()
+        public async Task WhenPostInvalidNotificationTypeInPayload_ThenReceiveBadRequest()
         {
             var notificationType = new List<NotificationType>() { new NotificationType() { Name = "dataTest", TopicName = "testTopic" } };
 

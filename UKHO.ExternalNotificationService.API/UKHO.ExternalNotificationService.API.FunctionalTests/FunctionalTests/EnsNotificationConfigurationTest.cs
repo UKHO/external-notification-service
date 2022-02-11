@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -29,7 +30,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [Test]
         public async Task WhenICallTheEnsSubscriptionApiWithAValidNotificationType_ThenAcceptedStatusIsReturned()
         {
-            var apiResponse = await _ensApiClient.PostEnsApiSubscriptionAsync(_d365Payload);
+            HttpResponseMessage apiResponse = await _ensApiClient.PostEnsApiSubscriptionAsync(_d365Payload);
             Assert.AreEqual(202, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 202.");
 
         }
@@ -41,10 +42,10 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         {
             _d365Payload.InputParameters[0].Value.FormattedValues[4].Value = notificationType;
 
-            var apiResponse = await _ensApiClient.PostEnsApiSubscriptionAsync(_d365Payload);
+            HttpResponseMessage apiResponse = await _ensApiClient.PostEnsApiSubscriptionAsync(_d365Payload);
             Assert.AreEqual(400, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 400.");
 
-            var errorMessage = await apiResponse.ReadAsTypeAsync<ErrorDescriptionModel>();
+            ErrorDescriptionModel errorMessage = await apiResponse.ReadAsTypeAsync<ErrorDescriptionModel>();
 
             Assert.IsTrue(errorMessage.Errors.Any(e => e.Source == "notificationType"));
             Assert.IsTrue(errorMessage.Errors.Any(e => e.Description == validationMessage));

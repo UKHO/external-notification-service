@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using UKHO.ExternalNotificationService.API.Extensions;
 using UKHO.ExternalNotificationService.API.Services;
+using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Logging;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 using UKHO.ExternalNotificationService.Common.Models.Response;
@@ -58,7 +59,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
 
             SubscriptionRequest subscription = _subscriptionService.ConvertToSubscriptionRequestModel(d365Payload);
 
-            var notificationType = _notificationRepository.GetAllNotificationTypes().FirstOrDefault(x => x.Name == subscription.NotificationType);
+            NotificationType notificationType = _notificationRepository.GetAllNotificationTypes().FirstOrDefault(x => x.Name == subscription.NotificationType);
 
             if (notificationType == null)
             {
