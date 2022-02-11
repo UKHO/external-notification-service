@@ -70,6 +70,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
             }
 
             SubscriptionRequest subscription = _subscriptionService.ConvertToSubscriptionRequestModel(d365Payload);
+            //call service--add message in queue
             SubscriptionRequestMessage subscriptionReqMessage = _subscriptionService.GetSubscriptionRequestMessage(subscription, GetCurrentCorrelationId());
             if (subscriptionReqMessage == null)
             {
