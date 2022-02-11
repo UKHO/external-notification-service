@@ -27,14 +27,16 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         private ISubscriptionService _fakeSubscriptionService;
         private D365Payload _fakeD365PayloadDetails;
         private SubscriptionRequest _fakeSubscriptionRequest;
+        private const string XmsDynamicsMsgSizeExceededHeader = "x-ms-dynamics-msg-size-exceeded";
         private INotificationRepository _fakeNotificationRepository;
+        private List<NotificationType> _fakeNotificationType;
 
         [SetUp]
         public void Setup()
         {
             _fakeD365PayloadDetails = GetD365Payload();
             _fakeSubscriptionRequest = GetSubscriptionRequest();
-
+            _fakeNotificationType = new List<NotificationType>() { new NotificationType() { Name = "Data test", TopicName = "testTopic" } };
             _fakeHttpContextAccessor = A.Fake<IHttpContextAccessor>();
             _fakeLogger = A.Fake<ILogger<SubscriptionController>>();
             _fakeSubscriptionService = A.Fake<ISubscriptionService>();
@@ -46,9 +48,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         [Test] 
         public async Task WhenPostInvalidNullPayload_ThenReceiveBadRequest()
         {
-            D365Payload d365Payload = null;
-
-            var result = (BadRequestObjectResult)await _controller.Post(d365Payload);
+            var result = (BadRequestObjectResult)await _controller.Post(null);
             var errors = (ErrorDescription)result.Value;
 
             Assert.AreEqual(400, result.StatusCode);
@@ -73,13 +73,28 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         }
 
         [Test]
+        public async Task WhenD365HttpPayloadSizeExceeded_ThenLogError()
+        {
+            DefaultHttpContext defaultHttpContext = new();
+            defaultHttpContext.Request.Headers.Add(XmsDynamicsMsgSizeExceededHeader, string.Empty);
+            A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(defaultHttpContext);
+            A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
+            A.CallTo(() => _fakeNotificationRepository.GetAllNotificationTypes()).Returns(_fakeNotificationType);
+
+            var result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
+
+            A.CallTo(_fakeLogger).Where(call => call.GetArgument<LogLevel>(0) == LogLevel.Error).MustHaveHappened();
+            Assert.AreEqual(StatusCodes.Status202Accepted, result.StatusCode);
+        }
+
+        [Test]
         public async Task WhenPostInvalidNotificationTypeInPayload_ThenReceiveBadRequest()
         {
-            var notificationType = new List<NotificationType>() { new NotificationType() { Name = "dataTest", TopicName = "testTopic" } };
+            _fakeNotificationType[0].Name = "test";
 
             A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
             A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
-            A.CallTo(() => _fakeNotificationRepository.GetAllNotificationTypes()).Returns(notificationType);
+            A.CallTo(() => _fakeNotificationRepository.GetAllNotificationTypes()).Returns(_fakeNotificationType);
 
             var result = (BadRequestObjectResult)await _controller.Post(_fakeD365PayloadDetails);
             var errors = (ErrorDescription)result.Value;
@@ -91,13 +106,12 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         [Test]
         public async Task WhenPostValidPayload_ThenReceiveSuccessfulResponse()
         {
-            var notificationType = new List<NotificationType>() { new NotificationType() { Name = "Data test", TopicName = "testTopic" } };
-
             A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
             A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
-            A.CallTo(() => _fakeNotificationRepository.GetAllNotificationTypes()).Returns(notificationType);
+            A.CallTo(() => _fakeNotificationRepository.GetAllNotificationTypes()).Returns(_fakeNotificationType);
             var result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
 
+            A.CallTo(_fakeLogger).Where(call => call.GetArgument<LogLevel>(0) == LogLevel.Error).MustNotHaveHappened();
             Assert.AreEqual(StatusCodes.Status202Accepted, result.StatusCode);
         }
 
