@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using FluentValidation.Results;
@@ -8,9 +9,11 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using UKHO.ExternalNotificationService.API.Extensions;
 using UKHO.ExternalNotificationService.API.Services;
+using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Logging;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 using UKHO.ExternalNotificationService.Common.Models.Response;
+using UKHO.ExternalNotificationService.Common.Repository;
 
 namespace UKHO.ExternalNotificationService.API.Controllers
 {
@@ -21,11 +24,13 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         private readonly ISubscriptionService _subscriptionService;
         private List<Error> _errors;
         private const string XmsDynamicsMsgSizeExceededHeader = "x-ms-dynamics-msg-size-exceeded";
+        private readonly INotificationRepository _notificationRepository;
 
-        public SubscriptionController(IHttpContextAccessor contextAccessor, ILogger<SubscriptionController> logger, ISubscriptionService subscriptionService) : base(contextAccessor, logger)
+        public SubscriptionController(IHttpContextAccessor contextAccessor, ILogger<SubscriptionController> logger, ISubscriptionService subscriptionService, INotificationRepository notificationRepository) : base(contextAccessor, logger)
         {
             _logger = logger;
             _subscriptionService = subscriptionService;
+            _notificationRepository = notificationRepository;
         }
 
         [HttpPost]
@@ -59,6 +64,21 @@ namespace UKHO.ExternalNotificationService.API.Controllers
             }
 
             SubscriptionRequest subscription = _subscriptionService.ConvertToSubscriptionRequestModel(d365Payload);
+
+            NotificationType notificationType = _notificationRepository.GetAllNotificationTypes().FirstOrDefault(x => x.Name == subscription.NotificationType);
+
+            if (notificationType == null)
+            {
+                var error = new List<Error>
+                {
+                    new Error()
+                    {
+                        Source = "notificationType",
+                        Description = $"Invalid Notification Type '{subscription.NotificationType}'"
+                    }
+                };
+                return BuildBadRequestErrorResponse(error);
+            }
 
             _logger.LogInformation(EventIds.Accepted.ToEventId(), "Subscription request Accepted for SubscriptionId:{subscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{correlationId}", subscription.SubscriptionId, subscription.D365CorrelationId, GetCurrentCorrelationId());
 

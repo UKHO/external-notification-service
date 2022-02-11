@@ -19,6 +19,7 @@ using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.API.Validation;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.HealthCheck;
+using UKHO.ExternalNotificationService.Common.Repository;
 using UKHO.Logging.EventHubLogProvider;
 
 namespace UKHO.ExternalNotificationService.API
@@ -36,9 +37,11 @@ namespace UKHO.ExternalNotificationService.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers()
-                .AddNewtonsoftJson();
+            services.AddControllers().AddNewtonsoftJson();
             services.Configure<EventHubLoggingConfiguration>(_configuration.GetSection("EventHubLoggingConfiguration"));
+            services.Configure<D365PayloadKeyConfiguration>(_configuration.GetSection("D365PayloadKeyConfiguration"));
+            services.Configure<EnsConfiguration>(_configuration.GetSection("EnsConfiguration"));
+
             services.AddApplicationInsightsTelemetry();
             services.AddLogging(loggingBuilder =>
             {
@@ -61,8 +64,8 @@ namespace UKHO.ExternalNotificationService.API
             services.AddHealthChecks().AddCheck<EventHubLoggingHealthCheck>("EventHubLoggingHealthCheck");
             services.AddScoped<ID365PayloadValidator, D365PayloadValidator>();
             services.AddScoped<ISubscriptionService, SubscriptionService>();
-
-            services.Configure<D365PayloadKeyConfiguration>(_configuration.GetSection("D365PayloadKeyConfiguration"));
+            services.AddScoped<IEventHubLoggingHealthClient, EventHubLoggingHealthClient>();
+            services.AddSingleton<INotificationRepository, NotificationRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -102,6 +105,8 @@ namespace UKHO.ExternalNotificationService.API
             {
                 builder.AddAzureKeyVault(new Uri(kvServiceUri), new DefaultAzureCredential());
             }
+
+            builder.AddJsonFile("ConfigurationFiles/NotificationTypes.json", false, true);
 
 #if DEBUG
             builder.AddJsonFile("appsettings.local.overrides.json", true, true);
