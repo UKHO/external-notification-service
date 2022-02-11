@@ -11,26 +11,26 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 {
     class EnsNotificationConfigurationTest
     {
-        private EnsApiClient _ensApiClient { get; set; }
-        private TestConfiguration _testConfig { get; set; }
-        private D365Payload _d365Payload { get; set; }
+        private EnsApiClient EnsApiClient { get; set; }
+        private TestConfiguration TestConfig { get; set; }
+        private D365Payload D365Payload { get; set; }
 
         [SetUp]
         public void Setup()
         {
-            _testConfig = new TestConfiguration();
-            _ensApiClient = new EnsApiClient(_testConfig.EnsApiBaseUrl);
+            TestConfig = new TestConfiguration();
+            EnsApiClient = new EnsApiClient(TestConfig.EnsApiBaseUrl);
 
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), _testConfig.PayloadFolder, _testConfig.PayloadFileName);
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), TestConfig.PayloadFolder, TestConfig.PayloadFileName);
 
-            _d365Payload = JsonConvert.DeserializeObject<D365Payload>(File.ReadAllText(filePath));
+            D365Payload = JsonConvert.DeserializeObject<D365Payload>(File.ReadAllText(filePath));
 
         }
 
         [Test]
         public async Task WhenICallTheEnsSubscriptionApiWithAValidNotificationType_ThenAcceptedStatusIsReturned()
         {
-            HttpResponseMessage apiResponse = await _ensApiClient.PostEnsApiSubscriptionAsync(_d365Payload);
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload);
             Assert.AreEqual(202, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 202.");
 
         }
@@ -40,9 +40,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [TestCase("ABC", "Invalid Notification Type 'ABC'", TestName = "Notification Type Value Is Invalid And Not Exist In The Configuration")]
         public async Task WhenICallTheEnsSubscriptionApiWithAnInValidNotificationType_ThenABadRequestStatusIsReturned(string notificationType,string validationMessage)
         {
-            _d365Payload.InputParameters[0].Value.FormattedValues[4].Value = notificationType;
+            D365Payload.InputParameters[0].Value.FormattedValues[4].Value = notificationType;
 
-            HttpResponseMessage apiResponse = await _ensApiClient.PostEnsApiSubscriptionAsync(_d365Payload);
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload);
             Assert.AreEqual(400, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 400.");
 
             ErrorDescriptionModel errorMessage = await apiResponse.ReadAsTypeAsync<ErrorDescriptionModel>();
