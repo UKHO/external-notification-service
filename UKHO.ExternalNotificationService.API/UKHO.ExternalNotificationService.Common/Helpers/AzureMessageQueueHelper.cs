@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Azure.Storage.Queues;
 using Microsoft.Extensions.Logging;
+using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Helper;
 using UKHO.ExternalNotificationService.Common.Logging;
 
@@ -15,14 +16,16 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
         {
             _logger = logger;
         }
-        public async Task AddQueueMessage<SubscriptionRequestMessage>(string storageConnectionString, string queueName, SubscriptionRequestMessage subscriptionRequestMessage, string correlationId)
+        public async Task AddQueueMessage<SubscriptionRequestMessage>(SubscriptionStorageConfiguration ensStorageConfiguration , SubscriptionRequestMessage subscriptionRequestMessage, string correlationId)
         {
+            string storageAccountConnectionString = $"DefaultEndpointsProtocol=https;AccountName={ensStorageConfiguration.StorageAccountName};AccountKey={ensStorageConfiguration.StorageAccountKey};EndpointSuffix=core.windows.net";
+           
             QueueClientOptions queueClientOptions = new()
             {
                 MessageEncoding = QueueMessageEncoding.Base64
             };
             
-            QueueClient queueClient = new(storageConnectionString, queueName, queueClientOptions);
+            QueueClient queueClient = new(storageAccountConnectionString, ensStorageConfiguration.QueueName, queueClientOptions);
 
             string subscriptionMessageString = JsonSerializer.Serialize(subscriptionRequestMessage);
             // Send a message to the queue

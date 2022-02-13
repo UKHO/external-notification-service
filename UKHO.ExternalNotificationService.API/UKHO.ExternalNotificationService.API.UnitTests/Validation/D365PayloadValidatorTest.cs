@@ -214,7 +214,6 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
 
             Assert.AreEqual(0, result.Errors.Count);
         }
-
         #endregion
 
         private D365Payload GetD365PayloadDetails()
