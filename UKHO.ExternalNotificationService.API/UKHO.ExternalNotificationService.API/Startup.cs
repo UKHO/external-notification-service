@@ -41,7 +41,10 @@ namespace UKHO.ExternalNotificationService.API
         {
             services.AddControllers().AddNewtonsoftJson();
             services.Configure<EventHubLoggingConfiguration>(_configuration.GetSection("EventHubLoggingConfiguration"));
+            services.Configure<D365PayloadKeyConfiguration>(_configuration.GetSection("D365PayloadKeyConfiguration"));
+            services.Configure<EnsConfiguration>(_configuration.GetSection("EnsConfiguration"));           
             services.Configure<SubscriptionStorageConfiguration>(_configuration.GetSection("SubscriptionStorageConfiguration"));
+
             services.AddApplicationInsightsTelemetry();
             services.AddLogging(loggingBuilder =>
             {
@@ -65,8 +68,7 @@ namespace UKHO.ExternalNotificationService.API
             services.AddScoped<IAzureMessageQueueHelper, AzureMessageQueueHelper>();           
             services.AddHealthChecks().AddCheck<EventHubLoggingHealthCheck>("EventHubLoggingHealthCheck");
             services.AddScoped<ID365PayloadValidator, D365PayloadValidator>();
-            services.AddSingleton<INotificationRepository, NotificationRepository>();
-            services.Configure<D365PayloadKeyConfiguration>(_configuration.GetSection("D365PayloadKeyConfiguration"));
+            services.AddSingleton<INotificationRepository, NotificationRepository>();            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
