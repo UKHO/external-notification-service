@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using FakeItEasy;
+﻿using FakeItEasy;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Controllers;
 using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.Common.Configuration;
-using UKHO.ExternalNotificationService.Common.Helper;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 using UKHO.ExternalNotificationService.Common.Models.Response;
-using UKHO.ExternalNotificationService.Common.Storage;
+using UKHO.ExternalNotificationService.Common.Repository;
 
 namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 {
@@ -29,28 +27,25 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         private ISubscriptionService _fakeSubscriptionService;
         private D365Payload _fakeD365PayloadDetails;
         private SubscriptionRequest _fakeSubscriptionRequest;
-        private IAzureMessageQueueHelper _fakeAzureMessageQueueHelper;
-        private IOptions<SubscriptionStorageConfiguration> _fakeSubscriptionStorageConfiguration;
-        private ISubscriptionStorageService _fakeSubscriptionStorageService;
         private const string XmsDynamicsMsgSizeExceededHeader = "x-ms-dynamics-msg-size-exceeded";
+        private INotificationRepository _fakeNotificationRepository;
+        private List<NotificationType> _fakeNotificationType;
 
         [SetUp]
         public void Setup()
         {
             _fakeD365PayloadDetails = GetD365Payload();
             _fakeSubscriptionRequest = GetSubscriptionRequest();
-
+            _fakeNotificationType = new List<NotificationType>() { new NotificationType() { Name = "Data test", TopicName = "testTopic" } };
             _fakeHttpContextAccessor = A.Fake<IHttpContextAccessor>();
             _fakeLogger = A.Fake<ILogger<SubscriptionController>>();
             _fakeSubscriptionService = A.Fake<ISubscriptionService>();
-            _fakeAzureMessageQueueHelper = A.Fake<IAzureMessageQueueHelper>();
-            _fakeSubscriptionStorageService = A.Fake<ISubscriptionStorageService>();
-            _fakeSubscriptionStorageConfiguration = A.Fake<IOptions<SubscriptionStorageConfiguration>>();
 
             A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(new DefaultHttpContext());
             _fakeSubscriptionService = A.Fake<ISubscriptionService>();
+            _fakeNotificationRepository = A.Fake<INotificationRepository>();
 
-            _controller = new SubscriptionController(_fakeHttpContextAccessor, _fakeLogger, _fakeSubscriptionService, _fakeAzureMessageQueueHelper, _fakeSubscriptionStorageConfiguration, _fakeSubscriptionStorageService);
+            _controller = new SubscriptionController(_fakeHttpContextAccessor, _fakeLogger, _fakeSubscriptionService, _fakeNotificationRepository);
         }
 
         [Test]
@@ -75,8 +70,6 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 
             var result = (BadRequestObjectResult)await _controller.Post(_fakeD365PayloadDetails);
             var errors = (ErrorDescription)result.Value;
-
-            _controller = new SubscriptionController(_fakeHttpContextAccessor, _fakeLogger, _fakeSubscriptionService, _fakeAzureMessageQueueHelper, _fakeSubscriptionStorageConfiguration, _fakeSubscriptionStorageService);
             Assert.AreEqual(400, result.StatusCode);
             Assert.AreEqual("D365Payload InputParameters cannot be blank or null.", errors.Errors.Single().Description);
         }
@@ -88,6 +81,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             defaultHttpContext.Request.Headers.Add(XmsDynamicsMsgSizeExceededHeader, string.Empty);
             A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(defaultHttpContext);
             A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
+            A.CallTo(() => _fakeNotificationRepository.GetAllNotificationTypes()).Returns(_fakeNotificationType);
+            A.CallTo(() => _fakeSubscriptionService.AddSubscriptionRequest(A<SubscriptionRequest>.Ignored, A<NotificationType>.Ignored, A<string>.Ignored));
 
             var result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
 
@@ -96,19 +91,32 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         }
 
         [Test]
+        public async Task WhenPostInvalidNotificationTypeInPayload_ThenReceiveBadRequest()
+        {
+            _fakeNotificationType[0].Name = "test";
+
+            A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
+            A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
+            A.CallTo(() => _fakeNotificationRepository.GetAllNotificationTypes()).Returns(_fakeNotificationType);
+
+            var result = (BadRequestObjectResult)await _controller.Post(_fakeD365PayloadDetails);
+            var errors = (ErrorDescription)result.Value;
+
+            Assert.AreEqual(400, result.StatusCode);
+            Assert.AreEqual("Invalid Notification Type 'Data test'", errors.Errors.Single().Description);
+        }
+
+        [Test]
         public async Task WhenPostValidPayload_ThenReceiveSuccessfulResponse()
         {
-            string storageAccConnectionString = "DefaultEndpointsProtocol = https; AccountName = testessdevstorage2; AccountKey =testaccountkey; EndpointSuffix = core.windows.net";
             A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
-
             A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
-            A.CallTo(() => _fakeSubscriptionStorageService.GetStorageAccountConnectionString(A<string>.Ignored, A<string>.Ignored))
-                            .Returns(storageAccConnectionString);
+            A.CallTo(() => _fakeNotificationRepository.GetAllNotificationTypes()).Returns(_fakeNotificationType);
 
-            A.CallTo(() => _fakeAzureMessageQueueHelper.AddQueueMessage(A<string>.Ignored, A<string>.Ignored, A<SubscriptionRequestMessage>.Ignored, A<string>.Ignored));
             var result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
 
             A.CallTo(_fakeLogger).Where(call => call.GetArgument<LogLevel>(0) == LogLevel.Error).MustNotHaveHappened();
+            A.CallTo(() => _fakeSubscriptionService.AddSubscriptionRequest(A<SubscriptionRequest>.Ignored, A<NotificationType>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
             Assert.AreEqual(StatusCodes.Status202Accepted, result.StatusCode);
         }
 

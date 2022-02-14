@@ -32,5 +32,9 @@
     <ProjectReference Include="..\UKHO.ExternalNotificationService.Common\UKHO.ExternalNotificationService.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="ConfigurationFiles\NotificationTypes.json" />
+  </ItemGroup>
+
 
 </Project>

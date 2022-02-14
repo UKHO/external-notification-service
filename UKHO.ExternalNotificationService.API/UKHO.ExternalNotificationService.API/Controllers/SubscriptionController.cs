@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Extensions;
 using UKHO.ExternalNotificationService.API.Services;
-using Microsoft.Extensions.Options;
 using UKHO.ExternalNotificationService.Common.Configuration;
-using UKHO.ExternalNotificationService.Common.Helper;
 using UKHO.ExternalNotificationService.Common.Logging;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 using UKHO.ExternalNotificationService.Common.Models.Response;
-using UKHO.ExternalNotificationService.Common.Storage;
+using UKHO.ExternalNotificationService.Common.Repository;
+
 
 namespace UKHO.ExternalNotificationService.API.Controllers
 {
@@ -23,20 +22,16 @@ namespace UKHO.ExternalNotificationService.API.Controllers
     public class SubscriptionController : BaseController<SubscriptionController>
     {
         private readonly ILogger<SubscriptionController> _logger;
-        private readonly ISubscriptionService _subscriptionService;
-        private readonly IAzureMessageQueueHelper _azureMessageQueueHelper;
-        private readonly IOptions<SubscriptionStorageConfiguration> _ensStorageConfiguration;
-        private readonly ISubscriptionStorageService _subscriptionStorageService;
+        private readonly ISubscriptionService _subscriptionService;  
         private List<Error> _errors;
         private const string XmsDynamicsMsgSizeExceededHeader = "x-ms-dynamics-msg-size-exceeded";
+        private readonly INotificationRepository _notificationRepository;
 
-        public SubscriptionController(IHttpContextAccessor contextAccessor, ILogger<SubscriptionController> logger, ISubscriptionService subscriptionService, IAzureMessageQueueHelper azureMessageQueueHelper, IOptions<SubscriptionStorageConfiguration> ensStorageConfiguration, ISubscriptionStorageService subscriptionStorageService) : base(contextAccessor, logger)
+        public SubscriptionController(IHttpContextAccessor contextAccessor, ILogger<SubscriptionController> logger, ISubscriptionService subscriptionService, INotificationRepository notificationRepository ) : base(contextAccessor, logger)
         {
             _logger = logger;
             _subscriptionService = subscriptionService;
-            _azureMessageQueueHelper = azureMessageQueueHelper;
-            _ensStorageConfiguration = ensStorageConfiguration;
-            _subscriptionStorageService = subscriptionStorageService;
+            _notificationRepository = notificationRepository;         
         }
 
         [HttpPost]
@@ -70,20 +65,24 @@ namespace UKHO.ExternalNotificationService.API.Controllers
             }
 
             SubscriptionRequest subscription = _subscriptionService.ConvertToSubscriptionRequestModel(d365Payload);
-            //call service--add message in queue
-            SubscriptionRequestMessage subscriptionReqMessage = _subscriptionService.GetSubscriptionRequestMessage(subscription, GetCurrentCorrelationId());
-            if (subscriptionReqMessage == null)
-            {
-                _logger.LogInformation(EventIds.LogRequest.ToEventId(), "Subscription Request message is null for SubscriptionId:{subscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{correlationId}", subscription.SubscriptionId, subscription.D365CorrelationId, GetCurrentCorrelationId());
-            }
-            else
-            {
-                string storageAccountConnectionString = _subscriptionStorageService.GetStorageAccountConnectionString(_ensStorageConfiguration.Value.StorageAccountName, _ensStorageConfiguration.Value.StorageAccountKey);
-               
-                await _azureMessageQueueHelper.AddQueueMessage(storageAccountConnectionString, _ensStorageConfiguration.Value.QueueName, subscriptionReqMessage, GetCurrentCorrelationId());
+           
+            NotificationType notificationType = _notificationRepository.GetAllNotificationTypes().FirstOrDefault(x => x.Name == subscription.NotificationType);
 
-                _logger.LogInformation(EventIds.AddedMessageInQueue.ToEventId(), "Subscription request message added in Queue for SubscriptionId:{subscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{correlationId}", subscription.SubscriptionId, subscription.D365CorrelationId, GetCurrentCorrelationId());
+            if (notificationType == null)
+            {
+                var error = new List<Error>
+                {
+                    new Error()
+                    {
+                        Source = "notificationType",
+                        Description = $"Invalid Notification Type '{subscription.NotificationType}'"
+                    }
+                };
+                return BuildBadRequestErrorResponse(error);
             }
+
+            await _subscriptionService.AddSubscriptionRequest(subscription, notificationType, GetCurrentCorrelationId());            
+            
             _logger.LogInformation(EventIds.Accepted.ToEventId(), "Subscription request Accepted for SubscriptionId:{subscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{correlationId}", subscription.SubscriptionId, subscription.D365CorrelationId, GetCurrentCorrelationId());            
 
             return GetEnsResponse(new ExternalNotificationServiceResponse { HttpStatusCode = HttpStatusCode.Accepted });

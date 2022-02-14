@@ -15,7 +15,7 @@ output "default_site_hostname" {
 }
 
 output "webapp_scm_credentials"{
-    value = merge({
+  value = merge({
     "${var.name}-scm-username" =  azurerm_app_service.webapp_service.site_credential[0].username 
     },
     {
