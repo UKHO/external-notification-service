@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.HealthCheck;
+using UKHO.ExternalNotificationService.Common.Helpers;
 using UKHO.ExternalNotificationService.Common.Storage;
 
 namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck

@@ -2,9 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-
 using Azure.Identity;
-
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +11,8 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 using UKHO.ExternalNotificationService.Common.Configuration;
+using UKHO.ExternalNotificationService.Common.Helpers;
+using UKHO.ExternalNotificationService.SubscriptionService.Services;
 using UKHO.Logging.EventHubLogProvider;
 
 namespace UKHO.ExternalNotificationService.SubscriptionService
@@ -37,12 +37,12 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
         private static HostBuilder BuildHostConfiguration()
         {
 
-            HostBuilder hostBuilder = new HostBuilder();
+            HostBuilder hostBuilder = new();
             hostBuilder.ConfigureAppConfiguration((hostContext, builder) =>
             {
                 builder.AddJsonFile("appsettings.json");
                 //Add environment specific configuration files.
-                var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+                string environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
                 if (!string.IsNullOrWhiteSpace(environmentName))
                 {
                     builder.AddJsonFile($"appsettings.{environmentName}.json", optional: true);
@@ -55,7 +55,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                 //Add environment variables
                 builder.AddEnvironmentVariables();
 
-                var tempConfig = builder.Build();
+                IConfigurationRoot tempConfig = builder.Build();
                 string kvServiceUri = tempConfig["KeyVaultSettings:ServiceUri"];
                 if (!string.IsNullOrWhiteSpace(kvServiceUri))
                 {
@@ -110,8 +110,11 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
              })
               .ConfigureServices((hostContext, services) =>
               {
-                  services.Configure<SubscriptionStorageConfiguration>(ConfigurationBuilder.GetSection("EnsSubscriptionStorageConfiguration"));
+                  services.Configure<SubscriptionStorageConfiguration>(ConfigurationBuilder.GetSection("SubscriptionStorageConfiguration"));
+                  services.Configure<EventGridDomainConfiguration>(ConfigurationBuilder.GetSection("EventGridDomainConfiguration"));
                   services.Configure<QueuesOptions>(ConfigurationBuilder.GetSection("QueuesOptions"));
+                  services.AddScoped<ISubscriptionServiceData, SubscriptionServiceData>();
+                  services.AddScoped<IAzureEventGridDomainService, AzureEventGridDomainService>();                  
               })
               .ConfigureWebJobs(b =>
               {

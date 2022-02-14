@@ -58,33 +58,61 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         D365PayloadSizeExceededError = 900013,
         /// <summary>
-        /// 900014 - Azure blob storage for external notification service is healthy.
+        /// 900014 -  Event data for adding message in queue.
         /// </summary>
-        AzureBlobStorageIsHealthy = 900014,
+        AddedMessageInQueue = 900014,
         /// <summary>
-        /// 900015 - Azure blob storage for external notification service is unhealthy.
+        /// 900015 -  Create subscription web job is started.
         /// </summary>
-        AzureBlobStorageIsUnhealthy = 900015,
+        CreateSubscriptionRequestStart = 900015,
         /// <summary>
-        /// 900016 - Azure message queue for external notification service is healthy.
+        /// 900016 -  Create subscription web job is Completed.
         /// </summary>
-        AzureMessageQueueIsHealthy = 900016,
+        CreateSubscriptionRequestCompleted = 900016,
         /// <summary>
-        /// 900017 - Azure message queue for external notification service is unhealthy.
+        /// 900017 -  Create subscription service is started.
         /// </summary>
-        AzureMessageQueueIsUnhealthy = 900017,
+        CreateSubscriptionServiceStart = 900017,
         /// <summary>
-        /// 900018 -  Event data for adding message in queue.
+        /// 900018 -  Create subscription service is Completed.
         /// </summary>
-        AddedMessageInQueue = 900018,
+        CreateSubscriptionServiceCompleted = 900018,
         /// <summary>
-        /// 900019 -  Azure webjob for external notification service is healthy.
+        /// 900019 -  Create or updated azure event domain topic is started.
         /// </summary>
-        AzureWebJobIsHealthy = 900019,
+        CreateOrUpdateAzureEventDomainTopicStart = 900019,
         /// <summary>
-        /// 900020 -  Azure webjob for external notification service is unhealthy.
+        /// 900020 -  Create or updated azure event domain topic is Completed.
         /// </summary>
-        AzureWebJobIsUnhealthy = 900020,
+        CreateOrUpdateAzureEventDomainTopicCompleted = 900020,
+        /// <summary>
+        /// 900021 -  Create subscription request error in case of exception.
+        /// </summary>
+        CreateSubscriptionRequestError = 900021,
+        /// <summary>
+        /// 900022 - Azure blob storage for external notification service is healthy.
+        /// </summary>
+        AzureBlobStorageIsHealthy = 900022,
+        /// <summary>
+        /// 900023 - Azure blob storage for external notification service is unhealthy.
+        /// </summary>
+        AzureBlobStorageIsUnhealthy = 900023,
+        /// <summary>
+        /// 900024 - Azure message queue for external notification service is healthy.
+        /// </summary>
+        AzureMessageQueueIsHealthy = 900024,
+        /// <summary>
+        /// 900025 - Azure message queue for external notification service is unhealthy.
+        /// </summary>
+        AzureMessageQueueIsUnhealthy = 900025,
+        /// <summary>
+        /// 900026 -  Azure webjob for external notification service is healthy.
+        /// </summary>
+        AzureWebJobIsHealthy = 900026,
+        /// <summary>
+        /// 900027 -  Azure webjob for external notification service is unhealthy.
+        /// </summary>
+        AzureWebJobIsUnhealthy = 900027
     }
 
     public static class EventIdExtensions

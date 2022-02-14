@@ -30,9 +30,9 @@ module "webapp_service" {
     "ASPNETCORE_ENVIRONMENT"                                   = local.env_name
     "WEBSITE_RUN_FROM_PACKAGE"                                 = "1"
     "WEBSITE_ENABLE_SYNC_UPDATE_SITE"                          = "true"
-    "EventGridDomainConfiguration:ResourceGroup"            = azurerm_resource_group.rg.name
-    "EventGridDomainConfiguration:EventGridDomainName"      = module.eventgriddomain.event_grid_domain_name
-    "EventGridDomainConfiguration:EventGridDomainEndpoint"  = module.eventgriddomain.event_grid_domain_endpoint
+    "EventGridDomainConfiguration:ResourceGroup"               = azurerm_resource_group.rg.name
+    "EventGridDomainConfiguration:EventGridDomainName"         = module.eventgriddomain.event_grid_domain_name
+    "EventGridDomainConfiguration:EventGridDomainEndpoint"     = module.eventgriddomain.event_grid_domain_endpoint
   }
   tags                      = local.tags
 }
@@ -47,15 +47,17 @@ module "key_vault" {
   read_access_objects = {
      "webapp_service" = module.webapp_service.web_app_object_id
   }
-  secrets = {
-        "EventHubLoggingConfiguration--ConnectionString"               = module.eventhub.log_primary_connection_string
-        "EventHubLoggingConfiguration--EntityPath"                     = module.eventhub.entity_path
+  secrets = merge(
+        module.webapp_service.webapp_scm_credentials,
+       {
+        "EventHubLoggingConfiguration--ConnectionString"            = module.eventhub.log_primary_connection_string
+        "EventHubLoggingConfiguration--EntityPath"                  = module.eventhub.entity_path
         "SubscriptionStorageConfiguration--StorageAccountName"      = module.storage.name
         "SubscriptionStorageConfiguration--StorageAccountKey"       = module.storage.primary_access_key
         "SubscriptionStorageConfiguration--StorageConnectionString" = module.storage.connection_string
-        "SubscriptionStorageConfiguration--QueueName"               = module.storage.event_storage_queue
         "EventGridDomainConfiguration--EventGridDomainAccessKey"    = module.eventgriddomain.event_grid_domain_primary_access_key
-      }
+        "AzureWebJobsStorage"                                       = module.storage.connection_string
+      })
   tags                = local.tags
 }
 
