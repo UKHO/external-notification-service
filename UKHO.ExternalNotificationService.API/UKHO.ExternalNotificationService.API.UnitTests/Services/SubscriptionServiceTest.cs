@@ -43,6 +43,9 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             _fakeD365PayloadValidator = A.Fake<ID365PayloadValidator>();
             _fakeAzureMessageQueueHelper = A.Fake<IAzureMessageQueueHelper>();
             _fakeEnsStorageConfiguration = A.Fake<IOptions<SubscriptionStorageConfiguration>>();
+            _fakeEnsStorageConfiguration.Value.StorageAccountName = "testaccount";
+            _fakeEnsStorageConfiguration.Value.StorageAccountKey = "testaccountkey";
+            _fakeEnsStorageConfiguration.Value.QueueName = "test-queue-name";
             _fakeLogger = A.Fake<ILogger<SubscriptionService>>();
 
         _fakeSubscriptionService = new SubscriptionService(_fakeD365PayloadValidator, _fakeD365PayloadKeyConfiguration, _fakeAzureMessageQueueHelper, _fakeEnsStorageConfiguration, _fakeLogger);

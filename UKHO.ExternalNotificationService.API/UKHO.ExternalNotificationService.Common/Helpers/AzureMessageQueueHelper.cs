@@ -1,12 +1,14 @@
-﻿using System.Text.Json;
-using System.Threading.Tasks;
-using Azure.Storage.Queues;
+﻿using Azure.Storage.Queues;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
+using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Logging;
 
 namespace UKHO.ExternalNotificationService.Common.Helpers
 {
+    [ExcludeFromCodeCoverage]
     public class AzureMessageQueueHelper : IAzureMessageQueueHelper
     {
         private readonly ILogger<AzureMessageQueueHelper> _logger;
