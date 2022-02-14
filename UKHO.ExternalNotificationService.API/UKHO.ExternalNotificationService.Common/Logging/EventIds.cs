@@ -84,8 +84,12 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900020 -  Create or updated azure event domain topic is Completed.
         /// </summary>
-        CreateOrUpdateAzureEventDomainTopicCompleted = 900020
-        
+        CreateOrUpdateAzureEventDomainTopicCompleted = 900020,
+        /// <summary>
+        /// 900021 -  Create subscription request error in case of exception.
+        /// </summary>
+        CreateSubscriptionRequestError = 900021
+
     }
 
     public static class EventIdExtensions

@@ -1,8 +1,8 @@
-using System.Threading;
-using System.Threading.Tasks;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
+using System.Threading;
+using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Helpers;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 using UKHO.ExternalNotificationService.SubscriptionService.Services;
@@ -29,9 +29,10 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
         public async Task WhenCreateOrUpdateSubscriptionThenCreateSubscription()
         {
             CancellationToken cancellationToken = CancellationToken.None;
-            A.CallTo(() => _fakeAzureEventGridDomainService.CreateOrUpdateSubscription(A<SubscriptionRequestMessage>.Ignored, A<CancellationToken>.Ignored));
 
             string response = await _fakeSubscriptionServiceData.CreateOrUpdateSubscription(GetSubscriptionRequestMessage(), cancellationToken);
+
+            A.CallTo(() => _fakeAzureEventGridDomainService.CreateOrUpdateSubscription(A<SubscriptionRequestMessage>.Ignored, A<CancellationToken>.Ignored)).MustHaveHappenedOnceExactly();
             Assert.IsInstanceOf<string>(response);
         }
 
@@ -39,11 +40,11 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
         {
             return new SubscriptionRequestMessage()
             {
-                D365CorrelationId = "",
-                NotificationType = "",
+                D365CorrelationId = "6ea03f10-2672-46fb-92a1-5200f6a4faaa",
+                NotificationType = "Data test",
                 IsActive = true,
-                NotificationTypeTopicName = "",
-                SubscriptionId = "1",
+                NotificationTypeTopicName = "test-Topic-type",
+                SubscriptionId = "246d71e7-1475-ec11-8943-002248818222",
                 WebhookUrl = "https://testurl.com"
 
             };

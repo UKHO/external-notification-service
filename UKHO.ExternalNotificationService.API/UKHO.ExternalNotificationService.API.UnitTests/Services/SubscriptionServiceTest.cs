@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FakeItEasy;
+﻿using FakeItEasy;
 using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.API.Validation;
 using UKHO.ExternalNotificationService.Common.Configuration;
-using UKHO.ExternalNotificationService.Common.Helper;
+using UKHO.ExternalNotificationService.Common.Helpers;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 
 namespace UKHO.ExternalNotificationService.API.UnitTests.Services
@@ -125,14 +125,14 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         #endregion
 
         [Test]
-        public void WhenValidSubscriptionRequestDetailsPassed_ThenGetSubcriptionRequestMessage()
+        public void WhenValidSubscriptionRequestDetailsPassed_ThenAddMessageInQueue()
         {
             string fakeCorrelationid = "6ea03f10-2672-46fb-92a1-5200f6a4faaa";            
-            A.CallTo(() => _fakeAzureMessageQueueHelper.AddQueueMessage(A<SubscriptionStorageConfiguration>.Ignored, A<SubscriptionRequestMessage>.Ignored, A<string>.Ignored));
+            
             var result = _fakeSubscriptionService.AddSubscriptionRequest(_fakeSubscriptionRequest, _fakeNotificationType, fakeCorrelationid);
-
-            Assert.IsTrue(result.IsCompleted);
-           
+            
+            A.CallTo(() => _fakeAzureMessageQueueHelper.AddQueueMessage(A<SubscriptionStorageConfiguration>.Ignored, A<SubscriptionRequestMessage>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            Assert.IsTrue(result.IsCompleted);           
         }
 
         private D365Payload GetD365PayloadDetails()

@@ -1,9 +1,10 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Threading;
-using System.Threading.Tasks;
-using Azure.Storage.Queues.Models;
+﻿using Azure.Storage.Queues.Models;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Logging;
 using UKHO.ExternalNotificationService.Common.Models.AzureEventGridDomain;
 using UKHO.ExternalNotificationService.Common.Models.Request;
@@ -24,20 +25,30 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
         }
 
         public async Task ProcessQueueMessage([QueueTrigger("%SubscriptionStorageConfiguration:QueueName%")] QueueMessage message)
-        {
-            _logger.LogInformation(EventIds.LogRequest.ToEventId(), "check web job is triggered or not using Azure Queue {message}", message.Body.ToString());
+        {            
             SubscriptionRequestMessage subscriptionMessage = message.Body.ToObjectFromJson<SubscriptionRequestMessage>();
             _logger.LogInformation(EventIds.CreateSubscriptionRequestStart.ToEventId(),
-                    "Create Subscription web job request started for _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+                    "Subscription provisioning request started for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionMessage.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
 
             SubscriptionRequestResult subscriptionRequestResult = new(subscriptionMessage);
             if (subscriptionMessage.IsActive)
             {
-                await _subscriptionServiceData.CreateOrUpdateSubscription(subscriptionMessage, CancellationToken.None);
-                subscriptionRequestResult.ProvisioningState = "Succeeded";
+                try
+                {
+                    await _subscriptionServiceData.CreateOrUpdateSubscription(subscriptionMessage, CancellationToken.None);
+                    subscriptionRequestResult.ProvisioningState = "Succeeded";
+                }
+                catch (Exception e)
+                {
+                    subscriptionRequestResult.ProvisioningState = e.Message;
+                    _logger.LogError(EventIds.CreateSubscriptionRequestError.ToEventId(),
+                   "Subscription provisioning request failed with Exception:{e} with SubscriptionId:{SubscriptionId} _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", e.Message, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+                }
             }
+            
             _logger.LogInformation(EventIds.CreateSubscriptionRequestCompleted.ToEventId(),
-                    "Create Subscription web job request Completed for _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+                    "Subscription provisioning request Completed for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionMessage.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+
         }
     }
 }

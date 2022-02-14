@@ -19,7 +19,6 @@ using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.API.Validation;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.HealthCheck;
-using UKHO.ExternalNotificationService.Common.Helper;
 using UKHO.ExternalNotificationService.Common.Helpers;
 using UKHO.ExternalNotificationService.Common.Repository;
 using UKHO.Logging.EventHubLogProvider;

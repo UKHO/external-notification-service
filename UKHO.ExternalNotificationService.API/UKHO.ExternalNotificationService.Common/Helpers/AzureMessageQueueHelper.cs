@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Azure.Storage.Queues;
 using Microsoft.Extensions.Logging;
 using UKHO.ExternalNotificationService.Common.Configuration;
-using UKHO.ExternalNotificationService.Common.Helper;
 using UKHO.ExternalNotificationService.Common.Logging;
 
 namespace UKHO.ExternalNotificationService.Common.Helpers

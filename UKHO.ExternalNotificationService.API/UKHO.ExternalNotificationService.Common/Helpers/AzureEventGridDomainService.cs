@@ -1,39 +1,42 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Azure.Core;
+﻿using Azure.Core;
 using Azure.Identity;
 using Microsoft.Azure.Management.EventGrid;
 using Microsoft.Azure.Management.EventGrid.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Rest;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Logging;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 
 namespace UKHO.ExternalNotificationService.Common.Helpers
 {
+    [ExcludeFromCodeCoverage]
     public class AzureEventGridDomainService : IAzureEventGridDomainService
     {
         private readonly EventGridDomainConfiguration _eventGridDomainConfig;
-        private readonly ILogger<AzureEventGridDomainService> _logger;
+        private readonly ILogger<AzureEventGridDomainService> _logger;        
 
         public AzureEventGridDomainService(IOptions<EventGridDomainConfiguration> eventGridDomainConfig, ILogger<AzureEventGridDomainService> logger)
         {
             _eventGridDomainConfig = eventGridDomainConfig.Value;
-            _logger = logger;
+            _logger = logger;            
         }
-
+        
         public async Task<string> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionRequestMessage, CancellationToken cancellationToken)
         {
             _logger.LogInformation(EventIds.CreateOrUpdateAzureEventDomainTopicStart.ToEventId(),
                     "Create or update azure event domain topic started for _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId} with Event domain topic {NotificationTypeTopicName}", subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId, subscriptionRequestMessage.NotificationTypeTopicName);
-            EventGridManagementClient eventGridMgmtClient = await GetEventGridClient(_eventGridDomainConfig.SubscriptionId, cancellationToken);
-            //////DomainTopic topic = await eventGridMgmtClient.DomainTopics.CreateOrUpdateAsync(_eventGridDomainConfig.ResourceGroup, _eventGridDomainConfig.EventGridDomainName, subscriptionRequestMessage.NotificationTypeTopicName, cancellationToken);
-            DomainTopic topic1 = await GetDomainTopic(eventGridMgmtClient, subscriptionRequestMessage.NotificationTypeTopicName, cancellationToken);
+            
+            EventGridManagementClient eventGridMgmtClient = await GetEventGridClient(_eventGridDomainConfig.SubscriptionId, cancellationToken);           
+            DomainTopic topic = await GetDomainTopic(eventGridMgmtClient, subscriptionRequestMessage.NotificationTypeTopicName, cancellationToken);
+
             _logger.LogInformation(EventIds.CreateOrUpdateAzureEventDomainTopicCompleted.ToEventId(),
-                    "Create or update azure event domain topic completed for _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId} with Event domain topic {topic1}", subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId, topic1.Name);
-            return topic1.Id;
+                    "Create or update azure event domain topic completed for _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId} with Event domain topic {topic}", subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId, topic.Name);
+            return topic.Id;
         }
 
         private static async Task<EventGridManagementClient> GetEventGridClient(string SubscriptionId, CancellationToken cancellationToken)
@@ -54,7 +57,7 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
 
         protected virtual async Task<DomainTopic> GetDomainTopic(EventGridManagementClient eventGridMgmtClient, string NotificationTypeTopicName, CancellationToken cancellationToken)
         {
-            return  await eventGridMgmtClient.DomainTopics.CreateOrUpdateAsync(_eventGridDomainConfig.ResourceGroup, _eventGridDomainConfig.EventGridDomainName, NotificationTypeTopicName, cancellationToken);
+            return await eventGridMgmtClient.DomainTopics.CreateOrUpdateAsync(_eventGridDomainConfig.ResourceGroup, _eventGridDomainConfig.EventGridDomainName, NotificationTypeTopicName, cancellationToken);
         }
     }
 }

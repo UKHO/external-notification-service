@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using FakeItEasy;
+﻿using FakeItEasy;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Controllers;
 using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.Common.Configuration;
-using UKHO.ExternalNotificationService.Common.Helper;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 using UKHO.ExternalNotificationService.Common.Models.Response;
 using UKHO.ExternalNotificationService.Common.Repository;
@@ -113,11 +112,12 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
             A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
             A.CallTo(() => _fakeNotificationRepository.GetAllNotificationTypes()).Returns(_fakeNotificationType);
-            A.CallTo(() => _fakeSubscriptionService.AddSubscriptionRequest(A<SubscriptionRequest>.Ignored, A<NotificationType>.Ignored, A<string>.Ignored));
+            
 
             var result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
 
             A.CallTo(_fakeLogger).Where(call => call.GetArgument<LogLevel>(0) == LogLevel.Error).MustNotHaveHappened();
+            A.CallTo(() => _fakeSubscriptionService.AddSubscriptionRequest(A<SubscriptionRequest>.Ignored, A<NotificationType>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
             Assert.AreEqual(StatusCodes.Status202Accepted, result.StatusCode);
         }
 
