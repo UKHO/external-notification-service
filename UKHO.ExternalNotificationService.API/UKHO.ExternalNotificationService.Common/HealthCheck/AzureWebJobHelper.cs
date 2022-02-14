@@ -9,9 +9,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Newtonsoft.Json;
-using UKHO.ExternalNotificationService.Common.HealthCheck;
 
-namespace UKHO.ExternalNotificationService.Common.Helpers
+namespace UKHO.ExternalNotificationService.Common.HealthCheck
 {
     [ExcludeFromCodeCoverage]
     public class AzureWebJobHelper : IAzureWebJobHelper

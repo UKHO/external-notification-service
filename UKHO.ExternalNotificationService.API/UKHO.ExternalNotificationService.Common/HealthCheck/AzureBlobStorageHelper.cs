@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Azure.Storage.Blobs;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace UKHO.ExternalNotificationService.Common.Helpers
+namespace UKHO.ExternalNotificationService.Common.HealthCheck
 {
     [ExcludeFromCodeCoverage]
     public class AzureBlobStorageHelper : IAzureBlobStorageHelper

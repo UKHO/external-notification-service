@@ -10,7 +10,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 using UKHO.ExternalNotificationService.Common.Logging;
 
-namespace UKHO.ExternalNotificationService.Common.Helpers
+namespace UKHO.ExternalNotificationService.Common.HealthCheck
 {
     [ExcludeFromCodeCoverage]
     public class AzureMessageQueueHelper : IAzureMessageQueueHelper

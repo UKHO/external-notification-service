@@ -5,7 +5,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace UKHO.ExternalNotificationService.Common.HealthCheck
 {
-    public interface IEventHubLoggingHealthHelper
+    public interface IEventHubLoggingHealthClient
     {
         Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default);
     }

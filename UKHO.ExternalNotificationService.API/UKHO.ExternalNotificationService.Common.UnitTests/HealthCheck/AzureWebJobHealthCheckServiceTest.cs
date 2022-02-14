@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using NUnit.Framework;
 using UKHO.ExternalNotificationService.Common.HealthCheck;
-using UKHO.ExternalNotificationService.Common.Helpers;
 
 namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
 {

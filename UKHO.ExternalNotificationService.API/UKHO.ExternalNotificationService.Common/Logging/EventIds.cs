@@ -50,6 +50,14 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         EventHubLoggingEventDataForHealthCheck = 900011,
         /// <summary>
+        /// 900012 - Request for external notification service post endpoint is started.
+        /// </summary>
+        ENSSubscriptionRequestStart = 900012,
+        /// <summary>
+        /// 900013 - Data truncation D365 Http Payload Size Exceeded.
+        /// </summary>
+        D365PayloadSizeExceededError = 900013,
+        /// <summary>
         /// 900014 - Azure blob storage for external notification service is healthy.
         /// </summary>
         AzureBlobStorageIsHealthy = 900014,
@@ -76,7 +84,7 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900020 -  Azure webjob for external notification service is unhealthy.
         /// </summary>
-        AzureWebJobIsUnhealthy = 900020
+        AzureWebJobIsUnhealthy = 900020,
     }
 
     public static class EventIdExtensions

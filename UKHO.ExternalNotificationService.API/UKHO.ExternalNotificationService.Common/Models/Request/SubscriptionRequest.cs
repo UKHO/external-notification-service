@@ -2,7 +2,7 @@
 {
     public class SubscriptionRequest
     {
-        public string Id { get; set; }
+        public string SubscriptionId { get; set; }
 
         public string NotificationType { get; set; }
 
@@ -10,6 +10,6 @@
 
         public bool IsActive { get; set; }
 
-        public string CorrelationId { get; set; }
+        public string D365CorrelationId { get; set; }
     }
 }

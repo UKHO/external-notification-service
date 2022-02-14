@@ -1,3 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Reflection;
+using System.Security.Claims;
 using Azure.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,17 +14,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Reflection;
-using System.Security.Claims;
 using UKHO.ExternalNotificationService.API.Filters;
 using UKHO.ExternalNotificationService.API.Services;
+using UKHO.ExternalNotificationService.API.Validation;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.HealthCheck;
-using UKHO.ExternalNotificationService.Common.Helpers;
+using UKHO.ExternalNotificationService.Common.Helper;
+using UKHO.ExternalNotificationService.Common.Repository;
 using UKHO.ExternalNotificationService.Common.Storage;
 using UKHO.Logging.EventHubLogProvider;
 
@@ -37,9 +39,11 @@ namespace UKHO.ExternalNotificationService.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers()
-                .AddNewtonsoftJson();
+            services.AddControllers().AddNewtonsoftJson();
             services.Configure<EventHubLoggingConfiguration>(_configuration.GetSection("EventHubLoggingConfiguration"));
+            services.Configure<D365PayloadKeyConfiguration>(_configuration.GetSection("D365PayloadKeyConfiguration"));
+            services.Configure<EnsConfiguration>(_configuration.GetSection("EnsConfiguration"));
+
             services.Configure<SubscriptionStorageConfiguration>(_configuration.GetSection("SubscriptionStorageConfiguration"));
             services.AddApplicationInsightsTelemetry();
             services.AddLogging(loggingBuilder =>
@@ -59,12 +63,14 @@ namespace UKHO.ExternalNotificationService.API
             });
             services.AddApplicationInsightsTelemetry();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddScoped<IEventHubLoggingHealthHelper, EventHubLoggingHealthHelper>();
+            services.AddScoped<ID365PayloadValidator, D365PayloadValidator>();
+            services.AddScoped<ISubscriptionService, SubscriptionService>();
+            services.AddScoped<IEventHubLoggingHealthClient, EventHubLoggingHealthClient>();
+            services.AddSingleton<INotificationRepository, NotificationRepository>();
             services.AddScoped<IStorageService, StorageService>();
             services.AddScoped<IAzureBlobStorageHelper, AzureBlobStorageHelper>();
             services.AddScoped<ISubscriptionStorageConfiguration, SubscriptionStorageConfiguration>();
             services.AddScoped<IAzureMessageQueueHelper, AzureMessageQueueHelper>();
-            services.AddScoped<ISubscriptionService, SubscriptionService>();
             services.AddScoped<ISubscriptionStorageService, SubscriptionStorageService>();
             services.AddScoped<IAzureWebJobHealthCheckService, AzureWebJobHealthCheckService>();
             services.AddScoped<IAzureWebJobHelper, AzureWebJobHelper>();
@@ -114,6 +120,8 @@ namespace UKHO.ExternalNotificationService.API
             {
                 builder.AddAzureKeyVault(new Uri(kvServiceUri), new DefaultAzureCredential());
             }
+
+            builder.AddJsonFile("ConfigurationFiles/NotificationTypes.json", false, true);
 
 #if DEBUG
             builder.AddJsonFile("appsettings.local.overrides.json", true, true);
