@@ -30,9 +30,9 @@ module "webapp_service" {
     "ASPNETCORE_ENVIRONMENT"                                   = local.env_name
     "WEBSITE_RUN_FROM_PACKAGE"                                 = "1"
     "WEBSITE_ENABLE_SYNC_UPDATE_SITE"                          = "true"
-    "EventGridDomainConfiguration:ResourceGroup"            = azurerm_resource_group.rg.name
-    "EventGridDomainConfiguration:EventGridDomainName"      = module.eventgriddomain.event_grid_domain_name
-    "EventGridDomainConfiguration:EventGridDomainEndpoint"  = module.eventgriddomain.event_grid_domain_endpoint
+    "EventGridDomainConfiguration:ResourceGroup"               = azurerm_resource_group.rg.name
+    "EventGridDomainConfiguration:EventGridDomainName"         = module.eventgriddomain.event_grid_domain_name
+    "EventGridDomainConfiguration:EventGridDomainEndpoint"     = module.eventgriddomain.event_grid_domain_endpoint
   }
   tags                      = local.tags
 }
