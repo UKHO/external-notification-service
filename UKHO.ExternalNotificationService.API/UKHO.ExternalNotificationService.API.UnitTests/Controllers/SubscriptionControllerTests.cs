@@ -26,7 +26,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         private ILogger<SubscriptionController> _fakeLogger;
         private ISubscriptionService _fakeSubscriptionService;
         private D365Payload _fakeD365PayloadDetails;
-        private SubscriptionRequest _fakeSubscriptionRequest;        
+        private SubscriptionRequest _fakeSubscriptionRequest;
         private const string XmsDynamicsMsgSizeExceededHeader = "x-ms-dynamics-msg-size-exceeded";
         private INotificationRepository _fakeNotificationRepository;
         private List<NotificationType> _fakeNotificationType;
@@ -39,13 +39,13 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             _fakeNotificationType = new List<NotificationType>() { new NotificationType() { Name = "Data test", TopicName = "testTopic" } };
             _fakeHttpContextAccessor = A.Fake<IHttpContextAccessor>();
             _fakeLogger = A.Fake<ILogger<SubscriptionController>>();
-            _fakeSubscriptionService = A.Fake<ISubscriptionService>();           
+            _fakeSubscriptionService = A.Fake<ISubscriptionService>();
 
             A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(new DefaultHttpContext());
             _fakeSubscriptionService = A.Fake<ISubscriptionService>();
             _fakeNotificationRepository = A.Fake<INotificationRepository>();
 
-           _controller = new SubscriptionController(_fakeHttpContextAccessor, _fakeLogger, _fakeSubscriptionService, _fakeNotificationRepository);
+            _controller = new SubscriptionController(_fakeHttpContextAccessor, _fakeLogger, _fakeSubscriptionService, _fakeNotificationRepository);
         }
 
         [Test]
@@ -69,7 +69,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure> { validationMessage }));
 
             var result = (BadRequestObjectResult)await _controller.Post(_fakeD365PayloadDetails);
-            var errors = (ErrorDescription)result.Value;         
+            var errors = (ErrorDescription)result.Value;
             Assert.AreEqual(400, result.StatusCode);
             Assert.AreEqual("D365Payload InputParameters cannot be blank or null.", errors.Errors.Single().Description);
         }
@@ -112,7 +112,6 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
             A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
             A.CallTo(() => _fakeNotificationRepository.GetAllNotificationTypes()).Returns(_fakeNotificationType);
-            
 
             var result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
 

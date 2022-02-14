@@ -22,7 +22,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
     public class SubscriptionController : BaseController<SubscriptionController>
     {
         private readonly ILogger<SubscriptionController> _logger;
-        private readonly ISubscriptionService _subscriptionService;       
+        private readonly ISubscriptionService _subscriptionService;  
         private List<Error> _errors;
         private const string XmsDynamicsMsgSizeExceededHeader = "x-ms-dynamics-msg-size-exceeded";
         private readonly INotificationRepository _notificationRepository;
@@ -31,7 +31,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         {
             _logger = logger;
             _subscriptionService = subscriptionService;
-            _notificationRepository = notificationRepository;            
+            _notificationRepository = notificationRepository;         
         }
 
         [HttpPost]
