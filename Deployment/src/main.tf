@@ -32,7 +32,6 @@ module "webapp_service" {
     "WEBSITE_ENABLE_SYNC_UPDATE_SITE"                          = "true"
     "EventGridDomainConfiguration:ResourceGroup"               = azurerm_resource_group.rg.name
     "EventGridDomainConfiguration:EventGridDomainName"         = module.eventgriddomain.event_grid_domain_name
-    "EventGridDomainConfiguration:EventGridDomainEndpoint"     = module.eventgriddomain.event_grid_domain_endpoint
   }
   tags                      = local.tags
 }
@@ -55,7 +54,6 @@ module "key_vault" {
         "SubscriptionStorageConfiguration--StorageAccountName"      = module.storage.name
         "SubscriptionStorageConfiguration--StorageAccountKey"       = module.storage.primary_access_key
         "SubscriptionStorageConfiguration--StorageConnectionString" = module.storage.connection_string
-        "EventGridDomainConfiguration--EventGridDomainAccessKey"    = module.eventgriddomain.event_grid_domain_primary_access_key
         "AzureWebJobsStorage"                                       = module.storage.connection_string
       })
   tags                = local.tags
