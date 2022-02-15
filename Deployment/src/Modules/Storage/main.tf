@@ -7,6 +7,7 @@ resource "azurerm_storage_account" "ens_storage" {
   account_kind              = "StorageV2"
   allow_blob_public_access  = false
   tags                      = var.tags
+  min_tls_version           = "TLS1_2"
 }
 
 resource "azurerm_storage_queue" "ens_storage_queue" {
