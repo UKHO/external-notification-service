@@ -15,7 +15,7 @@ namespace UKHO.ExternalNotificationService.API.Validation
     }
     public class D365PayloadValidator : AbstractValidator<D365Payload>, ID365PayloadValidator
     {
-        public D365PayloadValidator(IOptions<D365PayloadKeyConfiguration> d365PayloadKeyConfiguration)
+        public D365PayloadValidator()
         {
             RuleFor(v => v.CorrelationId).NotNull().NotEmpty()
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
@@ -30,25 +30,25 @@ namespace UKHO.ExternalNotificationService.API.Validation
                 .WithMessage("D365Payload PostEntityImages cannot be blank or null.");
 
             RuleFor(v => v).NotNull().NotEmpty().OverridePropertyName("SubscriptionId")
-                .Must(x => x.IsValidAttribute(d365PayloadKeyConfiguration.Value.PostEntityImageKey,d365PayloadKeyConfiguration.Value.SubscriptionIdKey))
+                .Must(x => x.IsValidAttribute(D365PayloadKeyConstant.PostEntityImageKey, D365PayloadKeyConstant.SubscriptionIdKey))
                 .When(ru => ru != null)
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("SubscriptionId cannot be blank or null.");
 
             RuleFor(v => v).NotNull().NotEmpty().OverridePropertyName("NotificationType")
-                .Must(x => x.ContainsFormattedValue(d365PayloadKeyConfiguration.Value.PostEntityImageKey, d365PayloadKeyConfiguration.Value.NotificationTypeKey))
+                .Must(x => x.ContainsFormattedValue(D365PayloadKeyConstant.PostEntityImageKey, D365PayloadKeyConstant.NotificationTypeKey))
                 .When(ru => ru != null)
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("NotificationType cannot be blank or null.");
 
             RuleFor(v => v).NotNull().NotEmpty().OverridePropertyName("WebhookUrl")
-                .Must(x => x.IsValidAttribute(d365PayloadKeyConfiguration.Value.PostEntityImageKey, d365PayloadKeyConfiguration.Value.WebhookUrlKey))
+                .Must(x => x.IsValidAttribute(D365PayloadKeyConstant.PostEntityImageKey, D365PayloadKeyConstant.WebhookUrlKey))
                 .When(ru => ru != null)
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("WebhookUrl cannot be blank or null.");
 
             RuleFor(v => v).NotNull().NotEmpty().OverridePropertyName("StateCode")
-                .Must(x => x.ContainsFormattedValue(d365PayloadKeyConfiguration.Value.PostEntityImageKey, d365PayloadKeyConfiguration.Value.IsActiveKey))
+                .Must(x => x.ContainsFormattedValue(D365PayloadKeyConstant.PostEntityImageKey, D365PayloadKeyConstant.IsActiveKey))
                 .When(ru => ru != null)
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("StateCode cannot be blank or null.");
