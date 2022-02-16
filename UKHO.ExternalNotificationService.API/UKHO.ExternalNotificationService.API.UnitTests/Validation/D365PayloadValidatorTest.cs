@@ -13,7 +13,6 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
     public class D365PayloadValidatorTest
     {
         private D365Payload _fakeD365Payload;
-        private IOptions<D365PayloadKeyConstant> _fakeD365PayloadKeyConstant;
         private D365PayloadValidator _d365PayloadValidator;
 
         [SetUp]
