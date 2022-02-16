@@ -80,6 +80,11 @@ namespace UKHO.ExternalNotificationService.API.Controllers
             }
         }
 
+        protected IActionResult GetWebhookResponse()
+        {
+            return new OkObjectResult(StatusCodes.Status200OK);
+        }
+
         private IActionResult BuildOkResponse(ExternalNotificationServiceResponse model)
         {
             LogInfo(EventIds.OK.ToEventId(), "OK", GetCurrentCorrelationId());
