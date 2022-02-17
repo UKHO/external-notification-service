@@ -10,6 +10,11 @@ resource "azurerm_storage_account" "ens_storage" {
   min_tls_version           = "TLS1_2"
 }
 
+resource "azurerm_storage_container" "ens_storage_container" {
+  name                  = "dead-letter"
+  storage_account_name  = azurerm_storage_account.ens_storage.name
+}
+
 resource "azurerm_storage_queue" "ens_storage_queue" {
   name                      = "ens-storage-queue"
   storage_account_name      = azurerm_storage_account.ens_storage.name
