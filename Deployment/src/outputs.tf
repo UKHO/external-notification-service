@@ -22,3 +22,7 @@ output "resource_group_name" {
 output "event_grid_doamin_name" {
   value = module.eventgriddomain.event_grid_domain_name
 }
+
+output "dead_letter_storage_container" {
+  value = module.storage.dead_letter_storage_container
+}
