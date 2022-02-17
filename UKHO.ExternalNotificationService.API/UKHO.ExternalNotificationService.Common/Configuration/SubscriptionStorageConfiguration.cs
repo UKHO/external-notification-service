@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace UKHO.ExternalNotificationService.Common.Configuration
+﻿namespace UKHO.ExternalNotificationService.Common.Configuration
 {
     public class SubscriptionStorageConfiguration
     {

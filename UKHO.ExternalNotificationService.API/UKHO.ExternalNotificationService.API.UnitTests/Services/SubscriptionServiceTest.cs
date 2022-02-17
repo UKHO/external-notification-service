@@ -134,7 +134,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             
             var result = _fakeSubscriptionService.AddSubscriptionRequest(_fakeSubscriptionRequest, _fakeNotificationType, fakeCorrelationid);
             
-            A.CallTo(() => _fakeAzureMessageQueueHelper.AddQueueMessage(A<SubscriptionStorageConfiguration>.Ignored, A<SubscriptionRequestMessage>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _fakeAzureMessageQueueHelper.AddQueueMessage(A<SubscriptionStorageConfiguration>.Ignored, A<SubscriptionRequestMessage>.Ignored)).MustHaveHappenedOnceExactly();
             Assert.IsTrue(result.IsCompleted);           
         }
 

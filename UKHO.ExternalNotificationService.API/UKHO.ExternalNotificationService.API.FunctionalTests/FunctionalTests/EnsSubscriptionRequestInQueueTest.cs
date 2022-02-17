@@ -1,15 +1,15 @@
-﻿using System;
-using System.IO;
-using System.Net.Http;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Azure.Storage.Queues;
+﻿using Azure.Storage.Queues;
 using Azure.Storage.Queues.Models;
 using Microsoft.Azure.Management.EventGrid;
 using Microsoft.Azure.Management.EventGrid.Models;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using System;
+using System.IO;
+using System.Net.Http;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.FunctionalTests.Helper;
 using UKHO.ExternalNotificationService.API.FunctionalTests.Model;
 
@@ -17,40 +17,40 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 {
     class EnsSubscriptionRequestInQueueTest
     {
-        private EnsApiClient _ensApiClient { get; set; }
-        private TestConfiguration _testConfig { get; set; }
-        private D365Payload _d365Payload { get; set; }
-        private QueueClient _queue { get; set; }
-        private EventGridManagementClient _eventGridMgmtClient { get; set; }
+        private EnsApiClient EnsApiClient { get; set; }
+        private TestConfiguration TestConfig { get; set; }
+        private D365Payload D365Payload { get; set; }
+        private QueueClient Queue { get; set; }
+        private EventGridManagementClient EventGridMgmtClient { get; set; }
 
         [SetUp]
         public async Task SetupAsync()
         {
-            _testConfig = new TestConfiguration();
-            _ensApiClient = new EnsApiClient(_testConfig.EnsApiBaseUrl);
+            TestConfig = new TestConfiguration();
+            EnsApiClient = new EnsApiClient(TestConfig.EnsApiBaseUrl);
 
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), _testConfig.PayloadFolder, _testConfig.PayloadFileName);
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), TestConfig.PayloadFolder, TestConfig.PayloadFileName);
 
-            _d365Payload = JsonConvert.DeserializeObject<D365Payload>(File.ReadAllText(filePath));
+            D365Payload = JsonConvert.DeserializeObject<D365Payload>(File.ReadAllText(filePath));
 
-            _queue = new QueueClient(_testConfig.EnsStorageConnectionString, _testConfig.EnsStorageQueueName);
-            _eventGridMgmtClient = await AzureEventGridDomainHelper.GetEventGridClient(_testConfig.EventGridDomainConfig.SubscriptionId, CancellationToken.None);
+            Queue = new QueueClient(TestConfig.EnsStorageConnectionString, TestConfig.EnsStorageQueueName);
+            EventGridMgmtClient = await AzureEventGridDomainHelper.GetEventGridClient(TestConfig.EventGridDomainConfig.SubscriptionId, CancellationToken.None);
         }
         
         [Test]
         public async Task WhenICallTheEnsSubscriptionApiWithAValidD365Payload_ThenMessageAddedInQueueAndDomainTopicCreated()
         {
-            HttpResponseMessage apiResponse = await _ensApiClient.PostEnsApiSubscriptionAsync(_d365Payload);
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload);
             Assert.AreEqual(202, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
 
-            QueueMessage[] messageQueue = _queue.ReceiveMessages();
+            QueueMessage[] messageQueue = Queue.ReceiveMessages();
 
             DateTime startTime = DateTime.UtcNow;
 
-            while (messageQueue.Length < 1 && DateTime.UtcNow - startTime < TimeSpan.FromSeconds(_testConfig.WaitingTimeForQueueInSeconds))
+            while (messageQueue.Length < 1 && DateTime.UtcNow - startTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
             {
                 await Task.Delay(1000);
-                messageQueue = _queue.ReceiveMessages();
+                messageQueue = Queue.ReceiveMessages();
             }
 
             byte[] data = Convert.FromBase64String(messageQueue[0].Body.ToString());
@@ -58,7 +58,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             QueueMessageModel queueMessageData = JsonConvert.DeserializeObject<QueueMessageModel>(messageBody);
 
-            string notificationType= _d365Payload.InputParameters[0].Value.FormattedValues[4].Value.ToString();
+            string notificationType= D365Payload.InputParameters[0].Value.FormattedValues[4].Value.ToString();
 
             //verify notification type in message body
             Assert.AreEqual(notificationType, queueMessageData.NotificationType);
@@ -66,12 +66,12 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             Assert.IsNotNull(messageQueue[0].MessageId);
 
             //Wait for Topic creation
-            await Task.Delay(TimeSpan.FromSeconds(_testConfig.WaitingTimeForTopicCreationInSeconds));
+            await Task.Delay(TimeSpan.FromSeconds(TestConfig.WaitingTimeForTopicCreationInSeconds));
 
             //Get the Topic details
-            DomainTopic topic = await _eventGridMgmtClient.DomainTopics.GetAsync(_testConfig.EventGridDomainConfig.ResourceGroup, _testConfig.EventGridDomainConfig.EventGridDomainName, _testConfig.EventGridDomainConfig.NotificationTypeTopicName,CancellationToken.None);
+            DomainTopic topic = await EventGridMgmtClient.DomainTopics.GetAsync(TestConfig.EventGridDomainConfig.ResourceGroup, TestConfig.EventGridDomainConfig.EventGridDomainName, TestConfig.EventGridDomainConfig.NotificationTypeTopicName,CancellationToken.None);
 
-            Assert.AreEqual(_testConfig.EventGridDomainConfig.NotificationTypeTopicName, topic.Name);
+            Assert.AreEqual(TestConfig.EventGridDomainConfig.NotificationTypeTopicName, topic.Name);
         }
     }
 }
