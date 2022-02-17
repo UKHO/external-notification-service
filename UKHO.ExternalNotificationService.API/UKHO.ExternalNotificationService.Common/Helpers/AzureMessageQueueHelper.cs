@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Logging;
+using UKHO.ExternalNotificationService.Common.Models.Request;
 
 namespace UKHO.ExternalNotificationService.Common.Helpers
 {
@@ -17,7 +18,7 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
         {
             _logger = logger;
         }
-        public async Task AddQueueMessage<SubscriptionRequestMessage>(SubscriptionStorageConfiguration ensStorageConfiguration , SubscriptionRequestMessage subscriptionRequestMessage, string correlationId)
+        public async Task AddQueueMessage(SubscriptionStorageConfiguration ensStorageConfiguration , SubscriptionRequestMessage subscriptionRequestMessage)
         {
             string storageAccountConnectionString = $"DefaultEndpointsProtocol=https;AccountName={ensStorageConfiguration.StorageAccountName};AccountKey={ensStorageConfiguration.StorageAccountKey};EndpointSuffix=core.windows.net";
            
@@ -32,7 +33,7 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             // Send a message to the queue
             await queueClient.SendMessageAsync(subscriptionMessageString);           
             
-            _logger.LogInformation(EventIds.AddedMessageInQueue.ToEventId(), "Added message in Queue for message:{subscriptionMessageString} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{correlationId}", subscriptionMessageString, subscriptionRequestMessage , correlationId);
+            _logger.LogInformation(EventIds.AddedMessageInQueue.ToEventId(), "Added message in Queue for message:{subscriptionMessageString} with SubscriptionId:{SubscriptionId}, _D365-Correlation-ID:{D365correlationId} and _X-Correlation-ID:{correlationId}", subscriptionMessageString, subscriptionRequestMessage.SubscriptionId, subscriptionRequestMessage.D365CorrelationId , subscriptionRequestMessage.CorrelationId);
         }
     }
 }

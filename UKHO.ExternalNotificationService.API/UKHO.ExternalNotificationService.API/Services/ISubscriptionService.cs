@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
+using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 
