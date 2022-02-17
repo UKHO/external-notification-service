@@ -16,8 +16,6 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             TokenRequestContext tokenRequestContext = new(new string[] { "https://management.azure.com/.default" });
 
             AccessToken tokenResult = await azureCredential.GetTokenAsync(tokenRequestContext, cancellationToken);
-
-            await Task.Delay(10000);
             TokenCredentials credential = new(tokenResult.Token);
 
             EventGridManagementClient _egClient = new(credential)
