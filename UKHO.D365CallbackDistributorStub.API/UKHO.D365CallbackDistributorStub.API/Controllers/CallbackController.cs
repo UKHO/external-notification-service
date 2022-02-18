@@ -8,10 +8,18 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
     [ApiController]
     public class CallbackController : ControllerBase
     {
+        private readonly ILogger<CallbackController> _logger;
+
+        public CallbackController(ILogger<CallbackController> logger)
+        {
+            _logger = logger;
+        }
+
         List<RecordCallbackRequest> recordCallbackRequests = new List<RecordCallbackRequest>();
         [HttpPost]
         public IActionResult Post([FromBody] CallbackRequest callbackRequest)
         {
+            _logger.LogInformation("Callback posted.");
             recordCallbackRequests.Add(new RecordCallbackRequest
             {
                 CallbackRequest = callbackRequest,
@@ -19,6 +27,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
                 SubscriptionId = string.Empty
 
             });
+            _logger.LogInformation("Callback request stored in memory.");
             return NoContent();
         }
     }
