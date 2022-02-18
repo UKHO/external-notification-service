@@ -7,9 +7,10 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
     [ApiController]
     public class CallbackController : ControllerBase
     {
+        [HttpPost]
         public async virtual Task<IActionResult> Post()
         {
-            return Ok();
+            return NoContent();
         }
     }
 }
