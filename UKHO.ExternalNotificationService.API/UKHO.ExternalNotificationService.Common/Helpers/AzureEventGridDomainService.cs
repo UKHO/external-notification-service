@@ -18,11 +18,13 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
     public class AzureEventGridDomainService : IAzureEventGridDomainService
     {
         private readonly EventGridDomainConfiguration _eventGridDomainConfig;
+        private readonly SubscriptionStorageConfiguration _subscriptionStorageConfiguration;
         private readonly ILogger<AzureEventGridDomainService> _logger;        
 
-        public AzureEventGridDomainService(IOptions<EventGridDomainConfiguration> eventGridDomainConfig, ILogger<AzureEventGridDomainService> logger)
+        public AzureEventGridDomainService(IOptions<EventGridDomainConfiguration> eventGridDomainConfig, IOptions<SubscriptionStorageConfiguration> subscriptionStorageConfiguration, ILogger<AzureEventGridDomainService> logger)
         {
             _eventGridDomainConfig = eventGridDomainConfig.Value;
+            _subscriptionStorageConfiguration = subscriptionStorageConfiguration.Value;
             _logger = logger;            
         }
         
@@ -35,7 +37,7 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             DomainTopic topic = await GetDomainTopic(eventGridMgmtClient, subscriptionRequestMessage.NotificationTypeTopicName, cancellationToken);
             string eventSubscriptionScope = topic.Id;
 
-            string deadLetterDestinationResourceId = $"/subscriptions/{_eventGridDomainConfig.SubscriptionId}/resourceGroups/{_eventGridDomainConfig.ResourceGroup}/providers/Microsoft.Storage/storageAccounts/{_eventGridDomainConfig.StorageAccountName}";
+            string deadLetterDestinationResourceId = $"/subscriptions/{_eventGridDomainConfig.SubscriptionId}/resourceGroups/{_eventGridDomainConfig.ResourceGroup}/providers/Microsoft.Storage/storageAccounts/{_subscriptionStorageConfiguration.StorageAccountName}";
 
             EventSubscription eventSubscription = new EventSubscription() {
                 Destination = new WebHookEventSubscriptionDestination()
@@ -60,7 +62,7 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
                 DeadLetterDestination = new StorageBlobDeadLetterDestination()
                 {
                     ResourceId = deadLetterDestinationResourceId,
-                    BlobContainerName = _eventGridDomainConfig.StorageContainerName,
+                    BlobContainerName = _subscriptionStorageConfiguration.StorageContainerName,
                 }
             };
             EventSubscription createdOrUpdatedEventSubscription = await eventGridMgmtClient.EventSubscriptions.CreateOrUpdateAsync(eventSubscriptionScope, subscriptionRequestMessage.SubscriptionId, eventSubscription, CancellationToken.None);
