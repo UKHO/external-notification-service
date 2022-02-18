@@ -15,10 +15,6 @@ output "ens_storage_connection_string" {
   sensitive = true
 }
 
-output "resource_group_name" {
-  value = azurerm_resource_group.rg.name
-}
-
 output "event_grid_doamin_name" {
   value = module.eventgriddomain.event_grid_domain_name
 }

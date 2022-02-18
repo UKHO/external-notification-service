@@ -56,7 +56,5 @@ Write-Host "##vso[task.setvariable variable=SubscriptionStorageConfiguration.Que
 Write-Host "##vso[task.setvariable variable=EventHubLoggingConfiguration.Environment]$($terraformOutput.env_name.value)"
 Write-Host "##vso[task.setvariable variable=EnsStorageConnectionString;issecret=true]$($terraformOutput.ens_storage_connection_string.value)"
 Write-Host "##vso[task.setvariable variable=EnsStorageQueueName]$($terraformOutput.event_storage_queue.value)"
-Write-Host "##vso[task.setvariable variable=EventGridDomainConfiguration.ResourceGroup]$($terraformOutput.resource_group_name.value)"
-Write-Host "##vso[task.setvariable variable=EventGridDomainConfiguration.EventGridDomainName]$($terraformOutput.event_grid_doamin_name.value)"
 
 $terraformOutput | ConvertTo-Json -Depth 5 > $terraformJsonOutputFile
