@@ -30,7 +30,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Helpers
 
             IConfidentialClientApplication app = ConfidentialClientApplicationBuilder.Create(callbackConfiguration.ClientId)
                                                 .WithClientSecret(callbackConfiguration.ClientSecret)
-                                                .WithAuthority(new Uri("https://login.microsoftonline.com/" + callbackConfiguration.TenantId))
+                                                .WithAuthority(new Uri(callbackConfiguration.MicrosoftOnlineLoginUrl + callbackConfiguration.TenantId))
                                                 .Build();
 
             AuthenticationResult tokenTask = await app.AcquireTokenForClient(scopes).ExecuteAsync();

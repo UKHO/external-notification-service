@@ -60,8 +60,10 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                         LastResponseStatusCode = _D365CallbackConfiguration.Value.SucceededStatusCode,
                         ResponseDetails = Convert.ToString(DateTime.UtcNow)
                     };
-                   /////   Console.WriteLine(externalNotificationEntity);
+
                     //Callback to D365
+                    _logger.LogInformation(EventIds.CreateSubscriptionRequestCompleted.ToEventId(),
+                  "CallbackToD365UsingDataverse start with SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
 
                     string entityPath = $"ukho_externalnotifications({subscriptionMessage.SubscriptionId})";
                     await _callbackService.CallbackToD365UsingDataverse(entityPath, externalNotificationEntity, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
@@ -70,7 +72,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                 {
                     subscriptionRequestResult.ProvisioningState = e.Message;
                     _logger.LogError(EventIds.CreateSubscriptionRequestError.ToEventId(),
-                   "Subscription provisioning request failed with Exception:{e} with SubscriptionId:{SubscriptionId} _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", e.Message, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+                   "Subscription provisioning request failed with Exception:{e} with SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", e.Message, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
                 }
             }
             

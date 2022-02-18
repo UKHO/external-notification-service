@@ -35,7 +35,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
             using (var message = new HttpRequestMessage(HttpMethod.Patch, externalEntityPath))
             {
                 string[] subscriptionId = externalEntityPath.Split("s(");                
-                //Get the access token that is required for authentication.
+                
                 var accessToken = await _authTokenProvider.GetADAccessToken();
                 message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
@@ -50,6 +50,8 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
 
                         //////throw new Exception(error); //should use HttpRequestException ??
                     }
+                    _logger.LogInformation(EventIds.CallbackToD365UsingDataverseError.ToEventId(),
+                    "Callback to D365 using Dataverse success with statusCode:{StatusCode} and Requesturi:{RequestUri} and SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", response.StatusCode, response.RequestMessage, subscriptionId[1].PadRight(1), D365CorrelationId, CorrelationId);
                 }
             }
 
