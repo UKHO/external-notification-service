@@ -88,8 +88,15 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900021 -  Create subscription request error in case of exception.
         /// </summary>
-        CreateSubscriptionRequestError = 900021
-
+        CreateSubscriptionRequestError = 900021,
+        /// <summary>
+        /// 900022 - Log an error if call back to D365 API returns statusCode other tha 204.
+        /// </summary>
+        CallbackToD365UsingDataverseError = 900022,
+        /// <summary>
+        /// 900023 - Request for retrying D365 Callback Http endpoint.
+        /// </summary>
+        RetryHttpClientD365CallbackRequest = 900023
     }
 
     public static class EventIdExtensions

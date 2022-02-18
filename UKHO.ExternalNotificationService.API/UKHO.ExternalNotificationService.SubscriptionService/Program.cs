@@ -12,6 +12,8 @@ using Serilog;
 using Serilog.Events;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Helpers;
+using UKHO.ExternalNotificationService.SubscriptionService.Configuration;
+using UKHO.ExternalNotificationService.SubscriptionService.Helpers;
 using UKHO.ExternalNotificationService.SubscriptionService.Services;
 using UKHO.Logging.EventHubLogProvider;
 
@@ -112,9 +114,19 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
               {
                   services.Configure<SubscriptionStorageConfiguration>(ConfigurationBuilder.GetSection("SubscriptionStorageConfiguration"));
                   services.Configure<EventGridDomainConfiguration>(ConfigurationBuilder.GetSection("EventGridDomainConfiguration"));
+                  services.Configure<D365CallbackConfiguration>(ConfigurationBuilder.GetSection("D365CallbackConfiguration"));
                   services.Configure<QueuesOptions>(ConfigurationBuilder.GetSection("QueuesOptions"));
                   services.AddScoped<ISubscriptionServiceData, SubscriptionServiceData>();
-                  services.AddScoped<IAzureEventGridDomainService, AzureEventGridDomainService>();                  
+                  services.AddScoped<IAzureEventGridDomainService, AzureEventGridDomainService>();
+                  services.AddScoped<IAuthTokenProvider, AuthTokenProvider>();
+                  services.AddScoped<ICallbackService, CallbackService>();
+
+                  services.AddHttpClient("D365DataverseApi", client =>
+                  {
+                      client.BaseAddress = new Uri("https://ukho-updatepreview-sandbox.api.crm4.dynamics.com/api/data/v9.2/");//Request bin-> 
+                      client.Timeout = TimeSpan.FromMinutes(Convert.ToDouble(ConfigurationBuilder["D365CallbackConfiguration:TimeOutInMins"]));
+                  });
+                
               })
               .ConfigureWebJobs(b =>
               {
