@@ -14,7 +14,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
     {
         private IAzureEventGridDomainService _fakeAzureEventGridDomainService;
         private ILogger<SubscriptionServiceData> _fakeLogger;
-        private SubscriptionServiceData _fakeSubscriptionServiceData;
+        private SubscriptionServiceData subscriptionServiceData;
 
         [SetUp]
         public void Setup()
@@ -22,17 +22,18 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
             _fakeAzureEventGridDomainService = A.Fake<IAzureEventGridDomainService>();
             _fakeLogger = A.Fake<ILogger<SubscriptionServiceData>>();
 
-            _fakeSubscriptionServiceData = new SubscriptionServiceData(_fakeAzureEventGridDomainService, _fakeLogger);
+            subscriptionServiceData = new SubscriptionServiceData(_fakeAzureEventGridDomainService, _fakeLogger);
         }
 
         [Test]
         public async Task WhenCreateOrUpdateSubscriptionThenCreateSubscription()
         {
             CancellationToken cancellationToken = CancellationToken.None;
+            SubscriptionRequestMessage subscriptionRequestMessage = GetSubscriptionRequestMessage();
 
-            string response = await _fakeSubscriptionServiceData.CreateOrUpdateSubscription(GetSubscriptionRequestMessage(), cancellationToken);
+            string response = await subscriptionServiceData.CreateOrUpdateSubscription(subscriptionRequestMessage, cancellationToken);
 
-            A.CallTo(() => _fakeAzureEventGridDomainService.CreateOrUpdateSubscription(A<SubscriptionRequestMessage>.Ignored, A<CancellationToken>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _fakeAzureEventGridDomainService.CreateOrUpdateSubscription(subscriptionRequestMessage, A<CancellationToken>.Ignored)).MustHaveHappenedOnceExactly();
             Assert.IsInstanceOf<string>(response);
         }
 

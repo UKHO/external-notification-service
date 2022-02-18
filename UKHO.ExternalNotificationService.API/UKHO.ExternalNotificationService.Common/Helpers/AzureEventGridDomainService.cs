@@ -39,7 +39,7 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             return topic.Id;
         }
 
-        private static async Task<EventGridManagementClient> GetEventGridClient(string SubscriptionId, CancellationToken cancellationToken)
+        private static async Task<EventGridManagementClient> GetEventGridClient(string subscriptionId, CancellationToken cancellationToken)
         {
             DefaultAzureCredential azureCredential = new();
             TokenRequestContext tokenRequestContext = new(new string[] { "https://management.azure.com/.default" });
@@ -49,15 +49,15 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
 
             EventGridManagementClient _egClient = new(credential)
             {
-                SubscriptionId = SubscriptionId
+                SubscriptionId = subscriptionId
             };
 
             return _egClient;
         }
 
-        protected virtual async Task<DomainTopic> GetDomainTopic(EventGridManagementClient eventGridMgmtClient, string NotificationTypeTopicName, CancellationToken cancellationToken)
+        protected virtual async Task<DomainTopic> GetDomainTopic(EventGridManagementClient eventGridMgmtClient, string notificationTypeTopicName, CancellationToken cancellationToken)
         {
-            return await eventGridMgmtClient.DomainTopics.CreateOrUpdateAsync(_eventGridDomainConfig.ResourceGroup, _eventGridDomainConfig.EventGridDomainName, NotificationTypeTopicName, cancellationToken);
+            return await eventGridMgmtClient.DomainTopics.CreateOrUpdateAsync(_eventGridDomainConfig.ResourceGroup, _eventGridDomainConfig.EventGridDomainName, notificationTypeTopicName, cancellationToken);
         }
     }
 }

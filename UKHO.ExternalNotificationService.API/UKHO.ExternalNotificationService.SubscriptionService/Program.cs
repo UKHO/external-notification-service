@@ -20,8 +20,8 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
     [ExcludeFromCodeCoverage]
     public static class Program
     {
-        private static IConfiguration ConfigurationBuilder;
-        private static string AssemblyVersion = Assembly.GetExecutingAssembly().GetCustomAttributes<AssemblyFileVersionAttribute>().Single().Version;
+        private static IConfiguration s_configurationBuilder;
+        private static readonly string s_assemblyVersion = Assembly.GetExecutingAssembly().GetCustomAttributes<AssemblyFileVersionAttribute>().Single().Version;
         public static void Main(string[] args)
         {
             HostBuilder hostBuilder = BuildHostConfiguration();
@@ -38,7 +38,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
         {
 
             HostBuilder hostBuilder = new();
-            hostBuilder.ConfigureAppConfiguration((hostContext, builder) =>
+            hostBuilder.ConfigureAppConfiguration((_, builder) =>
             {
                 builder.AddJsonFile("appsettings.json");
                 //Add environment specific configuration files.
@@ -62,11 +62,11 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                     builder.AddAzureKeyVault(new Uri(kvServiceUri), new DefaultAzureCredential());
                 }
 
-                Program.ConfigurationBuilder = builder.Build();
+                Program.s_configurationBuilder = builder.Build();
             })
-             .ConfigureLogging((hostContext, builder) =>
+             .ConfigureLogging((_, builder) =>
              {
-                 builder.AddConfiguration(ConfigurationBuilder.GetSection("Logging"));
+                 builder.AddConfiguration(s_configurationBuilder.GetSection("Logging"));
 
 #if DEBUG
                  builder.AddSerilog(new LoggerConfiguration()
@@ -79,40 +79,40 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                  builder.AddConsole();
 
                  //Add Application Insights if needed (if key exists in settings)
-                 string instrumentationKey = ConfigurationBuilder["APPINSIGHTS_INSTRUMENTATIONKEY"];
+                 string instrumentationKey = s_configurationBuilder["APPINSIGHTS_INSTRUMENTATIONKEY"];
                  if (!string.IsNullOrEmpty(instrumentationKey))
                  {
                      builder.AddApplicationInsightsWebJobs(o => o.InstrumentationKey = instrumentationKey);
                  }
-                 EventHubLoggingConfiguration eventhubConfig = ConfigurationBuilder.GetSection("EventHubLoggingConfiguration").Get<EventHubLoggingConfiguration>();
+                 EventHubLoggingConfiguration eventHubConfig = s_configurationBuilder.GetSection("EventHubLoggingConfiguration").Get<EventHubLoggingConfiguration>();
 
-                 if (!string.IsNullOrWhiteSpace(eventhubConfig.ConnectionString))
+                 if (!string.IsNullOrWhiteSpace(eventHubConfig.ConnectionString))
                  {
                      builder.AddEventHub(config =>
                      {
-                         config.Environment = eventhubConfig.Environment;
+                         config.Environment = eventHubConfig.Environment;
                          config.DefaultMinimumLogLevel =
-                             (LogLevel)Enum.Parse(typeof(LogLevel), eventhubConfig.MinimumLoggingLevel, true);
+                             (LogLevel)Enum.Parse(typeof(LogLevel), eventHubConfig.MinimumLoggingLevel, true);
                          config.MinimumLogLevels["UKHO"] =
-                             (LogLevel)Enum.Parse(typeof(LogLevel), eventhubConfig.UkhoMinimumLoggingLevel, true);
-                         config.EventHubConnectionString = eventhubConfig.ConnectionString;
-                         config.EventHubEntityPath = eventhubConfig.EntityPath;
-                         config.System = eventhubConfig.System;
-                         config.Service = eventhubConfig.Service;
-                         config.NodeName = eventhubConfig.NodeName;
+                             (LogLevel)Enum.Parse(typeof(LogLevel), eventHubConfig.UkhoMinimumLoggingLevel, true);
+                         config.EventHubConnectionString = eventHubConfig.ConnectionString;
+                         config.EventHubEntityPath = eventHubConfig.EntityPath;
+                         config.System = eventHubConfig.System;
+                         config.Service = eventHubConfig.Service;
+                         config.NodeName = eventHubConfig.NodeName;
                          config.AdditionalValuesProvider = additionalValues =>
                          {
-                             additionalValues["_AssemblyVersion"] = AssemblyVersion;
+                             additionalValues["_AssemblyVersion"] = s_assemblyVersion;
                          };
                      });
                  }
 
              })
-              .ConfigureServices((hostContext, services) =>
+              .ConfigureServices((_, services) =>
               {
-                  services.Configure<SubscriptionStorageConfiguration>(ConfigurationBuilder.GetSection("SubscriptionStorageConfiguration"));
-                  services.Configure<EventGridDomainConfiguration>(ConfigurationBuilder.GetSection("EventGridDomainConfiguration"));
-                  services.Configure<QueuesOptions>(ConfigurationBuilder.GetSection("QueuesOptions"));
+                  services.Configure<SubscriptionStorageConfiguration>(s_configurationBuilder.GetSection("SubscriptionStorageConfiguration"));
+                  services.Configure<EventGridDomainConfiguration>(s_configurationBuilder.GetSection("EventGridDomainConfiguration"));
+                  services.Configure<QueuesOptions>(s_configurationBuilder.GetSection("QueuesOptions"));
                   services.AddScoped<ISubscriptionServiceData, SubscriptionServiceData>();
                   services.AddScoped<IAzureEventGridDomainService, AzureEventGridDomainService>();                  
               })
