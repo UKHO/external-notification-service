@@ -1,7 +1,7 @@
 ﻿
 namespace UKHO.ExternalNotificationService.Common.Configuration
 {
-    public class D365PayloadKeyConstant
+    public static class D365PayloadKeyConstant
     {
         public const string PostEntityImageKey = "ENS Payload";
         public const string IsActiveKey = "statecode";
