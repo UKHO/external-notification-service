@@ -1,4 +1,5 @@
 ﻿using Azure.Storage.Queues.Models;
+using Microsoft.Azure.Management.EventGrid.Models;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using System;
@@ -35,7 +36,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
             {
                 try
                 {
-                    await _subscriptionServiceData.CreateOrUpdateSubscription(subscriptionMessage, CancellationToken.None);
+                    EventSubscription eventSubscriptionawait = await _subscriptionServiceData.CreateOrUpdateSubscription(subscriptionMessage, CancellationToken.None);
                     subscriptionRequestResult.ProvisioningState = "Succeeded";
                 }
                 catch (Exception e)

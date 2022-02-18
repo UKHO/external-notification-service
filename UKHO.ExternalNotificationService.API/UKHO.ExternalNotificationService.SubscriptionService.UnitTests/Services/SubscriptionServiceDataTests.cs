@@ -1,4 +1,5 @@
 using FakeItEasy;
+using Microsoft.Azure.Management.EventGrid.Models;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using System.Threading;
@@ -30,10 +31,10 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
         {
             CancellationToken cancellationToken = CancellationToken.None;
 
-            string response = await _fakeSubscriptionServiceData.CreateOrUpdateSubscription(GetSubscriptionRequestMessage(), cancellationToken);
+            EventSubscription response = await _fakeSubscriptionServiceData.CreateOrUpdateSubscription(GetSubscriptionRequestMessage(), cancellationToken);
 
             A.CallTo(() => _fakeAzureEventGridDomainService.CreateOrUpdateSubscription(A<SubscriptionRequestMessage>.Ignored, A<CancellationToken>.Ignored)).MustHaveHappenedOnceExactly();
-            Assert.IsInstanceOf<string>(response);
+            Assert.IsInstanceOf<EventSubscription>(response);
         }
 
         private static SubscriptionRequestMessage GetSubscriptionRequestMessage()
