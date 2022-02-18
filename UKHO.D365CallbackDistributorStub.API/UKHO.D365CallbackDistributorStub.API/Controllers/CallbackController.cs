@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using UKHO.D365CallbackDistributorStub.API.Models.Request;
 
 namespace UKHO.D365CallbackDistributorStub.API.Controllers
@@ -9,13 +8,12 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
     public class CallbackController : ControllerBase
     {
         private readonly ILogger<CallbackController> _logger;
-
         public CallbackController(ILogger<CallbackController> logger)
         {
             _logger = logger;
         }
 
-        List<RecordCallbackRequest> recordCallbackRequests = new List<RecordCallbackRequest>();
+        readonly List<RecordCallbackRequest> recordCallbackRequests = new();
         [HttpPost]
         public IActionResult Post([FromBody] CallbackRequest callbackRequest)
         {

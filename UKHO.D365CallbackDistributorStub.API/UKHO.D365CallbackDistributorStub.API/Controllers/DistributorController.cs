@@ -4,19 +4,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace UKHO.D365CallbackDistributorStub.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("/webhook/Notification")]
     [ApiController]
     public class DistributorController : BaseController<DistributorController>
     {
         private readonly ILogger<DistributorController> _logger;
-
         public DistributorController(ILogger<DistributorController> logger)
         {
             _logger = logger;
         }
 
         [HttpOptions]
-        [Route("/webhook/newEventspublished")]
         public IActionResult Options()
         {
             _logger.LogInformation("Distributor option accessed.");
@@ -30,7 +28,6 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
         }
 
         [HttpPost]
-        [Route("/webhook/newEventspublished")]
         public virtual async Task<IActionResult> Post()
         {
             _logger.LogInformation("Distributor Webhook posted.");

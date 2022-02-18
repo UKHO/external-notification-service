@@ -2,10 +2,8 @@
 {
     public class RecordCallbackRequest
     {
-        public CallbackRequest CallbackRequest  { get; set; }
-
-        public string SubscriptionId { get; set; }
-
-        public Guid Guid { get; set; }
+        public CallbackRequest? CallbackRequest  { get; set; }
+        public string? SubscriptionId { get; set; }
+        public Guid? Guid { get; set; }
     }
 }
