@@ -1,3 +1,7 @@
+data "azurerm_resource_group" "rg" {
+  name = var.ens_api_rg
+}
+
 module "webapp_service" {
   source              = "./Modules/Webapp"
   service_name        = local.service_name
