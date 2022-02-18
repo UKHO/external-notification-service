@@ -2,10 +2,12 @@
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Azure.Messaging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
+using UKHO.ExternalNotificationService.API.Services;
+using UKHO.ExternalNotificationService.Common.Logging;
 
 namespace UKHO.ExternalNotificationService.API.Controllers
 {
@@ -13,11 +15,15 @@ namespace UKHO.ExternalNotificationService.API.Controllers
     public class EesWebhookController : BaseController<EesWebhookController>
     {
         private readonly ILogger<EesWebhookController> _logger;
+        private readonly IEesWebhookService _eesWebhookService;
+
         public EesWebhookController(IHttpContextAccessor contextAccessor,
-                                    ILogger<EesWebhookController> logger)
+                                    ILogger<EesWebhookController> logger,
+                                    IEesWebhookService eesWebhookService)
         : base(contextAccessor, logger)
         {
             _logger = logger;
+            _eesWebhookService = eesWebhookService;
         }
 
         [HttpOptions]
@@ -35,10 +41,18 @@ namespace UKHO.ExternalNotificationService.API.Controllers
 
         [HttpPost]
         [Route("/webhook/newEventspublished")]
-        public virtual async Task<IActionResult> PostEesWebhook([FromBody] JObject request)
+        public virtual async Task<IActionResult> Post()
         {
-            await Task.CompletedTask;
-            return GetWebhookResponse();
+            using (var reader = new StreamReader(Request.Body, Encoding.UTF8))
+            {
+                string jsonContent = await reader.ReadToEndAsync();
+
+                CloudEvent cloudEvent = _eesWebhookService.TryGetCloudEventMessage(jsonContent);
+
+                _logger.LogInformation(EventIds.EESWebhookRequestStart.ToEventId(), " Enterprise Event Service Webhook start for _X-Correlation-ID:{correlationId}", GetCurrentCorrelationId());
+
+                return GetWebhookResponse();
+            }
         }
     }
 }

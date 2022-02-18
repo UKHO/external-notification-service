@@ -56,7 +56,12 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900013 - Data truncation D365 Http Payload Size Exceeded.
         /// </summary>
-        D365PayloadSizeExceededError = 900013
+        D365PayloadSizeExceededError = 900013,
+        /// <summary>
+        /// 900014 -  Request for enterprise event service webhook post endpoint is started.
+        /// </summary>
+        EESWebhookRequestStart = 900014
+
     }
 
     public static class EventIdExtensions
