@@ -7,3 +7,7 @@ output "event_grid_domain_primary_access_key" {
   value     = azurerm_eventgrid_domain.eventgrid_domain.primary_access_key
   sensitive = true
 }
+
+output "event_grid_domain_name" {
+  value     = azurerm_eventgrid_domain.eventgrid_domain.name
+}
