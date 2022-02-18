@@ -33,7 +33,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
 
             string response = await subscriptionServiceData.CreateOrUpdateSubscription(subscriptionRequestMessage, cancellationToken);
 
-            A.CallTo(() => _fakeAzureEventGridDomainService.CreateOrUpdateSubscription(subscriptionRequestMessage, A<CancellationToken>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _fakeAzureEventGridDomainService.CreateOrUpdateSubscription(subscriptionRequestMessage, cancellationToken)).MustHaveHappenedOnceExactly();
             Assert.IsInstanceOf<string>(response);
         }
 

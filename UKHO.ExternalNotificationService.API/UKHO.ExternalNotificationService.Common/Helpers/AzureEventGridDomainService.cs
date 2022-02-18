@@ -47,12 +47,10 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             AccessToken tokenResult = await azureCredential.GetTokenAsync(tokenRequestContext, cancellationToken);
             TokenCredentials credential = new(tokenResult.Token);
 
-            EventGridManagementClient _egClient = new(credential)
+            return new(credential)
             {
                 SubscriptionId = subscriptionId
             };
-
-            return _egClient;
         }
 
         protected virtual async Task<DomainTopic> GetDomainTopic(EventGridManagementClient eventGridMgmtClient, string notificationTypeTopicName, CancellationToken cancellationToken)
