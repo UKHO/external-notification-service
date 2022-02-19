@@ -61,7 +61,6 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// 900014 -  Request for enterprise event service webhook post endpoint is started.
         /// </summary>
         EESWebhookRequestStart = 900014
-
     }
 
     public static class EventIdExtensions

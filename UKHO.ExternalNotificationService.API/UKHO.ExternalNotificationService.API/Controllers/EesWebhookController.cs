@@ -3,15 +3,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Azure.Messaging;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.Common.Logging;
 
 namespace UKHO.ExternalNotificationService.API.Controllers
 {
     [ApiController]
+    [Authorize]
     public class EesWebhookController : BaseController<EesWebhookController>
     {
         private readonly ILogger<EesWebhookController> _logger;
@@ -49,7 +52,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
 
                 CloudEvent cloudEvent = _eesWebhookService.TryGetCloudEventMessage(jsonContent);
 
-                _logger.LogInformation(EventIds.EESWebhookRequestStart.ToEventId(), " Enterprise Event Service Webhook start for _X-Correlation-ID:{correlationId}", GetCurrentCorrelationId());
+                _logger.LogInformation(EventIds.EESWebhookRequestStart.ToEventId(), "Enterprise event service webhook request started for Data:{cloudEvent} and _X-Correlation-ID:{correlationId}.", JsonConvert.SerializeObject(cloudEvent), GetCurrentCorrelationId());
 
                 return GetWebhookResponse();
             }

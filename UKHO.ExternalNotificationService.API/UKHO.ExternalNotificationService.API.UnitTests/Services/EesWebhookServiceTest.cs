@@ -18,7 +18,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [Test]
         public void WhenInvalidJsonContentInRequest_ThenReturnNullValue()
         {
-            string fakeCacheJson = "{key: \\\"data\\\",value: \\\"test\\\"}";
+            string fakeCacheJson = "{key: \"data\",value: \"test\"}";
 
             CloudEvent result = _eesWebhookService.TryGetCloudEventMessage(fakeCacheJson.ToString());
 
