@@ -1,6 +1,6 @@
 ﻿
-using System.Collections.Generic;
 using Microsoft.Extensions.Options;
+using System.Collections.Generic;
 using UKHO.ExternalNotificationService.Common.Configuration;
 
 namespace UKHO.ExternalNotificationService.Common.Storage

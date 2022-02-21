@@ -1,9 +1,9 @@
 ﻿
+using Azure.Storage.Blobs;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Azure.Storage.Blobs;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace UKHO.ExternalNotificationService.Common.HealthCheck
 {
@@ -12,7 +12,7 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
     {
         public async Task<HealthCheckResult> CheckBlobContainerHealth(string storageAccountConnectionString, string containerName)
         {
-            BlobContainerClient container = new BlobContainerClient(storageAccountConnectionString, containerName);
+            BlobContainerClient container = new(storageAccountConnectionString, containerName);
             bool isBlobContainerExists = await container.ExistsAsync();
             if (isBlobContainerExists)
                 return HealthCheckResult.Healthy("Azure blob storage is healthy");

@@ -1,8 +1,8 @@
 ﻿
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
+using System.Threading;
+using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Logging;
 
 namespace UKHO.ExternalNotificationService.Common.HealthCheck
@@ -21,7 +21,7 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
 
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
-            HealthCheckResult healthCheckResult = await _azureWebJobHealthCheckService.CheckHealthAsync();
+            HealthCheckResult healthCheckResult = await _azureWebJobHealthCheckService.CheckHealthAsync(cancellationToken);
             if (healthCheckResult.Status == HealthStatus.Healthy)
             {
                 _logger.LogDebug(EventIds.AzureWebJobIsHealthy.ToEventId(), "Azure webjob is healthy");

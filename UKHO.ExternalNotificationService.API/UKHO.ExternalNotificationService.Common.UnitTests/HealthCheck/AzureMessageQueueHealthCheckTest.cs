@@ -1,11 +1,11 @@
 ﻿
-using System;
-using System.Threading.Tasks;
 using FakeItEasy;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NUnit.Framework;
+using System;
+using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.HealthCheck;
 using UKHO.ExternalNotificationService.Common.Helpers;

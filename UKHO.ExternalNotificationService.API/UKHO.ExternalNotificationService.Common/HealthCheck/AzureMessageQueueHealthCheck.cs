@@ -1,10 +1,10 @@
 ﻿
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Helpers;
 using UKHO.ExternalNotificationService.Common.Logging;
@@ -34,7 +34,7 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
             try
             {
                 Task<HealthCheckResult> messageQueuesHealth = CheckMessageQueuesHealth();
-                await Task.WhenAll(messageQueuesHealth);
+                await messageQueuesHealth;
 
                 if (messageQueuesHealth.Result.Status == HealthStatus.Healthy)
                 {
@@ -56,11 +56,8 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
 
         private async Task<HealthCheckResult> CheckMessageQueuesHealth()
         {
-            string storageAccountConnectionString = string.Empty;
-            HealthCheckResult messageQueueHealthStatus = new HealthCheckResult(HealthStatus.Healthy, "Azure message queue is healthy");
-
-            storageAccountConnectionString = _storageService.GetStorageAccountConnectionString(_subscriptionStorageConfiguration.Value.StorageAccountName, _subscriptionStorageConfiguration.Value.StorageAccountKey);
-            messageQueueHealthStatus = await _azureMessageQueueHelper.CheckMessageQueueHealth(storageAccountConnectionString, _subscriptionStorageConfiguration.Value.QueueName);
+            string storageAccountConnectionString = _storageService.GetStorageAccountConnectionString(_subscriptionStorageConfiguration.Value.StorageAccountName, _subscriptionStorageConfiguration.Value.StorageAccountKey);
+            HealthCheckResult messageQueueHealthStatus = await _azureMessageQueueHelper.CheckMessageQueueHealth(storageAccountConnectionString, _subscriptionStorageConfiguration.Value.QueueName);
             return messageQueueHealthStatus;
         }
     }

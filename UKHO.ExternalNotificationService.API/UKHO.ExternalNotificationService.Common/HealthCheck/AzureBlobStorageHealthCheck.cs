@@ -1,10 +1,10 @@
 ﻿
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Logging;
 using UKHO.ExternalNotificationService.Common.Storage;
@@ -33,11 +33,8 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
         {
             try
             {
-                string storageAccountConnectionString = string.Empty;
-                HealthCheckResult azureBlobStorageHealthStatus = new HealthCheckResult(HealthStatus.Healthy, "Azure blob storage is healthy");
-
-                storageAccountConnectionString = _storageService.GetStorageAccountConnectionString(_subscriptionStorageConfiguration.Value.StorageAccountName, _subscriptionStorageConfiguration.Value.StorageAccountKey);
-                azureBlobStorageHealthStatus = await _azureBlobStorageHelper.CheckBlobContainerHealth(storageAccountConnectionString, _subscriptionStorageConfiguration.Value.StorageContainerName);
+                string storageAccountConnectionString = _storageService.GetStorageAccountConnectionString(_subscriptionStorageConfiguration.Value.StorageAccountName, _subscriptionStorageConfiguration.Value.StorageAccountKey);
+                HealthCheckResult azureBlobStorageHealthStatus = await _azureBlobStorageHelper.CheckBlobContainerHealth(storageAccountConnectionString, _subscriptionStorageConfiguration.Value.StorageContainerName);
 
                 if (azureBlobStorageHealthStatus.Status == HealthStatus.Unhealthy)
                 {

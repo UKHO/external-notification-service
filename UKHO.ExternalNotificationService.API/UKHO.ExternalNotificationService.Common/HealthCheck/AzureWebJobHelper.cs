@@ -1,4 +1,7 @@
 ﻿
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Newtonsoft.Json;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
@@ -6,16 +9,13 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Newtonsoft.Json;
 
 namespace UKHO.ExternalNotificationService.Common.HealthCheck
 {
     [ExcludeFromCodeCoverage]
     public class AzureWebJobHelper : IAzureWebJobHelper
     {
-        static HttpClient httpClient = new HttpClient();
+        static HttpClient httpClient = new();
         private readonly IWebHostEnvironment _webHostEnvironment;
 
         public AzureWebJobHelper(IWebHostEnvironment webHostEnvironment)
@@ -29,7 +29,7 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
             {
                 string webJobDetail, webJobStatus = string.Empty;
 
-                using HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, webJob.WebJobUri);
+                using HttpRequestMessage httpRequestMessage = new(HttpMethod.Get, webJob.WebJobUri);
                 httpClient.DefaultRequestHeaders.Accept.Clear();
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", webJob.UserPassword);
