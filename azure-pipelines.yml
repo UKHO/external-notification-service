@@ -303,6 +303,12 @@ stages:
         variables:
           - group: "ENS-Dev-TF-Variables"
           - group: "ENS-Dev-Variables"
+          - name:  "D365CallbackConfiguration.ClientId"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-CLIENT-ID
+          - name:  "D365CallbackConfiguration.ClientSercet"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-ID)
+          - name: "D365CallbackConfiguration.TenantId"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-TENANT-ID)
         strategy:
           runOnce:
             deploy:
