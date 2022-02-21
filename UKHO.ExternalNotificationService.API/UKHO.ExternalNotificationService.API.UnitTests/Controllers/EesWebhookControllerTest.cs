@@ -1,12 +1,14 @@
-﻿using System.Threading.Tasks;
-using Azure.Messaging;
+﻿using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 using FakeItEasy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using UKHO.ExternalNotificationService.API.Controllers;
-using UKHO.ExternalNotificationService.API.Services;
 
 namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 {
@@ -15,7 +17,6 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
     {
         private EesWebhookController _controller;
         private ILogger<EesWebhookController> _fakeLogger;
-        private IEesWebhookService _fakeEesWebhookService;
         private IHttpContextAccessor _fakeHttpContextAccessor;
 
         [SetUp]
@@ -23,9 +24,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         {
             _fakeLogger = A.Fake<ILogger<EesWebhookController>>();
             _fakeHttpContextAccessor = A.Fake<IHttpContextAccessor>();
-            _fakeEesWebhookService = A.Fake<IEesWebhookService>();
 
-            _controller = new EesWebhookController(_fakeHttpContextAccessor, _fakeLogger, _fakeEesWebhookService);
+            _controller = new EesWebhookController(_fakeHttpContextAccessor, _fakeLogger);
         }
 
         [Test]
@@ -42,16 +42,24 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         [Test]
         public async Task WhenPostValidRequest_ThenReceiveSuccessfulResponse()
         {
-            object data = "{\"subject\": \"test\"}";
-            CloudEvent cloudEvent = new("test", "test", data);
-
-            A.CallTo(() => _fakeEesWebhookService.TryGetCloudEventMessage(A<string>.Ignored)).Returns(cloudEvent);
+            MemoryStream requestData = GetEventBodyData();
 
             _controller.ControllerContext.HttpContext = new DefaultHttpContext();
+            _controller.HttpContext.Request.Body = requestData;
 
             var result = (OkObjectResult)await _controller.Post();
 
             Assert.AreEqual(200, result.StatusCode);
+        }
+
+        private static MemoryStream GetEventBodyData()
+        {
+            var fakeJson = JObject.Parse(@"{""Type"":""FilesPublished""}");
+            fakeJson["Id"] = "25d6c6c1-418b-40f9-bb76-f6dfc0f133bc";
+
+            string jsonString = JsonConvert.SerializeObject(fakeJson);
+            var requestData = new MemoryStream(Encoding.UTF8.GetBytes(jsonString));
+            return requestData;
         }
     }
 }

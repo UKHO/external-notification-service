@@ -2,14 +2,13 @@
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Azure.Messaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.Common.Logging;
+using UKHO.ExternalNotificationService.Common.Models.Request;
 
 namespace UKHO.ExternalNotificationService.API.Controllers
 {
@@ -18,15 +17,12 @@ namespace UKHO.ExternalNotificationService.API.Controllers
     public class EesWebhookController : BaseController<EesWebhookController>
     {
         private readonly ILogger<EesWebhookController> _logger;
-        private readonly IEesWebhookService _eesWebhookService;
 
         public EesWebhookController(IHttpContextAccessor contextAccessor,
-                                    ILogger<EesWebhookController> logger,
-                                    IEesWebhookService eesWebhookService)
+                                    ILogger<EesWebhookController> logger)
         : base(contextAccessor, logger)
         {
             _logger = logger;
-            _eesWebhookService = eesWebhookService;
         }
 
         [HttpOptions]
@@ -50,9 +46,9 @@ namespace UKHO.ExternalNotificationService.API.Controllers
             {
                 string jsonContent = await reader.ReadToEndAsync();
 
-                CloudEvent cloudEvent = _eesWebhookService.TryGetCloudEventMessage(jsonContent);
+                CustomEventGridEvent eventGridEvent = JsonConvert.DeserializeObject<CustomEventGridEvent>(jsonContent);
 
-                _logger.LogInformation(EventIds.EESWebhookRequestStart.ToEventId(), "Enterprise event service webhook request started for Data:{cloudEvent} and _X-Correlation-ID:{correlationId}.", JsonConvert.SerializeObject(cloudEvent), GetCurrentCorrelationId());
+                _logger.LogInformation(EventIds.EESWebhookRequestStart.ToEventId(), "Enterprise event service webhook request started for event:{eventGridEvent} and _X-Correlation-ID:{correlationId}.", JsonConvert.SerializeObject(eventGridEvent), GetCurrentCorrelationId());
 
                 return GetWebhookResponse();
             }

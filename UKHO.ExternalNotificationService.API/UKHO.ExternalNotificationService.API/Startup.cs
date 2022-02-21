@@ -87,7 +87,6 @@ namespace UKHO.ExternalNotificationService.API
             services.AddScoped<ISubscriptionService, SubscriptionService>();
             services.AddScoped<IEventHubLoggingHealthClient, EventHubLoggingHealthClient>();
             services.AddSingleton<INotificationRepository, NotificationRepository>();
-            services.AddScoped<IEesWebhookService, EesWebhookService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
