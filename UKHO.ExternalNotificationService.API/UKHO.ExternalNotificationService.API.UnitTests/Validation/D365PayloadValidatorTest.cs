@@ -207,7 +207,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         }
         #endregion
 
-        private D365Payload GetD365PayloadDetails()
+        private static D365Payload GetD365PayloadDetails()
         {
             var d365Payload = new D365Payload()
             {

@@ -13,19 +13,19 @@ using UKHO.ExternalNotificationService.API.Controllers;
 namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 {
     [TestFixture]
-    public class EesWebhookControllerTest
+    public class WebhookControllerTest
     {
-        private EesWebhookController _controller;
-        private ILogger<EesWebhookController> _fakeLogger;
+        private WebhookController _controller;
+        private ILogger<WebhookController> _fakeLogger;
         private IHttpContextAccessor _fakeHttpContextAccessor;
 
         [SetUp]
         public void Setup()
         {
-            _fakeLogger = A.Fake<ILogger<EesWebhookController>>();
+            _fakeLogger = A.Fake<ILogger<WebhookController>>();
             _fakeHttpContextAccessor = A.Fake<IHttpContextAccessor>();
 
-            _controller = new EesWebhookController(_fakeHttpContextAccessor, _fakeLogger);
+            _controller = new WebhookController(_fakeHttpContextAccessor, _fakeLogger);
         }
 
         [Test]
