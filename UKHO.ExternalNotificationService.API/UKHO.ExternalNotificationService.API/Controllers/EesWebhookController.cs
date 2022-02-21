@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -13,7 +12,7 @@ using UKHO.ExternalNotificationService.Common.Models.Request;
 namespace UKHO.ExternalNotificationService.API.Controllers
 {
     [ApiController]
-    [Authorize]
+    ////[Authorize]
     public class EesWebhookController : BaseController<EesWebhookController>
     {
         private readonly ILogger<EesWebhookController> _logger;

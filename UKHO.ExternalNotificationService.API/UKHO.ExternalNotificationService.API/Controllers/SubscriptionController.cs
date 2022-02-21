@@ -1,13 +1,12 @@
-﻿using FluentValidation.Results;
-using Microsoft.AspNetCore.Authorization;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Extensions;
 using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.Common.Configuration;
@@ -16,11 +15,10 @@ using UKHO.ExternalNotificationService.Common.Models.Request;
 using UKHO.ExternalNotificationService.Common.Models.Response;
 using UKHO.ExternalNotificationService.Common.Repository;
 
-
 namespace UKHO.ExternalNotificationService.API.Controllers
 {
     [ApiController]
-    [Authorize]
+    ////[Authorize]
     public class SubscriptionController : BaseController<SubscriptionController>
     {
         private readonly ILogger<SubscriptionController> _logger;
