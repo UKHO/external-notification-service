@@ -76,5 +76,88 @@ resource "azurerm_api_management_product_api" "ees_product_api_mapping" {
   product_id          = azurerm_api_management_product.ees_product.product_id
 }
 
+#D365 Product policy
+resource "azurerm_api_management_product_policy" "d365_product_policy" {
+  resource_group_name = var.resource_group_name
+  api_management_name = data.azurerm_api_management.apim_instance.name
+  product_id          = azurerm_api_management_product.d365_product.product_id
+  depends_on          = [azurerm_api_management_product.d365_product, azurerm_api_management_product_api.d365_product_api_mapping]
+
+  xml_content = <<XML
+	<policies>
+	  <inbound>
+      <base />
+      <quota calls="${var.d365_product_daily_quota_limit}" renewal-period="86400" />
+
+      <!-- Send request to generate-token url with required values -->
+      <send-request mode="new" response-variable-name="client_credentials_token" timeout="60" ignore-error="true">            
+          <set-url>https://login.microsoftonline.com/${var.client_credentials_tenant_id}/oauth2/v2.0/token</set-url>
+          <set-method>POST</set-method>
+          <set-header name="Content-Type" exists-action="override">
+              <value>application/x-www-form-urlencoded</value>
+          </set-header>
+          <set-body>@{
+              return $"client_id=${var.client_credentials_client_id}&client_secret=${var.client_credentials_secret}&grant_type=client_credentials&scope=${var.client_credentials_scope}";
+              }
+          </set-body>
+      </send-request>
+      <choose>
+        <when condition="@(((IResponse)context.Variables["client_credentials_token"]).StatusCode == 200)">
+           <!-- Retrieve access_token and set Authorization header -->
+           <set-header name="Authorization" exists-action="override">
+                  <value>@{
+                      var body = ((IResponse)context.Variables["client_credentials_token"]).Body.As<JObject>();
+                      var access_token = body["access_token"];
+                      return "Bearer "+ access_token.ToString();
+                    }                
+                  </value>
+            </set-header>                    
+        </when>
+        <otherwise>
+            <!-- Retrieve error details and send internal server response  -->
+            <set-variable name="errorSource" value="@{ 
+                return ((IResponse)context.Variables["client_credentials_token"]).Body.As<JObject>(true)["error"].ToString();
+                }" />
+            <set-variable name="rawErrorDescription" value="@{ 
+                return ((IResponse)context.Variables["client_credentials_token"]).Body.As<JObject>()["error_description"].ToString();
+                }" />
+            <set-variable name="errorDescription" value="@{ 
+                    return ((string)context.Variables["rawErrorDescription"]).Substring(0, ((string)context.Variables["rawErrorDescription"]).IndexOf("\r"));
+                }" />
+            <set-variable name="tokenResponseStatusCode" value="@{ 
+                return ((IResponse)context.Variables.GetValueOrDefault<IResponse>("client_credentials_token")).StatusCode;
+                }" />
+            <set-variable name="tokenResponseStatusReason" value="@{ 
+                return ((IResponse)context.Variables.GetValueOrDefault<IResponse>("client_credentials_token")).StatusReason;
+                }" />
+            
+            <return-response>
+                <set-status code="500" reason="Internal Server Error" />
+                <set-header name="Content-Type" exists-action="override">
+                    <value>application/json</value>
+                </set-header>
+                <set-body template="liquid">{
+                        "correlationId": "{{context.Request.Headers["X-Correlation-ID"]}}",
+                        "errors": [
+                                    {
+                                        "Source": "Oauth2 token"
+                                        "Description": "Error while generating Oauth2 token for backend ENS service"
+                                        "InnerExceptionSource": "{{context.Variables["errorSource"]}}",
+                                        "InnerExceptionDescription": "{{context.Variables["errorDescription"]}}"
+                                        "TokenResponseStatusCode": "{{context.Variables["tokenResponseStatusCode"]}}"
+                                        "TokenResponseStatusReason": "{{context.Variables["tokenResponseStatusReason"]}}"
+                                    }
+                                ]
+                            }
+                    </set-body>
+            </return-response>                    
+        </otherwise>
+      </choose>
+
+	  </inbound>
+	</policies>
+	XML
+}
+
 
 

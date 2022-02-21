@@ -25,6 +25,27 @@ variable "api_openapi_spec_path" {
   type = string
 }
 
+variable "d365_product_daily_quota_limit" {
+  type = number
+  default = 25  
+}
+
+variable "client_credentials_tenant_id" {
+  type    = string
+}
+
+variable "client_credentials_client_id" {
+  type    = string
+}
+
+variable "client_credentials_secret" {
+  type    = string
+}
+
+variable "client_credentials_scope" {
+  type    = string
+}
+
 locals {
   formatted_env_suffix = lower(replace(trimspace(var.env_suffix), " ", "-"))
 }
