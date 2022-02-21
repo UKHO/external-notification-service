@@ -39,7 +39,7 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
 
             string deadLetterDestinationResourceId = $"/subscriptions/{_eventGridDomainConfig.SubscriptionId}/resourceGroups/{_eventGridDomainConfig.ResourceGroup}/providers/Microsoft.Storage/storageAccounts/{_subscriptionStorageConfiguration.StorageAccountName}";
 
-            EventSubscription eventSubscription = new EventSubscription() {
+            EventSubscription eventSubscription = new() {
                 Destination = new WebHookEventSubscriptionDestination()
                 {
                     EndpointUrl = subscriptionRequestMessage.WebhookUrl
@@ -72,7 +72,7 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             return createdOrUpdatedEventSubscription;
         }
 
-        private static async Task<EventGridManagementClient> GetEventGridClient(string SubscriptionId, CancellationToken cancellationToken)
+        private static async Task<EventGridManagementClient> GetEventGridClient(string subscriptionId, CancellationToken cancellationToken)
         {
             DefaultAzureCredential azureCredential = new();
             TokenRequestContext tokenRequestContext = new(new string[] { "https://management.azure.com/.default" });
@@ -80,17 +80,15 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             AccessToken tokenResult = await azureCredential.GetTokenAsync(tokenRequestContext, cancellationToken);
             TokenCredentials credential = new(tokenResult.Token);
 
-            EventGridManagementClient _egClient = new(credential)
+            return new(credential)
             {
-                SubscriptionId = SubscriptionId
+                SubscriptionId = subscriptionId
             };
-
-            return _egClient;
         }
 
-        protected virtual async Task<DomainTopic> GetDomainTopic(EventGridManagementClient eventGridMgmtClient, string NotificationTypeTopicName, CancellationToken cancellationToken)
+        protected virtual async Task<DomainTopic> GetDomainTopic(EventGridManagementClient eventGridMgmtClient, string notificationTypeTopicName, CancellationToken cancellationToken)
         {
-            return await eventGridMgmtClient.DomainTopics.CreateOrUpdateAsync(_eventGridDomainConfig.ResourceGroup, _eventGridDomainConfig.EventGridDomainName, NotificationTypeTopicName, cancellationToken);
+            return await eventGridMgmtClient.DomainTopics.CreateOrUpdateAsync(_eventGridDomainConfig.ResourceGroup, _eventGridDomainConfig.EventGridDomainName, notificationTypeTopicName, cancellationToken);
         }
     }
 }

@@ -116,7 +116,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             var result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
 
             A.CallTo(_fakeLogger).Where(call => call.GetArgument<LogLevel>(0) == LogLevel.Error).MustNotHaveHappened();
-            A.CallTo(() => _fakeSubscriptionService.AddSubscriptionRequest(A<SubscriptionRequest>.Ignored, A<NotificationType>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _fakeSubscriptionService.AddSubscriptionRequest(_fakeSubscriptionRequest, _fakeNotificationType.FirstOrDefault(), A<string>.Ignored)).MustHaveHappenedOnceExactly();
             Assert.AreEqual(StatusCodes.Status202Accepted, result.StatusCode);
         }
 

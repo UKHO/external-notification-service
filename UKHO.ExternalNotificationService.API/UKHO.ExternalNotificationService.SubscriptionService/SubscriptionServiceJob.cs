@@ -28,6 +28,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
         public async Task ProcessQueueMessage([QueueTrigger("%SubscriptionStorageConfiguration:QueueName%")] QueueMessage message)
         {            
             SubscriptionRequestMessage subscriptionMessage = message.Body.ToObjectFromJson<SubscriptionRequestMessage>();
+            EventSubscription eventSubscription;
             _logger.LogInformation(EventIds.CreateSubscriptionRequestStart.ToEventId(),
                     "Subscription provisioning request started for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionMessage.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
 
@@ -36,7 +37,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
             {
                 try
                 {
-                    EventSubscription eventSubscriptionawait = await _subscriptionServiceData.CreateOrUpdateSubscription(subscriptionMessage, CancellationToken.None);
+                    eventSubscription = await _subscriptionServiceData.CreateOrUpdateSubscription(subscriptionMessage, CancellationToken.None);
                     subscriptionRequestResult.ProvisioningState = "Succeeded";
                 }
                 catch (Exception e)
