@@ -404,7 +404,7 @@ stages:
                     testRunTitle: "Dev-AutomationTests"
                     workingDirectory: '$(Build.SourcesDirectory)/functionaltests'
 
- - stage: QCdeploy
+  - stage: QCdeploy
     displayName: "QCdeploy (inc terraform, webapp deploy)"
     jobs:
       - deployment: QCDeployApp
