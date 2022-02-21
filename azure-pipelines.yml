@@ -426,7 +426,6 @@ stages:
               steps:
                 - template: StubApiDeployment/templates/stub-api-continuous-deployment.yml
                   parameters:
-                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
                     AzureSubscription: "External Notification Service Dev - A.008.02"
                   
                 - task: DownloadBuildArtifacts@0
