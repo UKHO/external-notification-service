@@ -1,14 +1,14 @@
 ﻿
+using Azure.Storage.Queues;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Logging;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Queue;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Azure.Storage.Queues;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Logging;
 using UKHO.ExternalNotificationService.Common.Configuration;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Queue;
 using UKHO.ExternalNotificationService.Common.Logging;
 
 namespace UKHO.ExternalNotificationService.Common.Helpers
