@@ -1,7 +1,3 @@
-output "webapp_service" {
-  value = azurerm_app_service.webapp_service.name
-}
-
 output "web_app_object_id" {
   value = azurerm_app_service.webapp_service.identity.0.principal_id
 }
