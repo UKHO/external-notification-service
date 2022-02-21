@@ -39,7 +39,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
                 _logger.LogInformation(EventIds.CreateSubscriptionRequestCompleted.ToEventId(),
                 "Before ad authentication call with SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", externalEntityPath, D365CorrelationId, CorrelationId);
 
-                string accessToken = await _authTokenProvider.GetADAccessToken();
+                string accessToken = await _authTokenProvider.GetADAccessToken(CorrelationId);
                 message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
                 message.Content = new StringContent(JObject.FromObject(externalNotificationEntity).ToString());
