@@ -211,14 +211,33 @@ stages:
               publishWebProjects: false
               projects: '**/*UKHO.ExternalNotificationService.API.csproj'
               arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\ExternalNotificationServiceWebAPI'
-              zipAfterPublish: true
-              modifyOutputPath: true
+              zipAfterPublish: false
+              modifyOutputPath: false
+
+          - task: DotNetCoreCLI@2
+            displayName: "Publish SubscriptionServiceWebJob Code"
+            inputs:
+              command: "publish"
+              publishWebProjects: false
+              projects: "**/*UKHO.ExternalNotificationService.SubscriptionService.csproj"
+              arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\ExternalNotificationServiceWebAPI\App_Data\jobs\continuous\SubscriptionServiceWebJob'
+              zipAfterPublish: false
+              modifyOutputPath: false
+
+          - task: ArchiveFiles@2
+            displayName: "Zip ENS service"
+            inputs:
+              rootFolderOrFile: '$(Build.ArtifactStagingDirectory)\ExternalNotificationServiceWebAPI\'
+              includeRootFolder: false
+              archiveType: "zip"
+              archiveFile: '$(Build.ArtifactStagingDirectory)\ExternalNotificationServiceWebAPI\UKHO.ExternalNotificationService.API.zip'
+              replaceExistingArchive: true
 
           - task: PublishBuildArtifacts@1
             displayName: "Publish WebAPI Artifact"
             inputs:
-              PathtoPublish: '$(Build.ArtifactStagingDirectory)\ExternalNotificationServiceWebAPI'
-              ArtifactName: ExternalNotificationServiceWebAPI
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)\ExternalNotificationServiceWebAPI\UKHO.ExternalNotificationService.API.zip'
+              ArtifactName: ExternalNotificationService
 
       - job: PublishFunctionalTestsAndTerraform
         workspace:
