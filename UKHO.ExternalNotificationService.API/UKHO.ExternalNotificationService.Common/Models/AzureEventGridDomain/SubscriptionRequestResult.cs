@@ -2,7 +2,7 @@
 
 namespace UKHO.ExternalNotificationService.Common.Models.AzureEventGridDomain
 {
-    public class SubscriptionRequestResult
+    public class SubscriptionRequestResult: BaseSubscriptionRequest
     {
         public string SubscriptionId { get; set; }
         public string ProvisioningState { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace UKHO.ExternalNotificationService.Common.Models.Request
 {
-    public class SubscriptionRequestMessage
+    public class SubscriptionRequestMessage : BaseSubscriptionRequest
     {
         public string SubscriptionId { get; set; }
 
