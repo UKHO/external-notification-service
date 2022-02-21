@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 
-namespace UKHO.ExternalNotificationService.Common.Helper
+namespace UKHO.ExternalNotificationService.Common.Helpers
 {
     public static class ExtractD365Payload
     {

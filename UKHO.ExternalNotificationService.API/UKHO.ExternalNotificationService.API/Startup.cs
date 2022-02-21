@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Reflection;
-using System.Security.Claims;
 using Azure.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -16,11 +10,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Reflection;
+using System.Security.Claims;
 using UKHO.ExternalNotificationService.API.Filters;
 using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.API.Validation;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.HealthCheck;
+using UKHO.ExternalNotificationService.Common.Helpers;
 using UKHO.ExternalNotificationService.Common.Repository;
 using UKHO.Logging.EventHubLogProvider;
 
@@ -60,8 +61,9 @@ namespace UKHO.ExternalNotificationService.API
             });
 
             services.Configure<EventHubLoggingConfiguration>(_configuration.GetSection("EventHubLoggingConfiguration"));
-            services.Configure<D365PayloadKeyConfiguration>(_configuration.GetSection("D365PayloadKeyConfiguration"));
-            services.Configure<EnsConfiguration>(_configuration.GetSection("EnsConfiguration"));
+            ////services.Configure<D365PayloadKeyConfiguration>(_configuration.GetSection("D365PayloadKeyConfiguration"));
+            services.Configure<EnsConfiguration>(_configuration.GetSection("EnsConfiguration"));           
+            services.Configure<SubscriptionStorageConfiguration>(_configuration.GetSection("SubscriptionStorageConfiguration"));
 
             services.AddApplicationInsightsTelemetry();
             services.AddLogging(loggingBuilder =>
@@ -82,11 +84,11 @@ namespace UKHO.ExternalNotificationService.API
             services.AddApplicationInsightsTelemetry();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IEventHubLoggingHealthClient, EventHubLoggingHealthClient>();
+            services.AddScoped<ISubscriptionService, SubscriptionService>();
+            services.AddScoped<IAzureMessageQueueHelper, AzureMessageQueueHelper>();           
             services.AddHealthChecks().AddCheck<EventHubLoggingHealthCheck>("EventHubLoggingHealthCheck");
             services.AddScoped<ID365PayloadValidator, D365PayloadValidator>();
-            services.AddScoped<ISubscriptionService, SubscriptionService>();
-            services.AddScoped<IEventHubLoggingHealthClient, EventHubLoggingHealthClient>();
-            services.AddSingleton<INotificationRepository, NotificationRepository>();
+            services.AddSingleton<INotificationRepository, NotificationRepository>();            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
