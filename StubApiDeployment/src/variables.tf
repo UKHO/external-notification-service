@@ -8,11 +8,15 @@ variable "ens_api_rg" {
   default = "ens-dev-rg"
 }
 
+variable "ens_api_asp" {
+  type    = string
+  default = "ens-dev-webapp-asp"
+}
+
 locals {
   env_name           = lower(terraform.workspace)
   service_name       = "ens"
-  web_app_name       = "${local.service_name}-${local.env_name}-webapp"
-  key_vault_name     = "${local.service_name}-ukho-${local.env_name}-kv"
+  web_app_name       = "${local.service_name}-${local.env_name}-stub-webapp"
   tags = {
     SERVICE          = "External Notification Service"
     ENVIRONMENT      = local.env_name
@@ -21,7 +25,6 @@ locals {
     CALLOUT_TEAM     = "On-Call_N/A"
     COST_CENTRE      = "A.008.02"
   }
-  config_data        = jsondecode(file("${path.module}/appsettings.json"))
 }
 
 

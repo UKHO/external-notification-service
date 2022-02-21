@@ -1,16 +1,9 @@
-resource "azurerm_app_service_plan" "app_service_plan" {
-  name                = "${var.name}-asp"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  
-  sku {
-	tier = var.app_service_sku.tier
-	size = var.app_service_sku.size
-  }
-  tags                = var.tags
+data "azurerm_app_service_plan" "app_service_plan" {
+  name                = "var.ens_api_asp"
+  resource_group_name = "var.resource_group_name"
 }
 
-resource "azurerm_app_service" "webapp_service" {
+resource "azurerm_app_service" "stub_webapp_service" {
   name                = var.name
   location            = var.location
   resource_group_name = var.resource_group_name
