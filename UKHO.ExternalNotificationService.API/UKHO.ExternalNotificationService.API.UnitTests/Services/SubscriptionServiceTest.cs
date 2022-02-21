@@ -51,7 +51,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             A.CallTo(() => _fakeD365PayloadValidator.Validate(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>
                     {new ValidationFailure("InputParameters", "D365Payload InputParameters cannot be blank or null.")}));
 
-            ValidationResult result = await _fakeSubscriptionService.ValidateD365PayloadRequest(new D365Payload());
+            ValidationResult result = await _subscriptionService.ValidateD365PayloadRequest(new D365Payload());
 
             Assert.IsFalse(result.IsValid);
             Assert.AreEqual("D365Payload InputParameters cannot be blank or null.", result.Errors.Single().ErrorMessage);

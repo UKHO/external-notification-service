@@ -71,23 +71,6 @@ namespace UKHO.ExternalNotificationService.API.Services
 
             await _azureMessageQueueHelper.AddQueueMessage(_ensStorageConfiguration.Value, subscriptionRequestMessage);
             _logger.LogInformation(EventIds.AddedMessageInQueue.ToEventId(), "Subscription request message added in Queue for SubscriptionId:{subscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{correlationId}", subscriptionRequest.SubscriptionId, subscriptionRequest.D365CorrelationId, correlationId);
-        }
-
-        public async Task AddSubscriptionRequest(SubscriptionRequest subscriptionRequest,NotificationType notificationType, string correlationId)
-        {
-            SubscriptionRequestMessage subscriptionRequestMessage = new()
-            {
-                SubscriptionId = subscriptionRequest.SubscriptionId,
-                NotificationType = notificationType.Name,
-                NotificationTypeTopicName = notificationType.TopicName,
-                IsActive = subscriptionRequest.IsActive,
-                WebhookUrl = subscriptionRequest.WebhookUrl,
-                D365CorrelationId = subscriptionRequest.D365CorrelationId,
-                CorrelationId = correlationId
-            };         
-
-            await _azureMessageQueueHelper.AddQueueMessage(_ensStorageConfiguration.Value, subscriptionRequestMessage);
-            _logger.LogInformation(EventIds.AddedMessageInQueue.ToEventId(), "Subscription request message added in Queue for SubscriptionId:{subscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{correlationId}", subscriptionRequest.SubscriptionId, subscriptionRequest.D365CorrelationId, correlationId);
-        }
+        }        
     }
 }
