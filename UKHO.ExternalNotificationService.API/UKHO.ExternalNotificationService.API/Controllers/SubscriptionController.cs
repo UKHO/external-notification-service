@@ -26,7 +26,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         private const string XmsDynamicsMsgSizeExceededHeader = "x-ms-dynamics-msg-size-exceeded";
         private readonly INotificationRepository _notificationRepository;
 
-        public SubscriptionController(IHttpContextAccessor contextAccessor, ILogger<SubscriptionController> logger, ISubscriptionService subscriptionService, INotificationRepository notificationRepository) : base(contextAccessor, logger)
+        public SubscriptionController(IHttpContextAccessor contextAccessor, ILogger<SubscriptionController> logger, ISubscriptionService subscriptionService, INotificationRepository notificationRepository ) : base(contextAccessor, logger)
         {
             _logger = logger;
             _subscriptionService = subscriptionService;

@@ -1,7 +1,7 @@
 ﻿
 namespace UKHO.ExternalNotificationService.Common.Configuration
 {
-    public class SubscriptionStorageConfiguration : ISubscriptionStorageConfiguration
+    public class SubscriptionStorageConfiguration
     {
         public string StorageAccountName { get; set; }
         public string StorageAccountKey { get; set; }       
