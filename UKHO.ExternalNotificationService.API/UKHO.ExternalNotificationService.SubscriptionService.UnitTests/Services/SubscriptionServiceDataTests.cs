@@ -14,7 +14,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
     {
         private IAzureEventGridDomainService _fakeAzureEventGridDomainService;
         private ILogger<SubscriptionServiceData> _fakeLogger;
-        private SubscriptionServiceData subscriptionServiceData;
+        private SubscriptionServiceData _subscriptionServiceData;
 
         [SetUp]
         public void Setup()
@@ -22,7 +22,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
             _fakeAzureEventGridDomainService = A.Fake<IAzureEventGridDomainService>();
             _fakeLogger = A.Fake<ILogger<SubscriptionServiceData>>();
 
-            subscriptionServiceData = new SubscriptionServiceData(_fakeAzureEventGridDomainService, _fakeLogger);
+            _subscriptionServiceData = new SubscriptionServiceData(_fakeAzureEventGridDomainService, _fakeLogger);
         }
 
         [Test]
@@ -31,7 +31,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
             CancellationToken cancellationToken = CancellationToken.None;
             SubscriptionRequestMessage subscriptionRequestMessage = GetSubscriptionRequestMessage();
 
-            string response = await subscriptionServiceData.CreateOrUpdateSubscription(subscriptionRequestMessage, cancellationToken);
+            string response = await _subscriptionServiceData.CreateOrUpdateSubscription(subscriptionRequestMessage, cancellationToken);
 
             A.CallTo(() => _fakeAzureEventGridDomainService.CreateOrUpdateSubscription(subscriptionRequestMessage, cancellationToken)).MustHaveHappenedOnceExactly();
             Assert.IsInstanceOf<string>(response);
