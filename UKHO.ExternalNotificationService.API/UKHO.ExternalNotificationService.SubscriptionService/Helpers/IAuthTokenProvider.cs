@@ -5,6 +5,6 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Helpers
 {
     public interface IAuthTokenProvider
     {
-        Task<string> GetADAccessToken();
+        Task<string> GetADAccessToken(string CorrelationId);
     }
 }
