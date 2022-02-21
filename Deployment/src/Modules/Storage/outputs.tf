@@ -16,6 +16,6 @@ output event_storage_queue {
   value     = azurerm_storage_queue.ens_storage_queue.name
 }
 
-output storage_account_id {
-  value     = azurerm_storage_account.ens_storage.id
+output dead_letter_storage_container {
+  value     = azurerm_storage_container.ens_storage_container.name
 }
