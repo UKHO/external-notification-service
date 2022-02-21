@@ -18,3 +18,12 @@ output "ens_storage_connection_string" {
 output "event_grid_doamin_name" {
   value = module.eventgriddomain.event_grid_domain_name
 }
+
+output "ens_api_asp" {
+  value = module.webapp_service.web_app_asp_name
+}
+
+output "webapp_rg" {
+value = azurerm_resource_group.rg.name
+}
+

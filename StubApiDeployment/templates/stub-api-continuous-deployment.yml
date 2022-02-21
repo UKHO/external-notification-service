@@ -14,6 +14,8 @@ steps:
       ARM_CLIENT_SECRET: $(TERRAFORM-CLIENT-SECRET)
       ARM_TENANT_ID: $(TERRAFORM-TENANT-ID)
       ARM_SUBSCRIPTION_ID: $(TERRAFORM-SUBSCRIPTION-ID)
+      TF_VAR_ens_api_rg: $(ResourceGroup)
+      TF_VAR_ens_api_asp: $(EnsStubAsp)
 
   - task: FileTransform@1
     displayName: "File Transform: WebAppSettings"
