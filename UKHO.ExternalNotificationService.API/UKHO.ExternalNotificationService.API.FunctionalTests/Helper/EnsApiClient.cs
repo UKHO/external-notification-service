@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UKHO.ExternalNotificationService.API.FunctionalTests.Model;
 
 namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
@@ -37,5 +38,32 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             }
             return await s_httpClient.SendAsync(httpRequestMessage);
         }
+        public async Task<HttpResponseMessage> OptionEnsApiSubscriptionAsync(string headerRequest = null, string headerRequestValue = null)
+        {
+            string uri = $"{_apiHost}/webhook/newEventspublished";
+
+            // string payloadJson = JsonConvert.SerializeObject(d365Payload);
+
+            using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Options, uri);
+            // httpRequestMessage.Headers.Add("WebHook-Request-Origin", "eventemitter.example.com");
+            if (headerRequest != null)
+            {
+                httpRequestMessage.Headers.Add(headerRequest, headerRequestValue);
+            }
+            return await s_httpClient.SendAsync(httpRequestMessage);
+        }
+
+        public async Task<HttpResponseMessage> PostEnsWebookNewEventPublishedAsync([FromBody] JObject request)
+        {
+            string uri = $"{_apiHost}/webhook/newEventspublished";
+            string payloadJson = JsonConvert.SerializeObject(request);
+            using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri)
+            {
+                Content = new StringContent(payloadJson, Encoding.UTF8, "application/json")
+            };
+
+            return await s_httpClient.SendAsync(httpRequestMessage);
+        }
+
     }
 }
