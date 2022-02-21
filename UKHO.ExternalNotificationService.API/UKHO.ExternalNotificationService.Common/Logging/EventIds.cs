@@ -56,7 +56,40 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900013 - Data truncation D365 Http Payload Size Exceeded.
         /// </summary>
-        D365PayloadSizeExceededError = 900013
+        D365PayloadSizeExceededError = 900013,
+        /// <summary>
+        /// 900014 -  Event data for adding message in queue.
+        /// </summary>
+        AddedMessageInQueue = 900014,
+        /// <summary>
+        /// 900015 -  Create subscription web job is started.
+        /// </summary>
+        CreateSubscriptionRequestStart = 900015,
+        /// <summary>
+        /// 900016 -  Create subscription web job is Completed.
+        /// </summary>
+        CreateSubscriptionRequestCompleted = 900016,
+        /// <summary>
+        /// 900017 -  Create subscription service is started.
+        /// </summary>
+        CreateSubscriptionServiceStart = 900017,
+        /// <summary>
+        /// 900018 -  Create subscription service is Completed.
+        /// </summary>
+        CreateSubscriptionServiceCompleted = 900018,
+        /// <summary>
+        /// 900019 -  Create or updated azure event domain topic is started.
+        /// </summary>
+        CreateOrUpdateAzureEventDomainTopicStart = 900019,
+        /// <summary>
+        /// 900020 -  Create or updated azure event domain topic is Completed.
+        /// </summary>
+        CreateOrUpdateAzureEventDomainTopicCompleted = 900020,
+        /// <summary>
+        /// 900021 -  Create subscription request error in case of exception.
+        /// </summary>
+        CreateSubscriptionRequestError = 900021
+
     }
 
     public static class EventIdExtensions

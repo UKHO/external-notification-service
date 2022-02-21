@@ -29,7 +29,7 @@ steps:
   - task: FileTransform@1
     displayName: "File Transform: WebAppSettings"
     inputs:
-      folderPath: '$(Pipeline.Workspace)/ExternalNotificationServiceWebAPI/*.zip'
+      folderPath: '$(Pipeline.Workspace)/ExternalNotificationService/*.zip'
       fileType: 'json'
       targetFiles: '**/appsettings.json'
 
@@ -39,7 +39,7 @@ steps:
       azureSubscription: "${{ parameters.AzureSubscription }}"
       appType: webApp
       appName: "$(WEB_APP_NAME)"
-      package: "$(Pipeline.Workspace)/ExternalNotificationServiceWebAPI/UKHO.ExternalNotificationService.API.zip"
+      package: "$(Pipeline.Workspace)/ExternalNotificationService/UKHO.ExternalNotificationService.API.zip"
 
   - task: PowerShell@2
     displayName: "Check the status of Service"

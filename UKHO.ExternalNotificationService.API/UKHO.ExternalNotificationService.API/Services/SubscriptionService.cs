@@ -1,22 +1,32 @@
 ﻿using FluentValidation.Results;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Validation;
 using UKHO.ExternalNotificationService.Common.Configuration;
-using UKHO.ExternalNotificationService.Common.Helper;
+using UKHO.ExternalNotificationService.Common.Helpers;
+using UKHO.ExternalNotificationService.Common.Logging;
 using UKHO.ExternalNotificationService.Common.Models.Request;
+
 
 namespace UKHO.ExternalNotificationService.API.Services
 {
     public class SubscriptionService : ISubscriptionService
     {
         private readonly ID365PayloadValidator _d365PayloadValidator;
+        private readonly IAzureMessageQueueHelper _azureMessageQueueHelper;
+        private readonly IOptions<SubscriptionStorageConfiguration> _ensStorageConfiguration;        
+        private readonly ILogger<SubscriptionService> _logger;
 
-        public SubscriptionService(ID365PayloadValidator d365PayloadValidator)
+        public SubscriptionService(ID365PayloadValidator d365PayloadValidator, IAzureMessageQueueHelper azureMessageQueueHelper, IOptions<SubscriptionStorageConfiguration> ensStorageConfiguration, ILogger<SubscriptionService> logger)
         {
             _d365PayloadValidator = d365PayloadValidator;
+            _azureMessageQueueHelper = azureMessageQueueHelper;
+            _ensStorageConfiguration = ensStorageConfiguration;            
+            _logger = logger;
         }
 
         public Task<ValidationResult> ValidateD365PayloadRequest(D365Payload d365Payload)
@@ -43,7 +53,24 @@ namespace UKHO.ExternalNotificationService.API.Services
                 WebhookUrl = Convert.ToString(webhookurl),
                 NotificationType = Convert.ToString(formattedSubscriptionType),
                 D365CorrelationId = correlationId
-            };
+            };            
+        }
+
+        public async Task AddSubscriptionRequest(SubscriptionRequest subscriptionRequest,NotificationType notificationType, string correlationId)
+        {
+            SubscriptionRequestMessage subscriptionRequestMessage = new()
+            {
+                SubscriptionId = subscriptionRequest.SubscriptionId,
+                NotificationType = notificationType.Name,
+                NotificationTypeTopicName = notificationType.TopicName,
+                IsActive = subscriptionRequest.IsActive,
+                WebhookUrl = subscriptionRequest.WebhookUrl,
+                D365CorrelationId = subscriptionRequest.D365CorrelationId,
+                CorrelationId = correlationId
+            };         
+
+            await _azureMessageQueueHelper.AddQueueMessage(_ensStorageConfiguration.Value, subscriptionRequestMessage);
+            _logger.LogInformation(EventIds.AddedMessageInQueue.ToEventId(), "Subscription request message added in Queue for SubscriptionId:{subscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{correlationId}", subscriptionRequest.SubscriptionId, subscriptionRequest.D365CorrelationId, correlationId);
         }
     }
 }
