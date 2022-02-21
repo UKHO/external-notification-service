@@ -5,6 +5,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Configuration
     public class D365CallbackConfiguration
     {
         public string MicrosoftOnlineLoginUrl { get; set; }
+
         public string ClientId { get; set; }
 
         public string ClientSecret { get; set; }
