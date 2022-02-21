@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -12,20 +13,19 @@ using UKHO.ExternalNotificationService.Common.Models.Request;
 namespace UKHO.ExternalNotificationService.API.Controllers
 {
     [ApiController]
-    ////[Authorize]
-    public class EesWebhookController : BaseController<EesWebhookController>
+    [Authorize]
+    public class WebhookController : BaseController<WebhookController>
     {
-        private readonly ILogger<EesWebhookController> _logger;
+        private readonly ILogger<WebhookController> _logger;
 
-        public EesWebhookController(IHttpContextAccessor contextAccessor,
-                                    ILogger<EesWebhookController> logger)
+        public WebhookController(IHttpContextAccessor contextAccessor,
+                                    ILogger<WebhookController> logger)
         : base(contextAccessor, logger)
         {
             _logger = logger;
         }
 
         [HttpOptions]
-        [Route("/webhook/newEventspublished")]
         public IActionResult Options()
         {
             using (var reader = new StreamReader(Request.Body, Encoding.UTF8))
@@ -38,7 +38,6 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         }
 
         [HttpPost]
-        [Route("/webhook/newEventspublished")]
         public virtual async Task<IActionResult> Post()
         {
             using (var reader = new StreamReader(Request.Body, Encoding.UTF8))
@@ -47,7 +46,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
 
                 CustomEventGridEvent eventGridEvent = JsonConvert.DeserializeObject<CustomEventGridEvent>(jsonContent);
 
-                _logger.LogInformation(EventIds.EESWebhookRequestStart.ToEventId(), "Enterprise event service webhook request started for event:{eventGridEvent} and _X-Correlation-ID:{correlationId}.", JsonConvert.SerializeObject(eventGridEvent), GetCurrentCorrelationId());
+                _logger.LogInformation(EventIds.EESWebhookRequestStart.ToEventId(),"Enterprise event service webhook request started for event:{eventGridEvent} and _X-Correlation-ID:{correlationId}.", JsonConvert.SerializeObject(eventGridEvent), GetCurrentCorrelationId());
 
                 return GetWebhookResponse();
             }

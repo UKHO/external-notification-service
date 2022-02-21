@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -18,7 +19,7 @@ using UKHO.ExternalNotificationService.Common.Repository;
 namespace UKHO.ExternalNotificationService.API.Controllers
 {
     [ApiController]
-    ////[Authorize]
+    [Authorize]
     public class SubscriptionController : BaseController<SubscriptionController>
     {
         private readonly ILogger<SubscriptionController> _logger;
