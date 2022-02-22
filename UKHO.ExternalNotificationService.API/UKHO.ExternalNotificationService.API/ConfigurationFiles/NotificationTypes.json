@@ -4,7 +4,7 @@
         "NotificationTypes": [
             {
                 "Name": "File Share Service - AVCS Data",
-                "TopicName": "fss-filesPublished"
+                "TopicName": "fss-filesPublished-AvcsData"
             },
             {
                 "Name": "ADDS Data Pipeline",
