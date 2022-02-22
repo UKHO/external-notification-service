@@ -302,7 +302,9 @@ stages:
           clean: all
         variables:
           - group: "ENS-Dev-TF-Variables"
-          - group: "ENS-Dev-Variables"
+          - group: "ENS-Dev-Variables" 
+          - name: "EnsAuthConfiguration.D365Secret"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-VALUE)
         strategy:
           runOnce:
             deploy:
