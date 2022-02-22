@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace UKHO.D365CallbackDistributorStub.API.Controllers
 {
-    [Route("/webhook/Notification")]
+    [Route("/webhook/notification")]
     [ApiController]
     public class DistributorController : BaseController<DistributorController>
     {

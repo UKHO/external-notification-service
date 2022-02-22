@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using UKHO.D365CallbackDistributorStub.API.Models.Request;
+using UKHO.D365CallbackDistributorStub.API.Services;
 
 namespace UKHO.D365CallbackDistributorStub.API.Controllers
 {
@@ -8,25 +9,35 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
     public class CallbackController : ControllerBase
     {
         private readonly ILogger<CallbackController> _logger;
-        public CallbackController(ILogger<CallbackController> logger)
+        private readonly CallbackService _callbackService;
+
+        public CallbackController(ILogger<CallbackController> logger, CallbackService callbackService)
         {
             _logger = logger;
+            _callbackService = callbackService;
         }
 
-        readonly List<RecordCallbackRequest> recordCallbackRequests = new();
         [HttpPost]
-        public IActionResult Post([FromBody] CallbackRequest callbackRequest)
+        public IActionResult Post([FromBody] CallbackRequest callbackRequest, string subscriptionId)
         {
-            _logger.LogInformation("Callback posted.");
-            recordCallbackRequests.Add(new RecordCallbackRequest
-            {
-                CallbackRequest = callbackRequest,
-                Guid = Guid.NewGuid(),
-                SubscriptionId = string.Empty
+            _logger.LogInformation("POST callback accessed for subscriptionId: {subscriptionId}", subscriptionId);
+            CallbackService.SaveCallbackRequest(callbackRequest, subscriptionId);
+            _logger.LogInformation("Callback request stored in memory for subscriptionId: {subscriptionId}", subscriptionId);
+            return Ok();
+        }
 
-            });
-            _logger.LogInformation("Callback request stored in memory.");
-            return NoContent();
+        [HttpGet]
+        public IActionResult Get(string subscriptionId)
+        {
+            _logger.LogInformation("GET callback accessed for subscriptionId: {subscriptionId}", subscriptionId);
+            RecordCallbackRequest? callbackRequest = _callbackService.GetCallbackRequest(subscriptionId);
+            if (callbackRequest == null)
+            {
+                _logger.LogInformation("Callback not found for subscriptionId: {subscriptionId}", subscriptionId);
+                return NotFound();
+            }
+            _logger.LogInformation("Callback found and return for subscriptionId: {subscriptionId}", subscriptionId);
+            return Ok(callbackRequest);
         }
     }
 }

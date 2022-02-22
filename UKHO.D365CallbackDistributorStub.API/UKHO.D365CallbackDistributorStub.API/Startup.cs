@@ -1,4 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
+using UKHO.D365CallbackDistributorStub.API.Services;
 
 namespace UKHO.D365CallbackDistributorStub.API
 {
@@ -26,6 +27,7 @@ namespace UKHO.D365CallbackDistributorStub.API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "UKHO.D365CallbackDistributorStub.API", Version = "v1" });
             });
+            services.AddScoped<CallbackService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
