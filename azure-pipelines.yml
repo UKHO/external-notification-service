@@ -305,7 +305,7 @@ stages:
           - group: "ENS-Dev-Variables"
           - name:  "D365CallbackConfiguration.ClientId"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-CLIENT-ID)
-          - name:  "D365CallbackConfiguration.ClientSercet"
+          - name:  "D365CallbackConfiguration.ClientSecret"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-VALUE)
           - name: "D365CallbackConfiguration.TenantId"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-TENANT-ID)
