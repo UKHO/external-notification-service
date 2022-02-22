@@ -71,7 +71,7 @@ namespace UKHO.ExternalNotificationService.API
             services.AddScoped<IAzureBlobStorageHelper, AzureBlobStorageHelper>();
             services.AddScoped<IAzureWebJobHealthCheckService, AzureWebJobHealthCheckService>();
             services.AddScoped<IAzureWebJobHelper, AzureWebJobHelper>();
-            services.AddSingleton<IWebJobAccessKeyProvider>(s => new WebJobAccessKeyProvider(_configuration));
+            services.AddSingleton<IWebJobAccessKeyProvider>(_ => new WebJobAccessKeyProvider(_configuration));
             services.AddSingleton<INotificationRepository, NotificationRepository>();
 
             services.AddHealthChecks()

@@ -13,7 +13,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         private IWebJobAccessKeyProvider _fakeWebJobAccessKeyProvider;
         private IWebHostEnvironment _fakeWebHostEnvironment;
         private IAzureWebJobHelper _fakeAzureWebJobHelper;
-        private AzureWebJobHealthCheckService _azureWebJobHealthCheckService;
+        private IAzureWebJobHealthCheckService _azureWebJobHealthCheckService;
 
         [SetUp]
         public void Setup()

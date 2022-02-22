@@ -18,7 +18,7 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
 
         public string GetWebJobsAccessKey(string keyName)
         {
-            if (_webJobsAccessKey.TryGetValue(keyName, out var accessKey))
+            if (_webJobsAccessKey.TryGetValue(keyName, out string accessKey))
             {
                 return accessKey;
             }

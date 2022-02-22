@@ -15,7 +15,7 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
     [ExcludeFromCodeCoverage]
     public class AzureWebJobHelper : IAzureWebJobHelper
     {
-        static HttpClient httpClient = new();
+        static readonly HttpClient s_httpClient = new();
         private readonly IWebHostEnvironment _webHostEnvironment;
 
         public AzureWebJobHelper(IWebHostEnvironment webHostEnvironment)
@@ -27,22 +27,21 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
         {
             try
             {
-                string webJobDetail, webJobStatus = string.Empty;
 
                 using HttpRequestMessage httpRequestMessage = new(HttpMethod.Get, webJob.WebJobUri);
-                httpClient.DefaultRequestHeaders.Accept.Clear();
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", webJob.UserPassword);
+                s_httpClient.DefaultRequestHeaders.Accept.Clear();
+                s_httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                s_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", webJob.UserPassword);
 
-                HttpResponseMessage response = await httpClient.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseHeadersRead, CancellationToken.None);
+                HttpResponseMessage response = await s_httpClient.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseHeadersRead, CancellationToken.None);
 
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     dynamic webJobDetails = JsonConvert.DeserializeObject<dynamic>(await response.Content.ReadAsStringAsync());
-                    webJobStatus = webJobDetails["status"];
+                    string webJobStatus = webJobDetails["status"];
                     if (webJobStatus != "Running")
                     {
-                        webJobDetail = $"Webjob ens-{_webHostEnvironment.EnvironmentName} status is {webJobStatus}";
+                        string webJobDetail = $"Webjob ens-{_webHostEnvironment.EnvironmentName} status is {webJobStatus}";
                         return HealthCheckResult.Unhealthy("Azure webjob is unhealthy", new Exception(webJobDetail));
                     }
                 }
