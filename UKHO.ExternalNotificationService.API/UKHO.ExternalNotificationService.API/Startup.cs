@@ -1,3 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Reflection;
+using System.Security.Claims;
 using Azure.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -10,12 +16,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Reflection;
-using System.Security.Claims;
 using UKHO.ExternalNotificationService.API.Filters;
 using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.API.Validation;
@@ -42,14 +42,14 @@ namespace UKHO.ExternalNotificationService.API
         {
             services.AddControllers().AddNewtonsoftJson();
 
-            var azureADConfiguration = new AzureADConfiguration();
-            _configuration.Bind("AzureADConfiguration", azureADConfiguration);
+            var ensAuthorizationConfiguration = new AzureADConfiguration();
+            _configuration.Bind("EnsAuthorizationConfiguration", ensAuthorizationConfiguration);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer("AzureAD", options =>
                     {
-                        options.Audience = azureADConfiguration.ClientId;
-                        options.Authority = $"{azureADConfiguration.MicrosoftOnlineLoginUrl}{azureADConfiguration.TenantId}";
+                        options.Audience = ensAuthorizationConfiguration.EnsClientId;
+                        options.Authority = $"{ensAuthorizationConfiguration.MicrosoftOnlineLoginUrl}{ensAuthorizationConfiguration.TenantId}";
                     });
 
             services.AddAuthorization(options =>

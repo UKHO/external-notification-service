@@ -7,6 +7,6 @@ namespace UKHO.ExternalNotificationService.Common.Configuration
     {
         public string MicrosoftOnlineLoginUrl { get; set; }
         public string TenantId { get; set; }
-        public string ClientId { get; set; }
+        public string EnsClientId { get; set; }
     }
 }
