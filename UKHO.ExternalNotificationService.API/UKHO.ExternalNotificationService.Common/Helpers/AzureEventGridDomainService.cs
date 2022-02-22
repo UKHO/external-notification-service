@@ -5,6 +5,7 @@ using Microsoft.Azure.Management.EventGrid.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Rest;
+using Newtonsoft.Json;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,6 +37,8 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             EventGridManagementClient eventGridMgmtClient = await GetEventGridClient(_eventGridDomainConfig.SubscriptionId, cancellationToken);           
             DomainTopic topic = await GetDomainTopic(eventGridMgmtClient, subscriptionRequestMessage.NotificationTypeTopicName, cancellationToken);
             string eventSubscriptionScope = topic.Id;
+
+            _logger.LogInformation(EventIds.LogRequest.ToEventId(), JsonConvert.SerializeObject(_subscriptionStorageConfiguration));
 
             string deadLetterDestinationResourceId = $"/subscriptions/{_eventGridDomainConfig.SubscriptionId}/resourceGroups/{_eventGridDomainConfig.ResourceGroup}/providers/Microsoft.Storage/storageAccounts/{_subscriptionStorageConfiguration.StorageAccountName}";
 
