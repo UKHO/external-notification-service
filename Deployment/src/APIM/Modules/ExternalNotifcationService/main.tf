@@ -76,7 +76,7 @@ resource "azurerm_api_management_product_api" "ees_product_api_mapping" {
   product_id          = azurerm_api_management_product.ees_product.product_id
 }
 
-# d365 product-Group mapping
+# D365 product-Group mapping
 resource "azurerm_api_management_product_group" "d365_product_group_mappping" {
   resource_group_name = var.resource_group_name
   api_management_name = data.azurerm_api_management.apim_instance.name
@@ -106,7 +106,7 @@ resource "azurerm_api_management_product_policy" "d365_product_policy" {
       <quota calls="${var.d365_product_daily_quota_limit}" renewal-period="86400" />
 
       <!-- Send request to generate-token url with required values -->
-      <send-request mode="new" response-variable-name="client_credentials_token" timeout="60" ignore-error="true">            
+      <send-request mode="new" response-variable-name="ens_token_response" timeout="60" ignore-error="true">            
           <set-url>https://login.microsoftonline.com/${var.client_credentials_tenant_id}/oauth2/v2.0/token</set-url>
           <set-method>POST</set-method>
           <set-header name="Content-Type" exists-action="override">
@@ -118,12 +118,12 @@ resource "azurerm_api_management_product_policy" "d365_product_policy" {
           </set-body>
       </send-request>
       <choose>
-        <when condition="@(((IResponse)context.Variables["client_credentials_token"]).StatusCode == 200)">
+        <when condition="@(((IResponse)context.Variables["ens_token_response"]).StatusCode == 200)">
            <!-- Retrieve access_token and set Authorization header -->
            <set-header name="Authorization" exists-action="override">
                   <value>@{
-                      var body = ((IResponse)context.Variables["client_credentials_token"]).Body.As<JObject>();
-                      var access_token = body["access_token"];
+                      var responseBody = ((IResponse)context.Variables["ens_token_response"]).Body.As<JObject>();
+                      var access_token = responseBody["access_token"];
                       return "Bearer "+ access_token.ToString();
                     }                
                   </value>
@@ -132,19 +132,19 @@ resource "azurerm_api_management_product_policy" "d365_product_policy" {
         <otherwise>
             <!-- Retrieve error details and send internal server response  -->
             <set-variable name="errorSource" value="@{ 
-                return ((IResponse)context.Variables["client_credentials_token"]).Body.As<JObject>(true)["error"].ToString();
+                return ((IResponse)context.Variables["ens_token_response"]).Body.As<JObject>(true)["error"].ToString();
                 }" />
             <set-variable name="rawErrorDescription" value="@{ 
-                return ((IResponse)context.Variables["client_credentials_token"]).Body.As<JObject>()["error_description"].ToString();
+                return ((IResponse)context.Variables["ens_token_response"]).Body.As<JObject>()["error_description"].ToString();
                 }" />
             <set-variable name="errorDescription" value="@{ 
                     return ((string)context.Variables["rawErrorDescription"]).Substring(0, ((string)context.Variables["rawErrorDescription"]).IndexOf("\r"));
                 }" />
             <set-variable name="tokenResponseStatusCode" value="@{ 
-                return ((IResponse)context.Variables.GetValueOrDefault<IResponse>("client_credentials_token")).StatusCode;
+                return ((IResponse)context.Variables.GetValueOrDefault<IResponse>("ens_token_response")).StatusCode;
                 }" />
             <set-variable name="tokenResponseStatusReason" value="@{ 
-                return ((IResponse)context.Variables.GetValueOrDefault<IResponse>("client_credentials_token")).StatusReason;
+                return ((IResponse)context.Variables.GetValueOrDefault<IResponse>("ens_token_response")).StatusReason;
                 }" />
             
             <return-response>
@@ -153,7 +153,6 @@ resource "azurerm_api_management_product_policy" "d365_product_policy" {
                     <value>application/json</value>
                 </set-header>
                 <set-body template="liquid">{
-                        "correlationId": "{{context.Request.Headers["X-Correlation-ID"]}}",
                         "errors": [
                                     {
                                         "Source": "Oauth2 token"
