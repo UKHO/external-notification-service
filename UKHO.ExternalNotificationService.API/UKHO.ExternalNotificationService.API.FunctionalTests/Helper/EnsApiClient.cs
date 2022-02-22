@@ -22,45 +22,49 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         /// Post Subscription request
         /// </summary>
         /// <param name="d365Payload"></param>
-        /// <param name="headerRequest">headerRequest, pass NULL to skip request header</param>
+        /// <param name="accessToken">Access Token, pass NULL to skip auth header</param>
         /// <returns></returns>
-        public async Task<HttpResponseMessage> PostEnsApiSubscriptionAsync([FromBody] D365Payload d365Payload, string headerRequest = null)
+        public async Task<HttpResponseMessage> PostEnsApiSubscriptionAsync([FromBody] D365Payload d365Payload, string accessToken = null)
         {
             string uri = $"{_apiHost}/api/subscription";
             string payloadJson = JsonConvert.SerializeObject(d365Payload);
             using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri)
             {
                 Content = new StringContent(payloadJson, Encoding.UTF8, "application/json")
-            };
-            if (headerRequest != null)
+            };           
+            if (accessToken != null)
             {
-                httpRequestMessage.Headers.Add(headerRequest, string.Empty);
+                httpRequestMessage.SetBearerToken(accessToken);
             }
             return await s_httpClient.SendAsync(httpRequestMessage);
         }
-        public async Task<HttpResponseMessage> OptionEnsApiSubscriptionAsync(string headerRequest = null, string headerRequestValue = null)
+        public async Task<HttpResponseMessage> OptionEnsApiSubscriptionAsync(string headerRequest = null, string headerRequestValue = null, string accessToken = null)
         {
-            string uri = $"{_apiHost}/webhook/newEventspublished";
-
-            // string payloadJson = JsonConvert.SerializeObject(d365Payload);
-
-            using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Options, uri);
-            // httpRequestMessage.Headers.Add("WebHook-Request-Origin", "eventemitter.example.com");
+            string uri = $"{_apiHost}/api/webhook";       
+            using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Options, uri);           
             if (headerRequest != null)
             {
                 httpRequestMessage.Headers.Add(headerRequest, headerRequestValue);
             }
+            if(accessToken!=null)
+            {
+                httpRequestMessage.SetBearerToken(accessToken);
+            }
             return await s_httpClient.SendAsync(httpRequestMessage);
         }
 
-        public async Task<HttpResponseMessage> PostEnsWebookNewEventPublishedAsync([FromBody] JObject request)
+        public async Task<HttpResponseMessage> PostEnsWebookNewEventPublishedAsync([FromBody] JObject request, string accessToken = null)
         {
-            string uri = $"{_apiHost}/webhook/newEventspublished";
+            string uri = $"{_apiHost}/api/webhook";
             string payloadJson = JsonConvert.SerializeObject(request);
             using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri)
             {
                 Content = new StringContent(payloadJson, Encoding.UTF8, "application/json")
             };
+            if (accessToken != null)
+            {
+                httpRequestMessage.SetBearerToken(accessToken);
+            }
 
             return await s_httpClient.SendAsync(httpRequestMessage);
         }
