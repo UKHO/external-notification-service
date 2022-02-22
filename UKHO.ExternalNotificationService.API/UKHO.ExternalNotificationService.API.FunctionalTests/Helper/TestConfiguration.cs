@@ -13,9 +13,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         public int WaitingTimeForQueueInSeconds { get; set; }
         public string MicrosoftOnlineLoginUrl { get; set; }
         public string TenantId { get; set; }
-        public string EnsClientId { get; set; }
-        public string EnsApimClientId { get; set; }
-        public string EnsClientSecret { get; set; }
+        public string ClientId { get; set; }
+        public string D365ClientId { get; set; }
+        public string D365Secret { get; set; }
 
         public TestConfiguration()
         {
@@ -29,11 +29,11 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             EnsStorageConnectionString = ConfigurationRoot.GetSection("EnsStorageConnectionString").Value;
             EnsStorageQueueName = ConfigurationRoot.GetSection("EnsStorageQueueName").Value;
             WaitingTimeForQueueInSeconds = int.Parse(ConfigurationRoot.GetSection("WaitingTimeForQueueInSeconds").Value);
-            MicrosoftOnlineLoginUrl = ConfigurationRoot.GetSection("EnsAuthorizationConfiguration:MicrosoftOnlineLoginUrl").Value;
-            TenantId = ConfigurationRoot.GetSection("EnsAuthorizationConfiguration:TenantId").Value;
-            EnsClientId = ConfigurationRoot.GetSection("EnsAuthorizationConfiguration:EnsClientId").Value;
-            EnsApimClientId = ConfigurationRoot.GetSection("EnsAuthorizationConfiguration:EnsApimClientId").Value;
-            EnsClientSecret = ConfigurationRoot.GetSection("EnsAuthorizationConfiguration:EnsClientSecret").Value;
+            MicrosoftOnlineLoginUrl = ConfigurationRoot.GetSection("EnsAuthConfiguration:MicrosoftOnlineLoginUrl").Value;
+            TenantId = ConfigurationRoot.GetSection("EnsAuthConfiguration:TenantId").Value;
+            ClientId = ConfigurationRoot.GetSection("EnsAuthConfiguration:ClientId").Value;
+            D365ClientId = ConfigurationRoot.GetSection("EnsAuthConfiguration:D365ClientId").Value;
+            D365Secret = ConfigurationRoot.GetSection("EnsAuthConfiguration:D365Secret").Value;
         }
     }
 }
