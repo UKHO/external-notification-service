@@ -348,7 +348,7 @@ stages:
             displayName: "Publish Mock terraform Artifacts"
             inputs:
               PathtoPublish: '$(Build.SourcesDirectory)\StubApiDeployment'
-              ArtifactName: Stubapiterraformartifact              
+              ArtifactName: stubapiterraformartifact              
 
   - stage: Devdeploy
     displayName: "Devdeploy (inc terraform, webapp deploy)"
