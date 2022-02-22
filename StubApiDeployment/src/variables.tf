@@ -14,7 +14,7 @@ variable "ens_api_asp" {
 
 locals {
   env_name           = lower(terraform.workspace)
-  ens_api_rg         = "${ens_api_rg}"
+  ens_api_rg         = "var.ens_api_rg"
   service_name       = "ens"
   web_app_name       = "${local.service_name}-${local.env_name}-stub-webapp"
   tags = {
