@@ -14,6 +14,7 @@ variable "ens_api_asp" {
 
 locals {
   env_name           = lower(terraform.workspace)
+  ens_api_rg         = "${ens_api_rg}"
   service_name       = "ens"
   web_app_name       = "${local.service_name}-${local.env_name}-stub-webapp"
   tags = {
@@ -30,17 +31,9 @@ locals {
 variable "app_service_sku" {
   type = map(any)
   default = {
-    "dev"    = {
-	    tier = "PremiumV2"
-	    size = "P1v2"
-        }
-    "qa"     = {
+    "qc"     = {
 	    tier = "PremiumV3"
 	    size = "P1v3"
-        }
-    "live"   = {
-	    tier = "PremiumV3"
-	    size = "P1v3"
-        }
+    }
   }
 }
