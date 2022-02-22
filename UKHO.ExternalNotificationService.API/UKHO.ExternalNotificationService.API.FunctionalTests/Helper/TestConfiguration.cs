@@ -29,10 +29,10 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             EnsStorageConnectionString = ConfigurationRoot.GetSection("EnsStorageConnectionString").Value;
             EnsStorageQueueName = ConfigurationRoot.GetSection("EnsStorageQueueName").Value;
             WaitingTimeForQueueInSeconds = int.Parse(ConfigurationRoot.GetSection("WaitingTimeForQueueInSeconds").Value);
-            MicrosoftOnlineLoginUrl = ConfigurationRoot.GetSection("EnsAuthConfiguration:MicrosoftOnlineLoginUrl").Value;
-            D365TenantId = ConfigurationRoot.GetSection("EnsAuthConfiguration:TenantId").Value;
+            MicrosoftOnlineLoginUrl = ConfigurationRoot.GetSection("D365AuthConfiguration:MicrosoftOnlineLoginUrl").Value;
+            D365TenantId = ConfigurationRoot.GetSection("D365AuthConfiguration:TenantId").Value;
             D365ClientId = ConfigurationRoot.GetSection("D365AuthConfiguration:ClientId").Value;
-            D365Secret = ConfigurationRoot.GetSection("D365AuthConfiguration:Secret").Value;
+            D365Secret = ConfigurationRoot.GetSection("D365AuthConfiguration:ClientSecret").Value;
             ClientId = ConfigurationRoot.GetSection("EnsAuthConfiguration:ClientId").Value;
         }
     }
