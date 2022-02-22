@@ -364,6 +364,12 @@ stages:
         variables:
           - group: "ENS-QA-TF-Variables"
           - group: "ENS-QA-Variables"
+          - name:  "D365CallbackConfiguration.ClientId"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-CLIENT-ID)
+          - name:  "D365CallbackConfiguration.ClientSercet"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-VALUE)
+          - name: "D365CallbackConfiguration.TenantId"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-TENANT-ID)
         strategy:
           runOnce:
             deploy:
@@ -419,6 +425,12 @@ stages:
         variables:
           - group: "ENS-Live-TF-Variables"
           - group: "ENS-Live-Variables"
+          - name:  "D365CallbackConfiguration.ClientId"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-CLIENT-ID)
+          - name:  "D365CallbackConfiguration.ClientSercet"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-VALUE)
+          - name: "D365CallbackConfiguration.TenantId"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-TENANT-ID)
         strategy:
           runOnce:
             deploy:
