@@ -3,12 +3,9 @@ variable "location" {
   default = "uksouth"
 }
 
-variable "resource_group_name" {
-  type    = string
-}
-
 variable "ens_api_rg" {
   type    = string
+  default = "ens-dev-rg"
 }
 
 variable "ens_api_asp" {
