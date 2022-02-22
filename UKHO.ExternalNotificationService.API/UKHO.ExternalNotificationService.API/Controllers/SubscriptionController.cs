@@ -88,6 +88,5 @@ namespace UKHO.ExternalNotificationService.API.Controllers
 
             return GetEnsResponse(new ExternalNotificationServiceResponse { HttpStatusCode = HttpStatusCode.Accepted });
         }
-
     }
 }
