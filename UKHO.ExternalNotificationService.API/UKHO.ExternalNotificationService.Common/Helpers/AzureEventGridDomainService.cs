@@ -50,7 +50,7 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             return new(credential)
             {
                 SubscriptionId = subscriptionId
-            };            
+            };
         }
 
         protected virtual async Task<DomainTopic> GetDomainTopic(EventGridManagementClient eventGridMgmtClient, string notificationTypeTopicName, CancellationToken cancellationToken)

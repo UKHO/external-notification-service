@@ -58,7 +58,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                 try
                 {
                     await _subscriptionServiceData.CreateOrUpdateSubscription(subscriptionMessage, CancellationToken.None);
-                    subscriptionRequestResult.ProvisioningState = "Succeeded";      
+                    subscriptionRequestResult.ProvisioningState = "Succeeded";
                 }
                 catch (Exception e)
                 {
