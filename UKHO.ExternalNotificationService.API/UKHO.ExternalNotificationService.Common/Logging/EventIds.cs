@@ -90,9 +90,9 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         CreateSubscriptionRequestError = 900021,
         /// <summary>
-        /// 900022 -  Request for enterprise event service webhook post endpoint is started.
+        /// 900022 -  Request for external notification service webhook post endpoint is started.
         /// </summary>
-        EESWebhookRequestStart = 900022
+        ENSWebhookRequestStart = 900022
     }
 
     public static class EventIdExtensions
