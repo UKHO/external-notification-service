@@ -18,7 +18,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             IConfidentialClientApplication confidentialClientApplication = ConfidentialClientApplicationBuilder
              .Create(d365ClientId)
              .WithClientSecret(d365Secret)
-            .WithAuthority($"{s_testConnfig.MicrosoftOnlineLoginUrl}{s_testConnfig.TenantId}/oauth2/token")
+            .WithAuthority($"{s_testConnfig.MicrosoftOnlineLoginUrl}{s_testConnfig.D365TenantId}/oauth2/token")
             .Build();
 
             AuthenticationResult result =await confidentialClientApplication.AcquireTokenForClient(
