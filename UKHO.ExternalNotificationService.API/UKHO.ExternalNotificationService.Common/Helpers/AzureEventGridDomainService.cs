@@ -48,7 +48,7 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
                     EndpointUrl = subscriptionRequestMessage.WebhookUrl
                 },
                 // The below are all optional settings
-                EventDeliverySchema = EventDeliverySchema.EventGridSchema,
+                EventDeliverySchema = EventDeliverySchema.CloudEventSchemaV10,
                 /* Retry policy decides when an event can be marked as expired. 
                    The default retry policy keeps the event alive for 24 hrs (=1440 mins or 30 retries with exponential backoffs)
                    An event is marked as expired once any of the retry policy limits are exceeded. 
