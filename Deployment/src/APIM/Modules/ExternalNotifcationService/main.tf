@@ -76,6 +76,22 @@ resource "azurerm_api_management_product_api" "ees_product_api_mapping" {
   product_id          = azurerm_api_management_product.ees_product.product_id
 }
 
+# d365 product-Group mapping
+resource "azurerm_api_management_product_group" "d365_product_group_mappping" {
+  resource_group_name = var.resource_group_name
+  api_management_name = data.azurerm_api_management.apim_instance.name
+  product_id          = azurerm_api_management_product.d365_product.product_id
+  group_name          = azurerm_api_management_group.ens_management_group.name
+}
+
+# EES product-Group mapping
+resource "azurerm_api_management_product_group" "ees_product_group_mappping" {
+  resource_group_name = var.resource_group_name
+  api_management_name = data.azurerm_api_management.apim_instance.name
+  product_id          = azurerm_api_management_product.ees_product.product_id
+  group_name          = azurerm_api_management_group.ens_management_group.name
+}
+
 #D365 Product policy
 resource "azurerm_api_management_product_policy" "d365_product_policy" {
   resource_group_name = var.resource_group_name
