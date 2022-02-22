@@ -1,17 +1,13 @@
-data "azurerm_resource_group" "rg" {
-  name = var.resource_group_name
-}
-
 data "azurerm_app_service_plan" "app_service_plan" {
   name                = "var.ens_api_asp"
-  resource_group_name = data.azurerm_resource_group.rg.name
+  resource_group_name = var.resource_group_name
 }
 
 resource "azurerm_app_service" "stub_webapp_service" {
   name                = var.name
-  location            = data.azurerm_resource_group.rg.location
-  resource_group_name = data.azurerm_resource_group.rg.name
-  app_service_plan_id = azurerm_app_service_plan.app_service_plan.id
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  app_service_plan_id = data.azurerm_app_service_plan.app_service_plan.id
   tags                = var.tags
 
   site_config {
