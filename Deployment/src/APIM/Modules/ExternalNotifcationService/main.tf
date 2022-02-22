@@ -5,22 +5,22 @@
 
 # Create apim group
 resource "azurerm_api_management_group" "ens_management_group" {
-  resource_group_name = var.resource_group_name
+  resource_group_name = data.azurerm_api_management.apim_instance.resource_group_name
   api_management_name = data.azurerm_api_management.apim_instance.name
-  name                = "ens-group-${local.formatted_env_suffix}"
+  name                = "ens-group-${local.formatted_env}"
   display_name        = "External Notification Service Group ${var.env_suffix}"
   description         = "Management group for users with access to the ${var.env} External Notifcation Service."
 }
 
 # Create ENS API
 resource "azurerm_api_management_api" "ens_api" {
-  resource_group_name = var.resource_group_name
+  resource_group_name = data.azurerm_api_management.apim_instance.resource_group_name
   api_management_name = data.azurerm_api_management.apim_instance.name 
-  name                = "ens-api-${local.formatted_env_suffix}"
+  name                = "ens-api-${local.formatted_env}"
   display_name        = "External Notification Service API ${var.env_suffix}"
   description         = "The External Notification Service API provides the ability to subscribe and deliver notifications."
   revision            = "1"
-  path                = "ens-api-${local.formatted_env_suffix}"
+  path                = "ens-api-${local.formatted_env}"
   protocols           = ["https"]
   service_url         = var.apim_api_service_url
 
@@ -37,9 +37,9 @@ resource "azurerm_api_management_api" "ens_api" {
 
 # Create D365 Product
 resource "azurerm_api_management_product" "d365_product" {
-  resource_group_name   = var.resource_group_name
+  resource_group_name   = data.azurerm_api_management.apim_instance.resource_group_name
   api_management_name   = data.azurerm_api_management.apim_instance.name
-  product_id            = "ens-d365-${local.formatted_env_suffix}"
+  product_id            = "ens-d365-${local.formatted_env}"
   display_name          = "External Notification Service for D365 ${var.env_suffix}"
   description           = "The External Notification Service provides the ability to subscribe and deliver notifications and to be used by D365."
   subscription_required = true
@@ -50,9 +50,9 @@ resource "azurerm_api_management_product" "d365_product" {
 
 # Create EES Product
 resource "azurerm_api_management_product" "ees_product" {
-  resource_group_name   = var.resource_group_name
+  resource_group_name   = data.azurerm_api_management.apim_instance.resource_group_name
   api_management_name   = data.azurerm_api_management.apim_instance.name
-  product_id            = "ens-ees-${local.formatted_env_suffix}"
+  product_id            = "ens-ees-${local.formatted_env}"
   display_name          = "External Notification Service for EES ${var.env_suffix}"
   description           = "The External Notification Service provides the ability to subscribe and deliver notifications and to be used by Enterprise Event Service (EES)"
   subscription_required = true
@@ -63,14 +63,14 @@ resource "azurerm_api_management_product" "ees_product" {
 
 # API - Product mappings
 resource "azurerm_api_management_product_api" "d365_product_api_mapping" {
-  resource_group_name = var.resource_group_name
+  resource_group_name = data.azurerm_api_management.apim_instance.resource_group_name
   api_management_name = data.azurerm_api_management.apim_instance.name
   api_name            = azurerm_api_management_api.ens_api.name
   product_id          = azurerm_api_management_product.d365_product.product_id
 }
 
 resource "azurerm_api_management_product_api" "ees_product_api_mapping" {
-  resource_group_name = var.resource_group_name
+  resource_group_name = data.azurerm_api_management.apim_instance.resource_group_name
   api_management_name = data.azurerm_api_management.apim_instance.name
   api_name            = azurerm_api_management_api.ens_api.name
   product_id          = azurerm_api_management_product.ees_product.product_id
@@ -78,7 +78,7 @@ resource "azurerm_api_management_product_api" "ees_product_api_mapping" {
 
 # D365 product-Group mapping
 resource "azurerm_api_management_product_group" "d365_product_group_mappping" {
-  resource_group_name = var.resource_group_name
+  resource_group_name = data.azurerm_api_management.apim_instance.resource_group_name
   api_management_name = data.azurerm_api_management.apim_instance.name
   product_id          = azurerm_api_management_product.d365_product.product_id
   group_name          = azurerm_api_management_group.ens_management_group.name
@@ -86,7 +86,7 @@ resource "azurerm_api_management_product_group" "d365_product_group_mappping" {
 
 # EES product-Group mapping
 resource "azurerm_api_management_product_group" "ees_product_group_mappping" {
-  resource_group_name = var.resource_group_name
+  resource_group_name = data.azurerm_api_management.apim_instance.resource_group_name
   api_management_name = data.azurerm_api_management.apim_instance.name
   product_id          = azurerm_api_management_product.ees_product.product_id
   group_name          = azurerm_api_management_group.ens_management_group.name
@@ -94,7 +94,7 @@ resource "azurerm_api_management_product_group" "ees_product_group_mappping" {
 
 #D365 Product policy
 resource "azurerm_api_management_product_policy" "d365_product_policy" {
-  resource_group_name = var.resource_group_name
+  resource_group_name = data.azurerm_api_management.apim_instance.resource_group_name
   api_management_name = data.azurerm_api_management.apim_instance.name
   product_id          = azurerm_api_management_product.d365_product.product_id
   depends_on          = [azurerm_api_management_product.d365_product, azurerm_api_management_product_api.d365_product_api_mapping]
@@ -155,7 +155,7 @@ resource "azurerm_api_management_product_policy" "d365_product_policy" {
                 <set-body template="liquid">{
                         "errors": [
                                     {
-                                        "Source": "Oauth2 token"
+                                        "Source": "ENS Oauth2 token"
                                         "Description": "Error while generating Oauth2 token for backend ENS service"
                                         "InnerExceptionSource": "{{context.Variables["errorSource"]}}",
                                         "InnerExceptionDescription": "{{context.Variables["errorDescription"]}}"
