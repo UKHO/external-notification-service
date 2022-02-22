@@ -405,6 +405,8 @@ stages:
                     workingDirectory: '$(Build.SourcesDirectory)/functionaltests'
 
   - stage: QCdeploy
+    dependsOn:
+    - PERFORM_DEPENDENCYCHECK_DOTNETBUILD_DOTNETTEST_AND_PUBLISH
     displayName: "QCdeploy (inc terraform, webapp deploy)"
     jobs:
       - deployment: QCDeployApp
@@ -519,6 +521,7 @@ stages:
                     workingDirectory: '$(Build.SourcesDirectory)/functionaltests'
 
   - stage: Livedeploy
+    
     displayName: Livedeploy (inc terraform, webapp deploy)
     condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
