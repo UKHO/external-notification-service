@@ -1,7 +1,5 @@
-﻿
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -14,10 +12,8 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
     {
         private readonly HttpClient _httpClient;
         private readonly IAuthTokenProvider _authTokenProvider;
-        private readonly ILogger<CallbackService> _logger;
-        
-
-        public Uri BaseAddress { get { return _httpClient.BaseAddress; } }
+        private readonly ILogger<CallbackService> _logger;      
+            
 
         public CallbackService(IHttpClientFactory httpClientFactory, IAuthTokenProvider authTokenProvider, ILogger<CallbackService> logger)
         {
@@ -33,14 +29,10 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
 
         public async Task CallbackToD365UsingDataverse(string externalEntityPath, object externalNotificationEntity, string D365CorrelationId, string CorrelationId)
         {
+            string[] subscriptionId = externalEntityPath.Split("s(");
             using (var message = new HttpRequestMessage(HttpMethod.Patch, externalEntityPath))
-            {
-                string[] subscriptionId = externalEntityPath.Split("s(");
-
-                _logger.LogInformation(EventIds.CreateSubscriptionRequestCompleted.ToEventId(),
-                "Before ad authentication call with SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", externalEntityPath, D365CorrelationId, CorrelationId);
-
-                string accessToken = await _authTokenProvider.GetADAccessToken(CorrelationId);
+            {            
+                string accessToken = await _authTokenProvider.GetADAccessToken();
                 message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
                 message.Content = new StringContent(JObject.FromObject(externalNotificationEntity).ToString());
