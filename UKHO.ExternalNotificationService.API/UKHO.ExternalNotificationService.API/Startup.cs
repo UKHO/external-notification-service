@@ -42,14 +42,14 @@ namespace UKHO.ExternalNotificationService.API
         {
             services.AddControllers().AddNewtonsoftJson();
 
-            var ensAuthorizationConfiguration = new AzureADConfiguration();
-            _configuration.Bind("EnsAuthorizationConfiguration", ensAuthorizationConfiguration);
+            var ensAuthConfiguration = new AzureADConfiguration();
+            _configuration.Bind("EnsAuthConfiguration", ensAuthConfiguration);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer("AzureAD", options =>
                     {
-                        options.Audience = ensAuthorizationConfiguration.EnsClientId;
-                        options.Authority = $"{ensAuthorizationConfiguration.MicrosoftOnlineLoginUrl}{ensAuthorizationConfiguration.TenantId}";
+                        options.Audience = ensAuthConfiguration.ClientId;
+                        options.Authority = $"{ensAuthConfiguration.MicrosoftOnlineLoginUrl}{ensAuthConfiguration.TenantId}";
                     });
 
             services.AddAuthorization(options =>
