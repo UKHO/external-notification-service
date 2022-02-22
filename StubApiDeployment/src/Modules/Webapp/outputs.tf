@@ -1,5 +1,5 @@
-output "webapp_service" {
-  value = azurerm_app_service.webapp_service
+output "webapp_name" {
+  value = azurerm_app_service.webapp_service.name
 }
 
 output "web_app_object_id" {

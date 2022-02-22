@@ -1,11 +1,8 @@
-data "azurerm_resource_group" "rg" {
-  name = var.ens_api_rg
-}
-
 module "webapp_service" {
   source              = "./Modules/Webapp"
   name                = local.web_app_name
-  resource_group_name = azurerm_resource_group.rg.name
+  ens_api_rg          = var.ens_api_rg
+  ens_api_asp         = var.ens_api_asp
   location            = azurerm_resource_group.rg.location
   app_service_sku     = var.app_service_sku[local.env_name]
   app_settings = {

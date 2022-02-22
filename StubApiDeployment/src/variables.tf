@@ -5,12 +5,10 @@ variable "location" {
 
 variable "ens_api_rg" {
   type    = string
-  default = "ens-dev-rg"
 }
 
 variable "ens_api_asp" {
   type    = string
-  default = "ens-dev-webapp-asp"
 }
 
 locals {
