@@ -1,5 +1,5 @@
 data "azurerm_resource_group" "rg" {
-  name = var.ens_api_rg
+  name = var.resource_group_name
 }
 
 data "azurerm_app_service_plan" "app_service_plan" {
