@@ -1,5 +1,5 @@
 data "azurerm_resource_group" "rg" {
-  name = local.ens_api_rg
+  name = var.ens_api_rg
 }
 
 module "webapp_service" {
