@@ -21,24 +21,20 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
     public class SubscriptionServiceJob
     {
         private readonly ISubscriptionServiceData _subscriptionServiceData;
-        private readonly ILogger<SubscriptionServiceJob> _logger;
-        private readonly ILogger<CallbackService> _callbackLogger;
-        private readonly IAuthTokenProvider _authTokenProvider;
-        private readonly IOptions<D365CallbackConfiguration> _D365CallbackConfiguration;
-        private readonly CallbackService _callbackService;
-        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly ILogger<SubscriptionServiceJob> _logger;       
+        
+        private readonly IOptions<D365CallbackConfiguration> _d365CallbackConfiguration;
+        private readonly ICallbackService _callbackService;
+        
 
-        public SubscriptionServiceJob(ISubscriptionServiceData subscriptionServiceData, IAuthTokenProvider authTokenProvider,
-            ILogger<SubscriptionServiceJob> logger, ILogger<CallbackService> callbackLogger ,
-            IOptions<D365CallbackConfiguration> D365CallbackConfiguration, IHttpClientFactory httpClientFactory)
+        public SubscriptionServiceJob(ISubscriptionServiceData subscriptionServiceData,
+            ILogger<SubscriptionServiceJob> logger, IOptions<D365CallbackConfiguration> d365CallbackConfiguration,
+            ICallbackService callbackService)
         {
-            _subscriptionServiceData = subscriptionServiceData;
-            _authTokenProvider = authTokenProvider;
-            _callbackLogger = callbackLogger;
+            _subscriptionServiceData = subscriptionServiceData;           
             _logger = logger;
-            _D365CallbackConfiguration = D365CallbackConfiguration;
-            _httpClientFactory = httpClientFactory;
-            _callbackService = new CallbackService(_httpClientFactory, _authTokenProvider, _callbackLogger);
+            _d365CallbackConfiguration = d365CallbackConfiguration;           
+            _callbackService =  callbackService;
         }
 
         public async Task ProcessQueueMessage([QueueTrigger("%SubscriptionStorageConfiguration:QueueName%")] QueueMessage message)
@@ -52,7 +48,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
             {
                 ExternalNotificationEntity externalNotificationEntity = new()
                 {
-                    ukho_lastresponse = _D365CallbackConfiguration.Value.SucceededStatusCode,
+                    ukho_lastresponse = _d365CallbackConfiguration.Value.SucceededStatusCode,
                     ukho_responsedetails = Convert.ToString(DateTime.UtcNow)
                 };
                 try

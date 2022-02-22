@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using Azure.Identity;
 using Microsoft.Azure.WebJobs.Host;
@@ -8,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Polly;
 using Serilog;
 using Serilog.Events;
 using UKHO.ExternalNotificationService.Common.Configuration;
@@ -36,9 +39,19 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
             }
         }
 
+
         private static HostBuilder BuildHostConfiguration()
         {
 
+            Polly.Retry.AsyncRetryPolicy<HttpResponseMessage> retryPolicy = Policy.Handle<HttpRequestException>
+                (response => response.StatusCode == HttpStatusCode.ServiceUnavailable)
+            .OrResult<HttpResponseMessage>(response => response.StatusCode == HttpStatusCode.BadRequest)            
+            .WaitAndRetryAsync(new[]
+            {
+                TimeSpan.FromSeconds(3),
+                TimeSpan.FromSeconds(5),
+                TimeSpan.FromSeconds(10)
+            });
             HostBuilder hostBuilder = new();
             hostBuilder.ConfigureAppConfiguration((_, builder) =>
             {
@@ -110,6 +123,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                  }
 
              })
+
               .ConfigureServices((_, services) =>
               {
                   services.Configure<SubscriptionStorageConfiguration>(s_configurationBuilder.GetSection("SubscriptionStorageConfiguration"));
@@ -117,16 +131,20 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                   services.Configure<QueuesOptions>(s_configurationBuilder.GetSection("QueuesOptions"));
                   services.Configure<D365CallbackConfiguration>(s_configurationBuilder.GetSection("D365CallbackConfiguration"));
                   services.AddScoped<ISubscriptionServiceData, SubscriptionServiceData>();
-                  services.AddScoped<IAzureEventGridDomainService, AzureEventGridDomainService>();                  
+                  services.AddScoped<IAzureEventGridDomainService, AzureEventGridDomainService>();
                   services.AddScoped<IAuthTokenProvider, AuthTokenProvider>();
                   services.AddScoped<ICallbackService, CallbackService>();
 
-                  services.AddHttpClient("D365DataverseApi", client =>
-                  {
-                      client.BaseAddress = new Uri("https://ukho-updatepreview-sandbox.api.crm4.dynamics.com/api/data/v9.2/");//Request bin-> 
-                      client.Timeout = TimeSpan.FromMinutes(Convert.ToDouble(s_configurationBuilder["D365CallbackConfiguration:TimeOutInMins"]));
-                  });
-                
+
+                  ////////services.AddHttpClient<ICallbackClient, CallbackClient>("D365DataverseApi", client =>
+                  ////////{                     
+                  ////////    client.BaseAddress = new Uri("https://ukho-updatepreview-sandbox.api.crm4.dynamics.com/api/data/v9.2/");//Request bin-> 
+                  ////////    client.Timeout = TimeSpan.FromMinutes(Convert.ToDouble(s_configurationBuilder["D365CallbackConfiguration:TimeOutInMins"]));
+                  ////////})
+                  ////////.AddPolicyHandler(retryPolicy);
+                 
+                  services.AddHttpClient();
+                  services.AddScoped<ICallbackClient, CallbackClient>();
               })
               .ConfigureWebJobs(b =>
               {

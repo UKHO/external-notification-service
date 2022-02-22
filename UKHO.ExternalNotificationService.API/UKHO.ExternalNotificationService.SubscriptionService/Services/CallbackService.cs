@@ -1,7 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Logging;
 using UKHO.ExternalNotificationService.SubscriptionService.Helpers;
@@ -9,47 +12,34 @@ using UKHO.ExternalNotificationService.SubscriptionService.Helpers;
 namespace UKHO.ExternalNotificationService.SubscriptionService.Services
 {
     public class CallbackService : ICallbackService
-    {
-        private readonly HttpClient _httpClient;
+    {       
         private readonly IAuthTokenProvider _authTokenProvider;
-        private readonly ILogger<CallbackService> _logger;      
-            
+        private readonly ILogger<CallbackService> _logger;
+       private readonly ICallbackClient _callbackClient;
 
-        public CallbackService(IHttpClientFactory httpClientFactory, IAuthTokenProvider authTokenProvider, ILogger<CallbackService> logger)
+        public CallbackService(IAuthTokenProvider authTokenProvider, ILogger<CallbackService> logger, ICallbackClient callbackClient)
         {
             _authTokenProvider = authTokenProvider;
-            _logger = logger;            
-
-            _httpClient = httpClientFactory.CreateClient("D365DataverseApi");
-            _httpClient.DefaultRequestHeaders.Add("OData-MaxVersion", "4.0");
-            _httpClient.DefaultRequestHeaders.Add("OData-Version", "4.0");
-            _httpClient.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
+            _logger = logger;
+            _callbackClient = callbackClient;
         }
 
-        public async Task CallbackToD365UsingDataverse(string externalEntityPath, object externalNotificationEntity, string D365CorrelationId, string CorrelationId)
+        public async Task CallbackToD365UsingDataverse(string externalEntityPath, object externalNotificationEntity, string d365CorrelationId, string correlationId)
         {
             string[] subscriptionId = externalEntityPath.Split("s(");
-            using (var message = new HttpRequestMessage(HttpMethod.Patch, externalEntityPath))
-            {            
-                string accessToken = await _authTokenProvider.GetADAccessToken();
-                message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            string accessToken = await _authTokenProvider.GetADAccessToken();
 
-                message.Content = new StringContent(JObject.FromObject(externalNotificationEntity).ToString());
-                message.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-                using (HttpResponseMessage response = await _httpClient.SendAsync(message))
-                {
-                    if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
+            HttpResponseMessage httpResponse = await _callbackClient.GetCallbackD365Client(HttpMethod.Patch, externalEntityPath, accessToken, externalNotificationEntity, CancellationToken.None, correlationId);
+            
+                    if (httpResponse.StatusCode != System.Net.HttpStatusCode.NoContent)
                     {                        
                         _logger.LogError(EventIds.CallbackToD365UsingDataverseError.ToEventId(),
-                    "Callback to D365 using Dataverse failed with statusCode:{StatusCode} and Requesturi:{RequestUri} and SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", response.StatusCode, response.RequestMessage, subscriptionId[1].Remove(subscriptionId[1].Length - 1), D365CorrelationId, CorrelationId);
+                    "Callback to D365 using Dataverse failed with statusCode:{StatusCode} and Requesturi:{RequestUri} and SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", httpResponse.StatusCode, httpResponse.RequestMessage, subscriptionId[1].Remove(subscriptionId[1].Length - 1), d365CorrelationId, correlationId);
 
                         //////throw new Exception(error); //should use HttpRequestException ??
                     }
                     _logger.LogInformation(EventIds.CallbackToD365UsingDataverseError.ToEventId(),
-                    "Callback to D365 using Dataverse success with statusCode:{StatusCode} and Requesturi:{RequestUri} and SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", response.StatusCode, response.RequestMessage, subscriptionId[1].Remove(subscriptionId[1].Length - 1), D365CorrelationId, CorrelationId);
+                    "Callback to D365 using Dataverse success with statusCode:{StatusCode} and Requesturi:{RequestUri} and SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", httpResponse.StatusCode, httpResponse.RequestMessage, subscriptionId[1].Remove(subscriptionId[1].Length - 1), d365CorrelationId, correlationId);
                 }
             }
         }
-    }
-}
