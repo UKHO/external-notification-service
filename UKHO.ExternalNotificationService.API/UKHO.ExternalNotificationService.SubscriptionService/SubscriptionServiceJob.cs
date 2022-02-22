@@ -52,8 +52,8 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
             {
                 ExternalNotificationEntity externalNotificationEntity = new()
                 {
-                    LastResponseStatusCode = _D365CallbackConfiguration.Value.SucceededStatusCode,
-                    ResponseDetails = Convert.ToString(DateTime.UtcNow)
+                    ukho_lastresponse = _D365CallbackConfiguration.Value.SucceededStatusCode,
+                    ukho_responsedetails = Convert.ToString(DateTime.UtcNow)
                 };
                 try
                 {
