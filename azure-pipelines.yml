@@ -270,7 +270,7 @@ stages:
             inputs:
               SourceFolder: '$(Build.SourcesDirectory)'
               Contents: 'external-notification-service.openApi.yaml'
-              TargetFolder: '$(Build.SourcesDirectory)\Deployment\src\APIM
+              TargetFolder: '$(Build.SourcesDirectory)\Deployment\src\APIM'
 
           - task: PublishBuildArtifacts@1
             displayName: "Publish terraform Artifacts"
