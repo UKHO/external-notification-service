@@ -30,7 +30,7 @@ variable "d365_product_daily_quota_limit" {
   default = 25 
 }
 
-variable "client_credentials_tenant_id" {
+variable "ad_tenant_id" {
   type    = string
 }
 

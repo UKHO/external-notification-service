@@ -117,7 +117,7 @@ resource "azurerm_api_management_product_policy" "d365_product_policy" {
 
       <!-- Send request to generate-token url with required values -->
       <send-request mode="new" response-variable-name="ens_token_response" timeout="60" ignore-error="true">            
-          <set-url>https://login.microsoftonline.com/${var.client_credentials_tenant_id}/oauth2/v2.0/token</set-url>
+          <set-url>https://login.microsoftonline.com/${var.ad_tenant_id}/oauth2/v2.0/token</set-url>
           <set-method>POST</set-method>
           <set-header name="Content-Type" exists-action="override">
               <value>application/x-www-form-urlencoded</value>
@@ -184,5 +184,29 @@ resource "azurerm_api_management_product_policy" "d365_product_policy" {
 	XML
 }
 
+#EES Product policy
+resource "azurerm_api_management_product_policy" "ees_product_policy" {
+  resource_group_name = var.resource_group_name
+  api_management_name = data.azurerm_api_management.apim_instance.name
+  product_id          = azurerm_api_management_product.ees_product.product_id
+  depends_on          = [azurerm_api_management_product.d365_product, azurerm_api_management_product_api.ees_product_api_mapping]
+
+  xml_content = <<XML
+	<policies>
+	  <inbound>
+      <base />
+
+      <!-- Validate AD token -->
+      <validate-jwt header-name="Authorization" failed-validation-httpcode="401" failed-validation-error-message="Access token is missing or invalid.">
+        <openid-config url="https://login.microsoftonline.com/${var.ad_tenant_id}/.well-known/openid-configuration" />
+        <audiences>
+          <audience>${var.client_credentials_client_id}</audience>
+        </audiences>      
+      </validate-jwt>      
+
+	  </inbound>
+	</policies>
+	XML
+}
 
 
