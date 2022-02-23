@@ -303,11 +303,11 @@ stages:
         variables:
           - group: "ENS-Dev-TF-Variables"
           - group: "ENS-Dev-Variables"
-          - name:  "D365CallbackConfiguration.ClientId"
+          - name:  "EnsAuthconfiguration.ClientId"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-CLIENT-ID)
-          - name:  "D365CallbackConfiguration.ClientSecret"
+          - name:  "EnsAuthconfiguration.ClientSecret"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-VALUE)
-          - name: "D365CallbackConfiguration.TenantId"
+          - name: "EnsAuthconfiguration.TenantId"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-TENANT-ID)
         strategy:
           runOnce:
@@ -364,11 +364,11 @@ stages:
         variables:
           - group: "ENS-QA-TF-Variables"
           - group: "ENS-QA-Variables"
-          - name:  "D365CallbackConfiguration.ClientId"
+          - name:  "EnsAuthconfiguration.ClientId"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-CLIENT-ID)
-          - name:  "D365CallbackConfiguration.ClientSercet"
+          - name:  "EnsAuthconfiguration.ClientSecret"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-VALUE)
-          - name: "D365CallbackConfiguration.TenantId"
+          - name: "EnsAuthconfiguration.TenantId"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-TENANT-ID)
         strategy:
           runOnce:
@@ -425,11 +425,11 @@ stages:
         variables:
           - group: "ENS-Live-TF-Variables"
           - group: "ENS-Live-Variables"
-          - name:  "D365CallbackConfiguration.ClientId"
+          - name:  "EnsAuthconfiguration.ClientId"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-CLIENT-ID)
-          - name:  "D365CallbackConfiguration.ClientSercet"
+          - name:  "EnsAuthconfiguration.ClientSecret"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-VALUE)
-          - name: "D365CallbackConfiguration.TenantId"
+          - name: "EnsAuthconfiguration.TenantId"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-TENANT-ID)
         strategy:
           runOnce:
