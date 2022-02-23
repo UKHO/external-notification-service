@@ -1,11 +1,13 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.Identity.Client;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.SubscriptionService.Configuration;
 
 namespace UKHO.ExternalNotificationService.SubscriptionService.Helpers
 {
+    [ExcludeFromCodeCoverage] ////Excluded from code coverage as it has ADD interaction
     public class AuthTokenProvider : IAuthTokenProvider
     {
         public readonly IOptions<D365CallbackConfiguration> _D365CallbackConfiguration;       

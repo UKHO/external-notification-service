@@ -42,7 +42,6 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
 
         private static HostBuilder BuildHostConfiguration()
         {
-
             Polly.Retry.AsyncRetryPolicy<HttpResponseMessage> retryPolicy = Policy.Handle<HttpRequestException>
                 (response => response.StatusCode == HttpStatusCode.ServiceUnavailable)
             .OrResult<HttpResponseMessage>(response => response.StatusCode == HttpStatusCode.BadRequest)            
@@ -133,17 +132,9 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                   services.AddScoped<ISubscriptionServiceData, SubscriptionServiceData>();
                   services.AddScoped<IAzureEventGridDomainService, AzureEventGridDomainService>();
                   services.AddScoped<IAuthTokenProvider, AuthTokenProvider>();
-                  services.AddScoped<ICallbackService, CallbackService>();
-
-
-                  ////////services.AddHttpClient<ICallbackClient, CallbackClient>("D365DataverseApi", client =>
-                  ////////{                     
-                  ////////    client.BaseAddress = new Uri("https://ukho-updatepreview-sandbox.api.crm4.dynamics.com/api/data/v9.2/");//Request bin-> 
-                  ////////    client.Timeout = TimeSpan.FromMinutes(Convert.ToDouble(s_configurationBuilder["D365CallbackConfiguration:TimeOutInMins"]));
-                  ////////})
-                  ////////.AddPolicyHandler(retryPolicy);
+                  services.AddScoped<ICallbackService, CallbackService>();               
                  
-                  services.AddHttpClient();
+                  services.AddHttpClient("D365DataverseApi").AddPolicyHandler(retryPolicy);
                   services.AddScoped<ICallbackClient, CallbackClient>();
               })
               .ConfigureWebJobs(b =>

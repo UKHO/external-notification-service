@@ -1,18 +1,16 @@
-﻿using Azure.Storage.Queues.Models;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using System.Threading.Tasks;
+using Azure.Storage.Queues.Models;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Logging;
 using UKHO.ExternalNotificationService.Common.Models.AzureEventGridDomain;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 using UKHO.ExternalNotificationService.SubscriptionService.Configuration;
 using UKHO.ExternalNotificationService.SubscriptionService.D365Callback;
-using UKHO.ExternalNotificationService.SubscriptionService.Helpers;
 using UKHO.ExternalNotificationService.SubscriptionService.Services;
 
 namespace UKHO.ExternalNotificationService.SubscriptionService

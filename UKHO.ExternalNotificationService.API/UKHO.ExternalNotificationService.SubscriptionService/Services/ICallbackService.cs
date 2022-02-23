@@ -1,10 +1,11 @@
 ﻿
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace UKHO.ExternalNotificationService.SubscriptionService.Services
 {
     public interface ICallbackService
     {
-        Task CallbackToD365UsingDataverse(string externalEntityPath, object externalNotificationEntity, string D365CorrelationId, string CorrelationId);
+        Task<HttpResponseMessage> CallbackToD365UsingDataverse(string externalEntityPath, object externalNotificationEntity, string d365CorrelationId, string correlationId);
     }
 }

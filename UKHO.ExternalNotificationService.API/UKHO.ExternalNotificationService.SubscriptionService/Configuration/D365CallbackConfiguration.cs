@@ -16,7 +16,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Configuration
 
         public string D365ApiUri { get; set; }
 
-        public string SucceededStatusCode { get; set; }
+        public int SucceededStatusCode { get; set; }
 
         public int TimeOutInMins { get; set; }
     }
