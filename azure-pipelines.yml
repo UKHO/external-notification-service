@@ -303,12 +303,14 @@ stages:
         variables:
           - group: "ENS-Dev-TF-Variables"
           - group: "ENS-Dev-Variables" 
-          - name: "EnsAuthConfiguration.TenantId"
+          - name: "D365AuthConfiguration.TenantId"
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
-          - name: "EnsAuthConfiguration.ClientId"
+          - name: "D365AuthConfiguration.ClientId"
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
-          - name: "EnsAuthConfiguration.ClientSecret"
-            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-VALUE)
+          - name: "D365AuthConfiguration.ClientSecret"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
+          - name: "EnsAuthConfiguration.ClientId"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-CLIENT-ID)
         strategy:
           runOnce:
             deploy:
