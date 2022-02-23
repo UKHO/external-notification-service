@@ -88,8 +88,31 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900021 -  Create subscription request error in case of exception.
         /// </summary>
-        CreateSubscriptionRequestError = 900021
-
+        CreateSubscriptionRequestError = 900021,
+        /// <summary>
+        /// 900022 - Azure blob storage for external notification service is healthy.
+        /// </summary>
+        AzureBlobStorageIsHealthy = 900022,
+        /// <summary>
+        /// 900023 - Azure blob storage for external notification service is unhealthy.
+        /// </summary>
+        AzureBlobStorageIsUnhealthy = 900023,
+        /// <summary>
+        /// 900024 - Azure message queue for external notification service is healthy.
+        /// </summary>
+        AzureMessageQueueIsHealthy = 900024,
+        /// <summary>
+        /// 900025 - Azure message queue for external notification service is unhealthy.
+        /// </summary>
+        AzureMessageQueueIsUnhealthy = 900025,
+        /// <summary>
+        /// 900026 -  Azure webjob for external notification service is healthy.
+        /// </summary>
+        AzureWebJobIsHealthy = 900026,
+        /// <summary>
+        /// 900027 -  Azure webjob for external notification service is unhealthy.
+        /// </summary>
+        AzureWebJobIsUnhealthy = 900027
     }
 
     public static class EventIdExtensions
