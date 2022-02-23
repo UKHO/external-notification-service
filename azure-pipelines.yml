@@ -311,6 +311,10 @@ stages:
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
           - name: "EnsAuthConfiguration.ClientId"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-CLIENT-ID)
+          - name: "EnsAuthConfiguration.TenantId"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-TENANT-ID)
+          - name: "EnsAuthConfiguration.ClientSecret"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-VALUE)
         strategy:
           runOnce:
             deploy:
