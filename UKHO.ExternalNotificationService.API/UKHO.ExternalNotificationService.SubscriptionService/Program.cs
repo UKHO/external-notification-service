@@ -15,6 +15,7 @@ using Serilog;
 using Serilog.Events;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Helpers;
+using UKHO.ExternalNotificationService.Common.Models.Response;
 using UKHO.ExternalNotificationService.SubscriptionService.Configuration;
 using UKHO.ExternalNotificationService.SubscriptionService.Helpers;
 using UKHO.ExternalNotificationService.SubscriptionService.Services;
@@ -39,18 +40,10 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
             }
         }
 
-
         private static HostBuilder BuildHostConfiguration()
         {
-            Polly.Retry.AsyncRetryPolicy<HttpResponseMessage> retryPolicy = Policy.Handle<HttpRequestException>
-                (response => response.StatusCode == HttpStatusCode.ServiceUnavailable)
-            .OrResult<HttpResponseMessage>(response => response.StatusCode == HttpStatusCode.BadRequest)            
-            .WaitAndRetryAsync(new[]
-            {
-                TimeSpan.FromSeconds(3),
-                TimeSpan.FromSeconds(5),
-                TimeSpan.FromSeconds(10)
-            });
+             
+
             HostBuilder hostBuilder = new();
             hostBuilder.ConfigureAppConfiguration((_, builder) =>
             {
@@ -125,14 +118,27 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
 
               .ConfigureServices((_, services) =>
               {
+                  int retryCount = Convert.ToInt32(s_configurationBuilder["D365CallbackConfiguration:RetryCount"]);
+                  double sleepDuration = Convert.ToDouble(s_configurationBuilder["D365CallbackConfiguration:SleepDuration"]);
+
+                  Polly.Retry.AsyncRetryPolicy<HttpResponseMessage> retryPolicy = Policy.Handle<HttpRequestException>
+                      (response => response.StatusCode != HttpStatusCode.NoContent)
+                  .OrResult<HttpResponseMessage>(response => response.StatusCode != (HttpStatusCode.InternalServerError))
+                  ///// .OrResult<HttpResponseMessage>(response => response.StatusCode == HttpStatusCode.BadRequest)           
+                  .WaitAndRetryAsync(retryCount, (retryAttempt) =>
+                  {
+                      return TimeSpan.FromSeconds(Math.Pow(sleepDuration, (retryAttempt - 1)));
+                  });
+
                   services.Configure<SubscriptionStorageConfiguration>(s_configurationBuilder.GetSection("SubscriptionStorageConfiguration"));
                   services.Configure<EventGridDomainConfiguration>(s_configurationBuilder.GetSection("EventGridDomainConfiguration"));
                   services.Configure<QueuesOptions>(s_configurationBuilder.GetSection("QueuesOptions"));
                   services.Configure<D365CallbackConfiguration>(s_configurationBuilder.GetSection("D365CallbackConfiguration"));
+                  services.Configure<AzureADConfiguration>(s_configurationBuilder.GetSection("EnsAuthConfiguration"));
                   services.AddScoped<ISubscriptionServiceData, SubscriptionServiceData>();
                   services.AddScoped<IAzureEventGridDomainService, AzureEventGridDomainService>();
                   services.AddScoped<IAuthTokenProvider, AuthTokenProvider>();
-                  services.AddScoped<ICallbackService, CallbackService>();               
+                  services.AddScoped<ICallbackService, CallbackService>();           
                  
                   services.AddHttpClient("D365DataverseApi").AddPolicyHandler(retryPolicy);
                   services.AddScoped<ICallbackClient, CallbackClient>();

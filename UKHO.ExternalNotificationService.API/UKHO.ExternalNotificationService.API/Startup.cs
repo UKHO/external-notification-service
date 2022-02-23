@@ -21,6 +21,7 @@ using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.HealthCheck;
 using UKHO.ExternalNotificationService.Common.Helpers;
 using UKHO.ExternalNotificationService.Common.Repository;
+using UKHO.ExternalNotificationService.Common.Storage;
 using UKHO.Logging.EventHubLogProvider;
 
 namespace UKHO.ExternalNotificationService.API
@@ -40,7 +41,6 @@ namespace UKHO.ExternalNotificationService.API
         {
             services.AddControllers().AddNewtonsoftJson();
             services.Configure<EventHubLoggingConfiguration>(_configuration.GetSection("EventHubLoggingConfiguration"));
-            
             services.Configure<EnsConfiguration>(_configuration.GetSection("EnsConfiguration"));           
             services.Configure<SubscriptionStorageConfiguration>(_configuration.GetSection("SubscriptionStorageConfiguration"));
 
@@ -65,9 +65,20 @@ namespace UKHO.ExternalNotificationService.API
             services.AddScoped<IEventHubLoggingHealthClient, EventHubLoggingHealthClient>();
             services.AddScoped<ISubscriptionService, SubscriptionService>();
             services.AddScoped<IAzureMessageQueueHelper, AzureMessageQueueHelper>();           
-            services.AddHealthChecks().AddCheck<EventHubLoggingHealthCheck>("EventHubLoggingHealthCheck");
             services.AddScoped<ID365PayloadValidator, D365PayloadValidator>();
-            services.AddSingleton<INotificationRepository, NotificationRepository>();            
+            services.AddSingleton<INotificationRepository, NotificationRepository>();
+            services.AddScoped<IStorageService, StorageService>();
+            services.AddScoped<IAzureBlobStorageHelper, AzureBlobStorageHelper>();
+            services.AddScoped<IAzureWebJobHealthCheckService, AzureWebJobHealthCheckService>();
+            services.AddScoped<IAzureWebJobHelper, AzureWebJobHelper>();
+            services.AddSingleton<IWebJobAccessKeyProvider>(_ => new WebJobAccessKeyProvider(_configuration));
+            services.AddSingleton<INotificationRepository, NotificationRepository>();
+
+            services.AddHealthChecks()
+                .AddCheck<EventHubLoggingHealthCheck>("EventHubLoggingHealthCheck")
+                .AddCheck<AzureBlobStorageHealthCheck>("AzureBlobStorageHealthCheck")
+                .AddCheck<AzureMessageQueueHealthCheck>("AzureMessageQueueHealthCheck")
+                .AddCheck<AzureWebJobHealthCheck>("AzureWebJobsHealthCheck");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
