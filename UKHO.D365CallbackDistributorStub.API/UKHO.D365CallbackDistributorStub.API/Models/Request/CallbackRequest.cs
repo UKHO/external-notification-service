@@ -2,7 +2,7 @@
 {
     public class CallbackRequest
     {
-        public int? ukho_lastresponse { get; set; }
-        public string? ukho_responsedetails { get; set; }
+        public int? ResponseStatusCode { get; set; }
+        public string? ResponseDetails { get; set; }
     }
 }

@@ -22,12 +22,17 @@ namespace UKHO.D365CallbackDistributorStub.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "UKHO.D365CallbackDistributorStub.API", Version = "v1" });
             });
             services.AddScoped<CallbackService>();
+            services.AddScoped<IDistributionWebhookService,DistributionWebhookService>();
+            services.AddScoped<DistributionService>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
