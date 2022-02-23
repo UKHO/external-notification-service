@@ -1,13 +1,13 @@
-﻿using Azure.Core;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using System.Threading.Tasks;
+using Azure.Core;
 using Azure.Identity;
 using Microsoft.Azure.Management.EventGrid;
 using Microsoft.Azure.Management.EventGrid.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Rest;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading;
-using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Logging;
 using UKHO.ExternalNotificationService.Common.Models.Request;
@@ -18,20 +18,20 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
     public class AzureEventGridDomainService : IAzureEventGridDomainService
     {
         private readonly EventGridDomainConfiguration _eventGridDomainConfig;
-        private readonly ILogger<AzureEventGridDomainService> _logger;        
+        private readonly ILogger<AzureEventGridDomainService> _logger;
 
         public AzureEventGridDomainService(IOptions<EventGridDomainConfiguration> eventGridDomainConfig, ILogger<AzureEventGridDomainService> logger)
         {
             _eventGridDomainConfig = eventGridDomainConfig.Value;
-            _logger = logger;            
+            _logger = logger;
         }
-        
+
         public async Task<string> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionRequestMessage, CancellationToken cancellationToken)
         {
             _logger.LogInformation(EventIds.CreateOrUpdateAzureEventDomainTopicStart.ToEventId(),
                     "Create or update azure event domain topic started for SubscriptionId:{SubscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId} with Event domain topic {NotificationTypeTopicName}", subscriptionRequestMessage.SubscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId, subscriptionRequestMessage.NotificationTypeTopicName);
-            
-            EventGridManagementClient eventGridMgmtClient = await GetEventGridClient(_eventGridDomainConfig.SubscriptionId, cancellationToken);           
+
+            EventGridManagementClient eventGridMgmtClient = await GetEventGridClient(_eventGridDomainConfig.SubscriptionId, cancellationToken);
             DomainTopic topic = await GetDomainTopic(eventGridMgmtClient, subscriptionRequestMessage.NotificationTypeTopicName, cancellationToken);
 
             _logger.LogInformation(EventIds.CreateOrUpdateAzureEventDomainTopicCompleted.ToEventId(),

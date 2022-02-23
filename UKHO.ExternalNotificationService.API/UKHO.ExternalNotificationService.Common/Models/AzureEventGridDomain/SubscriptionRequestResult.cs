@@ -1,7 +1,9 @@
-﻿using UKHO.ExternalNotificationService.Common.Models.Request;
+﻿using System.Diagnostics.CodeAnalysis;
+using UKHO.ExternalNotificationService.Common.Models.Request;
 
 namespace UKHO.ExternalNotificationService.Common.Models.AzureEventGridDomain
 {
+    [ExcludeFromCodeCoverage]
     public class SubscriptionRequestResult: BaseSubscriptionRequest
     {
         public string ProvisioningState { get; set; }
