@@ -370,10 +370,16 @@ stages:
         variables:
           - group: "ENS-QA-TF-Variables"
           - group: "ENS-QA-Variables"
-          - name: "EnsAuthConfiguration.TenantId"
+          - name: "D365AuthConfiguration.TenantId"
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
-          - name: "EnsAuthConfiguration.ClientId"
+          - name: "D365AuthConfiguration.ClientId"
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
+          - name: "D365AuthConfiguration.ClientSecret"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
+          - name: "EnsAuthConfiguration.ClientId"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-CLIENT-ID)
+          - name: "EnsAuthConfiguration.TenantId"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-TENANT-ID)
           - name: "EnsAuthConfiguration.ClientSecret"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-VALUE)
         strategy:
@@ -431,10 +437,16 @@ stages:
         variables:
           - group: "ENS-Live-TF-Variables"
           - group: "ENS-Live-Variables"
-          - name: "EnsAuthConfiguration.TenantId"
+          - name: "D365AuthConfiguration.TenantId"
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
-          - name: "EnsAuthConfiguration.ClientId"
+          - name: "D365AuthConfiguration.ClientId"
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
+          - name: "D365AuthConfiguration.ClientSecret"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
+          - name: "EnsAuthConfiguration.ClientId"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-CLIENT-ID)
+          - name: "EnsAuthConfiguration.TenantId"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-TENANT-ID)
           - name: "EnsAuthConfiguration.ClientSecret"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-VALUE)
         strategy:
