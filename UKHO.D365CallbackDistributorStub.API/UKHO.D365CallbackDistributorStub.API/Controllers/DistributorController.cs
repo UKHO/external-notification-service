@@ -13,25 +13,20 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
     public class DistributorController : BaseController<DistributorController>
     {
         private readonly ILogger<DistributorController> _logger;
-        private readonly IDistributionWebhookService _distributionWebhookService;
         private readonly DistributionService _distributionService;
-
-        public DistributorController(ILogger<DistributorController> logger, IDistributionWebhookService distributionWebhookService,
-            DistributionService distributionService)
+        public DistributorController(ILogger<DistributorController> logger, DistributionService distributionService)
         {
             _logger = logger;
-            _distributionWebhookService = distributionWebhookService;
             _distributionService = distributionService;
         }
-
 
         [HttpOptions]
         public IActionResult Options()
         {
             _logger.LogInformation("Distributor option accessed.");
-            using (var reader = new StreamReader(Request.Body, Encoding.UTF8))
+            using (StreamReader? reader = new(Request.Body, Encoding.UTF8))
             {
-                var webhookRequestOrigin = HttpContext.Request.Headers["WebHook-Request-Origin"].FirstOrDefault();
+                string? webhookRequestOrigin = HttpContext.Request.Headers["WebHook-Request-Origin"].FirstOrDefault();
                 HttpContext.Response.Headers.Add("WebHook-Allowed-Rate", "*");
                 HttpContext.Response.Headers.Add("WebHook-Allowed-Origin", webhookRequestOrigin);
             }
@@ -42,32 +37,43 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
         public virtual async Task<IActionResult> Post()
         {
             _logger.LogInformation("Distributor Webhook accessed");
-            using (var reader = new StreamReader(Request.Body, Encoding.UTF8))
+            using (StreamReader? reader = new(Request.Body, Encoding.UTF8))
             {
                 string jsonContent = await reader.ReadToEndAsync();
                 CustomCloudEvent? customCloudEvent = JsonConvert.DeserializeObject<CustomCloudEvent>(jsonContent);
-                bool isDistributorRequestSaved = DistributionService.SaveDistributorRequest(customCloudEvent);
-                if (isDistributorRequestSaved)
+                if (customCloudEvent != null)
                 {
-                    return NoContent();
+                    bool isDistributorRequestSaved = DistributionService.SaveDistributorRequest(customCloudEvent);
+                    if (isDistributorRequestSaved)
+                    {
+                        _logger.LogInformation("Distributor webhook request stored in memory for Id: {Id}", customCloudEvent.Id);
+                        return NoContent();
+                    }
+                    else
+                    {
+                        _logger.LogInformation("Distributor webhook request not stored in memory for Id: {Id}", customCloudEvent.Id);
+                        return BuildInternalServerErrorResponse();
+                    }
                 }
                 else
                 {
-                    //return BuildInternalServerErrorResponse();
+                    _logger.LogInformation("Distributor webhook request cannot be null");
+                    return BuildInternalServerErrorResponse();
                 }
             }
-            return NoContent();
         }
 
         [HttpGet]
         public IActionResult Get(string cloudEventId)
         {
+            _logger.LogInformation("GET distribution request accessed for Id: {Id}", cloudEventId);
             DistributorRequest? distributorRequest = _distributionService.GetDistributorRequest(cloudEventId);
             if (distributorRequest == null)
             {
                 _logger.LogInformation("Distribution Request not found for CloudEventId : {cloudEventId}", cloudEventId);
                 return NotFound();
             }
+            _logger.LogInformation("Distribution Request found and return for CloudEventId : {cloudEventId}", cloudEventId);
             return Ok(distributorRequest);
         }
     }

@@ -1,12 +1,12 @@
-﻿using Azure.Messaging;
+﻿using System.Diagnostics.CodeAnalysis;
 using UKHO.D365CallbackDistributorStub.API.Models.Request;
 
 namespace UKHO.D365CallbackDistributorStub.API.Services
 {
+    [ExcludeFromCodeCoverage]
     public class DistributionService
     {
         static readonly Queue<DistributorRequest> s_recordDistributorRequestQueue = new();
-
         public static bool SaveDistributorRequest(CustomCloudEvent cloudEvent)
         {
             try

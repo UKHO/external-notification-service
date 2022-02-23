@@ -34,7 +34,6 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
                 _logger.LogInformation("Callback request not stored in memory for subscriptionId: {subscriptionId}", subscriptionId);
                 return BuildInternalServerErrorResponse();
             }
-
         }
 
         [HttpGet]
