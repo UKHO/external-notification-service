@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using UKHO.ExternalNotificationService.Common.Configuration;
@@ -24,6 +25,14 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.Storage
             });
 
             _storageService = new StorageService(_fakeSubscriptionStorageConfiguration);
+        }
+
+
+        [Test]
+        public void WhenInValidStorageConfiguration_ThenKeyNotFoundException()
+        {
+            Assert.Throws(Is.TypeOf<KeyNotFoundException>().And.Message.EqualTo("Storage account accesskey not found"),
+                     delegate { _storageService.GetStorageAccountConnectionString(); });
         }
 
         [Test]

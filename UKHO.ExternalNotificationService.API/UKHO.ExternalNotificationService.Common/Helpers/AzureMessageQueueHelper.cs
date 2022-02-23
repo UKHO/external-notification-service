@@ -47,8 +47,8 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageAccountConnectionString);
             CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
             CloudQueue queue = queueClient.GetQueueReference(queueName);
-            bool isqueueExists = await queue.ExistsAsync();
-            if (isqueueExists)
+            bool queueExists = await queue.ExistsAsync();
+            if (queueExists)
                 return HealthCheckResult.Healthy("Azure message queue is healthy");
             else
                 return HealthCheckResult.Unhealthy("Azure message queue is unhealthy", new Exception($"Azure message queue {queueName} does not exists"));
