@@ -6,7 +6,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CallbackController : ControllerBase
+    public class CallbackController : BaseController<CallbackController>
     {
         private readonly ILogger<CallbackController> _logger;
         private readonly CallbackService _callbackService;
@@ -21,9 +21,18 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
         public IActionResult Post([FromBody] CallbackRequest callbackRequest, string subscriptionId)
         {
             _logger.LogInformation("POST callback accessed for subscriptionId: {subscriptionId}", subscriptionId);
-            CallbackService.SaveCallbackRequest(callbackRequest, subscriptionId);
-            _logger.LogInformation("Callback request stored in memory for subscriptionId: {subscriptionId}", subscriptionId);
-            return Ok();
+            bool isCallbackRequestSave = CallbackService.SaveCallbackRequest(callbackRequest, subscriptionId);
+            if(isCallbackRequestSave)
+            {
+                _logger.LogInformation("Callback request stored in memory for subscriptionId: {subscriptionId}", subscriptionId);
+                return NoContent();
+            }
+            else
+            {
+                _logger.LogInformation("Callback request not stored in memory for subscriptionId: {subscriptionId}", subscriptionId);
+                return BuildInternalServerErrorResponse();
+            }
+
         }
 
         [HttpGet]

@@ -5,12 +5,10 @@ variable "location" {
 
 variable "ens_api_rg" {
   type    = string
-  default = "ens-dev-rg"
 }
 
 variable "ens_api_asp" {
   type    = string
-  default = "ens-dev-webapp-asp"
 }
 
 locals {
@@ -31,17 +29,9 @@ locals {
 variable "app_service_sku" {
   type = map(any)
   default = {
-    "dev"    = {
-	    tier = "PremiumV2"
-	    size = "P1v2"
-        }
-    "qa"     = {
+    "qc"     = {
 	    tier = "PremiumV3"
 	    size = "P1v3"
-        }
-    "live"   = {
-	    tier = "PremiumV3"
-	    size = "P1v3"
-        }
+    }
   }
 }
