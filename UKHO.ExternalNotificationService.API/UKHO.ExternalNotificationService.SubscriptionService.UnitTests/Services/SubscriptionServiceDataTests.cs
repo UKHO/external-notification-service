@@ -34,7 +34,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
 
             EventSubscription response = await _subscriptionServiceData.CreateOrUpdateSubscription(subscriptionRequestMessage, cancellationToken);
 
-            A.CallTo(() => _fakeAzureEventGridDomainService.CreateOrUpdateSubscription(subscriptionRequestMessage, A<CancellationToken>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _fakeAzureEventGridDomainService.CreateOrUpdateSubscription(subscriptionRequestMessage, CancellationToken.None)).MustHaveHappenedOnceExactly();
             Assert.IsInstanceOf<EventSubscription>(response);
         }
 
