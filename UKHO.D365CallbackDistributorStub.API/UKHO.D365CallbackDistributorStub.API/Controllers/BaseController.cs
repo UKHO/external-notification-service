@@ -10,22 +10,22 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
     {
         protected IActionResult GetOkResponse()
         {
-            return new ObjectResult(StatusCodes.Status200OK);
+            return Ok();
         }
 
-        protected IActionResult GetInternalServerErrorResponse()
+        protected IActionResult GetBadRequestResponse()
         {
-            return new ObjectResult(StatusCodes.Status500InternalServerError);
+            return BadRequest();
         }
 
         protected IActionResult GetNotContentResponse()
         {
-            return new ObjectResult(StatusCodes.Status204NoContent);
+            return NoContent();
         }
 
         protected IActionResult GetNotFoundResponse()
         {
-            return new ObjectResult(StatusCodes.Status404NotFound);
+            return NotFound();
         }
 
     }

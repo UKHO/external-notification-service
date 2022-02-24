@@ -52,13 +52,13 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
                     else
                     {
                         _logger.LogInformation("Distributor webhook request not stored in memory for Id: {Id}", customCloudEvent.Id);
-                        return GetInternalServerErrorResponse();
+                        return GetBadRequestResponse();
                     }
                 }
                 else
                 {
                     _logger.LogInformation("Distributor webhook request cannot be null");
-                    return GetInternalServerErrorResponse();
+                    return GetBadRequestResponse();
                 }
             }
         }

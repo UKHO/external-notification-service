@@ -32,7 +32,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
             else
             {
                 _logger.LogInformation("Callback request not stored in memory for subscriptionId: {subscriptionId}", subscriptionId);
-                return GetInternalServerErrorResponse();
+                return GetBadRequestResponse();
             }
         }
 
