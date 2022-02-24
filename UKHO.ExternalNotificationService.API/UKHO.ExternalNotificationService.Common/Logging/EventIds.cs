@@ -1,5 +1,4 @@
-﻿
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 namespace UKHO.ExternalNotificationService.Common.Logging
 {
@@ -113,14 +112,23 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// 900027 -  Azure webjob for external notification service is unhealthy.
         /// </summary>
         AzureWebJobIsUnhealthy = 900027,
-            /// <summary>
-            /// 900028 - Log an error if call back to D365 API returns statusCode other tha 204.
-            /// </summary>
-        CallbackToD365UsingDataverseError = 900028,
         /// <summary>
-        /// 900029 - Request for retrying D365 Callback Http endpoint.
+        /// 900028 - Before calling HTTP client request to  Callback to D365 and after token authorization
         /// </summary>
-        RetryHttpClientD365CallbackRequest = 900029
+        BeforeCallbackToD365 = 900028,
+        /// <summary>
+        /// 900029 - Log an error if call back to D365 API returns statusCode other than 204.
+        /// </summary>
+        ErrorInCallbackToD365HttpClient = 900029,
+        /// <summary>
+        /// 900030 - Http Client request completed for Callback to D365
+        /// </summary>
+        CallbackToD365Completed = 900030,
+        /// <summary>
+        /// 900031 - Request for retrying D365 Callback Http endpoint.
+        /// </summary>
+        RetryHttpClientD365CallbackRequest = 900031,
+        
     }
 
     public static class EventIdExtensions

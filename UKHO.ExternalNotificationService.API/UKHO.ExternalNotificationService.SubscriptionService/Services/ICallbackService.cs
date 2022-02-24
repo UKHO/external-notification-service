@@ -1,5 +1,4 @@
-﻿
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace UKHO.ExternalNotificationService.SubscriptionService.Services

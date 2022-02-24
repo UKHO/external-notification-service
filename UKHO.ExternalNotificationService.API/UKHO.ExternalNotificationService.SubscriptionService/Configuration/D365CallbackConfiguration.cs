@@ -1,7 +1,8 @@
-﻿
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace UKHO.ExternalNotificationService.SubscriptionService.Configuration
 {
+    [ExcludeFromCodeCoverage]
     public class D365CallbackConfiguration
     {
         public string D365Uri { get; set; }

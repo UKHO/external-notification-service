@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Linq;
 using UKHO.ExternalNotificationService.SubscriptionService.Configuration;
 
 namespace UKHO.ExternalNotificationService.SubscriptionService.Helpers

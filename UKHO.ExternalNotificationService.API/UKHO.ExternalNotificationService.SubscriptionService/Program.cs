@@ -1,21 +1,18 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Reflection;
-using Azure.Identity;
+﻿using Azure.Identity;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Polly;
 using Serilog;
 using Serilog.Events;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Reflection;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Helpers;
-using UKHO.ExternalNotificationService.Common.Models.Response;
+using UKHO.ExternalNotificationService.Common.Logging;
 using UKHO.ExternalNotificationService.SubscriptionService.Configuration;
 using UKHO.ExternalNotificationService.SubscriptionService.Helpers;
 using UKHO.ExternalNotificationService.SubscriptionService.Services;
@@ -121,15 +118,6 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                   int retryCount = Convert.ToInt32(s_configurationBuilder["D365CallbackConfiguration:RetryCount"]);
                   double sleepDuration = Convert.ToDouble(s_configurationBuilder["D365CallbackConfiguration:SleepDuration"]);
 
-                  Polly.Retry.AsyncRetryPolicy<HttpResponseMessage> retryPolicy = Policy.Handle<HttpRequestException>
-                      (response => response.StatusCode != HttpStatusCode.NoContent)
-                  .OrResult<HttpResponseMessage>(response => response.StatusCode != (HttpStatusCode.InternalServerError))
-                  ///// .OrResult<HttpResponseMessage>(response => response.StatusCode == HttpStatusCode.BadRequest)           
-                  .WaitAndRetryAsync(retryCount, (retryAttempt) =>
-                  {
-                      return TimeSpan.FromSeconds(Math.Pow(sleepDuration, (retryAttempt - 1)));
-                  });
-
                   services.Configure<SubscriptionStorageConfiguration>(s_configurationBuilder.GetSection("SubscriptionStorageConfiguration"));
                   services.Configure<EventGridDomainConfiguration>(s_configurationBuilder.GetSection("EventGridDomainConfiguration"));
                   services.Configure<QueuesOptions>(s_configurationBuilder.GetSection("QueuesOptions"));
@@ -138,10 +126,10 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                   services.AddScoped<ISubscriptionServiceData, SubscriptionServiceData>();
                   services.AddScoped<IAzureEventGridDomainService, AzureEventGridDomainService>();
                   services.AddScoped<IAuthTokenProvider, AuthTokenProvider>();
-                  services.AddScoped<ICallbackService, CallbackService>();           
+                  services.AddScoped<ICallbackService, CallbackService>();                 
                  
-                  services.AddHttpClient("D365DataverseApi").AddPolicyHandler(retryPolicy);
-                  services.AddScoped<ICallbackClient, CallbackClient>();
+                 services.AddHttpClient("D365DataverseApi").AddPolicyHandler((services, request) => CommonHelper.GetRetryPolicy(services.GetService<ILogger<ICallbackService>>(), EventIds.RetryHttpClientD365CallbackRequest, retryCount, sleepDuration));
+                 services.AddScoped<ICallbackClient, CallbackClient>();
               })
               .ConfigureWebJobs(b =>
               {
