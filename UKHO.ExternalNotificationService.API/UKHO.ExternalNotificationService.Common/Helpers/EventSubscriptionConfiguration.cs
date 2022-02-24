@@ -1,6 +1,7 @@
 ﻿using Microsoft.Azure.Management.EventGrid.Models;
 using Microsoft.Extensions.Options;
 using UKHO.ExternalNotificationService.Common.Configuration;
+using UKHO.ExternalNotificationService.Common.Models.Request;
 
 namespace UKHO.ExternalNotificationService.Common.Helpers
 {
@@ -16,12 +17,23 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             _subscriptionStorageConfiguration = subscriptionStorageConfiguration.Value;
         }
 
-        public WebHookEventSubscriptionDestination SetWebHookEventSubscriptionDestination(string webhookUrl) => new()
+        public EventSubscription SetEventSubscription(SubscriptionRequestMessage subscriptionRequestMessage)
+        {
+            return new()
+            {
+                Destination = SetWebHookEventSubscriptionDestination(subscriptionRequestMessage.WebhookUrl),
+                EventDeliverySchema = SetEventDeliverySchema,
+                RetryPolicy = SetRetryPolicy(),
+                DeadLetterDestination = SetStorageBlobDeadLetterDestination()
+            };
+        }
+
+        private static WebHookEventSubscriptionDestination SetWebHookEventSubscriptionDestination(string webhookUrl) => new()
         {
             EndpointUrl = webhookUrl
         };
 
-        public string SetEventDeliverySchema => EventDeliverySchema.CloudEventSchemaV10;
+        private static string SetEventDeliverySchema => EventDeliverySchema.CloudEventSchemaV10;
 
         /* Retry policy decides when an event can be marked as expired. 
            The default retry policy keeps the event alive for 24 hrs (=1440 mins or 30 retries with exponential backoffs)
@@ -29,7 +41,7 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
            Note: The below configuration for the retry policy will cause events to expire after one delivery attempt. 
            This is only to make it easier to help test/verify dead letter destinations quickly.
         */
-        public RetryPolicy SetRetryPolicy() => new()
+        private RetryPolicy SetRetryPolicy() => new()
         {
             MaxDeliveryAttempts = _eventGridDomainConfig.MaxDeliveryAttempts,
             EventTimeToLiveInMinutes = _eventGridDomainConfig.EventTimeToLiveInMinutes,
@@ -37,7 +49,7 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
 
         // With dead-letter destination configured, all expired events will be delivered to this destination.
         // Note: only Storage Blobs are supported as dead letter destinations as of now.
-        public StorageBlobDeadLetterDestination SetStorageBlobDeadLetterDestination()
+        private StorageBlobDeadLetterDestination SetStorageBlobDeadLetterDestination()
         {
             string deadLetterDestinationResourceId = $"/subscriptions/{_eventGridDomainConfig.SubscriptionId}/resourceGroups/{_eventGridDomainConfig.ResourceGroup}/providers/Microsoft.Storage/storageAccounts/{_subscriptionStorageConfiguration.StorageAccountName}";
             return new StorageBlobDeadLetterDestination()

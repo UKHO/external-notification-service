@@ -37,12 +37,7 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             DomainTopic topic = await GetDomainTopic(eventGridMgmtClient, subscriptionRequestMessage.NotificationTypeTopicName, cancellationToken);
             string eventSubscriptionScope = topic.Id;
 
-            EventSubscription eventSubscription = new() {
-                Destination = _eventSubscriptionConfiguration.SetWebHookEventSubscriptionDestination(subscriptionRequestMessage.WebhookUrl),
-                EventDeliverySchema = _eventSubscriptionConfiguration.SetEventDeliverySchema,
-                RetryPolicy = _eventSubscriptionConfiguration.SetRetryPolicy(),
-                DeadLetterDestination = _eventSubscriptionConfiguration.SetStorageBlobDeadLetterDestination()
-            };
+            EventSubscription eventSubscription = _eventSubscriptionConfiguration.SetEventSubscription(subscriptionRequestMessage);
             EventSubscription createdOrUpdatedEventSubscription = await eventGridMgmtClient.EventSubscriptions.CreateOrUpdateAsync(eventSubscriptionScope, subscriptionRequestMessage.SubscriptionId, eventSubscription, cancellationToken);
 
             _logger.LogInformation(EventIds.CreateOrUpdateAzureEventDomainTopicCompleted.ToEventId(),

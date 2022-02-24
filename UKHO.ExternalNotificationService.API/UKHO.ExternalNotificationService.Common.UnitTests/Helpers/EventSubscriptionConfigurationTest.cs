@@ -5,6 +5,7 @@ using NUnit.Framework;
 using System;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Helpers;
+using UKHO.ExternalNotificationService.Common.Models.Request;
 
 namespace UKHO.ExternalNotificationService.Common.UnitTests.Helpers
 {
@@ -31,44 +32,27 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.Helpers
         }
 
         [Test]
-        public void WhenCallSetWebHookEventSubscriptionDestination_ThenReturnWebHookEventSubscriptionDestination()
+        public void WhenCallSetEventSubscription_ThenReturnEventSubscription()
         {
-            string uri = "https://abc.com/";
-            WebHookEventSubscriptionDestination result = _eventSubscriptionConfiguration.SetWebHookEventSubscriptionDestination(uri);
-            Assert.IsInstanceOf<WebHookEventSubscriptionDestination>(result);
+            SubscriptionRequestMessage subscriptionRequestMessage = new() { 
+                CorrelationId = Guid.NewGuid().ToString(),
+                D365CorrelationId = Guid.NewGuid().ToString(),
+                IsActive = true,
+                NotificationType = "ADDS Data Pipeline",
+                NotificationTypeTopicName = "avcs-contentPublished",
+                SubscriptionId = Guid.NewGuid().ToString(),
+                WebhookUrl = "https://abc.com/"
+            };
+
+            EventSubscription result = _eventSubscriptionConfiguration.SetEventSubscription(subscriptionRequestMessage);
             Assert.IsNotNull(result);
-            bool assertUriResult = Uri.TryCreate(result.EndpointUrl, UriKind.Absolute, out Uri uriResult)
-                && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-            Assert.IsTrue(assertUriResult);
-            Assert.AreEqual(uri, uriResult.AbsoluteUri);
-        }
-
-        [Test]
-        public void WhenCallSetEventDeliverySchema_ThenReturnEventDeliverySchema()
-        {
-            string result = _eventSubscriptionConfiguration.SetEventDeliverySchema;
-            Assert.IsInstanceOf<string>(result);
-            Assert.AreEqual(EventDeliverySchema.CloudEventSchemaV10, result);
-            Assert.IsNotEmpty(EventDeliverySchema.EventGridSchema, result);
-        }
-
-        [Test]
-        public void WhenCallSetSetRetryPolicy_ThenReturnRetryPolicy()
-        {
-            RetryPolicy result = _eventSubscriptionConfiguration.SetRetryPolicy();
-            Assert.IsInstanceOf<RetryPolicy>(result);
-            Assert.AreEqual(true, result.MaxDeliveryAttempts.HasValue);
-            Assert.AreEqual(true, result.EventTimeToLiveInMinutes.HasValue);
-        }
-
-        [Test]
-        public void WhenCallSetStorageBlobDeadLetterDestination_ThenStorageBlobDeadLetterDestination()
-        {
-            string deadLetterDestinationResourceId = $"/subscriptions/{_fakeEventGridDomainConfig.Value.SubscriptionId}/resourceGroups/{_fakeEventGridDomainConfig.Value.ResourceGroup}/providers/Microsoft.Storage/storageAccounts/{_fakeSubscriptionStorageConfiguration.Value.StorageAccountName}";
-            StorageBlobDeadLetterDestination result = _eventSubscriptionConfiguration.SetStorageBlobDeadLetterDestination();
-            Assert.IsInstanceOf<StorageBlobDeadLetterDestination>(result);
-            Assert.AreEqual(_fakeSubscriptionStorageConfiguration.Value.StorageContainerName, result.BlobContainerName);
-            Assert.AreEqual(deadLetterDestinationResourceId, result.ResourceId);
+            Assert.IsInstanceOf<EventSubscription>(result);
+            Assert.IsInstanceOf<EventSubscriptionDestination>(result.Destination);
+            Assert.IsInstanceOf<RetryPolicy>(result.RetryPolicy);
+            Assert.AreEqual(_fakeEventGridDomainConfig.Value.MaxDeliveryAttempts, result.RetryPolicy.MaxDeliveryAttempts);
+            Assert.AreEqual(_fakeEventGridDomainConfig.Value.EventTimeToLiveInMinutes, result.RetryPolicy.EventTimeToLiveInMinutes);
+            Assert.IsInstanceOf<DeadLetterDestination>(result.DeadLetterDestination);
+            Assert.AreEqual(EventDeliverySchema.CloudEventSchemaV10, result.EventDeliverySchema);
         }
     }
 }
