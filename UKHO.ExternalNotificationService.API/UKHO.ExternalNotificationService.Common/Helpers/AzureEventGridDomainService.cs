@@ -18,13 +18,13 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
     public class AzureEventGridDomainService : IAzureEventGridDomainService
     {
         private readonly EventGridDomainConfiguration _eventGridDomainConfig;
-        private readonly SubscriptionStorageConfiguration _subscriptionStorageConfiguration;
+        private readonly IEventSubscriptionConfiguration _eventSubscriptionConfiguration;
         private readonly ILogger<AzureEventGridDomainService> _logger;        
 
-        public AzureEventGridDomainService(IOptions<EventGridDomainConfiguration> eventGridDomainConfig, IOptions<SubscriptionStorageConfiguration> subscriptionStorageConfiguration, ILogger<AzureEventGridDomainService> logger)
+        public AzureEventGridDomainService(IOptions<EventGridDomainConfiguration> eventGridDomainConfig, IEventSubscriptionConfiguration eventSubscriptionConfiguration, ILogger<AzureEventGridDomainService> logger)
         {
             _eventGridDomainConfig = eventGridDomainConfig.Value;
-            _subscriptionStorageConfiguration = subscriptionStorageConfiguration.Value;
+            _eventSubscriptionConfiguration = eventSubscriptionConfiguration;
             _logger = logger;            
         }
         
@@ -37,33 +37,11 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             DomainTopic topic = await GetDomainTopic(eventGridMgmtClient, subscriptionRequestMessage.NotificationTypeTopicName, cancellationToken);
             string eventSubscriptionScope = topic.Id;
 
-            string deadLetterDestinationResourceId = $"/subscriptions/{_eventGridDomainConfig.SubscriptionId}/resourceGroups/{_eventGridDomainConfig.ResourceGroup}/providers/Microsoft.Storage/storageAccounts/{_subscriptionStorageConfiguration.StorageAccountName}";
-
             EventSubscription eventSubscription = new() {
-                Destination = new WebHookEventSubscriptionDestination()
-                {
-                    EndpointUrl = subscriptionRequestMessage.WebhookUrl
-                },
-                // The below are all optional settings
-                EventDeliverySchema = EventDeliverySchema.CloudEventSchemaV10,
-                /* Retry policy decides when an event can be marked as expired. 
-                   The default retry policy keeps the event alive for 24 hrs (=1440 mins or 30 retries with exponential backoffs)
-                   An event is marked as expired once any of the retry policy limits are exceeded. 
-                   Note: The below configuration for the retry policy will cause events to expire after one delivery attempt. 
-                   This is only to make it easier to help test/verify dead letter destinations quickly.
-                */
-                RetryPolicy = new RetryPolicy()
-                {
-                    MaxDeliveryAttempts = _eventGridDomainConfig.MaxDeliveryAttempts,
-                    EventTimeToLiveInMinutes = _eventGridDomainConfig.EventTimeToLiveInMinutes,
-                },
-                // With dead-letter destination configured, all expired events will be delivered to this destination.
-                // Note: only Storage Blobs are supported as dead letter destinations as of now.
-                DeadLetterDestination = new StorageBlobDeadLetterDestination()
-                {
-                    ResourceId = deadLetterDestinationResourceId,
-                    BlobContainerName = _subscriptionStorageConfiguration.StorageContainerName,
-                }
+                Destination = _eventSubscriptionConfiguration.SetWebHookEventSubscriptionDestination(subscriptionRequestMessage.WebhookUrl),
+                EventDeliverySchema = _eventSubscriptionConfiguration.SetEventDeliverySchema,
+                RetryPolicy = _eventSubscriptionConfiguration.SetRetryPolicy(),
+                DeadLetterDestination = _eventSubscriptionConfiguration.SetStorageBlobDeadLetterDestination()
             };
             EventSubscription createdOrUpdatedEventSubscription = await eventGridMgmtClient.EventSubscriptions.CreateOrUpdateAsync(eventSubscriptionScope, subscriptionRequestMessage.SubscriptionId, eventSubscription, cancellationToken);
 
