@@ -56,8 +56,10 @@ Write-Host "##vso[task.setvariable variable=SubscriptionStorageConfiguration.Que
 Write-Host "##vso[task.setvariable variable=EventHubLoggingConfiguration.Environment]$($terraformOutput.env_name.value)"
 Write-Host "##vso[task.setvariable variable=EnsStorageConnectionString;issecret=true]$($terraformOutput.ens_storage_connection_string.value)"
 Write-Host "##vso[task.setvariable variable=EnsStorageQueueName]$($terraformOutput.event_storage_queue.value)"
-Write-Host "##vso[task.setvariable variable=ResourceGroup]$($terraformOutput.webapp_rg.value)"
-Write-Host "##vso[task.setvariable variable=EnsStubAsp]$($terraformOutput.ens_api_asp.value)"
 Write-Host "##vso[task.setvariable variable=SubscriptionStorageConfiguration.StorageContainerName]$($terraformOutput.dead_letter_storage_container.value)"
+Write-Host "##vso[task.setvariable variable=EnsStorageConnection;issecret=true;isOutput=true]$($terraformOutput.ens_storage_connection_string.value)"
+Write-Host "##vso[task.setvariable variable=EnsStorageQueue;isOutput=true]$($terraformOutput.event_storage_queue.value)"
+Write-Host "##vso[task.setvariable variable=ResourceGroup;isOutput=true]$($terraformOutput.webapp_rg.value)"
+Write-Host "##vso[task.setvariable variable=EnsStubAsp;isOutput=true]$($terraformOutput.ens_api_asp.value)"
 
 $terraformOutput | ConvertTo-Json -Depth 5 > $terraformJsonOutputFile

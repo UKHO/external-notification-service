@@ -36,3 +36,5 @@ $terraformOutput = terraform output -json | ConvertFrom-Json
 
 write-output "Set JSON output into pipeline variables"
 Write-Host "##vso[task.setvariable variable=stubWebAppName]$($terraformOutput.mock_webappname.value)"
+Write-Host "##vso[task.setvariable variable=D365CallbackConfiguration.D365ApiUri]$($terraformOutput.ens_stub_web_app_url.value)"
+Write-Host "##vso[task.setvariable variable=EnsApiUrl]$env:SERVICE_DNS_URL"

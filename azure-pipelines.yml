@@ -363,6 +363,8 @@ stages:
         variables:
           - group: "ENS-Dev-TF-Variables"
           - group: "ENS-Dev-Variables"
+          - name: "D365CallbackConfiguration.D365ApiUri"
+            value: $(D365ApiStubUri)
         strategy:
           runOnce:
             deploy:
@@ -406,7 +408,12 @@ stages:
 
   - stage: QCdeploy
     dependsOn:
-    - PERFORM_DEPENDENCYCHECK_DOTNETBUILD_DOTNETTEST_AND_PUBLISH
+    - Devdeploy
+    variables:
+      EnsStorageConnectionString: $[ stageDependencies.Devdeploy.DevDeployApp.outputs['DevDeployApp.setvariable.EnsStorageConnection'] ]
+      ResourceGroup: $[ stageDependencies.Devdeploy.DevDeployApp.outputs['DevDeployApp.setvariable.ResourceGroup'] ]
+      EnsStubAsp: $[ stageDependencies.Devdeploy.DevDeployApp.outputs['DevDeployApp.setvariable.EnsStubAsp'] ]
+      EnsStorageQueueName:  $[ stageDependencies.Devdeploy.DevDeployApp.outputs['DevDeployApp.setvariable.EnsStorageQueue'] ]
     displayName: "QCdeploy (inc terraform, webapp deploy)"
     jobs:
       - deployment: QCDeployApp
@@ -462,6 +469,18 @@ stages:
                     testRunTitle: "Dev-AutomationTests"
                     workingDirectory: '$(Build.SourcesDirectory)/functionaltests'
 
+                - bash: echo "##vso[task.setvariable variable=D365CallbackConfiguration.D365ApiUri]$(D365ApiStubUri)"
+                  name: SwapStubURL
+
+                - bash: echo $(D365CallbackConfiguration.D365ApiUri)
+
+                - task: FileTransform@1
+                  displayName: "File Transform: functionaltestsdev"
+                  inputs:
+                    folderPath: '$(Build.SourcesDirectory)/functionaltests/'
+                    fileType: json
+                    targetFiles: '**/appsettings.json'
+
   - stage: QAdeploy
     dependsOn:
     - Devdeploy
@@ -479,6 +498,8 @@ stages:
         variables:
           - group: "ENS-QA-TF-Variables"
           - group: "ENS-QA-Variables"
+          - name: "D365CallbackConfiguration.D365ApiUri"
+            value: $(D365ApiStubUri)
         strategy:
           runOnce:
             deploy:
@@ -535,6 +556,8 @@ stages:
         variables:
           - group: "ENS-Live-TF-Variables"
           - group: "ENS-Live-Variables"
+          - name: "D365CallbackConfiguration.D365ApiUri"
+            value: $(D365ApiStubUri)
         strategy:
           runOnce:
             deploy:
