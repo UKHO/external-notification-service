@@ -19,11 +19,9 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
     public class SubscriptionServiceJob
     {
         private readonly ISubscriptionServiceData _subscriptionServiceData;
-        private readonly ILogger<SubscriptionServiceJob> _logger;       
-        
+        private readonly ILogger<SubscriptionServiceJob> _logger;        
         private readonly IOptions<D365CallbackConfiguration> _d365CallbackConfiguration;
-        private readonly ICallbackService _callbackService;
-        
+        private readonly ICallbackService _callbackService;        
 
         public SubscriptionServiceJob(ISubscriptionServiceData subscriptionServiceData,
             ILogger<SubscriptionServiceJob> logger, IOptions<D365CallbackConfiguration> d365CallbackConfiguration,
@@ -62,8 +60,8 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                 }
 
                 //Callback to D365
-                _logger.LogInformation(EventIds.CreateSubscriptionRequestCompleted.ToEventId(),
-              "CallbackToD365UsingDataverse start with SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+                _logger.LogInformation(EventIds.CallbackToD365Started.ToEventId(),
+              "CallbackToD365UsingDataverse start with ResponseDetails:{externalNotificationEntity} for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", externalNotificationEntity.ukho_lastresponse,externalNotificationEntity.ukho_responsedetails, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
 
                 string entityPath = $"ukho_externalnotifications({subscriptionMessage.SubscriptionId})";
                 await _callbackService.CallbackToD365UsingDataverse(entityPath, externalNotificationEntity, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);

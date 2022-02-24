@@ -28,7 +28,6 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
         [Test]
         public async Task WhenServiceUnavailable_GetRetryPolicy()
         {
-            // Arrange 
             IServiceCollection services = new ServiceCollection();
             _isRetryCalled = false;
 
@@ -42,19 +41,15 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
                     .GetRequiredService<IHttpClientFactory>()
                     .CreateClient(TestClient);
 
-            // Act
             HttpResponseMessage result = await configuredClient.GetAsync("https://testretry.com");
 
-            // Assert
             Assert.False(_isRetryCalled);
             Assert.AreEqual(HttpStatusCode.ServiceUnavailable, result.StatusCode);
-
         }
 
         [Test]
         public async Task WhenInternalServerError_GetRetryPolicy()
         {
-            // Arrange 
             IServiceCollection services = new ServiceCollection();
             _isRetryCalled = false;
             retryCount = 1;
@@ -69,10 +64,8 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
                     .GetRequiredService<IHttpClientFactory>()
                     .CreateClient(TestClient);
 
-            // Act
             HttpResponseMessage result = await configuredClient.GetAsync("https://testretry.com");
 
-            // Assert
             Assert.False(_isRetryCalled);
             Assert.AreEqual(HttpStatusCode.InternalServerError, result.StatusCode);
         }
