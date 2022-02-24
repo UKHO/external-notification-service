@@ -30,7 +30,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
                 HttpContext.Response.Headers.Add("WebHook-Allowed-Rate", "*");
                 HttpContext.Response.Headers.Add("WebHook-Allowed-Origin", webhookRequestOrigin);
             }
-            return GetWebhookResponse();
+            return GetOkResponse();
         }
 
         [HttpPost]
@@ -52,13 +52,13 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
                     else
                     {
                         _logger.LogInformation("Distributor webhook request not stored in memory for Id: {Id}", customCloudEvent.Id);
-                        return BuildInternalServerErrorResponse();
+                        return GetInternalServerErrorResponse();
                     }
                 }
                 else
                 {
                     _logger.LogInformation("Distributor webhook request cannot be null");
-                    return BuildInternalServerErrorResponse();
+                    return GetInternalServerErrorResponse();
                 }
             }
         }

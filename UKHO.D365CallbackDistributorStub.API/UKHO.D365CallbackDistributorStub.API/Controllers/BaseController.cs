@@ -8,11 +8,11 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
     [Route("api/[controller]")]
     public abstract class BaseController<T> : ControllerBase
     {
-        protected IActionResult GetWebhookResponse()
+        protected IActionResult GetOkResponse()
         {
             return new OkObjectResult(StatusCodes.Status200OK);
         }
-        protected IActionResult BuildInternalServerErrorResponse()
+        protected IActionResult GetInternalServerErrorResponse()
         {
             return new OkObjectResult(StatusCodes.Status500InternalServerError);
         }
