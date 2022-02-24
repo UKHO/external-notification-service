@@ -1,13 +1,13 @@
-﻿using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-using FakeItEasy;
+﻿using FakeItEasy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Controllers;
 
 namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
@@ -34,9 +34,9 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             _controller.ControllerContext.HttpContext = new DefaultHttpContext();
             _controller.HttpContext.Request.Headers.Add("WebHook-Request-Origin", "test.example.com");
 
-            var result = (OkObjectResult)_controller.Options();
+            var result = (StatusCodeResult)_controller.Options();
 
-            Assert.AreEqual(200, result.StatusCode);
+            Assert.AreEqual(StatusCodes.Status200OK, result.StatusCode);
         }
 
         [Test]
@@ -47,9 +47,9 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             _controller.ControllerContext.HttpContext = new DefaultHttpContext();
             _controller.HttpContext.Request.Body = requestData;
 
-            var result = (OkObjectResult)await _controller.Post();
+            var result = (StatusCodeResult)await _controller.Post();
 
-            Assert.AreEqual(200, result.StatusCode);
+            Assert.AreEqual(StatusCodes.Status200OK, result.StatusCode);
         }
 
         private static MemoryStream GetEventBodyData()

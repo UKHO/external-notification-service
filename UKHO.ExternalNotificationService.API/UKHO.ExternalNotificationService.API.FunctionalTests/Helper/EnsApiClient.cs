@@ -1,9 +1,9 @@
-﻿using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.FunctionalTests.Model;
 
 namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
@@ -38,6 +38,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             }
             return await s_httpClient.SendAsync(httpRequestMessage);
         }
+
         public async Task<HttpResponseMessage> OptionEnsApiSubscriptionAsync(string headerRequest = null, string headerRequestValue = null, string accessToken = null)
         {
             string uri = $"{_apiHost}/api/webhook";       
@@ -68,6 +69,5 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
 
             return await s_httpClient.SendAsync(httpRequestMessage);
         }
-
     }
 }

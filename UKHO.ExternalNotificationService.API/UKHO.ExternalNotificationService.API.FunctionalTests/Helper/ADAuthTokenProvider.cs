@@ -1,16 +1,16 @@
-﻿using System.Threading.Tasks;
-using Microsoft.Identity.Client;
+﻿using Microsoft.Identity.Client;
+using System.Threading.Tasks;
 
 namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
 {
     public class ADAuthTokenProvider
     {
-        private string ensAccessToken { get; set; }
+        private string EnsAccessToken { get; set; }
         static readonly TestConfiguration s_testConnfig = new();
         public async Task<string> GetEnsAuthToken()
         {
-            ensAccessToken = await GenerateEnsToken(s_testConnfig.ClientId, s_testConnfig.D365ClientId, s_testConnfig.D365Secret);
-            return ensAccessToken;
+            EnsAccessToken = await GenerateEnsToken(s_testConnfig.ClientId, s_testConnfig.D365ClientId, s_testConnfig.D365Secret);
+            return EnsAccessToken;
         }
 
         private static async Task<string> GenerateEnsToken(string clientId, string d365ClientId, string d365Secret)

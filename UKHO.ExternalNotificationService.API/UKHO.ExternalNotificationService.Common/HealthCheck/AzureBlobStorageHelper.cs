@@ -1,9 +1,9 @@
 ﻿
+using Azure.Storage.Blobs;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Azure.Storage.Blobs;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace UKHO.ExternalNotificationService.Common.HealthCheck
 {

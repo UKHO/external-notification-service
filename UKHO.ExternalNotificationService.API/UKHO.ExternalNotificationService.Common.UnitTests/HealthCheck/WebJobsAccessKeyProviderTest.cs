@@ -1,7 +1,7 @@
 ﻿
-using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
+using System.Collections.Generic;
 using UKHO.ExternalNotificationService.Common.HealthCheck;
 
 namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck

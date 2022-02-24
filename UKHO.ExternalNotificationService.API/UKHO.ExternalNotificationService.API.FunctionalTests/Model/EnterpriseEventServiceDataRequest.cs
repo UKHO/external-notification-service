@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace UKHO.ExternalNotificationService.API.FunctionalTests.Model
 {
@@ -43,6 +40,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Model
     {
         public string href { get; set; }
     }
+
     public class EnterpriseEventServiceDataRequest
     {
         public string batchId { get; set; }

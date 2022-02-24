@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-using NUnit.Framework;
 using UKHO.ExternalNotificationService.API.FunctionalTests.Helper;
 using UKHO.ExternalNotificationService.API.FunctionalTests.Model;
 
@@ -62,12 +62,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [Test]
         public async Task WhenICallTheEnsWebhookApiWithAValidJObjectBodyWithoutAuthToken_ThenAnUnauthorisedResponseIsReturned()
         {
-            var ensWebhookJson = JObject.Parse(@"{""Type"":""uk.gov.UKHO.FileShareService.NewFilesPublished.v1""}");
-            ensWebhookJson["Source"] = "https://files.admiralty.co.uk";
-            ensWebhookJson["Id"] = "49c67cca-9cca-4655-a38e-583693af55ea";
-            ensWebhookJson["Subject"] = "83d08093-7a67-4b3a-b431-92ba42feaea0";
-            ensWebhookJson["DataContentType"] = "application/json";
-            ensWebhookJson["Data"] = JObject.FromObject(GetEnterpriseEventServiceRequestData());
+            var ensWebhookJson = GetEnsWebhookJson();
 
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebookNewEventPublishedAsync(ensWebhookJson);
 
@@ -79,12 +74,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         public async Task WhenICallTheEnsWebhookApiWithAValidJObjectBodyWitInvalidAuthToken_ThenAnUnauthorisedResponseIsReturned()
         {
             string invalidToken = EnsToken.Remove(EnsToken.Length - 4).Insert(EnsToken.Length - 4, "ABAA");
-            var ensWebhookJson = JObject.Parse(@"{""Type"":""uk.gov.UKHO.FileShareService.NewFilesPublished.v1""}");
-            ensWebhookJson["Source"] = "https://files.admiralty.co.uk";
-            ensWebhookJson["Id"] = "49c67cca-9cca-4655-a38e-583693af55ea";
-            ensWebhookJson["Subject"] = "83d08093-7a67-4b3a-b431-92ba42feaea0";
-            ensWebhookJson["DataContentType"] = "application/json";
-            ensWebhookJson["Data"] = JObject.FromObject(GetEnterpriseEventServiceRequestData());
+            var ensWebhookJson = GetEnsWebhookJson();
 
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebookNewEventPublishedAsync(ensWebhookJson, invalidToken);
 
@@ -92,17 +82,10 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
         }
 
-
         [Test]
         public async Task WhenICallTheEnsWebhookApiWithAValidJObjectBody_ThenOkStatusIsReturned()
         {
-            var ensWebhookJson = JObject.Parse(@"{""Type"":""uk.gov.UKHO.FileShareService.NewFilesPublished.v1""}");
-            ensWebhookJson["Source"] = "https://files.admiralty.co.uk";
-            ensWebhookJson["Id"] = "49c67cca-9cca-4655-a38e-583693af55ea";
-            ensWebhookJson["Subject"] = "83d08093-7a67-4b3a-b431-92ba42feaea0";
-            ensWebhookJson["DataContentType"] = "application/json";
-            ensWebhookJson["Data"]= JObject.FromObject(GetEnterpriseEventServiceRequestData());
-
+            var ensWebhookJson = GetEnsWebhookJson();
 
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebookNewEventPublishedAsync(ensWebhookJson, EnsToken);
            
@@ -110,7 +93,18 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
         }
 
-        private EnterpriseEventServiceDataRequest GetEnterpriseEventServiceRequestData()
+        private static JObject GetEnsWebhookJson()
+        {
+            var ensWebhookJson = JObject.Parse(@"{""Type"":""uk.gov.UKHO.FileShareService.NewFilesPublished.v1""}");
+            ensWebhookJson["Source"] = "https://files.admiralty.co.uk";
+            ensWebhookJson["Id"] = "49c67cca-9cca-4655-a38e-583693af55ea";
+            ensWebhookJson["Subject"] = "83d08093-7a67-4b3a-b431-92ba42feaea0";
+            ensWebhookJson["DataContentType"] = "application/json";
+            ensWebhookJson["Data"] = JObject.FromObject(GetEnterpriseEventServiceRequestData());
+            return ensWebhookJson;
+        }
+
+        private static EnterpriseEventServiceDataRequest GetEnterpriseEventServiceRequestData()
         {
             BatchDetails linkBatchDetails = new()
             {

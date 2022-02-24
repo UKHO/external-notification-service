@@ -1,10 +1,10 @@
 ﻿
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace UKHO.ExternalNotificationService.Common.HealthCheck
 {
