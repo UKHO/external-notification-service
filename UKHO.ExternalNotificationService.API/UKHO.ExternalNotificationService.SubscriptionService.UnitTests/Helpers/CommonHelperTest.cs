@@ -14,9 +14,9 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
     public class CommonHelperTest
     {
         private ILogger<CallbackService> _fakeLogger;
-        public int retryCount = 3;
+        private int retryCount = 3;
         private const double SleepDuration = 2;
-        const string TestClient = "TestClient";
+        private const string TestClient = "TestClient";
         private bool _isRetryCalled;
 
         [SetUp]
@@ -26,20 +26,16 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
         }
 
         [Test]
-        public async Task WhenServiceUnavailable_GetRetryPolicy()
+        public async Task WhenServiceUnavailable_ThenGetRetryPolicy()
         {
             IServiceCollection services = new ServiceCollection();
             _isRetryCalled = false;
 
             services.AddHttpClient(TestClient)
-                .AddPolicyHandler(CommonHelper.GetRetryPolicy(_fakeLogger, Common.Logging.EventIds.RetryHttpClientD365CallbackRequest, retryCount, SleepDuration))
+                .AddPolicyHandler(CommonHelper.GetRetryPolicy(_fakeLogger, retryCount, SleepDuration))
                 .AddHttpMessageHandler(() => new ServiceUnavailableDelegatingHandler());
 
-            HttpClient configuredClient =
-                services
-                    .BuildServiceProvider()
-                    .GetRequiredService<IHttpClientFactory>()
-                    .CreateClient(TestClient);
+            HttpClient configuredClient = CreateClient(services);
 
             HttpResponseMessage result = await configuredClient.GetAsync("https://testretry.com");
 
@@ -48,21 +44,17 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
         }
 
         [Test]
-        public async Task WhenInternalServerError_GetRetryPolicy()
+        public async Task WhenInternalServerError_ThenGetRetryPolicy()
         {
             IServiceCollection services = new ServiceCollection();
             _isRetryCalled = false;
             retryCount = 1;
 
             services.AddHttpClient(TestClient)
-                .AddPolicyHandler(CommonHelper.GetRetryPolicy(_fakeLogger, Common.Logging.EventIds.RetryHttpClientD365CallbackRequest, retryCount, SleepDuration))
+                .AddPolicyHandler(CommonHelper.GetRetryPolicy(_fakeLogger, retryCount, SleepDuration))
                 .AddHttpMessageHandler(() => new InternalServerDelegatingHandler());
 
-            HttpClient configuredClient =
-                services
-                    .BuildServiceProvider()
-                    .GetRequiredService<IHttpClientFactory>()
-                    .CreateClient(TestClient);
+            HttpClient configuredClient = CreateClient(services);
 
             HttpResponseMessage result = await configuredClient.GetAsync("https://testretry.com");
 
@@ -70,5 +62,12 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
             Assert.AreEqual(HttpStatusCode.InternalServerError, result.StatusCode);
         }
 
+        private static HttpClient CreateClient(IServiceCollection services)
+        {
+            return services
+                    .BuildServiceProvider()
+                    .GetRequiredService<IHttpClientFactory>()
+                    .CreateClient(TestClient);
+        }
     }
 }

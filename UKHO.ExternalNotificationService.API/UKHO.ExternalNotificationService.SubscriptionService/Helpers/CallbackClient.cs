@@ -22,7 +22,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Helpers
             _d365CallbackConfiguration = d365CallbackConfiguration;
         }
 
-        public async Task<HttpResponseMessage> GetCallbackD365Client(HttpMethod method, string externalEntityPath, string accessToken, object externalNotificationEntity, string correlationId, CancellationToken cancellationToken)
+        public async Task<HttpResponseMessage> GetCallbackD365Client(string externalEntityPath, string accessToken, object externalNotificationEntity, string correlationId, CancellationToken cancellationToken)
         {
             HttpClient httpClient = _httpClientFactory.CreateClient("D365DataverseApi");
             httpClient.BaseAddress = new Uri(_d365CallbackConfiguration.Value.D365ApiUri);
@@ -35,10 +35,10 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Helpers
             HttpContent content = new StringContent(JObject.FromObject(externalNotificationEntity).ToString());
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
-            using var httpRequestMessage = new HttpRequestMessage(method, externalEntityPath)
+            using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, externalEntityPath)
             { Content = content };
 
-            if (correlationId != "")
+            if (correlationId != string.Empty)
             {
                 httpRequestMessage.Headers.Add("X-Correlation-ID", correlationId);
             }

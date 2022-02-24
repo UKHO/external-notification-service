@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
 {
     public class ServiceUnavailableDelegatingHandler : DelegatingHandler
-    {        
+    {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             var httpResponse = new HttpResponseMessage
@@ -16,6 +16,5 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
             };
             return Task.FromResult(httpResponse);
         }
-    
-}
+    }
 }

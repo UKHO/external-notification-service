@@ -66,7 +66,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
               "CallbackToD365UsingDataverse start with ResponseDetails:{externalNotificationEntity} for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", externalNotificationEntity.ukho_lastresponse,externalNotificationEntity.ukho_responsedetails, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
 
                 string entityPath = $"ukho_externalnotifications({subscriptionMessage.SubscriptionId})";
-                await _callbackService.CallbackToD365UsingDataverse(entityPath, externalNotificationEntity, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+                await _callbackService.CallbackToD365UsingDataverse(entityPath, externalNotificationEntity, subscriptionMessage);
             }
             
             _logger.LogInformation(EventIds.CreateSubscriptionRequestCompleted.ToEventId(),

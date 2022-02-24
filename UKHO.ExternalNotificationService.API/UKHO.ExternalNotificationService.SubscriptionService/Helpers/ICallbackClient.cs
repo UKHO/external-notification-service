@@ -6,6 +6,6 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Helpers
 {
     public interface ICallbackClient
     {        
-        Task<HttpResponseMessage> GetCallbackD365Client(HttpMethod method, string externalEntityPath, string accessToken, object externalNotificationEntity, string correlationId, CancellationToken cancellationToken);
+        Task<HttpResponseMessage> GetCallbackD365Client(string externalEntityPath, string accessToken, object externalNotificationEntity, string correlationId, CancellationToken cancellationToken);
     }
 }

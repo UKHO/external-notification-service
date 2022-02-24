@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using UKHO.ExternalNotificationService.Common.Models.Request;
 using UKHO.ExternalNotificationService.SubscriptionService.D365Callback;
 using UKHO.ExternalNotificationService.SubscriptionService.Helpers;
 using UKHO.ExternalNotificationService.SubscriptionService.Services;
@@ -38,16 +39,14 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
         public async Task WhenInvalidCallbackToD365UsingDataverseRequest_ThenReturnsBadRequest()
         {
             string fakeExternalEntityPath = $"ukho_externalnotifications(1ea01f10-1372-13fb-13a1-1300f3a3faaa)";
-            string fakeD365CorrelationId = "3ea03f30-2372-43fb-93a1-5300f3a3faaa";
-            string fakeCorrelationId = "6ea03f10-2672-46fb-92a1-5200f6a4faaa";
             string fakeAccessToken = GetFakeToken();
 
             var httpResponse = new HttpResponseMessage() { StatusCode = HttpStatusCode.BadRequest, RequestMessage = new HttpRequestMessage() { Method = HttpMethod.Patch, RequestUri = new Uri("http://test.com") }, Content = new StreamContent(new MemoryStream(Encoding.UTF8.GetBytes("Bad Request"))) };
             A.CallTo(() => _fakeAuthTokenProvider.GetADAccessToken()).Returns(fakeAccessToken);
-            A.CallTo(() => _fakeCallbackClient.GetCallbackD365Client(A<HttpMethod>.Ignored, A<string>.Ignored, A<string>.Ignored, A<object>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored))
+            A.CallTo(() => _fakeCallbackClient.GetCallbackD365Client(A<string>.Ignored, A<string>.Ignored, A<object>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored))
              .Returns(httpResponse);
 
-            HttpResponseMessage response = await _callbackService.CallbackToD365UsingDataverse(fakeExternalEntityPath, GetExternalNotificationEntity(), fakeD365CorrelationId, fakeCorrelationId);
+            HttpResponseMessage response = await _callbackService.CallbackToD365UsingDataverse(fakeExternalEntityPath, GetExternalNotificationEntity(), GetSubscriptionRequestMessage());
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.IsFalse(response.IsSuccessStatusCode);
         }
@@ -56,19 +55,17 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
         public async Task WhenValidCallbackToD365UsingDataverseRequest_ThenReturnsNoContent()
         {
             string fakeExternalEntityPath = $"ukho_externalnotifications(1ea01f10-1372-13fb-13a1-1300f3a3faaa)";
-            string fakeD365CorrelationId = "3ea03f30-2372-43fb-93a1-5300f3a3faaa";
-            string fakeCorrelationId = "6ea03f10-2672-46fb-92a1-5200f6a4faaa";
             string fakeAccessToken = GetFakeToken();
 
             ExternalNotificationEntity getExternalNotificationEntry = GetExternalNotificationEntity();
             string jsonString = JsonConvert.SerializeObject(getExternalNotificationEntry);
-            var httpResponse = new HttpResponseMessage() { StatusCode = HttpStatusCode.NoContent, RequestMessage = new HttpRequestMessage() {Method= HttpMethod.Patch, RequestUri = new Uri("http://test.com") }, Content = new StreamContent(new MemoryStream(Encoding.UTF8.GetBytes(jsonString))) };
+            var httpResponse = new HttpResponseMessage() { StatusCode = HttpStatusCode.NoContent, RequestMessage = new HttpRequestMessage() { Method = HttpMethod.Patch, RequestUri = new Uri("http://test.com") }, Content = new StreamContent(new MemoryStream(Encoding.UTF8.GetBytes(jsonString))) };
 
             A.CallTo(() => _fakeAuthTokenProvider.GetADAccessToken()).Returns(fakeAccessToken);
-            A.CallTo(() => _fakeCallbackClient.GetCallbackD365Client(A<HttpMethod>.Ignored, A<string>.Ignored, A<string>.Ignored, A<object>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored))
+            A.CallTo(() => _fakeCallbackClient.GetCallbackD365Client(A<string>.Ignored, A<string>.Ignored, A<object>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored))
              .Returns(httpResponse);
 
-            HttpResponseMessage response = await _callbackService.CallbackToD365UsingDataverse(fakeExternalEntityPath, getExternalNotificationEntry, fakeD365CorrelationId, fakeCorrelationId);
+            HttpResponseMessage response = await _callbackService.CallbackToD365UsingDataverse(fakeExternalEntityPath, getExternalNotificationEntry, GetSubscriptionRequestMessage());
             Assert.AreEqual(HttpStatusCode.NoContent, response.StatusCode);
             Assert.IsTrue(response.IsSuccessStatusCode);
         }
@@ -82,8 +79,22 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
         {
             return new ExternalNotificationEntity()
             {
-                ukho_lastresponse = 123232 ,
+                ukho_lastresponse = 123232,
                 ukho_responsedetails = Convert.ToString(DateTime.UtcNow)
+            };
+        }
+
+        private static SubscriptionRequestMessage GetSubscriptionRequestMessage()
+        {
+            return new SubscriptionRequestMessage()
+            {
+                CorrelationId = Guid.NewGuid().ToString(),
+                D365CorrelationId = Guid.NewGuid().ToString(),
+                IsActive = true,
+                NotificationType = "ADDS Data Pipeline",
+                NotificationTypeTopicName = "avcs-contentPublished",
+                SubscriptionId = Guid.NewGuid().ToString(),
+                WebhookUrl = "https://abc.com/"
             };
         }
     }

@@ -129,7 +129,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                   services.AddScoped<IAuthTokenProvider, AuthTokenProvider>();
                   services.AddScoped<ICallbackService, CallbackService>();                 
                  
-                 services.AddHttpClient("D365DataverseApi").AddPolicyHandler((services, request) => CommonHelper.GetRetryPolicy(services.GetService<ILogger<ICallbackService>>(), EventIds.RetryHttpClientD365CallbackRequest, retryCount, sleepDuration));
+                 services.AddHttpClient("D365DataverseApi").AddPolicyHandler((services, request) => CommonHelper.GetRetryPolicy(services.GetService<ILogger<ICallbackService>>(), retryCount, sleepDuration));
                  services.AddScoped<ICallbackClient, CallbackClient>();
               })
               .ConfigureWebJobs(b =>
