@@ -15,7 +15,6 @@ using UKHO.ExternalNotificationService.Common.Models.Request;
 using UKHO.ExternalNotificationService.Common.Models.Response;
 using UKHO.ExternalNotificationService.Common.Repository;
 
-
 namespace UKHO.ExternalNotificationService.API.Controllers
 {
     [ApiController]
@@ -87,6 +86,5 @@ namespace UKHO.ExternalNotificationService.API.Controllers
 
             return GetEnsResponse(new ExternalNotificationServiceResponse { HttpStatusCode = HttpStatusCode.Accepted });
         }
-
     }
 }
