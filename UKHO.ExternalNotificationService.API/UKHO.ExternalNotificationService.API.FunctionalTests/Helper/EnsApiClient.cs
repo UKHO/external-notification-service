@@ -28,14 +28,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         {
             string uri = $"{_apiHost}/api/subscription";
             string payloadJson = JsonConvert.SerializeObject(d365Payload);
-            using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri)
-            {
-                Content = new StringContent(payloadJson, Encoding.UTF8, "application/json")
-            };           
-            if (accessToken != null)
-            {
-                httpRequestMessage.SetBearerToken(accessToken);
-            }
+            HttpRequestMessage httpRequestMessage = GetHttpRequestMessage(accessToken, uri, payloadJson);
+
             return await s_httpClient.SendAsync(httpRequestMessage);
         }
 
@@ -58,7 +52,14 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         {
             string uri = $"{_apiHost}/api/webhook";
             string payloadJson = JsonConvert.SerializeObject(request);
-            using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri)
+            using var httpRequestMessage = GetHttpRequestMessage(accessToken, uri, payloadJson);
+
+            return await s_httpClient.SendAsync(httpRequestMessage);
+        }
+
+        private static HttpRequestMessage GetHttpRequestMessage(string accessToken, string uri, string payloadJson)
+        {
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri)
             {
                 Content = new StringContent(payloadJson, Encoding.UTF8, "application/json")
             };
@@ -67,7 +68,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
                 httpRequestMessage.SetBearerToken(accessToken);
             }
 
-            return await s_httpClient.SendAsync(httpRequestMessage);
+            return httpRequestMessage;
         }
     }
 }
