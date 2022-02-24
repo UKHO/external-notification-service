@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Extensions;
 using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.Common.Configuration;
@@ -21,16 +21,16 @@ namespace UKHO.ExternalNotificationService.API.Controllers
     public class SubscriptionController : BaseController<SubscriptionController>
     {
         private readonly ILogger<SubscriptionController> _logger;
-        private readonly ISubscriptionService _subscriptionService;
+        private readonly ISubscriptionService _subscriptionService;  
         private List<Error> _errors;
         private const string XmsDynamicsMsgSizeExceededHeader = "x-ms-dynamics-msg-size-exceeded";
         private readonly INotificationRepository _notificationRepository;
 
-        public SubscriptionController(IHttpContextAccessor contextAccessor, ILogger<SubscriptionController> logger, ISubscriptionService subscriptionService, INotificationRepository notificationRepository) : base(contextAccessor, logger)
+        public SubscriptionController(IHttpContextAccessor contextAccessor, ILogger<SubscriptionController> logger, ISubscriptionService subscriptionService, INotificationRepository notificationRepository ) : base(contextAccessor, logger)
         {
             _logger = logger;
             _subscriptionService = subscriptionService;
-            _notificationRepository = notificationRepository;
+            _notificationRepository = notificationRepository;         
         }
 
         [HttpPost]
@@ -64,7 +64,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
             }
 
             SubscriptionRequest subscription = _subscriptionService.ConvertToSubscriptionRequestModel(d365Payload);
-
+           
             NotificationType notificationType = _notificationRepository.GetAllNotificationTypes().FirstOrDefault(x => x.Name == subscription.NotificationType);
 
             if (notificationType == null)
@@ -80,7 +80,9 @@ namespace UKHO.ExternalNotificationService.API.Controllers
                 return BuildBadRequestErrorResponse(error);
             }
 
-            _logger.LogInformation(EventIds.Accepted.ToEventId(), "Subscription request Accepted for SubscriptionId:{subscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{correlationId}", subscription.SubscriptionId, subscription.D365CorrelationId, GetCurrentCorrelationId());
+            await _subscriptionService.AddSubscriptionRequest(subscription, notificationType, GetCurrentCorrelationId());            
+            
+            _logger.LogInformation(EventIds.Accepted.ToEventId(), "Subscription request Accepted for SubscriptionId:{subscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{correlationId}", subscription.SubscriptionId, subscription.D365CorrelationId, GetCurrentCorrelationId());            
 
             return GetEnsResponse(new ExternalNotificationServiceResponse { HttpStatusCode = HttpStatusCode.Accepted });
         }

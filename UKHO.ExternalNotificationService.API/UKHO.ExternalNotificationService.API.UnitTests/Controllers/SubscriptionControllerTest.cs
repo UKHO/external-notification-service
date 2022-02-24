@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using FakeItEasy;
+﻿using FakeItEasy;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Controllers;
 using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.Common.Configuration;
@@ -22,8 +22,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
     public class SubscriptionControllerTests
     {
         private SubscriptionController _controller;
-        private ILogger<SubscriptionController> _fakeLogger;
         private IHttpContextAccessor _fakeHttpContextAccessor;
+        private ILogger<SubscriptionController> _fakeLogger;
         private ISubscriptionService _fakeSubscriptionService;
         private D365Payload _fakeD365PayloadDetails;
         private SubscriptionRequest _fakeSubscriptionRequest;
@@ -40,12 +40,15 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             _fakeHttpContextAccessor = A.Fake<IHttpContextAccessor>();
             _fakeLogger = A.Fake<ILogger<SubscriptionController>>();
             _fakeSubscriptionService = A.Fake<ISubscriptionService>();
+
+            A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(new DefaultHttpContext());
+            _fakeSubscriptionService = A.Fake<ISubscriptionService>();
             _fakeNotificationRepository = A.Fake<INotificationRepository>();
 
             _controller = new SubscriptionController(_fakeHttpContextAccessor, _fakeLogger, _fakeSubscriptionService, _fakeNotificationRepository);
         }
 
-        [Test] 
+        [Test]
         public async Task WhenPostInvalidNullPayload_ThenReceiveBadRequest()
         {
             var result = (BadRequestObjectResult)await _controller.Post(null);
@@ -55,7 +58,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             Assert.AreEqual("Either body is null or malformed.", errors.Errors.Single().Description);
         }
 
-        [Test] 
+        [Test]
         public async Task WhenPostInvalidNullInputParameters_ThenReceiveBadRequest()
         {
             var validationMessage = new ValidationFailure("InputParameters", "D365Payload InputParameters cannot be blank or null.")
@@ -67,7 +70,6 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 
             var result = (BadRequestObjectResult)await _controller.Post(_fakeD365PayloadDetails);
             var errors = (ErrorDescription)result.Value;
-
             Assert.AreEqual(400, result.StatusCode);
             Assert.AreEqual("D365Payload InputParameters cannot be blank or null.", errors.Errors.Single().Description);
         }
@@ -80,6 +82,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(defaultHttpContext);
             A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
             A.CallTo(() => _fakeNotificationRepository.GetAllNotificationTypes()).Returns(_fakeNotificationType);
+            A.CallTo(() => _fakeSubscriptionService.AddSubscriptionRequest(A<SubscriptionRequest>.Ignored, A<NotificationType>.Ignored, A<string>.Ignored));
 
             var result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
 
@@ -109,9 +112,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
             A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
             A.CallTo(() => _fakeNotificationRepository.GetAllNotificationTypes()).Returns(_fakeNotificationType);
+
             var result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
 
             A.CallTo(_fakeLogger).Where(call => call.GetArgument<LogLevel>(0) == LogLevel.Error).MustNotHaveHappened();
+            A.CallTo(() => _fakeSubscriptionService.AddSubscriptionRequest(_fakeSubscriptionRequest, _fakeNotificationType.FirstOrDefault(), A<string>.Ignored)).MustHaveHappenedOnceExactly();
             Assert.AreEqual(StatusCodes.Status202Accepted, result.StatusCode);
         }
 
