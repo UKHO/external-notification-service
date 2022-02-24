@@ -200,7 +200,7 @@ resource "azurerm_api_management_product_policy" "ees_product_policy" {
       <validate-jwt header-name="Authorization" failed-validation-httpcode="401" failed-validation-error-message="Access token is missing or invalid.">
         <openid-config url="https://login.microsoftonline.com/${var.ad_tenant_id}/.well-known/openid-configuration" />
         <audiences>
-          <audience>${var.client_credentials_client_id}</audience>
+          <audience>${var.ens_app_client_id}</audience>
         </audiences>      
       </validate-jwt>      
 

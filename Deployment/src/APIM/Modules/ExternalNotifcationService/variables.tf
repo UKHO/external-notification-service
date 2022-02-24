@@ -1,5 +1,5 @@
 variable "resource_group_name" {
-  type = string
+  type = string 
   default = "apim-rg"
 }
 
@@ -31,21 +31,25 @@ variable "d365_product_daily_quota_limit" {
 }
 
 variable "ad_tenant_id" {
-  type    = string
+  type    = string  
 }
 
-variable "client_credentials_client_id" {
-  type    = string
+variable "client_credentials_client_id" { 
+   type    = string    
 }
 
 variable "client_credentials_secret" {
-  type    = string
+  type    = string    
 }
 
 variable "client_credentials_scope" {
-  type    = string
+  type    = string    
+}
+
+variable "ens_app_client_id" {
+  type    = string    
 }
 
 locals {
-  formatted_env = lower(replace(trimspace(var.env), " ", "-"))
+  formatted_env = lower(replace(trimspace(var.env), " ", "-"))  
 }
