@@ -5,6 +5,7 @@ data "azurerm_resource_group" "rg" {
 module "webapp_service" {
   source              = "./Modules/Webapp"
   name                = local.web_app_name
+  ens_api_asp         = var.ens_api_asp
   resource_group_name = data.azurerm_resource_group.rg.name
   location            = data.azurerm_resource_group.rg.location
   app_service_sku     = var.app_service_sku[local.env_name]

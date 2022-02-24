@@ -1,3 +1,7 @@
+variable "ens_api_asp" {
+  type    = string
+}
+
 variable "name" {
   type = string
 }
@@ -13,7 +17,6 @@ variable "location" {
 variable "app_settings" {
   type = map(string)
 }
-
 
 variable "tags" {
 
