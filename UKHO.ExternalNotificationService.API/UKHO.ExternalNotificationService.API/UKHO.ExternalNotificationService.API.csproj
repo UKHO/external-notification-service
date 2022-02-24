@@ -19,7 +19,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="6.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Serilog.Extensions.Logging.File" Version="2.0.0" />
-    <PackageReference Include="UKHO.Logging.EventHubLogProvider" Version="1.20077.2" />
+    <PackageReference Include="UKHO.Logging.EventHubLogProvider" Version="1.22047.3" />
   </ItemGroup>
 
   <ItemGroup>

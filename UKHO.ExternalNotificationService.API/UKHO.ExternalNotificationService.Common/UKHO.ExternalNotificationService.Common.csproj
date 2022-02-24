@@ -17,9 +17,9 @@
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
-    <PackageReference Include="UKHO.Logging.EventHubLogProvider" Version="1.20077.2" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="UKHO.Logging.EventHubLogProvider" Version="1.22047.3" />
   </ItemGroup>
 
 </Project>

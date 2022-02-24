@@ -132,7 +132,7 @@ namespace UKHO.ExternalNotificationService.API
                  .AddJsonFile("appsettings.json", false, true);
 
             builder.AddEnvironmentVariables();
-            var tempConfig = builder.Build();
+            IConfigurationRoot tempConfig = builder.Build();
             string kvServiceUri = tempConfig["KeyVaultSettings:ServiceUri"];
 
             if (!string.IsNullOrWhiteSpace(kvServiceUri))

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Azure.Management.EventGrid.Models;
+using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Helpers;
@@ -18,11 +19,11 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
             _logger = logger;
         }
 
-        public async Task<string> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionMessage, CancellationToken cancellationToken)
+        public async Task<EventSubscription> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionMessage, CancellationToken cancellationToken)
         {
             _logger.LogInformation(EventIds.CreateSubscriptionServiceStart.ToEventId(),
                     "Create Subscription service started for _D365-Correlation-ID:{CorrelationId} and _X-Correlation-ID:{CorrelationId}", subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
-            string response = await _azureEventGridDomainService.CreateOrUpdateSubscription(subscriptionMessage, cancellationToken);
+            EventSubscription response = await _azureEventGridDomainService.CreateOrUpdateSubscription(subscriptionMessage, cancellationToken);
             _logger.LogInformation(EventIds.CreateSubscriptionServiceCompleted.ToEventId(),
                     "Create Subscription service completed for _D365-Correlation-ID:{CorrelationId} and _X-Correlation-ID:{CorrelationId}", subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
             return response;
