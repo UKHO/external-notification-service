@@ -114,7 +114,8 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                   services.Configure<EventGridDomainConfiguration>(s_configurationBuilder.GetSection("EventGridDomainConfiguration"));
                   services.Configure<QueuesOptions>(s_configurationBuilder.GetSection("QueuesOptions"));
                   services.AddScoped<ISubscriptionServiceData, SubscriptionServiceData>();
-                  services.AddScoped<IAzureEventGridDomainService, AzureEventGridDomainService>();                  
+                  services.AddScoped<IAzureEventGridDomainService, AzureEventGridDomainService>();
+                  services.AddScoped<IEventSubscriptionConfiguration, EventSubscriptionConfiguration>();
               })
               .ConfigureWebJobs(b =>
               {
