@@ -27,7 +27,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
             if(isCallbackRequestSave)
             {
                 _logger.LogInformation("Callback request stored in memory for subscriptionId: {subscriptionId}", subscriptionId);
-                return NoContent();
+                return GetNotContentResponse();
             }
             else
             {
@@ -44,7 +44,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
             if (callbackRequest == null)
             {
                 _logger.LogInformation("Callback not found for subscriptionId: {subscriptionId}", subscriptionId);
-                return NotFound();
+                return GetNotFoundResponse();
             }
             _logger.LogInformation("Callback found and return for subscriptionId: {subscriptionId}", subscriptionId);
             return Ok(callbackRequest);

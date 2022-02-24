@@ -47,7 +47,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
                     if (isDistributorRequestSaved)
                     {
                         _logger.LogInformation("Distributor webhook request stored in memory for Id: {Id}", customCloudEvent.Id);
-                        return NoContent();
+                        return GetNotContentResponse();
                     }
                     else
                     {
@@ -71,7 +71,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
             if (distributorRequest == null)
             {
                 _logger.LogInformation("Distribution Request not found for CloudEventId : {cloudEventId}", cloudEventId);
-                return NotFound();
+                return GetNotFoundResponse();
             }
             _logger.LogInformation("Distribution Request found and return for CloudEventId : {cloudEventId}", cloudEventId);
             return Ok(distributorRequest);
