@@ -125,6 +125,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                   services.Configure<AzureADConfiguration>(s_configurationBuilder.GetSection("EnsAuthConfiguration"));
                   services.AddScoped<ISubscriptionServiceData, SubscriptionServiceData>();
                   services.AddScoped<IAzureEventGridDomainService, AzureEventGridDomainService>();
+                  services.AddScoped<IEventSubscriptionConfiguration, EventSubscriptionConfiguration>();                 
                   services.AddScoped<IAuthTokenProvider, AuthTokenProvider>();
                   services.AddScoped<ICallbackService, CallbackService>();                 
                  
