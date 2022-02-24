@@ -4,8 +4,8 @@ info:
   description: "This is a light weight open api spec for UKHO External Notification Service and it should not be used as formal API documentation. One of its main purpose is to allow importing ENS APIs in APIM."
   version: '0.0.1'
   contact:
-    email: martin.rock-evans@ukho.gov.uk
-    name: Martin Rock-Evans
+    email: AbzuDeliveryTeam@ukho.gov.uk
+    name: Abzu Team
 paths:
   /subscription:
     post:
