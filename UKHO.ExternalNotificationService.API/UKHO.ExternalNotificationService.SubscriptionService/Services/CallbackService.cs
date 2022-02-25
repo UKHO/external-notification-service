@@ -36,12 +36,12 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
                 "Callback to D365 using Dataverse failed with Status:{StatusCode} and RequestUri:{RequestUri} and SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", httpResponse.StatusCode, httpResponse.RequestMessage.RequestUri, subscriptionMessage.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
                     return httpResponse;
                 }
-                    _logger.LogInformation(EventIds.CallbackToD365Completed.ToEventId(),
-                "Callback to D365 using Dataverse succeeded with Status:{StatusCode} and RequestUri:{RequestUri} and SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", httpResponse.StatusCode, httpResponse.RequestMessage.RequestUri, subscriptionMessage.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+                _logger.LogInformation(EventIds.CallbackToD365Completed.ToEventId(),
+                    "Callback to D365 using Dataverse succeeded with Status:{StatusCode} and RequestUri:{RequestUri} and SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", httpResponse.StatusCode, httpResponse.RequestMessage.RequestUri, subscriptionMessage.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
                 return httpResponse;
             }
-               _logger.LogError(EventIds.ErrorInCallbackToD365HttpClient.ToEventId(),
-            "As Authorization to AD Token failed with Status:{StatusCode} and SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", HttpStatusCode.Unauthorized, subscriptionMessage.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+            _logger.LogError(EventIds.ErrorInCallbackToD365HttpClient.ToEventId(),
+                "As Authorization to AD Token failed with Status:{StatusCode} and SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", HttpStatusCode.Unauthorized, subscriptionMessage.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
             return new HttpResponseMessage { StatusCode = HttpStatusCode.Unauthorized };
         }
     }
