@@ -1,6 +1,7 @@
-﻿using System.Net.Http;
+﻿using Newtonsoft.Json;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
 {
@@ -17,6 +18,11 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         {
             string bodyJson = await httpResponseMessage.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<T>(bodyJson);
+        }
+
+        public static void SetBearerToken(this HttpRequestMessage requestMessage, string accessToken)
+        {
+            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
         }
     }
 }

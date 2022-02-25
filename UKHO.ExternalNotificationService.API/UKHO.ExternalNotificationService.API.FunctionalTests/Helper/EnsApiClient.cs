@@ -1,8 +1,9 @@
-﻿using System.Net.Http;
+﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using UKHO.ExternalNotificationService.API.FunctionalTests.Model;
 
 namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
@@ -21,21 +22,53 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         /// Post Subscription request
         /// </summary>
         /// <param name="d365Payload"></param>
-        /// <param name="headerRequest">headerRequest, pass NULL to skip request header</param>
+        /// <param name="accessToken">Access Token, pass NULL to skip auth header</param>
         /// <returns></returns>
-        public async Task<HttpResponseMessage> PostEnsApiSubscriptionAsync([FromBody] D365Payload d365Payload, string headerRequest = null)
+        public async Task<HttpResponseMessage> PostEnsApiSubscriptionAsync([FromBody] D365Payload d365Payload, string accessToken = null)
         {
             string uri = $"{_apiHost}/api/subscription";
             string payloadJson = JsonConvert.SerializeObject(d365Payload);
-            using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri)
+            HttpRequestMessage httpRequestMessage = GetHttpRequestMessage(accessToken, uri, payloadJson);
+
+            return await s_httpClient.SendAsync(httpRequestMessage);
+        }
+
+        public async Task<HttpResponseMessage> OptionEnsApiSubscriptionAsync(string headerRequest = null, string headerRequestValue = null, string accessToken = null)
+        {
+            string uri = $"{_apiHost}/api/webhook";       
+            using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Options, uri);           
+            if (headerRequest != null)
+            {
+                httpRequestMessage.Headers.Add(headerRequest, headerRequestValue);
+            }
+            if(accessToken!=null)
+            {
+                httpRequestMessage.SetBearerToken(accessToken);
+            }
+            return await s_httpClient.SendAsync(httpRequestMessage);
+        }
+
+        public async Task<HttpResponseMessage> PostEnsWebhookNewEventPublishedAsync([FromBody] JObject request, string accessToken = null)
+        {
+            string uri = $"{_apiHost}/api/webhook";
+            string payloadJson = JsonConvert.SerializeObject(request);
+            using var httpRequestMessage = GetHttpRequestMessage(accessToken, uri, payloadJson);
+
+            return await s_httpClient.SendAsync(httpRequestMessage);
+        }
+
+        private static HttpRequestMessage GetHttpRequestMessage(string accessToken, string uri, string payloadJson)
+        {
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri)
             {
                 Content = new StringContent(payloadJson, Encoding.UTF8, "application/json")
             };
-            if (headerRequest != null)
+            if (accessToken != null)
             {
-                httpRequestMessage.Headers.Add(headerRequest, string.Empty);
+                httpRequestMessage.SetBearerToken(accessToken);
             }
-            return await s_httpClient.SendAsync(httpRequestMessage);
+
+            return httpRequestMessage;
         }
     }
 }
