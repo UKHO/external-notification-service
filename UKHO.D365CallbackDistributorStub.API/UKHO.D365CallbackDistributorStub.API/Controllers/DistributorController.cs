@@ -64,15 +64,17 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get(string cloudEventId)
+        public IActionResult Get(string? cloudEventId)
         {
             _logger.LogInformation("GET distribution request accessed for Id: {Id}", cloudEventId);
-            DistributorRequest? distributorRequest = _distributionService.GetDistributorRequest(cloudEventId);
-            if (distributorRequest == null)
+            List<DistributorRequest>? distributorRequest = _distributionService.GetDistributorRequest(cloudEventId);
+
+            if (distributorRequest == null || distributorRequest.Count == 0)
             {
                 _logger.LogInformation("Distribution Request not found for CloudEventId : {cloudEventId}", cloudEventId);
                 return GetNotFoundResponse();
             }
+
             _logger.LogInformation("Distribution Request found and return for CloudEventId : {cloudEventId}", cloudEventId);
             return Ok(distributorRequest);
         }

@@ -5,7 +5,7 @@ using UKHO.D365CallbackDistributorStub.API.Services;
 
 namespace UKHO.D365CallbackDistributorStub.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/dynamics")]
     [ApiController]
     [ExcludeFromCodeCoverage]
     public class CallbackController : BaseController<CallbackController>
@@ -24,7 +24,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
         {
             _logger.LogInformation("POST callback accessed for subscriptionId: {subscriptionId}", subscriptionId);
             bool isCallbackRequestSave = CallbackService.SaveCallbackRequest(callbackRequest, subscriptionId);
-            if(isCallbackRequestSave)
+            if (isCallbackRequestSave)
             {
                 _logger.LogInformation("Callback request stored in memory for subscriptionId: {subscriptionId}", subscriptionId);
                 return GetNotContentResponse();
@@ -37,15 +37,17 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get(string subscriptionId)
+        public IActionResult Get(string? subscriptionId)
         {
             _logger.LogInformation("GET callback accessed for subscriptionId: {subscriptionId}", subscriptionId);
-            RecordCallbackRequest? callbackRequest = _callbackService.GetCallbackRequest(subscriptionId);
-            if (callbackRequest == null)
+            List<RecordCallbackRequest>? callbackRequest = _callbackService.GetCallbackRequest(subscriptionId);
+
+            if (callbackRequest == null || callbackRequest.Count == 0)
             {
                 _logger.LogInformation("Callback not found for subscriptionId: {subscriptionId}", subscriptionId);
                 return GetNotFoundResponse();
             }
+
             _logger.LogInformation("Callback found and return for subscriptionId: {subscriptionId}", subscriptionId);
             return Ok(callbackRequest);
         }

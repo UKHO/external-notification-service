@@ -30,9 +30,16 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
             }
         }
 
-        public DistributorRequest? GetDistributorRequest(string cloudEventId)
+        public List<DistributorRequest>? GetDistributorRequest(string? cloudEventId)
         {
-            return s_recordDistributorRequestQueue.FirstOrDefault(a => a.cloudEventId == cloudEventId);
+            if(!string.IsNullOrEmpty(cloudEventId))
+            {
+                return s_recordDistributorRequestQueue.Where(a => a.cloudEventId == cloudEventId).ToList();
+            }
+            else
+            {
+                return s_recordDistributorRequestQueue.ToList();
+            }
         }
     }
 }

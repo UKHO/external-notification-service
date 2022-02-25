@@ -30,9 +30,17 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
             }
         }
 
-        public  RecordCallbackRequest? GetCallbackRequest(string subscriptionId)
+        public  List<RecordCallbackRequest>? GetCallbackRequest(string? subscriptionId)
         {
-            return s_recordCallbackRequestQueue.FirstOrDefault(a => a.subscriptionId == subscriptionId);
+            if(!string.IsNullOrEmpty(subscriptionId))
+            {
+                return s_recordCallbackRequestQueue.Where(a => a.subscriptionId == subscriptionId).ToList();
+            }
+            else
+            {
+                return s_recordCallbackRequestQueue.ToList();
+            }
+
         }
     }
 }
