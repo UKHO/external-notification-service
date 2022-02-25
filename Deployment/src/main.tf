@@ -36,7 +36,6 @@ module "webapp_service" {
   tags                      = local.tags
   allowed_ips               = var.allowed_ips
 }
-}
 
 module "key_vault" {
   source              = "./Modules/KeyVault"
