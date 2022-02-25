@@ -303,11 +303,11 @@ stages:
         variables:
           - group: "ENS-Dev-TF-Variables"
           - group: "ENS-Dev-Variables"
-          - name:  "EnsAuthconfiguration.ClientId"
+          - name:  "EnsAuthConfiguration.ClientId"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-CLIENT-ID)
-          - name:  "EnsAuthconfiguration.ClientSecret"
+          - name:  "EnsAuthConfiguration.ClientSecret"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-VALUE)
-          - name: "EnsAuthconfiguration.TenantId"
+          - name: "EnsAuthConfiguration.TenantId"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-TENANT-ID)
         strategy:
           runOnce:
@@ -364,11 +364,11 @@ stages:
         variables:
           - group: "ENS-QA-TF-Variables"
           - group: "ENS-QA-Variables"
-          - name:  "EnsAuthconfiguration.ClientId"
+          - name:  "EnsAuthConfiguration.ClientId"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-CLIENT-ID)
-          - name:  "EnsAuthconfiguration.ClientSecret"
+          - name:  "EnsAuthConfiguration.ClientSecret"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-VALUE)
-          - name: "EnsAuthconfiguration.TenantId"
+          - name: "EnsAuthConfiguration.TenantId"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-TENANT-ID)
         strategy:
           runOnce:
@@ -425,11 +425,11 @@ stages:
         variables:
           - group: "ENS-Live-TF-Variables"
           - group: "ENS-Live-Variables"
-          - name:  "EnsAuthconfiguration.ClientId"
+          - name:  "EnsAuthConfiguration.ClientId"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-CLIENT-ID)
-          - name:  "EnsAuthconfiguration.ClientSecret"
+          - name:  "EnsAuthConfiguration.ClientSecret"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-VALUE)
-          - name: "EnsAuthconfiguration.TenantId"
+          - name: "EnsAuthConfiguration.TenantId"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-TENANT-ID)
         strategy:
           runOnce:
