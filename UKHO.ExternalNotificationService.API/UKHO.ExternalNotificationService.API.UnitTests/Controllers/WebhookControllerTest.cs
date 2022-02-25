@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Controllers;
@@ -31,12 +32,22 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         [Test]
         public void WhenValidHeaderRequestedInNewFilesPublishedOptions_ThenReturnsOkResponse()
         {
-            _controller.ControllerContext.HttpContext = new DefaultHttpContext();
-            _controller.HttpContext.Request.Headers.Add("WebHook-Request-Origin", "test.example.com");
+            var context = new DefaultHttpContext();
+            string requestHeaderValue = "test.example.com";
+            context.Request.Headers["WebHook-Request-Origin"] = requestHeaderValue;
+
+            A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(context);
+
+            _controller.ControllerContext = new ControllerContext()
+            {
+                HttpContext = context
+            };
 
             var result = (StatusCodeResult)_controller.Options();
 
             Assert.AreEqual(StatusCodes.Status200OK, result.StatusCode);
+            Assert.AreEqual("*", _controller.HttpContext.Response.Headers.Where(a => a.Key == "WebHook-Allowed-Rate").Select(b => b.Value).FirstOrDefault());
+            Assert.AreEqual(requestHeaderValue, _controller.HttpContext.Response.Headers.Where(a => a.Key == "WebHook-Allowed-Origin").Select(b => b.Value).FirstOrDefault());
         }
 
         [Test]
