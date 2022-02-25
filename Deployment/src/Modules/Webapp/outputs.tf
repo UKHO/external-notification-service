@@ -2,10 +2,6 @@ output "web_app_object_id" {
   value = azurerm_app_service.webapp_service.identity.0.principal_id
 }
 
-output "web_app_asp_name" {
-  value = azurerm_app_service_plan.app_service_plan.name
-}
-
 output "web_app_tenant_id" {
   value = azurerm_app_service.webapp_service.identity.0.tenant_id
 }

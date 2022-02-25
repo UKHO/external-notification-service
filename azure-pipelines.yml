@@ -375,7 +375,6 @@ stages:
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-TENANT-ID)
           - name: "EnsAuthConfiguration.ClientSecret"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-VALUE)
-          - group: "ENS-Dev-Variables"
           - name: "D365CallbackConfiguration.D365ApiUri"
             value: $(D365ApiStubUri)
         strategy:
