@@ -302,7 +302,19 @@ stages:
           clean: all
         variables:
           - group: "ENS-Dev-TF-Variables"
-          - group: "ENS-Dev-Variables"
+          - group: "ENS-Dev-Variables" 
+          - name: "D365AuthConfiguration.TenantId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
+          - name: "D365AuthConfiguration.ClientId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
+          - name: "D365AuthConfiguration.ClientSecret"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
+          - name: "EnsAuthConfiguration.ClientId"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-CLIENT-ID)
+          - name: "EnsAuthConfiguration.TenantId"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-TENANT-ID)
+          - name: "EnsAuthConfiguration.ClientSecret"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-VALUE)
         strategy:
           runOnce:
             deploy:
@@ -358,6 +370,18 @@ stages:
         variables:
           - group: "ENS-QA-TF-Variables"
           - group: "ENS-QA-Variables"
+          - name: "D365AuthConfiguration.TenantId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
+          - name: "D365AuthConfiguration.ClientId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
+          - name: "D365AuthConfiguration.ClientSecret"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
+          - name: "EnsAuthConfiguration.ClientId"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-CLIENT-ID)
+          - name: "EnsAuthConfiguration.TenantId"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-TENANT-ID)
+          - name: "EnsAuthConfiguration.ClientSecret"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-VALUE)
         strategy:
           runOnce:
             deploy:
@@ -413,6 +437,18 @@ stages:
         variables:
           - group: "ENS-Live-TF-Variables"
           - group: "ENS-Live-Variables"
+          - name: "D365AuthConfiguration.TenantId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
+          - name: "D365AuthConfiguration.ClientId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
+          - name: "D365AuthConfiguration.ClientSecret"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
+          - name: "EnsAuthConfiguration.ClientId"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-CLIENT-ID)
+          - name: "EnsAuthConfiguration.TenantId"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-TENANT-ID)
+          - name: "EnsAuthConfiguration.ClientSecret"
+            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-VALUE)
         strategy:
           runOnce:
             deploy:

@@ -18,17 +18,21 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         private EnsApiClient EnsApiClient { get; set; }
         private TestConfiguration TestConfig { get; set; }
         private D365Payload D365Payload { get; set; }
-        private QueueClient Queue { get; set; }        
+        private QueueClient Queue { get; set; }
+        private string EnsToken { get; set; }
 
         [SetUp]
-        public void Setup()
+        public async Task SetupAsync()
         {
             TestConfig = new TestConfiguration();
             EnsApiClient = new EnsApiClient(TestConfig.EnsApiBaseUrl);
 
+            ADAuthTokenProvider adAuthTokenProvider = new();
+            EnsToken = await adAuthTokenProvider.GetEnsAuthToken();
+
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), TestConfig.PayloadFolder, TestConfig.PayloadFileName);
 
-            D365Payload = JsonConvert.DeserializeObject<D365Payload>(File.ReadAllText(filePath));
+            D365Payload = JsonConvert.DeserializeObject<D365Payload>(await File.ReadAllTextAsync(filePath));
 
             Queue = new QueueClient(TestConfig.EnsStorageConnectionString, TestConfig.EnsStorageQueueName);
             
@@ -37,7 +41,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [Test]
         public async Task WhenICallTheEnsSubscriptionApiWithAValidD365Payload_ThenMessageAddedInQueue()
         {
-            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload);
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
             Assert.AreEqual(202, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
 
             QueueMessage[] messageQueue = await Queue.ReceiveMessagesAsync();

@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using UKHO.ExternalNotificationService.API.Filters;
 using UKHO.ExternalNotificationService.Common.Logging;
 using UKHO.ExternalNotificationService.Common.Models.Response;
@@ -61,13 +61,13 @@ namespace UKHO.ExternalNotificationService.API.Controllers
             switch (model.HttpStatusCode)
             {
                 case HttpStatusCode.OK:
-                    return BuildOkResponse(model);
+                    return BuildOkResponse();
 
                 case HttpStatusCode.Accepted:
                     return BuildAcceptedResponse();
 
                 case HttpStatusCode.Created:
-                    return BuildOkResponse(model);
+                    return BuildOkResponse();
 
                 case HttpStatusCode.InternalServerError:
                     return BuildInternalServerErrorResponse();
@@ -80,7 +80,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
             }
         }
 
-        private IActionResult BuildOkResponse(ExternalNotificationServiceResponse model)
+        private IActionResult BuildOkResponse()
         {
             LogInfo(EventIds.OK.ToEventId(), "OK", GetCurrentCorrelationId());
             return Ok();
