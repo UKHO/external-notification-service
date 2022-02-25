@@ -33,6 +33,12 @@ module "webapp_service" {
     "EventGridDomainConfiguration:ResourceGroup"               = azurerm_resource_group.rg.name
     "EventGridDomainConfiguration:EventGridDomainName"         = module.eventgriddomain.event_grid_domain_name
   }
+  app_settings_stub = {
+    "ASPNETCORE_ENVIRONMENT"                               = local.env_name
+    "WEBSITE_RUN_FROM_PACKAGE"                             = "1"
+    "WEBSITE_ENABLE_SYNC_UPDATE_SITE"                      = "true"
+    "APPINSIGHTS_INSTRUMENTATIONKEY"                       = "NOT_CONFIGURED"
+  }
   tags                      = local.tags
 }
 

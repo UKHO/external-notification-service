@@ -419,85 +419,16 @@ stages:
                     testRunTitle: "Dev-AutomationTests"
                     workingDirectory: '$(Build.SourcesDirectory)/functionaltests'
 
-  - stage: QCdeploy
-    dependsOn:
-    - Devdeploy
-    variables:
-      EnsStorageConnectionString: $[ stageDependencies.Devdeploy.DevDeployApp.outputs['DevDeployApp.setvariable.EnsStorageConnection'] ]
-      ResourceGroup: $[ stageDependencies.Devdeploy.DevDeployApp.outputs['DevDeployApp.setvariable.ResourceGroup'] ]
-      EnsStubAsp: $[ stageDependencies.Devdeploy.DevDeployApp.outputs['DevDeployApp.setvariable.EnsStubAsp'] ]
-      EnsStorageQueueName:  $[ stageDependencies.Devdeploy.DevDeployApp.outputs['DevDeployApp.setvariable.EnsStorageQueue'] ]
-    displayName: "QCdeploy (inc terraform, webapp deploy)"
-    jobs:
-      - deployment: QCDeployApp
-        displayName: "QC - deploy terraform and dotnet App"
-        environment: "Ens-Dev"
-        pool: $(DeploymentPool)
-        container: ${{variables.Container}}
-        workspace:
-          clean: all
-        variables:
-          - group: "ENS-Dev-TF-Variables"
-          - group: "ENS-Dev-Variables"
-            #This variables are overridden since they are different from dev and we have used same library
-          - name: "Environment"
-            value: "qc"
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - template: StubApiDeployment/templates/stub-api-continuous-deployment.yml
-                  parameters:
-                    AzureSubscription: "External Notification Service Dev - A.008.02"
-                  
-                - task: DownloadBuildArtifacts@0
-                  displayName: "Download Functional test Artifact"
+                - task: AzureCLI@2
+                  displayName: "Swap Stub URL"
                   inputs:
-                    buildType: 'current'
-                    downloadType: 'single'
-                    artifactName: 'functionaltests'
-                    downloadPath: '$(Build.SourcesDirectory)'
-
-                - task: FileTransform@1
-                  displayName: "File Transform: functionaltests"
-                  inputs:
-                    folderPath: '$(Build.SourcesDirectory)/functionaltests/'
-                    fileType: json
-                    targetFiles: '**/appsettings.json'
-
-                - task: UseDotNet@2
-                  displayName: 'Use .NET 6.0.x sdk'
-                  inputs:
-                    packageType: sdk
-                    version: 6.0.x
-
-                - task: DotNetCoreCLI@2
-                  displayName: "Run Functional tests"
-                  inputs:
-                    command: "test"
-                    projects: |
-                      **/*FunctionalTest*.dll
-                      !**/*TestAdapter.dll
-                      !**/obj/**
-                    testRunTitle: "Dev-AutomationTests"
-                    workingDirectory: '$(Build.SourcesDirectory)/functionaltests'
-
-                - bash: echo "##vso[task.setvariable variable=D365CallbackConfiguration.D365ApiUri]$(D365ApiStubUri)"
-                  name: SwapStubURL
-
-                - bash: echo $(D365CallbackConfiguration.D365ApiUri)
-
-                - task: FileTransform@1
-                  displayName: "File Transform: functionaltestsdev"
-                  inputs:
-                    folderPath: '$(Build.SourcesDirectory)/functionaltests/'
-                    fileType: json
-                    targetFiles: '**/appsettings.json'
+                    azureSubscription: "External Notification Service Dev - A.008.02"
+                    scriptType: 'pscore'
+                    scriptLocation: 'scriptPath'
+                    scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
+                    arguments: '-Stuburi $(D365ApiStubUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
 
   - stage: QAdeploy
-    dependsOn:
-    - Devdeploy
-    - QCdeploy
     displayName: QAdeploy (inc terraform, webapp deploy)
     condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
