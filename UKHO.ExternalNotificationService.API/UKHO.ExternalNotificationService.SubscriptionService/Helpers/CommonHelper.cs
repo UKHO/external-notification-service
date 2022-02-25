@@ -20,7 +20,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Helpers
                 .WaitAndRetryAsync(retryCount, (retryAttempt) =>
                 {
                     return TimeSpan.FromSeconds(Math.Pow(sleepDuration, (retryAttempt - 1)));
-                }, async (response, timespan, retryAttempt, context) =>
+                }, async (response, timespan, retryAttempt, _) =>
                 {
                     KeyValuePair<string, IEnumerable<string>> retryAfterHeader = response.Result.Headers.FirstOrDefault(h => h.Key.ToLowerInvariant() == "retry-after");
                     KeyValuePair<string, IEnumerable<string>> correlationId = response.Result.RequestMessage.Headers.FirstOrDefault(h => h.Key.ToLowerInvariant() == "x-correlation-id");

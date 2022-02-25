@@ -34,7 +34,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
             _callbackService =  callbackService;
         }
 
-        public async Task ProcessQueueMessage([QueueTrigger("%SubscriptionStorageConfiguration:QueueName%")] QueueMessage message)
+        public async Task ProcessQueueMessage([QueueTrigger("ens-subscription")] QueueMessage message)
         {            
             SubscriptionRequestMessage subscriptionMessage = message.Body.ToObjectFromJson<SubscriptionRequestMessage>();
             EventSubscription eventSubscription;

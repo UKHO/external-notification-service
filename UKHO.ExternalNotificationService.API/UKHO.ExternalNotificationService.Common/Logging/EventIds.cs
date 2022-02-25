@@ -113,25 +113,37 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         AzureWebJobIsUnhealthy = 900027,
         /// <summary>
-        /// 900028 - Callbcak to D365 API using dataverse event started
+        /// 900028 -  Request for external notification service webhook post endpoint is started.
         /// </summary>
-        CallbackToD365Started = 900028,
+        ENSWebhookRequestStart = 900028,
         /// <summary>
-        /// 900029 - Before calling HTTP client request to  Callback to D365 and after token authorization
+        /// 900029 -  Requested for external notification service webhook options endpoint.
         /// </summary>
-        BeforeCallbackToD365 = 900029,       
+        ENSWebhookOptionsEndPointRequested= 900029,
         /// <summary>
-        /// 900030 - Log an error if call back to D365 API returns statusCode other than 204.
+        /// 900030 - Callbcak to D365 API using dataverse event started
         /// </summary>
-        ErrorInCallbackToD365HttpClient = 900030,
+        CallbackToD365Started = 900030,
         /// <summary>
-        /// 900031 - Http Client request completed for Callback to D365
+        /// 900031 - Before calling HTTP client request to  Callback to D365 and after token authorization
         /// </summary>
-        CallbackToD365Completed = 900031,
+        BeforeCallbackToD365 = 900031,
         /// <summary>
-        /// 900032 - Request for retrying D365 Callback Http endpoint.
+        /// 900032 - Log an error if call back to D365 API returns statusCode other than 204
         /// </summary>
-        RetryHttpClientD365CallbackRequest = 900032        
+        ErrorInCallbackToD365HttpClient = 900032,
+        /// <summary>
+        /// 900033 - Http Client request completed for Callback to D365
+        /// </summary>
+        CallbackToD365Completed = 900033,
+        /// <summary>
+        /// 900032 - Request for retrying D365 Callback Http endpoint
+        /// </summary>
+        RetryHttpClientD365CallbackRequest = 900034,
+        /// <summary>
+        /// 900035 - Authorization failed with AD Authentication Token
+        /// </summary>
+        ADAuthenticationFailed = 900035
     }
 
     public static class EventIdExtensions

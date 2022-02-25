@@ -12,7 +12,6 @@ using System.Linq;
 using System.Reflection;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Helpers;
-using UKHO.ExternalNotificationService.Common.Logging;
 using UKHO.ExternalNotificationService.SubscriptionService.Configuration;
 using UKHO.ExternalNotificationService.SubscriptionService.Helpers;
 using UKHO.ExternalNotificationService.SubscriptionService.Services;
@@ -39,7 +38,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
 
         private static HostBuilder BuildHostConfiguration()
         {
-             
+
 
             HostBuilder hostBuilder = new();
             hostBuilder.ConfigureAppConfiguration((_, builder) =>
@@ -125,12 +124,12 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                   services.Configure<AzureADConfiguration>(s_configurationBuilder.GetSection("EnsAuthConfiguration"));
                   services.AddScoped<ISubscriptionServiceData, SubscriptionServiceData>();
                   services.AddScoped<IAzureEventGridDomainService, AzureEventGridDomainService>();
-                  services.AddScoped<IEventSubscriptionConfiguration, EventSubscriptionConfiguration>();                 
+                  services.AddScoped<IEventSubscriptionConfiguration, EventSubscriptionConfiguration>();
                   services.AddScoped<IAuthTokenProvider, AuthTokenProvider>();
-                  services.AddScoped<ICallbackService, CallbackService>();                 
-                 
-                 services.AddHttpClient("D365DataverseApi").AddPolicyHandler((services, request) => CommonHelper.GetRetryPolicy(services.GetService<ILogger<ICallbackService>>(), retryCount, sleepDuration));
-                 services.AddScoped<ICallbackClient, CallbackClient>();
+                  services.AddScoped<ICallbackService, CallbackService>();
+
+                  services.AddHttpClient("D365DataverseApi").AddPolicyHandler((_service, request) => CommonHelper.GetRetryPolicy(_service.GetService<ILogger<ICallbackService>>(), retryCount, sleepDuration));
+                  services.AddScoped<ICallbackClient, CallbackClient>();
               })
               .ConfigureWebJobs(b =>
               {

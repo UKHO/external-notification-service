@@ -14,7 +14,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
     public class CommonHelperTest
     {
         private ILogger<CallbackService> _fakeLogger;
-        private int retryCount = 3;
+        private int _retryCount = 3;
         private const double SleepDuration = 2;
         private const string TestClient = "TestClient";
         private bool _isRetryCalled;
@@ -32,7 +32,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
             _isRetryCalled = false;
 
             services.AddHttpClient(TestClient)
-                .AddPolicyHandler(CommonHelper.GetRetryPolicy(_fakeLogger, retryCount, SleepDuration))
+                .AddPolicyHandler(CommonHelper.GetRetryPolicy(_fakeLogger, _retryCount, SleepDuration))
                 .AddHttpMessageHandler(() => new ServiceUnavailableDelegatingHandler());
 
             HttpClient configuredClient = CreateClient(services);
@@ -48,10 +48,10 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
         {
             IServiceCollection services = new ServiceCollection();
             _isRetryCalled = false;
-            retryCount = 1;
+            _retryCount = 1;
 
             services.AddHttpClient(TestClient)
-                .AddPolicyHandler(CommonHelper.GetRetryPolicy(_fakeLogger, retryCount, SleepDuration))
+                .AddPolicyHandler(CommonHelper.GetRetryPolicy(_fakeLogger, _retryCount, SleepDuration))
                 .AddHttpMessageHandler(() => new InternalServerDelegatingHandler());
 
             HttpClient configuredClient = CreateClient(services);
