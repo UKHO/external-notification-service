@@ -24,6 +24,8 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
         private ICallbackClient _fakeCallbackClient;
         private ICallbackService _callbackService;
 
+        public const string FakeExternalEntityPath = $"ukho_externalnotifications(1ea01f10-1372-13fb-13a1-1300f3a3faaa)";
+
         [SetUp]
         public void Setup()
         {
@@ -33,9 +35,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
             _callbackService = A.Fake<ICallbackService>();
 
             _callbackService = new CallbackService(_fakeAuthTokenProvider, _fakeLogger, _fakeCallbackClient);           
-        }
-
-        public const string FakeExternalEntityPath = $"ukho_externalnotifications(1ea01f10-1372-13fb-13a1-1300f3a3faaa)";
+        }     
 
         [Test]
         public async Task WhenInvalidCallbackToD365UsingDataverseRequest_ThenReturnsBadRequest()

@@ -119,7 +119,7 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900029 -  Requested for external notification service webhook options endpoint.
         /// </summary>
-        ENSWebhookOptionsEndPointRequested= 900029,
+        ENSWebhookOptionsEndPointRequested = 900029,
         /// <summary>
         /// 900030 - Callbcak to D365 API using dataverse event started
         /// </summary>
@@ -137,7 +137,7 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         CallbackToD365Completed = 900033,
         /// <summary>
-        /// 900032 - Request for retrying D365 Callback Http endpoint
+        /// 900034 - Request for retrying D365 Callback Http endpoint
         /// </summary>
         RetryHttpClientD365CallbackRequest = 900034,
         /// <summary>

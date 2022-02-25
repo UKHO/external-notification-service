@@ -15,7 +15,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Helpers
         public static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(ILogger logger, int retryCount, double sleepDuration)
         {
             return Policy
-                .HandleResult<HttpResponseMessage>(r => r.StatusCode == HttpStatusCode.ServiceUnavailable)                
+                .HandleResult<HttpResponseMessage>(r => r.StatusCode == HttpStatusCode.ServiceUnavailable)
                 .OrResult(r => r.StatusCode == HttpStatusCode.InternalServerError)
                 .WaitAndRetryAsync(retryCount, (retryAttempt) =>
                 {
