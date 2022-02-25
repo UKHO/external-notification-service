@@ -46,8 +46,8 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
             {
                 ExternalNotificationEntity externalNotificationEntity = new()
                 {
-                    ukho_lastresponse = _d365CallbackConfiguration.Value.SucceededStatusCode,
-                    ukho_responsedetails = Convert.ToString(DateTime.UtcNow)
+                    ResponseStatusCode = _d365CallbackConfiguration.Value.SucceededStatusCode,
+                    ResponseDetails = Convert.ToString(DateTime.UtcNow)
                 };
                 try
                 {
@@ -63,7 +63,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
 
                 //Callback to D365
                 _logger.LogInformation(EventIds.CallbackToD365Started.ToEventId(),
-              "CallbackToD365UsingDataverse start with ResponseDetails:{externalNotificationEntity} for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", externalNotificationEntity.ukho_lastresponse,externalNotificationEntity.ukho_responsedetails, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+              "CallbackToD365UsingDataverse start with ResponseDetails:{externalNotificationEntity} for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", externalNotificationEntity.ResponseStatusCode, externalNotificationEntity.ResponseDetails, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
 
                 string entityPath = $"ukho_externalnotifications({subscriptionMessage.SubscriptionId})";
                 await _callbackService.CallbackToD365UsingDataverse(entityPath, externalNotificationEntity, subscriptionMessage);

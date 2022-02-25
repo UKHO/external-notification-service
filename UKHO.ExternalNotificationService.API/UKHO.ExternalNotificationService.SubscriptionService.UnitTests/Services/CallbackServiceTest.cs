@@ -79,8 +79,8 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
         {
             return new ExternalNotificationEntity()
             {
-                ukho_lastresponse = 123232,
-                ukho_responsedetails = Convert.ToString(DateTime.UtcNow)
+                ResponseStatusCode = 123232,
+                ResponseDetails = Convert.ToString(DateTime.UtcNow)
             };
         }
 

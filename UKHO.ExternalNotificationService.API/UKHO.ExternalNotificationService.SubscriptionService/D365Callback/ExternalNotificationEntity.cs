@@ -1,14 +1,14 @@
-﻿
-using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
+
 
 namespace UKHO.ExternalNotificationService.SubscriptionService.D365Callback
 {
     public class ExternalNotificationEntity
     {
-        [JsonPropertyName("ResponseStatusCode")]
-        public int ukho_lastresponse { get; set; }
+        [JsonProperty("ukho_lastresponse")]
+        public int ResponseStatusCode { get; set; }
 
-        [JsonPropertyName("ResponseDetails")]
-        public string ukho_responsedetails { get; set; }
+        [JsonProperty("ukho_responsedetails")]
+        public string ResponseDetails { get; set; }
     }
 }
