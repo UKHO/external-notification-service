@@ -34,6 +34,8 @@ module "webapp_service" {
     "EventGridDomainConfiguration:EventGridDomainName"         = module.eventgriddomain.event_grid_domain_name
   }
   tags                      = local.tags
+  allowed_ips               = var.allowed_ips
+}
 }
 
 module "key_vault" {

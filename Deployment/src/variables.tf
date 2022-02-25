@@ -41,3 +41,7 @@ variable "app_service_sku" {
         }
   }
 }
+
+variable "allowed_ips" {
+  type = list
+}
