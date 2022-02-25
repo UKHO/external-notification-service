@@ -64,7 +64,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         {
             var ensWebhookJson = GetEnsWebhookJson();
 
-            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebookNewEventPublishedAsync(ensWebhookJson);
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson);
 
             Assert.AreEqual(401, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 401.");
 
@@ -76,7 +76,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             string invalidToken = EnsToken.Remove(EnsToken.Length - 4).Insert(EnsToken.Length - 4, "ABAA");
             var ensWebhookJson = GetEnsWebhookJson();
 
-            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebookNewEventPublishedAsync(ensWebhookJson, invalidToken);
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, invalidToken);
 
             Assert.AreEqual(401, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 401.");
 
@@ -87,7 +87,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         {
             var ensWebhookJson = GetEnsWebhookJson();
 
-            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebookNewEventPublishedAsync(ensWebhookJson, EnsToken);
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
            
             Assert.AreEqual(200, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 200.");
 

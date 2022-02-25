@@ -6,10 +6,10 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
     public class ADAuthTokenProvider
     {
         private string EnsAccessToken { get; set; }
-        static readonly TestConfiguration s_testConnfig = new();
+        static readonly TestConfiguration s_testConfig = new();
         public async Task<string> GetEnsAuthToken()
         {
-            EnsAccessToken = await GenerateEnsToken(s_testConnfig.ClientId, s_testConnfig.D365ClientId, s_testConnfig.D365Secret);
+            EnsAccessToken = await GenerateEnsToken(s_testConfig.ClientId, s_testConfig.D365ClientId, s_testConfig.D365Secret);
             return EnsAccessToken;
         }
 
@@ -18,7 +18,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             IConfidentialClientApplication confidentialClientApplication = ConfidentialClientApplicationBuilder
              .Create(d365ClientId)
              .WithClientSecret(d365Secret)
-            .WithAuthority($"{s_testConnfig.MicrosoftOnlineLoginUrl}{s_testConnfig.D365TenantId}/oauth2/token")
+            .WithAuthority($"{s_testConfig.MicrosoftOnlineLoginUrl}{s_testConfig.D365TenantId}/oauth2/token")
             .Build();
 
             AuthenticationResult result =await confidentialClientApplication.AcquireTokenForClient(

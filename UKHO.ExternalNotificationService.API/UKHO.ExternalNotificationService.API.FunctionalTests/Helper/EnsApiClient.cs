@@ -48,7 +48,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             return await s_httpClient.SendAsync(httpRequestMessage);
         }
 
-        public async Task<HttpResponseMessage> PostEnsWebookNewEventPublishedAsync([FromBody] JObject request, string accessToken = null)
+        public async Task<HttpResponseMessage> PostEnsWebhookNewEventPublishedAsync([FromBody] JObject request, string accessToken = null)
         {
             string uri = $"{_apiHost}/api/webhook";
             string payloadJson = JsonConvert.SerializeObject(request);

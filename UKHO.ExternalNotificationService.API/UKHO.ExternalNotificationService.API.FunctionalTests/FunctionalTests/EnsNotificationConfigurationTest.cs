@@ -26,7 +26,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), TestConfig.PayloadFolder, TestConfig.PayloadFileName);
 
-            D365Payload = JsonConvert.DeserializeObject<D365Payload>(File.ReadAllText(filePath));
+            D365Payload = JsonConvert.DeserializeObject<D365Payload>(await File.ReadAllTextAsync(filePath));
 
         }
 

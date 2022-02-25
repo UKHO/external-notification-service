@@ -116,7 +116,11 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900028 -  Request for external notification service webhook post endpoint is started.
         /// </summary>
-        ENSWebhookRequestStart = 900028
+        ENSWebhookRequestStart = 900028,
+        /// <summary>
+        /// 900029 -  Requested for external notification service webhook options endpoint.
+        /// </summary>
+        ENSWebhookOptionsEndPointRequested
     }
 
     public static class EventIdExtensions
