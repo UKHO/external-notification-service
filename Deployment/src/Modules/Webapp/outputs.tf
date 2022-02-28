@@ -2,10 +2,6 @@ output "web_app_object_id" {
   value = azurerm_app_service.webapp_service.identity.0.principal_id
 }
 
-output "web_app_asp_name" {
-  value = azurerm_app_service_plan.app_service_plan.name
-}
-
 output "web_app_tenant_id" {
   value = azurerm_app_service.webapp_service.identity.0.tenant_id
 }
@@ -22,4 +18,12 @@ output "webapp_scm_credentials"{
     "${var.name}-scm-password" =  azurerm_app_service.webapp_service.site_credential[0].password 
     })
   sensitive = true
+}
+
+output "webapp_name" {
+  value = azurerm_app_service.stub_webapp_service.name
+}
+
+output "default_site_hostname_ens_stub" {
+  value = azurerm_app_service.stub_webapp_service.default_site_hostname
 }
