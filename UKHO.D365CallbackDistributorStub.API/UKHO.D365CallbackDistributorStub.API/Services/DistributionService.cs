@@ -6,16 +6,16 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
     [ExcludeFromCodeCoverage]
     public class DistributionService
     {
-        static readonly Queue<DistributorRequest> s_recordDistributorRequestQueue = new();
+        private static readonly Queue<DistributorRequest> s_recordDistributorRequestQueue = new();
         public static bool SaveDistributorRequest(CustomCloudEvent cloudEvent)
         {
             try
             {
                 s_recordDistributorRequestQueue.Enqueue(new DistributorRequest
                 {
-                    cloudEvent = cloudEvent,
-                    cloudEventId = cloudEvent.Id,
-                    guid = new Guid(),
+                    CloudEvent = cloudEvent,
+                    CloudEventId = cloudEvent.Id,
+                    Guid = new Guid(),
                 });
 
                 if (s_recordDistributorRequestQueue.Count >= 50)
@@ -34,7 +34,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
         {
             if(!string.IsNullOrEmpty(cloudEventId))
             {
-                return s_recordDistributorRequestQueue.Where(a => a.cloudEventId == cloudEventId).ToList();
+                return s_recordDistributorRequestQueue.Where(a => a.CloudEventId == cloudEventId).ToList();
             }
             else
             {
