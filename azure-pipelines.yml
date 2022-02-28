@@ -369,8 +369,6 @@ stages:
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-TENANT-ID)
           - name: "EnsAuthConfiguration.ClientSecret"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-VALUE)
-          - name: "D365CallbackConfiguration.D365ApiUri"
-            value: $(D365ApiStubUri)
         strategy:
           runOnce:
             deploy:
@@ -447,8 +445,6 @@ stages:
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-TENANT-ID)
           - name: "EnsAuthConfiguration.ClientSecret"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-VALUE)
-          - name: "D365CallbackConfiguration.D365ApiUri"
-            value: $(D365ApiStubUri)
         strategy:
           runOnce:
             deploy:
@@ -517,8 +513,6 @@ stages:
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-TENANT-ID)
           - name: "EnsAuthConfiguration.ClientSecret"
             value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-VALUE)
-          - name: "D365CallbackConfiguration.D365ApiUri"
-            value: $(D365ApiStubUri)
         strategy:
           runOnce:
             deploy:
