@@ -17,7 +17,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
             return BadRequest();
         }
 
-        protected IActionResult NotContentResponse()
+        protected IActionResult NoContentResponse()
         {
             return NoContent();
         }
