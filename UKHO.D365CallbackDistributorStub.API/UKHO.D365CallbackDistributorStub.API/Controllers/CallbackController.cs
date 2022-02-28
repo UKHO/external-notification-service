@@ -27,7 +27,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
             if (callbackRequestSaved)
             {
                 _logger.LogInformation("Callback request stored in memory for subscriptionId: {subscriptionId}", subscriptionId);
-                return NotContentResponse();
+                return NoContentResponse();
             }
             else
             {

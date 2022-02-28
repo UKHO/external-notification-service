@@ -47,7 +47,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
                     if (distributorRequestSaved)
                     {
                         _logger.LogInformation("Distributor webhook request stored in memory for Subject: {Subject}", customCloudEvent.Subject);
-                        return NotContentResponse();
+                        return NoContentResponse();
                     }
                     else
                     {
