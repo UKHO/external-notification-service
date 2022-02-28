@@ -37,7 +37,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
         public virtual async Task<IActionResult> Post()
         {
             _logger.LogInformation("Distributor Webhook accessed");
-            using (StreamReader? reader = new(Request.Body, Encoding.UTF8))
+            using StreamReader? reader = new(Request.Body, Encoding.UTF8);
             {
                 string jsonContent = await reader.ReadToEndAsync();
                 CustomCloudEvent? customCloudEvent = JsonConvert.DeserializeObject<CustomCloudEvent>(jsonContent);
