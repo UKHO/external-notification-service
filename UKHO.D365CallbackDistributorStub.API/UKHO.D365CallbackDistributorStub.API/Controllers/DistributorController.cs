@@ -1,7 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Text;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using UKHO.D365CallbackDistributorStub.API.Models.Request;
 using UKHO.D365CallbackDistributorStub.API.Services;
 
@@ -30,7 +30,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
                 HttpContext.Response.Headers.Add("WebHook-Allowed-Rate", "*");
                 HttpContext.Response.Headers.Add("WebHook-Allowed-Origin", webhookRequestOrigin);
             }
-            return GetOkResponse();
+            return OkResponse();
         }
 
         [HttpPost]
@@ -43,22 +43,22 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
                 CustomCloudEvent? customCloudEvent = JsonConvert.DeserializeObject<CustomCloudEvent>(jsonContent);
                 if (customCloudEvent != null)
                 {
-                    bool isDistributorRequestSaved = DistributionService.SaveDistributorRequest(customCloudEvent);
-                    if (isDistributorRequestSaved)
+                    bool distributorRequestSaved = DistributionService.SaveDistributorRequest(customCloudEvent);
+                    if (distributorRequestSaved)
                     {
                         _logger.LogInformation("Distributor webhook request stored in memory for Id: {Id}", customCloudEvent.Id);
-                        return GetNotContentResponse();
+                        return NotContentResponse();
                     }
                     else
                     {
                         _logger.LogInformation("Distributor webhook request not stored in memory for Id: {Id}", customCloudEvent.Id);
-                        return GetBadRequestResponse();
+                        return BadRequestResponse();
                     }
                 }
                 else
                 {
                     _logger.LogInformation("Distributor webhook request cannot be null");
-                    return GetBadRequestResponse();
+                    return BadRequestResponse();
                 }
             }
         }
@@ -72,7 +72,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
             if (distributorRequest == null || distributorRequest.Count == 0)
             {
                 _logger.LogInformation("Distribution Request not found for CloudEventId : {cloudEventId}", cloudEventId);
-                return GetNotFoundResponse();
+                return NotFoundResponse();
             }
 
             _logger.LogInformation("Distribution Request found and return for CloudEventId : {cloudEventId}", cloudEventId);

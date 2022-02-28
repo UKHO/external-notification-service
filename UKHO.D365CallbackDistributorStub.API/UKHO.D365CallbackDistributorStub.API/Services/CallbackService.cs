@@ -6,16 +6,16 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
     [ExcludeFromCodeCoverage]
     public class CallbackService
     {
-        static readonly Queue<RecordCallbackRequest> s_recordCallbackRequestQueue = new();
+        private static readonly Queue<RecordCallbackRequest> s_recordCallbackRequestQueue = new();
         public static bool SaveCallbackRequest(CallbackRequest callbackRequest, string subscriptionId)
         {
             try
             {
                 s_recordCallbackRequestQueue.Enqueue(new RecordCallbackRequest
                 {
-                    callBackRequest = callbackRequest,
-                    guid = Guid.NewGuid(),
-                    subscriptionId = subscriptionId
+                    CallBackRequest = callbackRequest,
+                    Guid = Guid.NewGuid(),
+                    SubscriptionId = subscriptionId
                 });
 
                 if (s_recordCallbackRequestQueue.Count >= 50)
@@ -34,7 +34,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
         {
             if(!string.IsNullOrEmpty(subscriptionId))
             {
-                return s_recordCallbackRequestQueue.Where(a => a.subscriptionId == subscriptionId).ToList();
+                return s_recordCallbackRequestQueue.Where(a => a.SubscriptionId == subscriptionId).ToList();
             }
             else
             {

@@ -1,29 +1,28 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 
 namespace UKHO.D365CallbackDistributorStub.API.Controllers
 {
     [ExcludeFromCodeCoverage]
     [ApiController]
-    [Route("api/[controller]")]
     public abstract class BaseController<T> : ControllerBase
     {
-        protected IActionResult GetOkResponse()
+        protected IActionResult OkResponse()
         {
             return Ok();
         }
 
-        protected IActionResult GetBadRequestResponse()
+        protected IActionResult BadRequestResponse()
         {
             return BadRequest();
         }
 
-        protected IActionResult GetNotContentResponse()
+        protected IActionResult NotContentResponse()
         {
             return NoContent();
         }
 
-        protected IActionResult GetNotFoundResponse()
+        protected IActionResult NotFoundResponse()
         {
             return NotFound();
         }
