@@ -112,7 +112,15 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900027 -  Azure webjob for external notification service is unhealthy.
         /// </summary>
-        AzureWebJobIsUnhealthy = 900027
+        AzureWebJobIsUnhealthy = 900027,
+        /// <summary>
+        /// 900028 -  Request for external notification service webhook post endpoint is started.
+        /// </summary>
+        ENSWebhookRequestStart = 900028,
+        /// <summary>
+        /// 900029 -  Requested for external notification service webhook options endpoint.
+        /// </summary>
+        ENSWebhookOptionsEndPointRequested
     }
 
     public static class EventIdExtensions

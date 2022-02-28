@@ -1,4 +1,6 @@
 using Azure.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -40,6 +42,25 @@ namespace UKHO.ExternalNotificationService.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers().AddNewtonsoftJson();
+
+            var ensAuthConfiguration = new AzureADConfiguration();
+            _configuration.Bind("EnsAuthConfiguration", ensAuthConfiguration);
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer("AzureAD", options =>
+                    {
+                        options.Audience = ensAuthConfiguration.ClientId;
+                        options.Authority = $"{ensAuthConfiguration.MicrosoftOnlineLoginUrl}{ensAuthConfiguration.TenantId}";
+                    });
+
+            services.AddAuthorization(options =>
+            {
+                options.DefaultPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .AddAuthenticationSchemes("AzureAD")
+                .Build();
+            });
+
             services.Configure<EventHubLoggingConfiguration>(_configuration.GetSection("EventHubLoggingConfiguration"));
             services.Configure<EnsConfiguration>(_configuration.GetSection("EnsConfiguration"));           
             services.Configure<SubscriptionStorageConfiguration>(_configuration.GetSection("SubscriptionStorageConfiguration"));
@@ -111,7 +132,7 @@ namespace UKHO.ExternalNotificationService.API
                  .AddJsonFile("appsettings.json", false, true);
 
             builder.AddEnvironmentVariables();
-            var tempConfig = builder.Build();
+            IConfigurationRoot tempConfig = builder.Build();
             string kvServiceUri = tempConfig["KeyVaultSettings:ServiceUri"];
 
             if (!string.IsNullOrWhiteSpace(kvServiceUri))
