@@ -1,8 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Reflection;
-using Azure.Identity;
+﻿using Azure.Identity;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,8 +6,14 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Reflection;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Helpers;
+using UKHO.ExternalNotificationService.SubscriptionService.Configuration;
+using UKHO.ExternalNotificationService.SubscriptionService.Helpers;
 using UKHO.ExternalNotificationService.SubscriptionService.Services;
 using UKHO.Logging.EventHubLogProvider;
 
@@ -36,6 +38,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
 
         private static HostBuilder BuildHostConfiguration()
         {
+
 
             HostBuilder hostBuilder = new();
             hostBuilder.ConfigureAppConfiguration((_, builder) =>
@@ -108,14 +111,25 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                  }
 
              })
+
               .ConfigureServices((_, services) =>
               {
+                  int retryCount = Convert.ToInt32(s_configurationBuilder["D365CallbackConfiguration:RetryCount"]);
+                  double sleepDuration = Convert.ToDouble(s_configurationBuilder["D365CallbackConfiguration:SleepDuration"]);
+
                   services.Configure<SubscriptionStorageConfiguration>(s_configurationBuilder.GetSection("SubscriptionStorageConfiguration"));
                   services.Configure<EventGridDomainConfiguration>(s_configurationBuilder.GetSection("EventGridDomainConfiguration"));
                   services.Configure<QueuesOptions>(s_configurationBuilder.GetSection("QueuesOptions"));
+                  services.Configure<D365CallbackConfiguration>(s_configurationBuilder.GetSection("D365CallbackConfiguration"));
+                  services.Configure<AzureADConfiguration>(s_configurationBuilder.GetSection("EnsAuthConfiguration"));
                   services.AddScoped<ISubscriptionServiceData, SubscriptionServiceData>();
                   services.AddScoped<IAzureEventGridDomainService, AzureEventGridDomainService>();
                   services.AddScoped<IEventSubscriptionConfiguration, EventSubscriptionConfiguration>();
+                  services.AddScoped<IAuthTokenProvider, AuthTokenProvider>();
+                  services.AddScoped<ICallbackService, CallbackService>();
+
+                  services.AddHttpClient("D365DataverseApi").AddPolicyHandler((service, _) => CommonHelper.GetRetryPolicy(service.GetService<ILogger<ICallbackService>>(), retryCount, sleepDuration));
+                  services.AddScoped<ICallbackClient, CallbackClient>();
               })
               .ConfigureWebJobs(b =>
               {
