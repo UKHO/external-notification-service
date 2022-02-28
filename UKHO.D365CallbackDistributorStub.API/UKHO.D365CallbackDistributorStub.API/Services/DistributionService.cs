@@ -14,7 +14,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                 s_recordDistributorRequestQueue.Enqueue(new DistributorRequest
                 {
                     CloudEvent = cloudEvent,
-                    CloudEventId = cloudEvent.Id,
+                    Subject = cloudEvent.Subject,
                     Guid = new Guid(),
                 });
 
@@ -30,11 +30,11 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
             }
         }
 
-        public List<DistributorRequest>? GetDistributorRequest(string? cloudEventId)
+        public List<DistributorRequest>? GetDistributorRequest(string? subject)
         {
-            if(!string.IsNullOrEmpty(cloudEventId))
+            if(!string.IsNullOrEmpty(subject))
             {
-                return s_recordDistributorRequestQueue.Where(a => a.CloudEventId == cloudEventId).ToList();
+                return s_recordDistributorRequestQueue.Where(a => a.Subject == subject).ToList();
             }
             else
             {
