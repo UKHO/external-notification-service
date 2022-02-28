@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Mvc;
 using UKHO.D365CallbackDistributorStub.API.Models.Request;
 using UKHO.D365CallbackDistributorStub.API.Services;
 

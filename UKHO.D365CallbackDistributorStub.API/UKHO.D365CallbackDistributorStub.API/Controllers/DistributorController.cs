@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using UKHO.D365CallbackDistributorStub.API.Models.Request;
 using UKHO.D365CallbackDistributorStub.API.Services;
 
