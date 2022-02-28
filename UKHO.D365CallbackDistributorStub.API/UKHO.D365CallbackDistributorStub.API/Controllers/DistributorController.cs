@@ -46,12 +46,12 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
                     bool distributorRequestSaved = DistributionService.SaveDistributorRequest(customCloudEvent);
                     if (distributorRequestSaved)
                     {
-                        _logger.LogInformation("Distributor webhook request stored in memory for Id: {Id}", customCloudEvent.Id);
+                        _logger.LogInformation("Distributor webhook request stored in memory for Subject: {Subject}", customCloudEvent.Subject);
                         return NotContentResponse();
                     }
                     else
                     {
-                        _logger.LogInformation("Distributor webhook request not stored in memory for Id: {Id}", customCloudEvent.Id);
+                        _logger.LogInformation("Distributor webhook request not stored in memory for Subject: {Subject}", customCloudEvent.Subject);
                         return BadRequestResponse();
                     }
                 }
@@ -64,18 +64,18 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get(string? cloudEventId)
+        public IActionResult Get(string? Subject)
         {
-            _logger.LogInformation("GET distribution request accessed for Id: {Id}", cloudEventId);
-            List<DistributorRequest>? distributorRequest = _distributionService.GetDistributorRequest(cloudEventId);
+            _logger.LogInformation("GET distribution request accessed for Subject: {Subject}", Subject);
+            List<DistributorRequest>? distributorRequest = _distributionService.GetDistributorRequest(Subject);
 
             if (distributorRequest == null || distributorRequest.Count == 0)
             {
-                _logger.LogInformation("Distribution Request not found for CloudEventId : {cloudEventId}", cloudEventId);
+                _logger.LogInformation("Distribution Request not found for Subject : {Subject}", Subject);
                 return NotFoundResponse();
             }
 
-            _logger.LogInformation("Distribution Request found and return for CloudEventId : {cloudEventId}", cloudEventId);
+            _logger.LogInformation("Distribution Request found and return for Subject : {Subject}", Subject);
             return Ok(distributorRequest);
         }
     }
