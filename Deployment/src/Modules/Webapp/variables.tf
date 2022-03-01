@@ -22,3 +22,7 @@ variable "tags" {
 variable "app_service_sku" {
 
 }
+
+variable "app_settings_stub" {
+  type = map(string)
+}
