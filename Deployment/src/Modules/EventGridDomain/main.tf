@@ -19,10 +19,11 @@ resource "azurerm_monitor_diagnostic_setting" "example" {
 
   log {
     category = "AuditEvent"
-    enabled  = false
+    enabled  = true
 
     retention_policy {
-      enabled = false
+      enabled = true
+      days    = 7
     }
   }
 }
