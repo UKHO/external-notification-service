@@ -13,12 +13,20 @@ resource "azurerm_role_assignment" "eventgrid_domain_role" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "example" {
-  name               = "{var.name}-diagnostic"
+  name               = "${var.name}-diagnostic"
   target_resource_id = azurerm_eventgrid_domain.eventgrid_domain.id
   storage_account_id = var.storage_account_id
 
   log {
     category = "DeliveryFailures"
+    enabled  = true
+
+    retention_policy {
+      enabled = true
+      days    = 7
+    }
+
+    category = "PublishFailures"
     enabled  = true
 
     retention_policy {
