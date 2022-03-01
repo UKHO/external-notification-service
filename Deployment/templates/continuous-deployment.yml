@@ -47,3 +47,18 @@ steps:
       filePath: "$(Pipeline.Workspace)/terraformartifact/check_service_status.ps1"
       arguments: "-healthEndPointUrl $(EnsApiUrl)/health -waitTimeInMinute $(waitTimeInMinute)"
 
+  - task: FileTransform@1
+    displayName: "File Transform: StubWebAppSettings"
+    inputs:
+      folderPath: '$(Pipeline.Workspace)/StubWebAPI/*.zip'
+      fileType: 'json'
+      targetFiles: '**/appsettings.json'
+
+  - task: AzureWebApp@1
+    displayName: "Azure App Deploy: ens-$(Environment)-stub-webapp"
+    inputs:
+      azureSubscription: "${{ parameters.AzureSubscription }}"
+      appType: webApp
+      appName: "$(stubWebAppName)"
+      package: "$(Pipeline.Workspace)/StubWebAPI/UKHO.D365CallbackDistributorStub.API.zip"
+

@@ -32,6 +32,13 @@ module "webapp_service" {
     "WEBSITE_ENABLE_SYNC_UPDATE_SITE"                          = "true"
     "EventGridDomainConfiguration:ResourceGroup"               = azurerm_resource_group.rg.name
     "EventGridDomainConfiguration:EventGridDomainName"         = module.eventgriddomain.event_grid_domain_name
+    "D365CallbackConfiguration:D365ApiUri"                     = "https://${module.webapp_service.default_site_hostname_ens_stub}/api/dynamics"
+  }
+  app_settings_stub = {
+    "ASPNETCORE_ENVIRONMENT"                               = local.env_name
+    "WEBSITE_RUN_FROM_PACKAGE"                             = "1"
+    "WEBSITE_ENABLE_SYNC_UPDATE_SITE"                      = "true"
+    "APPINSIGHTS_INSTRUMENTATIONKEY"                       = "NOT_CONFIGURED"
   }
   tags                      = local.tags
   allowed_ips               = var.allowed_ips

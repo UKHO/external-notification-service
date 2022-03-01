@@ -23,6 +23,6 @@ variable "app_service_sku" {
 
 }
 
-variable "allowed_ips" {
-  type = list
+variable "app_settings_stub" {
+  type = map(string)
 }

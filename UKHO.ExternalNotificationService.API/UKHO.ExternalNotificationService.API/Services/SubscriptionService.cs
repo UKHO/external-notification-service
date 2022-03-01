@@ -53,7 +53,7 @@ namespace UKHO.ExternalNotificationService.API.Services
                 WebhookUrl = Convert.ToString(webhookurl),
                 NotificationType = Convert.ToString(formattedSubscriptionType),
                 D365CorrelationId = correlationId
-            };            
+            };
         }
 
         public async Task AddSubscriptionRequest(SubscriptionRequest subscriptionRequest,NotificationType notificationType, string correlationId)
