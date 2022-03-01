@@ -24,12 +24,9 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
         public IActionResult Options()
         {
             _logger.LogInformation("Distributor option accessed.");
-            using (StreamReader? reader = new(Request.Body, Encoding.UTF8))
-            {
-                string? webhookRequestOrigin = HttpContext.Request.Headers["WebHook-Request-Origin"].FirstOrDefault();
-                HttpContext.Response.Headers.Add("WebHook-Allowed-Rate", "*");
-                HttpContext.Response.Headers.Add("WebHook-Allowed-Origin", webhookRequestOrigin);
-            }
+            string? webhookRequestOrigin = HttpContext.Request.Headers["WebHook-Request-Origin"].FirstOrDefault();
+            HttpContext.Response.Headers.Add("WebHook-Allowed-Rate", "*");
+            HttpContext.Response.Headers.Add("WebHook-Allowed-Origin", webhookRequestOrigin);
             return OkResponse();
         }
 
@@ -37,7 +34,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
         public virtual async Task<IActionResult> Post()
         {
             _logger.LogInformation("Distributor Webhook accessed");
-            using StreamReader? reader = new(Request.Body, Encoding.UTF8);
+            using StreamReader reader = new(Request.Body, Encoding.UTF8);
             {
                 string jsonContent = await reader.ReadToEndAsync();
                 CustomCloudEvent? customCloudEvent = JsonConvert.DeserializeObject<CustomCloudEvent>(jsonContent);
@@ -64,18 +61,18 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get(string? Subject)
+        public IActionResult Get(string? subject)
         {
-            _logger.LogInformation("GET distribution request accessed for Subject: {Subject}", Subject);
-            List<DistributorRequest>? distributorRequest = _distributionService.GetDistributorRequest(Subject);
+            _logger.LogInformation("GET distribution request accessed for Subject: {Subject}", subject);
+            List<DistributorRequest>? distributorRequest = _distributionService.GetDistributorRequest(subject);
 
             if (distributorRequest == null || distributorRequest.Count == 0)
             {
-                _logger.LogInformation("Distribution Request not found for Subject : {Subject}", Subject);
+                _logger.LogInformation("Distribution Request not found for Subject : {Subject}", subject);
                 return NotFoundResponse();
             }
 
-            _logger.LogInformation("Distribution Request found and return for Subject : {Subject}", Subject);
+            _logger.LogInformation("Distribution Request found and return for Subject : {Subject}", subject);
             return Ok(distributorRequest);
         }
     }
