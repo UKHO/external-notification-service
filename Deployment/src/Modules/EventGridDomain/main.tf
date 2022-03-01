@@ -12,3 +12,18 @@ resource "azurerm_role_assignment" "eventgrid_domain_role" {
   principal_id         = var.webapp_principal_id
 }
 
+resource "azurerm_monitor_diagnostic_setting" "example" {
+  name               = "{var.name}-diagnostic"
+  target_resource_id = azurerm_eventgrid_domain.eventgrid_domain.id
+  storage_account_id = var.storage_account_id
+
+  log {
+    category = "AuditEvent"
+    enabled  = false
+
+    retention_policy {
+      enabled = false
+    }
+  }
+}
+
