@@ -70,5 +70,26 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
 
             return httpRequestMessage;
         }
+
+        /// <summary>
+        /// Get Ens Call back status
+        /// </summary>
+        /// <param name="d365ApiStubUrl"></param>
+        /// <param name="subscriptionId"></param>
+        /// <returns></returns>
+
+        public static async Task<HttpResponseMessage> GetEnsCallBackAsync(string d365ApiStubUrl, string subscriptionId=null)
+        {
+            string uri = d365ApiStubUrl;
+            if (subscriptionId!=null)
+            {
+                uri += $"?subscriptionId={subscriptionId}";
+            }                     
+            using var httpRequestMessage =new HttpRequestMessage(HttpMethod.Get, uri);
+            return await s_httpClient.SendAsync(httpRequestMessage);
+        }
+
+
+
     }
 }

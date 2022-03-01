@@ -71,7 +71,7 @@
                     },
                     {
                         "key": "ukho_webhookurl",
-                        "value": "https://dummy.address"
+                        "value": "https://ens-qc-stub-webapp.azurewebsites.net/webhook/notification"
                     },
                     {
                         "key": "ukho_externalnotificationid",
