@@ -18,7 +18,7 @@ resource "azurerm_monitor_diagnostic_setting" "example" {
   storage_account_id = var.storage_account_id
 
   log {
-    category = "AuditEvent"
+    category = "DeliveryFailures"
     enabled  = true
 
     retention_policy {
