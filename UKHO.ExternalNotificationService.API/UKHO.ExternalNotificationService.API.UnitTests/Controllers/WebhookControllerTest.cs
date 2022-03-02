@@ -68,7 +68,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 
         private static MemoryStream GetEventBodyData()
         {
-            var fakeJson = JObject.Parse(@"{""Type"":""FilesPublished""}");
+            var fakeJson = JObject.Parse(@"{""Type"":""uk.gov.UKHO.FileShareService.NewFilesPublished.v1""}");
             fakeJson["Id"] = "25d6c6c1-418b-40f9-bb76-f6dfc0f133bc";
 
             string jsonString = JsonConvert.SerializeObject(fakeJson);

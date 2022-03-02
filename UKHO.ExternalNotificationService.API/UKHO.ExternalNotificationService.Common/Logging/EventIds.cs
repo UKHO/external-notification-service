@@ -1,5 +1,4 @@
-﻿
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 namespace UKHO.ExternalNotificationService.Common.Logging
 {
@@ -120,7 +119,31 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900029 -  Requested for external notification service webhook options endpoint.
         /// </summary>
-        ENSWebhookOptionsEndPointRequested = 900029
+        ENSWebhookOptionsEndPointRequested = 900029,
+        /// <summary>
+        /// 900030 - Callbcak to D365 API using dataverse event started
+        /// </summary>
+        CallbackToD365Started = 900030,
+        /// <summary>
+        /// 900031 - Before calling HTTP client request to  Callback to D365 and after token authorization
+        /// </summary>
+        BeforeCallbackToD365 = 900031,
+        /// <summary>
+        /// 900032 - Log an error if call back to D365 API returns statusCode other than 204
+        /// </summary>
+        ErrorInCallbackToD365HttpClient = 900032,
+        /// <summary>
+        /// 900033 - Http Client request completed for Callback to D365
+        /// </summary>
+        CallbackToD365Completed = 900033,
+        /// <summary>
+        /// 900034 - Request for retrying D365 Callback Http endpoint
+        /// </summary>
+        RetryHttpClientD365CallbackRequest = 900034,
+        /// <summary>
+        /// 900035 - Authorization failed with AD Authentication Token
+        /// </summary>
+        ADAuthenticationFailed = 900035
     }
 
     public static class EventIdExtensions
