@@ -27,9 +27,7 @@ namespace UKHO.ExternalNotificationService.Common.FssService
         protected async Task<bool> PublishEventAsync(CloudEvent cloudEvent, string correlationId, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation(EventIds.ENSEventPublishStart.ToEventId(), "External notification service event publish started for subject:{subject} and _X-Correlation-ID:{correlationId}.", cloudEvent.Subject, correlationId);
-
-            _logger.LogInformation(EventIds.ENSEventPublishStart.ToEventId(), "External notification service event publish started for EventGridDomainAccessKey:{EventGridDomainAccessKey} and _X-Correlation-ID:{correlationId}.", _eventGridDomainConfig.Value.EventGridDomainAccessKey, correlationId);
-
+            
             EventGridPublisherClient client = new(new Uri(_eventGridDomainConfig.Value.EventGridDomainEndpoint),
                                                   new AzureKeyCredential(_eventGridDomainConfig.Value.EventGridDomainAccessKey));
 
@@ -45,7 +43,7 @@ namespace UKHO.ExternalNotificationService.Common.FssService
             }
             catch (Exception ex)
             {
-                _logger.LogInformation(EventIds.ENSEventNotPublished.ToEventId(), "External notification service event not published for subject:{subject} and _X-Correlation-ID:{correlationId}.", cloudEvent.Subject, correlationId);
+                _logger.LogError(EventIds.ENSEventNotPublished.ToEventId(), ex, "External notification service event not published for subject:{subject} and _X-Correlation-ID:{correlationId} with error {Message}.", cloudEvent.Subject, correlationId, ex.Message);
 
                 return false;
             }
