@@ -18,7 +18,8 @@ resource "azurerm_monitor_diagnostic_setting" "example" {
   storage_account_id = var.storage_account_id
 
   log {
-    category = "DeliveryFailures"
+    for_each = var.category
+    category = each.value
     enabled  = true
 
     retention_policy {
@@ -26,13 +27,6 @@ resource "azurerm_monitor_diagnostic_setting" "example" {
       days    = 7
     }
 
-    category = "PublishFailures"
-    enabled  = true
-
-    retention_policy {
-      enabled = true
-      days    = 7
-    }
   }
 }
 

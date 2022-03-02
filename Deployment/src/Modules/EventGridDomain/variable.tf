@@ -21,3 +21,7 @@ variable "webapp_principal_id" {
 variable "storage_account_id" {
   type = string
 }
+
+variable "category" {
+  type = map(string)
+}
