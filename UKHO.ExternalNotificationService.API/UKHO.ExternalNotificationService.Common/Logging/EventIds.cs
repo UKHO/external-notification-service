@@ -143,7 +143,13 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900035 - Authorization failed with AD Authentication Token
         /// </summary>
-        ADAuthenticationFailed = 900035
+        ADAuthenticationFailed = 900035,
+        ENSWebhookRequestCompleted = 900036,
+        FssEventDataMappingStart = 900037,
+        FssEventDataMappingCompleted = 900038,
+        ENSEventPublishStart = 900039,
+        ENSEventPublishCompleted = 900040,
+        ENSEventNotPublished = 900041
     }
 
     public static class EventIdExtensions
