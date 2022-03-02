@@ -28,6 +28,8 @@ namespace UKHO.ExternalNotificationService.Common.FssService
         {
             _logger.LogInformation(EventIds.ENSEventPublishStart.ToEventId(), "External notification service event publish started for subject:{subject} and _X-Correlation-ID:{correlationId}.", cloudEvent.Subject, correlationId);
 
+            _logger.LogInformation(EventIds.ENSEventPublishStart.ToEventId(), "External notification service event publish started for EventGridDomainAccessKey:{EventGridDomainAccessKey} and _X-Correlation-ID:{correlationId}.", _eventGridDomainConfig.Value.EventGridDomainAccessKey, correlationId);
+
             EventGridPublisherClient client = new(new Uri(_eventGridDomainConfig.Value.EventGridDomainEndpoint),
                                                   new AzureKeyCredential(_eventGridDomainConfig.Value.EventGridDomainAccessKey));
 

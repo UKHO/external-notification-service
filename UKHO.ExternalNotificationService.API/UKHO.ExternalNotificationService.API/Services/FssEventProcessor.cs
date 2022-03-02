@@ -61,7 +61,7 @@ namespace UKHO.ExternalNotificationService.API.Services
 
                 CloudEvent cloudEvent = _fssEventValidationAndMappingService.FssEventDataMapping(customEventGridEvent, correlationId);
 
-                _logger.LogInformation(EventIds.FssEventDataMappingCompleted.ToEventId(), "Fss event data mapping started for subject:{subject} and _X-Correlation-ID:{correlationId}.", customEventGridEvent.Subject, correlationId);
+                _logger.LogInformation(EventIds.FssEventDataMappingCompleted.ToEventId(), "Fss event data mapping completed for subject:{subject} and _X-Correlation-ID:{correlationId}.", customEventGridEvent.Subject, correlationId);
 
                 await PublishEventAsync(cloudEvent, correlationId, cancellationToken);
             }
