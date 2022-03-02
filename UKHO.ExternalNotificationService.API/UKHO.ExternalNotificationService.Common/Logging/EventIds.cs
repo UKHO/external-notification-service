@@ -120,7 +120,7 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900029 -  Requested for external notification service webhook options endpoint.
         /// </summary>
-        ENSWebhookOptionsEndPointRequested
+        ENSWebhookOptionsEndPointRequested = 900029
     }
 
     public static class EventIdExtensions

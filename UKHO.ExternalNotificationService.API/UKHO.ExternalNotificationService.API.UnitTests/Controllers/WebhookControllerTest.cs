@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Controllers;
+using UKHO.ExternalNotificationService.API.Services;
 
 namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 {
@@ -19,14 +20,16 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         private WebhookController _controller;
         private ILogger<WebhookController> _fakeLogger;
         private IHttpContextAccessor _fakeHttpContextAccessor;
+        private IWebhookService _fakeWebhookService;
 
         [SetUp]
         public void Setup()
         {
             _fakeLogger = A.Fake<ILogger<WebhookController>>();
             _fakeHttpContextAccessor = A.Fake<IHttpContextAccessor>();
+            _fakeWebhookService = A.Fake<IWebhookService>();
 
-            _controller = new WebhookController(_fakeHttpContextAccessor, _fakeLogger);
+            _controller = new WebhookController(_fakeHttpContextAccessor, _fakeLogger, _fakeWebhookService);
         }
 
         [Test]

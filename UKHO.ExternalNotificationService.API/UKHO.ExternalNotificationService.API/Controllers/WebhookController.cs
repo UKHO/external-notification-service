@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.Common.Logging;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 using UKHO.ExternalNotificationService.Common.Models.Response;
@@ -19,12 +20,15 @@ namespace UKHO.ExternalNotificationService.API.Controllers
     public class WebhookController : BaseController<WebhookController>
     {
         private readonly ILogger<WebhookController> _logger;
+        private readonly IWebhookService _webhookService;
 
         public WebhookController(IHttpContextAccessor contextAccessor,
-                                    ILogger<WebhookController> logger)
+                                    ILogger<WebhookController> logger,
+                                    IWebhookService webhookService)
         : base(contextAccessor, logger)
         {
             _logger = logger;
+            _webhookService = webhookService;
         }
 
         [HttpOptions]
@@ -46,6 +50,21 @@ namespace UKHO.ExternalNotificationService.API.Controllers
             string jsonContent = await reader.ReadToEndAsync();
 
             CustomEventGridEvent eventGridEvent = JsonConvert.DeserializeObject<CustomEventGridEvent>(jsonContent);
+
+            if (eventGridEvent != null)
+            {
+                var processor = _webhookService.GetProcessor(eventGridEvent.Type);
+
+                if (processor != null)
+                {
+                    IActionResult result = await processor.Process(eventGridEvent, GetCurrentCorrelationId());
+                    return result;
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
 
             _logger.LogInformation(EventIds.ENSWebhookRequestStart.ToEventId(), "External notification service webhook request started for event:{eventGridEvent} and _X-Correlation-ID:{correlationId}.", JsonConvert.SerializeObject(eventGridEvent), GetCurrentCorrelationId());
 

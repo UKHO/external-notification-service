@@ -10,5 +10,7 @@ namespace UKHO.ExternalNotificationService.Common.Configuration
         public string EventGridDomainName { get; set; }        
         public int MaxDeliveryAttempts { get; set; }
         public int EventTimeToLiveInMinutes { get; set; }
+        public string EventGridDomainAccessKey { get; set; }
+        public string EventGridDomainEndpoint { get; set; }
     }
 }
