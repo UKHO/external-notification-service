@@ -25,7 +25,9 @@ resource "azurerm_monitor_diagnostic_setting" "example" {
       enabled = true
       days    = 7
     }
+    }
 
+  log {
     category = "PublishFailures"
     enabled  = true
 
