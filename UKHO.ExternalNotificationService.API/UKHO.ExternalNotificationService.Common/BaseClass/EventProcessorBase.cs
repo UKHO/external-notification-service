@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Logging;
 
-namespace UKHO.ExternalNotificationService.Common.FssService
+namespace UKHO.ExternalNotificationService.Common.BaseClass
 {
     public class EventProcessorBase
     {
