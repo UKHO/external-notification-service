@@ -62,7 +62,7 @@ module "key_vault" {
         "SubscriptionStorageConfiguration--StorageAccountKey"       = module.storage.primary_access_key
         "SubscriptionStorageConfiguration--StorageConnectionString" = module.storage.connection_string
         "AzureWebJobsStorage"                                       = module.storage.connection_string
-        "EventGridDomainConfiguration.EventGridDomainAccessKey"     = module.eventgriddomain.event_grid_domain_primary_access_key
+        "EventGridDomainConfiguration--EventGridDomainAccessKey"    = module.eventgriddomain.event_grid_domain_primary_access_key
       })
   tags                = local.tags
 }
