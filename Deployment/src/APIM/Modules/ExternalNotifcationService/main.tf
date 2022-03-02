@@ -9,7 +9,7 @@ resource "azurerm_api_management_group" "ens_management_group" {
   api_management_name = data.azurerm_api_management.apim_instance.name
   name                = "ens-group-${local.formatted_env}"
   display_name        = "External Notification Service Group ${var.env_suffix}"
-  description         = "Management group for users with access to the ${var.env} External Notifcation Service."
+  description         = "Management group for users with access to the ${var.env} External Notification Service."
 }
 
 # Create ENS API
