@@ -32,7 +32,7 @@ module "webapp_service" {
   name                      = local.web_app_name
   resource_group_name       = azurerm_resource_group.rg.name
   subnet_id                 = data.azurerm_subnet.main_subnet.id
-  agent_id                  = data.azurerm_subnet.agent_subnet.id
+  allowed_subnet_ids        = [data.azurerm_subnet.main_subnet.id,data.azurerm_subnet.agent_subnet.id]
   location                  = azurerm_resource_group.rg.location
   app_service_sku           = var.app_service_sku[local.env_name]
   app_settings = {

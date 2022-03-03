@@ -24,7 +24,7 @@ resource "azurerm_app_service" "webapp_service" {
     ftps_state = "Disabled"
 
     ip_restriction {
-      virtual_network_subnet_id = [var.subnet_id,var.agent_id]
+      virtual_network_subnet_id = var.allowed_subnet_ids
     }
 
     dynamic "ip_restriction" {
