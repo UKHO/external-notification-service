@@ -41,7 +41,7 @@ namespace UKHO.ExternalNotificationService.Common.BaseClass
             }
             catch (Exception ex)
             {
-                _logger.LogError(EventIds.ENSEventNotPublished.ToEventId(), "External notification service event not published for subject:{subject} and _X-Correlation-ID:{correlationId} with error:{Message}.", cloudEvent.Subject, correlationId, ex.Message);
+                _logger.LogError(EventIds.ENSEventNotPublished.ToEventId(), "External notification service event publish is failed for subject:{subject} and _X-Correlation-ID:{correlationId} with error:{Message}.", cloudEvent.Subject, correlationId, ex.Message);
 
                 return false;
             }

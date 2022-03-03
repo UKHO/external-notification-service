@@ -147,7 +147,7 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         ENSWebhookRequestCompleted = 900036,
         ENSWebhookRequestTypeNotMatch = 900037,
         ENSWebhookRequestInvalidEventPayload = 900038,
-        ENSWebhookRequestCompletedWithNullEventPayload = 900039,
+        ENSWebhookRequestWithNullEventPayload = 900039,
         FssEventDataMappingStart = 900040,
         FssEventDataMappingCompleted = 900041,
         ENSEventPublishStart = 900042,

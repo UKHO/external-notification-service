@@ -52,9 +52,9 @@ namespace UKHO.ExternalNotificationService.API.Services
 
             if (fssEventData.BusinessUnit == _fssDataMappingConfiguration.Value.BusinessUnit)
             {
-                _logger.LogInformation(EventIds.FssEventDataMappingStart.ToEventId(), "Fss event data mapping started for subject:{subject}, BusinessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customEventGridEvent.Subject, fssEventData.BusinessUnit, correlationId);
+                _logger.LogInformation(EventIds.FssEventDataMappingStart.ToEventId(), "Fss event data mapping started for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customEventGridEvent.Subject, fssEventData.BusinessUnit, correlationId);
                 CloudEvent cloudEvent = _fssEventValidationAndMappingService.FssEventDataMapping(customEventGridEvent, correlationId);
-                _logger.LogInformation(EventIds.FssEventDataMappingCompleted.ToEventId(), "Fss event data mapping completed for subject:{subject}, BusinessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customEventGridEvent.Subject, fssEventData.BusinessUnit, correlationId);
+                _logger.LogInformation(EventIds.FssEventDataMappingCompleted.ToEventId(), "Fss event data mapping completed for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customEventGridEvent.Subject, fssEventData.BusinessUnit, correlationId);
 
                 await PublishEventAsync(cloudEvent, correlationId, cancellationToken);
             }
