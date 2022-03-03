@@ -35,6 +35,6 @@ variable "subnet_id" {
   type = string
 }
 
-variable "allowed_subnet_ids" {
+variable "agent_id" {
   type = string
 }
