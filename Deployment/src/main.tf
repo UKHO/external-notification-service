@@ -31,6 +31,7 @@ module "webapp_service" {
   source                    = "./Modules/Webapp"
   name                      = local.web_app_name
   resource_group_name       = azurerm_resource_group.rg.name
+  subnet_id                 = data.azurerm_subnet.main_subnet.id
   location                  = azurerm_resource_group.rg.location
   app_service_sku           = var.app_service_sku[local.env_name]
   app_settings = {
@@ -52,7 +53,8 @@ module "webapp_service" {
     "WEBSITE_ENABLE_SYNC_UPDATE_SITE"                      = "true"
     "APPINSIGHTS_INSTRUMENTATIONKEY"                       = "NOT_CONFIGURED"
   }
-  tags                      = local.tags  
+  tags                      = local.tags
+  allowed_ips               = var.allowed_ips
 }
 
 module "key_vault" {
