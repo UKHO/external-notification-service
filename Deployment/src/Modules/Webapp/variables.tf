@@ -34,3 +34,7 @@ variable "allowed_ips" {
 variable "subnet_id" {
   type = string
 }
+
+variable "agent_id" {
+type = string
+}
