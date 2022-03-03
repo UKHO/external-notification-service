@@ -36,5 +36,5 @@ variable "subnet_id" {
 }
 
 variable "allowed_subnet_ids" {
-
+  type = string
 }
