@@ -37,3 +37,7 @@ variable "m_spoke_subnet" {
 variable "allowed_ips" {
 
 }
+
+variable "agent_subnet" {
+  type = string
+}
