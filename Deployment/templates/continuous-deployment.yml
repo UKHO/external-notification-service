@@ -25,7 +25,6 @@ steps:
       ARM_TENANT_ID: $(TERRAFORM-TENANT-ID)
       ARM_SUBSCRIPTION_ID: $(TERRAFORM-SUBSCRIPTION-ID)
 
-
   - task: FileTransform@1
     displayName: "File Transform: WebAppSettings"
     inputs:
