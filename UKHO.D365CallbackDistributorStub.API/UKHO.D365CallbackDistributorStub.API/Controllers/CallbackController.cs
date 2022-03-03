@@ -1,6 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
-using Microsoft.AspNetCore.Mvc;
 using UKHO.D365CallbackDistributorStub.API.Models.Request;
 using UKHO.D365CallbackDistributorStub.API.Services;
 
@@ -25,25 +25,25 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
         {
             _logger.LogInformation("POST callback accessed for subscriptionId: {subscriptionId}", subscriptionId);
 
-            FailCallbackRequest? failCallbackRequest = _callbackService.SubscriptionInFailCallbackList(subscriptionId);
-            if (failCallbackRequest != null)
+            CommandCallbackRequest? commandCallbackRequest = _callbackService.SubscriptionInCommandCallbackList(subscriptionId);
+            bool callbackRequestSaved = CallbackService.SaveCallbackRequest(callbackRequest,
+                                                                            subscriptionId,
+                                                                            commandCallbackRequest == null ? HttpStatusCode.NoContent : commandCallbackRequest.HttpStatusCode);
+
+            if (callbackRequestSaved)
             {
-                _logger.LogInformation("Callback request failed for subscriptionId: {subscriptionId} with httpStatusCode as {httpStatusCode}", subscriptionId, failCallbackRequest.httpStatusCode.ToString());
-                return GetEnsStubResponse(failCallbackRequest.httpStatusCode);
+                _logger.LogInformation("Callback request stored in memory for subscriptionId: {subscriptionId}", subscriptionId);
+                if (commandCallbackRequest != null)
+                {
+                    _logger.LogInformation("Callback request failed for subscriptionId: {subscriptionId} with httpStatusCode as {httpStatusCode}", subscriptionId, commandCallbackRequest.HttpStatusCode.ToString());
+                    return GetEnsStubResponse(commandCallbackRequest.HttpStatusCode);
+                }
+                return NoContentResponse();
             }
             else
             {
-                bool callbackRequestSaved = CallbackService.SaveCallbackRequest(callbackRequest, subscriptionId);
-                if (callbackRequestSaved)
-                {
-                    _logger.LogInformation("Callback request stored in memory for subscriptionId: {subscriptionId}", subscriptionId);
-                    return NoContentResponse();
-                }
-                else
-                {
-                    _logger.LogInformation("Callback request not stored in memory for subscriptionId: {subscriptionId}", subscriptionId);
-                    return BadRequestResponse();
-                }
+                _logger.LogInformation("Callback request not stored in memory for subscriptionId: {subscriptionId}", subscriptionId);
+                return BadRequestResponse();
             }
         }
 
@@ -66,12 +66,12 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
         [HttpPost("command-to-return-status/{subscriptionId}/{httpStatusCode?}")]
         public IActionResult CommandToReturnStatus(string subscriptionId, HttpStatusCode? httpStatusCode)
         {
-            _logger.LogInformation("fail callback accessed for subscriptionId: {subscriptionId}", subscriptionId);
+            _logger.LogInformation("Command for callback accessed for subscriptionId: {subscriptionId}", subscriptionId);
 
-            bool failCallbackRequestSaved = _callbackService.SaveFailCallbackRequest(subscriptionId, httpStatusCode);
-            if (failCallbackRequestSaved)
+            bool commandCallbackRequestSaved = _callbackService.SaveCommandCallbackRequest(subscriptionId, httpStatusCode);
+            if (commandCallbackRequestSaved)
             {
-                _logger.LogInformation("Fail callback stored in memory for subscriptionId: {subscriptionId} with httpStatusCode as {httpStatusCode}", subscriptionId, httpStatusCode.ToString());
+                _logger.LogInformation("Command for callback stored in memory for subscriptionId: {subscriptionId} with httpStatusCode as {httpStatusCode}", subscriptionId, httpStatusCode.ToString());
                 return OkResponse();
             }
             return BadRequestResponse();

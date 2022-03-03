@@ -2,9 +2,9 @@
 
 namespace UKHO.D365CallbackDistributorStub.API.Models.Request
 {
-    public class FailCallbackRequest
+    public class CommandCallbackRequest
     {
-        public HttpStatusCode httpStatusCode { get; set; }
+        public HttpStatusCode HttpStatusCode { get; set; }
         public string? SubscriptionId { get; set; }
     }
 }

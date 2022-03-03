@@ -1,16 +1,17 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Net;
 using UKHO.D365CallbackDistributorStub.API.Models.Request;
 
 namespace UKHO.D365CallbackDistributorStub.API.Services
 {
     [ExcludeFromCodeCoverage]
-    public class CallbackService
+    public class CallbackService 
     {
         private static readonly Queue<RecordCallbackRequest> s_recordCallbackRequestQueue = new();
-        private static readonly List<FailCallbackRequest> s_failCallbackRequestList = new();
-        public static bool SaveCallbackRequest(CallbackRequest callbackRequest, string subscriptionId)
+        private static readonly List<CommandCallbackRequest> s_commandCallbackRequestList = new();
+        private const HttpStatusCode _noContent = HttpStatusCode.NoContent;
+
+        public static bool SaveCallbackRequest(CallbackRequest callbackRequest, string subscriptionId, HttpStatusCode? httpStatusCode)
         {
             try
             {
@@ -19,7 +20,8 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                     CallBackRequest = callbackRequest,
                     Guid = Guid.NewGuid(),
                     SubscriptionId = subscriptionId,
-                    TimeStamp = DateTime.UtcNow.ToString("yyyy-MM-dd'T'HH:mm:ss.fffzzz", DateTimeFormatInfo.InvariantInfo),
+                    TimeStamp = CommonService.ToRfc3339String(DateTime.UtcNow),
+                    HttpStatusCode = httpStatusCode ?? _noContent
                 });
 
                 if (s_recordCallbackRequestQueue.Count >= 50)
@@ -47,31 +49,31 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
 
         }
 
-        public bool SaveFailCallbackRequest(string subscriptionId, HttpStatusCode? httpStatusCode)
+        public bool SaveCommandCallbackRequest(string subscriptionId, HttpStatusCode? httpStatusCode)
         {
             try
             {
-                FailCallbackRequest? failCallbackRequest = s_failCallbackRequestList.FirstOrDefault(a => a.SubscriptionId == subscriptionId);
+                CommandCallbackRequest? commandCallbackRequest = s_commandCallbackRequestList.FirstOrDefault(a => a.SubscriptionId == subscriptionId);
 
-                if (failCallbackRequest != null)
+                if (commandCallbackRequest != null)
                 {
                     if (httpStatusCode == null)
                     {
-                        s_failCallbackRequestList.Remove(failCallbackRequest);
+                        s_commandCallbackRequestList.Remove(commandCallbackRequest);
                     }
                     else
                     {
-                        failCallbackRequest.httpStatusCode = httpStatusCode ?? new HttpStatusCode();
+                        commandCallbackRequest.HttpStatusCode = httpStatusCode ?? _noContent;
                     }
                 }
                 else
                 {
                     if (httpStatusCode != null)
                     {
-                        s_failCallbackRequestList.Add(new FailCallbackRequest
+                        s_commandCallbackRequestList.Add(new CommandCallbackRequest
                         {
                             SubscriptionId = subscriptionId,
-                            httpStatusCode = httpStatusCode ?? new HttpStatusCode(),
+                            HttpStatusCode = httpStatusCode ?? _noContent,
                         });
                     }
                     else
@@ -80,9 +82,9 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                     }
                 }
 
-                if (s_failCallbackRequestList.Count >= 50)
+                if (s_commandCallbackRequestList.Count >= 50)
                 {
-                    s_failCallbackRequestList.RemoveAt(0);
+                    s_commandCallbackRequestList.RemoveAt(0);
                 }
                 return true;
             }
@@ -92,9 +94,9 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
             }
         }
 
-        public FailCallbackRequest? SubscriptionInFailCallbackList(string subscriptionId)
+        public CommandCallbackRequest? SubscriptionInCommandCallbackList(string subscriptionId)
         {
-           return s_failCallbackRequestList.Where(a => a.SubscriptionId == subscriptionId).FirstOrDefault();
+           return s_commandCallbackRequestList.Where(a => a.SubscriptionId == subscriptionId).FirstOrDefault();
         }
     }
 }
