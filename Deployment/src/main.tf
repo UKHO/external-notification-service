@@ -1,3 +1,16 @@
+data "azurerm_subnet" "main_subnet" {
+  name                 = var.spoke_subnet_name
+  virtual_network_name = var.spoke_vnet_name
+  resource_group_name  = var.spoke_rg
+}
+
+data "azurerm_subnet" "agent_subnet" {
+  provider             = azurerm.build_agent
+  name                 = var.agent_subnet_name
+  virtual_network_name = var.agent_vnet_name
+  resource_group_name  = var.agent_rg
+}
+
 module "app_insights" {
   source              = "./Modules/AppInsights"
   name                = "${local.service_name}-${local.env_name}-insights"
@@ -11,7 +24,6 @@ module "eventhub" {
   name                = "${local.service_name}-${local.env_name}-events"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-  logstashStorageName = lower("${local.service_name}logstash${local.env_name}")
   tags                = local.tags
 }
 
@@ -49,6 +61,9 @@ module "key_vault" {
   resource_group_name = azurerm_resource_group.rg.name
   env_name            = local.env_name
   tenant_id           = module.webapp_service.web_app_tenant_id
+  allowed_ips         = var.allowed_ips
+  m_spoke_subnet      = data.azurerm_subnet.main_subnet.id
+  agent_subnet        = data.azurerm_subnet.agent_subnet.id
   location            = azurerm_resource_group.rg.location
   read_access_objects = {
      "webapp_service" = module.webapp_service.web_app_object_id
@@ -79,6 +94,9 @@ module "storage" {
   source              = "./Modules/Storage"
   resource_group_name = azurerm_resource_group.rg.name
   location            = var.location
+  allowed_ips         = var.allowed_ips
+  m_spoke_subnet      = data.azurerm_subnet.main_subnet.id
+  agent_subnet        = data.azurerm_subnet.agent_subnet.id
   tags                = local.tags
   webapp_principal_id = module.webapp_service.web_app_object_id
   env_name            = local.env_name
