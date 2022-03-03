@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Models.Request;
+using UKHO.ExternalNotificationService.Common.Models.Response;
 
 namespace UKHO.ExternalNotificationService.API.Services
 {
@@ -9,6 +9,6 @@ namespace UKHO.ExternalNotificationService.API.Services
     {
         string EventType { get; }
 
-        Task<IActionResult> Process(CustomEventGridEvent customEventGridEvent, string correlationId, CancellationToken cancellationToken = default);
+        Task<ExternalNotificationServiceProcessResponse> Process(CustomEventGridEvent customEventGridEvent, string correlationId, CancellationToken cancellationToken = default);
     }
 }

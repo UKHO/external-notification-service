@@ -48,7 +48,6 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         {
             using var reader = new StreamReader(Request.Body, Encoding.UTF8);
             string jsonContent = await reader.ReadToEndAsync();
-
             CustomEventGridEvent eventGridEvent = JsonConvert.DeserializeObject<CustomEventGridEvent>(jsonContent);
 
             _logger.LogInformation(EventIds.ENSWebhookRequestStart.ToEventId(), "External notification service webhook request started for event:{eventGridEvent} and _X-Correlation-ID:{correlationId}.", JsonConvert.SerializeObject(eventGridEvent), GetCurrentCorrelationId());
@@ -59,16 +58,26 @@ namespace UKHO.ExternalNotificationService.API.Controllers
 
                 if (processor != null)
                 {
-                    IActionResult result = await processor.Process(eventGridEvent, GetCurrentCorrelationId());
+                    ExternalNotificationServiceProcessResponse result = await processor.Process(eventGridEvent, GetCurrentCorrelationId());
 
-                    _logger.LogInformation(EventIds.ENSWebhookRequestCompleted.ToEventId(), "External notification service webhook request Completed for subject:{subject} and _X-Correlation-ID:{correlationId}.", eventGridEvent.Subject, GetCurrentCorrelationId());
-
-                    return result;
+                    if (result.Errors != null && result.Errors.Count > 0)
+                    {
+                        _logger.LogInformation(EventIds.ENSWebhookRequestInvalidEventPayload.ToEventId(), "External notification service webhook requested invalid event for subject:{subject}, BusinessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", eventGridEvent.Subject, result.BusinessUnit, GetCurrentCorrelationId());
+                        _logger.LogInformation(EventIds.ENSWebhookRequestCompleted.ToEventId(), "External notification service webhook request completed for subject:{subject} and _X-Correlation-ID:{correlationId}.", eventGridEvent.Subject, GetCurrentCorrelationId());
+                        
+                        return BuildOkRequestErrorResponse(result.Errors);
+                    }
                 }
-                else
+                else 
                 {
-                    return BadRequest();
+                    _logger.LogInformation(EventIds.ENSWebhookRequestTypeNotMatch.ToEventId(), "External notification service webhook request type not matched with event processor for subject:{subject}, type:{type} and _X-Correlation-ID:{correlationId}.", eventGridEvent.Subject, eventGridEvent.Type, GetCurrentCorrelationId());
                 }
+
+                _logger.LogInformation(EventIds.ENSWebhookRequestCompleted.ToEventId(), "External notification service webhook request completed for subject:{subject} and _X-Correlation-ID:{correlationId}.", eventGridEvent.Subject, GetCurrentCorrelationId());
+            }
+            else
+            {
+                _logger.LogInformation(EventIds.ENSWebhookRequestCompletedWithNullEventPayload.ToEventId(), "External notification service webhook request completed with null event payload for _X-Correlation-ID:{correlationId}.", GetCurrentCorrelationId());
             }
 
             return GetEnsResponse(new ExternalNotificationServiceResponse { HttpStatusCode = HttpStatusCode.OK });

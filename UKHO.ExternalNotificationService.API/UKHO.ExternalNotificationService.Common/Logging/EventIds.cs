@@ -145,11 +145,14 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         ADAuthenticationFailed = 900035,
         ENSWebhookRequestCompleted = 900036,
-        FssEventDataMappingStart = 900037,
-        FssEventDataMappingCompleted = 900038,
-        ENSEventPublishStart = 900039,
-        ENSEventPublishCompleted = 900040,
-        ENSEventNotPublished = 900041
+        ENSWebhookRequestTypeNotMatch = 900037,
+        ENSWebhookRequestInvalidEventPayload = 900038,
+        ENSWebhookRequestCompletedWithNullEventPayload = 900039,
+        FssEventDataMappingStart = 900040,
+        FssEventDataMappingCompleted = 900041,
+        ENSEventPublishStart = 900042,
+        ENSEventPublishCompleted = 900043,
+        ENSEventNotPublished = 900044
     }
 
     public static class EventIdExtensions

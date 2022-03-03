@@ -28,11 +28,6 @@ namespace UKHO.ExternalNotificationService.API.Validation
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("Batch published date cannot be blank or null.");
 
-            RuleFor(b => b.Attributes)
-                .Must(pi => pi != null)
-                .WithErrorCode(HttpStatusCode.BadRequest.ToString())
-                .WithMessage("Attributes filed cannot be blank or null.");
-
             RuleFor(v => v.Links.BatchDetails).NotNull().NotEmpty()
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("Batch details links cannot be blank or null.");
@@ -47,17 +42,10 @@ namespace UKHO.ExternalNotificationService.API.Validation
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("File links are missing in event data.");
 
-            ////------
-            
             RuleFor(b => b.Files)
                 .Must(at => at.All(a => a.MIMEType != null))
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("File MIME type cannot be null.");
-
-            RuleFor(b => b.Files)
-                .Must(at => at.All(a => a.Attributes != null))
-                .WithErrorCode(HttpStatusCode.BadRequest.ToString())
-                .WithMessage("File attributes cannot be null.");
 
             RuleFor(b => b.Files)
                 .Must(at => at.All(a => a.Hash != null))
@@ -73,8 +61,6 @@ namespace UKHO.ExternalNotificationService.API.Validation
                 .Must(at => at.All(a => a.FileSize > 0))
                 .WithErrorCode(HttpStatusCode.BadRequest.ToString())
                 .WithMessage("File size cannot be null.");
-
-            ////------
         }
 
         Task<ValidationResult> IFssEventDataValidator.Validate(FssEventData fssEventData)

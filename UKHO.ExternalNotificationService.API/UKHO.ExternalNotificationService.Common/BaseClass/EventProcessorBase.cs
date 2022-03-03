@@ -3,6 +3,7 @@ using Azure.Messaging;
 using Azure.Messaging.EventGrid;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -26,24 +27,21 @@ namespace UKHO.ExternalNotificationService.Common.BaseClass
 
         protected async Task<bool> PublishEventAsync(CloudEvent cloudEvent, string correlationId, CancellationToken cancellationToken = default)
         {
-            _logger.LogInformation(EventIds.ENSEventPublishStart.ToEventId(), "External notification service event publish started for subject:{subject} and _X-Correlation-ID:{correlationId}.", cloudEvent.Subject, correlationId);
-            
             EventGridPublisherClient client = new(new Uri(_eventGridDomainConfig.Value.EventGridDomainEndpoint),
                                                   new AzureKeyCredential(_eventGridDomainConfig.Value.EventGridDomainAccessKey));
-
             List<CloudEvent> listCloudEvent = new() { cloudEvent };
 
             try
             {
+                _logger.LogInformation(EventIds.ENSEventPublishStart.ToEventId(), "External notification service event publish started for event:{listCloudEvent}, subject:{subject} and _X-Correlation-ID:{correlationId}.", JsonConvert.SerializeObject(cloudEvent), cloudEvent.Subject, correlationId);
                 await client.SendEventsAsync(listCloudEvent, cancellationToken);
-
                 _logger.LogInformation(EventIds.ENSEventPublishCompleted.ToEventId(), "External notification service event publish completed for subject:{subject} and _X-Correlation-ID:{correlationId}.", cloudEvent.Subject, correlationId);
-
+                 
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(EventIds.ENSEventNotPublished.ToEventId(), ex, "External notification service event not published for subject:{subject} and _X-Correlation-ID:{correlationId} with error {Message}.", cloudEvent.Subject, correlationId, ex.Message);
+                _logger.LogError(EventIds.ENSEventNotPublished.ToEventId(), "External notification service event not published for subject:{subject} and _X-Correlation-ID:{correlationId} with error:{Message}.", cloudEvent.Subject, correlationId, ex.Message);
 
                 return false;
             }

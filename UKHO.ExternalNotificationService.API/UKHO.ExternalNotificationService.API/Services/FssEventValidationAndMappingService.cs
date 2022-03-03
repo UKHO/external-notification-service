@@ -34,23 +34,27 @@ namespace UKHO.ExternalNotificationService.API.Services
             string data = JsonConvert.SerializeObject(customEventGridEvent.Data);
             FssEventData fssEventData = JsonConvert.DeserializeObject<FssEventData>(data);
 
-            fssEventData.Links.BatchStatus.Href = fssEventData.Links.BatchStatus.Href.Replace(_fssDataMappingConfiguration.Value.ExistingHostName, _fssDataMappingConfiguration.Value.ReplacingHostName);
-            fssEventData.Links.BatchDetails.Href = fssEventData.Links.BatchDetails.Href.Replace(_fssDataMappingConfiguration.Value.ExistingHostName, _fssDataMappingConfiguration.Value.ReplacingHostName);
-            var linksHref = fssEventData.Files.FirstOrDefault().Links.Get.Href.Replace(_fssDataMappingConfiguration.Value.ExistingHostName, _fssDataMappingConfiguration.Value.ReplacingHostName);
-            fssEventData.Files.FirstOrDefault().Links.Get.Href = linksHref; 
+            fssEventData.Links.BatchStatus.Href = ReplceHostValueMethod(fssEventData.Links.BatchStatus.Href);
+            fssEventData.Links.BatchDetails.Href = ReplceHostValueMethod(fssEventData.Links.BatchDetails.Href);
+            fssEventData.Files.FirstOrDefault().Links.Get.Href = ReplceHostValueMethod(fssEventData.Files.FirstOrDefault().Links.Get.Href);
 
             CloudEvent cloudEvent = new(_fssDataMappingConfiguration.Value.Source,
-                                        _fssDataMappingConfiguration.Value.Type, 
+                                        _fssDataMappingConfiguration.Value.Type,
                                         fssEventData)
-            { 
+            {
                 Time = DateTimeOffset.Parse(DateTimeExtensions.ToRfc3339String(DateTime.UtcNow)),
                 Id = Guid.NewGuid().ToString(),
                 Subject = customEventGridEvent.Subject,
                 DataContentType = customEventGridEvent.DataContentType,
-                DataSchema= customEventGridEvent.DataSchema
+                DataSchema = customEventGridEvent.DataSchema
             };
 
             return cloudEvent;
+        }
+
+        private string ReplceHostValueMethod(string href)
+        {
+            return href.Replace(_fssDataMappingConfiguration.Value.ExistingHostName, _fssDataMappingConfiguration.Value.ReplacingHostName);
         }
     }
 }
