@@ -100,6 +100,8 @@ namespace UKHO.ExternalNotificationService.API
             services.AddScoped<IFssEventValidationAndMappingService, FssEventValidationAndMappingService>();
             services.AddScoped<IFssEventDataValidator, FssEventDataValidator>();
             services.AddScoped<IEventProcessor, FssEventProcessor>();
+            services.AddScoped<IAzureEventGridDomainService, AzureEventGridDomainService>();
+            services.AddScoped<IEventSubscriptionConfiguration, EventSubscriptionConfiguration>();
 
             services.AddHealthChecks()
                 .AddCheck<EventHubLoggingHealthCheck>("EventHubLoggingHealthCheck")

@@ -150,9 +150,10 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         ENSWebhookRequestWithNullEventPayload = 900039,
         FssEventDataMappingStart = 900040,
         FssEventDataMappingCompleted = 900041,
-        ENSEventPublishStart = 900042,
-        ENSEventPublishCompleted = 900043,
-        ENSEventNotPublished = 900044
+        FssEventDataWithInvalidBusinessUnit = 900042,
+        ENSEventPublishStart = 900043,
+        ENSEventPublishCompleted = 900044,
+        ENSEventNotPublished = 900045
     }
 
     public static class EventIdExtensions
