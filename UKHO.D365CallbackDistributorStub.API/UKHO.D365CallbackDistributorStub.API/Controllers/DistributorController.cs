@@ -1,7 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Text;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Diagnostics.CodeAnalysis;
+using System.Net;
+using System.Text;
 using UKHO.D365CallbackDistributorStub.API.Models.Request;
 using UKHO.D365CallbackDistributorStub.API.Services;
 
@@ -34,17 +35,26 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
         public virtual async Task<IActionResult> Post()
         {
             _logger.LogInformation("Distributor Webhook accessed");
+
             using StreamReader reader = new(Request.Body, Encoding.UTF8);
             {
                 string jsonContent = await reader.ReadToEndAsync();
                 CustomCloudEvent? customCloudEvent = JsonConvert.DeserializeObject<CustomCloudEvent>(jsonContent);
                 if (customCloudEvent != null)
                 {
-                    bool distributorRequestSaved = DistributionService.SaveDistributorRequest(customCloudEvent);
-                    if (distributorRequestSaved)
+                    CommandDistributionRequest? commandDistributionRequest = _distributionService.SubscriptionInCommandDistributionList(customCloudEvent.Subject);
+                    bool distributionRequestSaved = DistributionService.SaveDistributorRequest(customCloudEvent,
+                                                                              commandDistributionRequest == null ? HttpStatusCode.OK : commandDistributionRequest.httpStatusCode);
+
+                    if (distributionRequestSaved)
                     {
                         _logger.LogInformation("Distributor webhook request stored in memory for Subject: {Subject}", customCloudEvent.Subject);
-                        return NoContentResponse();
+                        if (commandDistributionRequest != null)
+                        {
+                            _logger.LogInformation("Distribution request commanded for Subejct: {subjectId} with httpStatusCode as {httpStatusCode}", customCloudEvent.Subject, commandDistributionRequest.httpStatusCode.ToString());
+                            return GetEnsStubResponse(commandDistributionRequest.httpStatusCode);
+                        }
+                        return OkResponse();
                     }
                     else
                     {
@@ -71,9 +81,39 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
                 _logger.LogInformation("Distribution Request not found for Subject : {Subject}", subject);
                 return NotFoundResponse();
             }
-
             _logger.LogInformation("Distribution Request found and return for Subject : {Subject}", subject);
             return Ok(distributorRequest);
+        }
+
+        [Route("command-to-return-status")]
+        [HttpPost]
+        public virtual async Task<IActionResult> CommandToReturnStatus(HttpStatusCode? statusCode)
+        {
+            _logger.LogInformation("Command Api Webhook accessed");
+            using StreamReader reader = new(Request.Body, Encoding.UTF8);
+            {
+                string jsonContent = await reader.ReadToEndAsync();
+                CustomCloudEvent? customCloudEvent = JsonConvert.DeserializeObject<CustomCloudEvent>(jsonContent);
+                if (customCloudEvent != null)
+                {
+                    bool distributorRequestSaved = DistributionService.SaveDistributorRequestForCommand(customCloudEvent, statusCode);
+                    if (distributorRequestSaved)
+                    {
+                        _logger.LogInformation("Command Api webhook request stored in memory for Subject: {Subject}", customCloudEvent.Subject);
+                        return OkResponse();
+                    }
+                    else
+                    {
+                        _logger.LogInformation("Command Api webhook request not stored in memory for Subject: {Subject}", customCloudEvent.Subject);
+                        return BadRequestResponse();
+                    }
+                }
+                else
+                {
+                    _logger.LogInformation("Command Api webhook request cannot be null");
+                    return BadRequestResponse();
+                }
+            }
         }
     }
 }
