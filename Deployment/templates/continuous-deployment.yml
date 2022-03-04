@@ -53,7 +53,7 @@ steps:
 
   - task: FileTransform@1
     displayName: "File Transform: StubWebAppSettings"
-    condition: and(succeeded(), eq(variables['Environment.Name'], 'Ens-Dev'))
+    condition: and(succeeded(), eq(variables['Environment.Name'], 'Ens-Qa'))
     inputs:
       folderPath: '$(Pipeline.Workspace)/StubWebAPI/*.zip'
       fileType: 'json'
@@ -61,7 +61,7 @@ steps:
 
   - task: AzureWebApp@1
     displayName: "Azure App Deploy: ens-$(Environment)-stub-webapp"
-    condition: and(succeeded(), eq(variables['Environment.Name'], 'Ens-Dev'))
+    condition: and(succeeded(), eq(variables['Environment.Name'], 'Ens-Qa'))
     inputs:
       azureSubscription: "External Notification Service Dev - A.008.02"
       appType: webApp
