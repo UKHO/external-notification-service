@@ -63,7 +63,7 @@ steps:
     displayName: "Azure App Deploy: ens-$(Environment)-stub-webapp"
     condition: and(succeeded(), eq(variables['Environment.Name'], 'Ens-Dev'))
     inputs:
-      azureSubscription: "External Notification Service Dev - A.008.02"
+      azureSubscription: "${{ parameters.AzureSubscription }}"
       appType: webApp
       appName: "$(stubWebAppName)"
       package: "$(Pipeline.Workspace)/StubWebAPI/UKHO.D365CallbackDistributorStub.API.zip"
