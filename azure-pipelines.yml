@@ -452,7 +452,7 @@ stages:
                     scriptType: 'pscore'
                     scriptLocation: 'scriptPath'
                     scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
-                    arguments: '-Stuburi $(D365ApiStubUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
+                    arguments: '-sandboxUri $(D365ApiSandboxUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
 
   - stage: QAdeploy
     displayName: QAdeploy (inc terraform, webapp deploy)
