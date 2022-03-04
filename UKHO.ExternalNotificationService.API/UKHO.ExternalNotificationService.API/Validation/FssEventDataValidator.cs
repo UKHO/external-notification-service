@@ -17,49 +17,48 @@ namespace UKHO.ExternalNotificationService.API.Validation
         public FssEventDataValidator()
         {
             RuleFor(v => v.BatchId).NotNull().NotEmpty()
-                .WithErrorCode(HttpStatusCode.BadRequest.ToString())
+                .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("BatchId cannot be blank or null.");
 
             RuleFor(v => v.BusinessUnit).NotNull().NotEmpty()
-                .WithErrorCode(HttpStatusCode.BadRequest.ToString())
+                .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("Business unit cannot be blank or null.");
 
             RuleFor(v => v.BatchPublishedDate).NotNull().NotEmpty()
-                .WithErrorCode(HttpStatusCode.BadRequest.ToString())
+                .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("Batch published date cannot be blank or null.");
 
-            RuleFor(v => v.Links.BatchDetails).NotNull().NotEmpty()
-                .WithErrorCode(HttpStatusCode.BadRequest.ToString())
+            RuleFor(v => v.Links.BatchDetails).NotNull().NotEmpty().OverridePropertyName("BatchDetails")
+                .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("Batch details links cannot be blank or null.");
 
-            RuleFor(v => v.Links.BatchStatus).NotNull().NotEmpty()
-                .WithErrorCode(HttpStatusCode.BadRequest.ToString())
+            RuleFor(v => v.Links.BatchStatus).NotNull().NotEmpty().OverridePropertyName("BatchStatus")
+                .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("Batch status links cannot be blank or null.");
 
-            RuleFor(v => v.Files).NotNull().NotEmpty()
-                .Must(at => at.All(a => !string.IsNullOrWhiteSpace(a.Links.ToString())))
-                .When(ru => ru.Attributes != null)
-                .WithErrorCode(HttpStatusCode.BadRequest.ToString())
-                .WithMessage("File links are missing in event data.");
+            RuleFor(v => v.Files).NotNull().NotEmpty().OverridePropertyName("Links")
+                .Must(at => at.All(a => a.Links != null))
+                .WithErrorCode(HttpStatusCode.OK.ToString())
+                .WithMessage("File links cannot be null.");
 
-            RuleFor(b => b.Files)
+            RuleFor(b => b.Files).NotNull().NotEmpty().OverridePropertyName("MIMEType")
                 .Must(at => at.All(a => a.MIMEType != null))
-                .WithErrorCode(HttpStatusCode.BadRequest.ToString())
+                .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("File MIME type cannot be null.");
 
-            RuleFor(b => b.Files)
+            RuleFor(b => b.Files).NotNull().NotEmpty().OverridePropertyName("Hash")
                 .Must(at => at.All(a => a.Hash != null))
-                .WithErrorCode(HttpStatusCode.BadRequest.ToString())
+                .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("File hash cannot be null.");
 
-            RuleFor(b => b.Files)
+            RuleFor(b => b.Files).NotNull().NotEmpty().OverridePropertyName("FileName")
                 .Must(at => at.All(a => a.FileName != null))
-                .WithErrorCode(HttpStatusCode.BadRequest.ToString())
+                .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("File name cannot be null.");
 
-            RuleFor(b => b.Files)
+            RuleFor(b => b.Files).NotNull().NotEmpty().OverridePropertyName("FileSize")
                 .Must(at => at.All(a => a.FileSize > 0))
-                .WithErrorCode(HttpStatusCode.BadRequest.ToString())
+                .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("File size cannot be null.");
         }
 
