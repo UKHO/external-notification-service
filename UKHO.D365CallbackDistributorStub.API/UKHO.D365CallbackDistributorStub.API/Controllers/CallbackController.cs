@@ -20,8 +20,9 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
             _callbackService = callbackService;
         }
 
-        [HttpPost]
-        public IActionResult Post([FromBody] CallbackRequest callbackRequest, string subscriptionId)
+        [Route("ukho_externalnotifications({subscriptionId})")]
+        [HttpPatch]
+        public IActionResult Patch([FromBody] CallbackRequest callbackRequest, string subscriptionId)
         {
             _logger.LogInformation("POST callback accessed for subscriptionId: {subscriptionId}", subscriptionId);
 
