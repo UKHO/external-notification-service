@@ -10,6 +10,12 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
         private static readonly Queue<RecordCallbackRequest> s_recordCallbackRequestQueue = new();
         private static readonly List<CommandCallbackRequest> s_commandCallbackRequestList = new();
         private const HttpStatusCode _noContent = HttpStatusCode.NoContent;
+        private readonly ILogger<CallbackService> _logger;
+
+        public CallbackService(ILogger<CallbackService> logger)
+        {
+            _logger = logger;
+        }
 
         public static bool SaveCallbackRequest(CallbackRequest callbackRequest, string subscriptionId, HttpStatusCode? httpStatusCode)
         {
@@ -78,6 +84,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                     }
                     else
                     {
+                        _logger.LogInformation("Request not found in memory for subscriptionId: {subscriptionId}", subscriptionId);
                         return false;
                     }
                 }
