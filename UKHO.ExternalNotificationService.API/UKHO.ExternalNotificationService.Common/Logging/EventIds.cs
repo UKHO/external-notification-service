@@ -144,15 +144,45 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// 900035 - Authorization failed with AD Authentication Token
         /// </summary>
         ADAuthenticationFailed = 900035,
+        /// <summary>
+        /// 900036 -  Request for external notification service webhook post endpoint is Completed.
+        /// </summary>
         ENSWebhookRequestCompleted = 900036,
+        /// <summary>
+        /// 900037 -  Request event type for external notification service webhook not matched with processor.
+        /// </summary>
         ENSWebhookRequestTypeNotMatch = 900037,
+        /// <summary>
+        /// 900038 -  Request invalid event payload for external notification service webhook post endpoint.
+        /// </summary>
         ENSWebhookRequestInvalidEventPayload = 900038,
+        /// <summary>
+        /// 900039 -  Request null event payload for external notification service webhook post endpoint.
+        /// </summary>
         ENSWebhookRequestWithNullEventPayload = 900039,
+        /// <summary>
+        /// 900040 -  File share service event data mapping started.
+        /// </summary>
         FssEventDataMappingStart = 900040,
+        /// <summary>
+        /// 900041 -  File share service event data mapping Completed.
+        /// </summary>
         FssEventDataMappingCompleted = 900041,
+        /// <summary>
+        /// 900042 -  Request invalid business unit for external notification service webhook post endpoint.
+        /// </summary>
         FssEventDataWithInvalidBusinessUnit = 900042,
+        /// <summary>
+        /// 900043 -  External notification service event publish started.
+        /// </summary>
         ENSEventPublishStart = 900043,
+        /// <summary>
+        /// 900044 -  External notification service event publish Completed.
+        /// </summary>
         ENSEventPublishCompleted = 900044,
+        /// <summary>
+        /// 900045 -  External notification service event publish is failed.
+        /// </summary>
         ENSEventNotPublished = 900045
     }
 

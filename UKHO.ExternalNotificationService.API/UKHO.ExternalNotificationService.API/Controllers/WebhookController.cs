@@ -70,7 +70,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
                 }
                 else 
                 {
-                    _logger.LogInformation(EventIds.ENSWebhookRequestTypeNotMatch.ToEventId(), "External notification service webhook request is failed due to type not matched with event processor for subject:{subject}, type:{type} and _X-Correlation-ID:{correlationId}.", eventGridEvent.Subject, eventGridEvent.Type, GetCurrentCorrelationId());
+                    _logger.LogInformation(EventIds.ENSWebhookRequestTypeNotMatch.ToEventId(), "External notification service webhook request is failed due to event type not matched with event processor for subject:{subject}, type:{type} and _X-Correlation-ID:{correlationId}.", eventGridEvent.Subject, eventGridEvent.Type, GetCurrentCorrelationId());
                 }
 
                 _logger.LogInformation(EventIds.ENSWebhookRequestCompleted.ToEventId(), "External notification service webhook request completed for subject:{subject} and _X-Correlation-ID:{correlationId}.", eventGridEvent.Subject, GetCurrentCorrelationId());
