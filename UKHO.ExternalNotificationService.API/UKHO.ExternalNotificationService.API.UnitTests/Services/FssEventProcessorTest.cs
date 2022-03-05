@@ -1,4 +1,5 @@
-﻿using FakeItEasy;
+﻿using Azure.Messaging;
+using FakeItEasy;
 using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.Common.Configuration;
@@ -72,6 +74,26 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomEventGridEvent, correlationId);
 
             Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
+        }
+
+        [Test]
+        public async Task WhenValidPayloadInRequest_ThenReceiveSuccessfulResponse()
+        {
+            CancellationToken cancellationToken = CancellationToken.None;
+            CloudEvent cloudEvent = new("test", "test", new object());
+
+            A.CallTo(() => _fakeFssEventValidationAndMappingService.ValidateFssEventData(A<FssEventData>.Ignored)).Returns(new ValidationResult());
+
+            A.CallTo(() => _fakeFssEventValidationAndMappingService.FssEventDataMapping(A<CustomEventGridEvent>.Ignored, A<string>.Ignored))
+                            .Returns(cloudEvent);
+
+            A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(A<CloudEvent>.Ignored, A<string>.Ignored, cancellationToken))
+                            .Returns(true);
+
+            ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomEventGridEvent, correlationId);
+
+            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
+            Assert.IsNull(result.Errors);
         }
 
         private static CustomEventGridEvent GetCustomEventGridEvent()
