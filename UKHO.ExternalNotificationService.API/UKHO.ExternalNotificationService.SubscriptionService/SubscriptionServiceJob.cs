@@ -47,34 +47,41 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                 ExternalNotificationEntity externalNotificationEntity = new()
                 {
                     ResponseStatusCode = _d365CallbackConfiguration.Value.SucceededStatusCode,
-                    ResponseDetails = "Successfully added subscription @Time:" + Convert.ToString(DateTime.UtcNow)
+                    ResponseDetails = "Successfully added subscription @Time: " + Convert.ToString(DateTime.UtcNow)
                 };
                 try
                 {
                     eventSubscription = await _subscriptionServiceData.CreateOrUpdateSubscription(subscriptionMessage, CancellationToken.None);
                     subscriptionRequestResult.ProvisioningState = "Succeeded";
+
+                    _logger.LogError(EventIds.CreateSubscriptionRequestSuccess.ToEventId(),
+                 "Subscription provisioning request Succeeded for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
                 }
                 catch (Exception e)
                 {
                     subscriptionRequestResult.ProvisioningState = "Failed";
 
-                    externalNotificationEntity.ResponseStatusCode = _d365CallbackConfiguration.Value.FailedStatusCode;                    
+                    externalNotificationEntity.ResponseStatusCode = _d365CallbackConfiguration.Value.FailedStatusCode;
 
-                    //other potential errors
+                    //Webhook validation handshake failure error
                     if (e.Message.Contains("Webhook validation handshake failed"))
                     {
                         int startIndex = e.Message.IndexOf("Webhook validation handshake failed");
                         subscriptionRequestResult.ErrorMessage = e.Message.Substring(startIndex, e.Message.Length - startIndex);
-                        externalNotificationEntity.ResponseDetails = "Failed to add subscription @Time:" + Convert.ToString(DateTime.UtcNow) + " with exception " + subscriptionRequestResult.ErrorMessage;
+                        externalNotificationEntity.ResponseDetails = "Failed to add subscription @Time: " + Convert.ToString(DateTime.UtcNow) + " with exception " + subscriptionRequestResult.ErrorMessage;
+
+                        _logger.LogError(EventIds.CreateSubscriptionRequestHandshakeFailureError.ToEventId(),
+                  "Subscription provisioning request failed with Webhook handshake failure with Exception:{e} with SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", e.Message, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
                     }
+                    //other potential errors
                     else
                     {
                         subscriptionRequestResult.ErrorMessage = e.Message;                        
-                        externalNotificationEntity.ResponseDetails = "Failed to add subscription @Time:" + Convert.ToString(DateTime.UtcNow) + " with exception " + e.Message;
-                    }
-                    
-                    _logger.LogError(EventIds.CreateSubscriptionRequestError.ToEventId(),
-                   "Subscription provisioning request failed with Exception:{e} with SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", e.Message, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+                        externalNotificationEntity.ResponseDetails = "Failed to add subscription @Time: " + Convert.ToString(DateTime.UtcNow) + " with exception " + e.Message;
+
+                        _logger.LogError(EventIds.CreateSubscriptionRequestPotentialError.ToEventId(),
+                  "Subscription provisioning request failed with other potential errors with Exception:{e} with SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", e.Message, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+                    }                   
                 }
 
                 //Callback to D365

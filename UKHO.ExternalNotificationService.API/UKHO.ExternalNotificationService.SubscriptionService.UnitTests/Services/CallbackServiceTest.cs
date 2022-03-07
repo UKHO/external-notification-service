@@ -31,8 +31,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
         {
             _fakeAuthTokenProvider = A.Fake<IAuthTokenProvider>();
             _fakeLogger = A.Fake<ILogger<CallbackService>>();
-            _fakeCallbackClient = A.Fake<ICallbackClient>();
-            _callbackService = A.Fake<ICallbackService>();
+            _fakeCallbackClient = A.Fake<ICallbackClient>();            
 
             _callbackService = new CallbackService(_fakeAuthTokenProvider, _fakeLogger, _fakeCallbackClient);           
         }
