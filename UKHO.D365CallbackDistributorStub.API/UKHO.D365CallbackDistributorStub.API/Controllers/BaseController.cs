@@ -1,6 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
-using Microsoft.AspNetCore.Mvc;
 
 namespace UKHO.D365CallbackDistributorStub.API.Controllers
 {

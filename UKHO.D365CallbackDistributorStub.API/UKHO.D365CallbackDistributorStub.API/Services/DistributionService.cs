@@ -10,6 +10,13 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
         private static readonly Queue<DistributorRequest> s_recordDistributorRequestQueue = new();
         private static readonly List<CommandDistributionRequest> s_CommandDistributionList = new();
         private const HttpStatusCode _ok = HttpStatusCode.OK;
+        private readonly ILogger<DistributionService> _logger;
+
+        public DistributionService(ILogger<DistributionService> logger)
+        {
+            _logger = logger;
+        }
+
         public static bool SaveDistributorRequest(CustomCloudEvent cloudEvent, HttpStatusCode? httpStatusCode)
         {
             try
@@ -47,7 +54,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
             }
         }
 
-        public static bool SaveDistributorRequestForCommand(CustomCloudEvent cloudEvent, HttpStatusCode? statusCode)
+        public bool SaveDistributorRequestForCommand(CustomCloudEvent cloudEvent, HttpStatusCode? statusCode)
         {
             try
             {
@@ -75,6 +82,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                     }
                     else
                     {
+                        _logger.LogInformation("Request not found in memory for subject: {subject}", cloudEvent.Subject);
                         return false;
                     }
                 }

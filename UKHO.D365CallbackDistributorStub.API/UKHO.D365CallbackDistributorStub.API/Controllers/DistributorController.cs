@@ -51,7 +51,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
                         _logger.LogInformation("Distributor webhook request stored in memory for Subject: {Subject}", customCloudEvent.Subject);
                         if (commandDistributionRequest != null)
                         {
-                            _logger.LogInformation("Distribution request commanded for Subejct: {subjectId} with httpStatusCode as {httpStatusCode}", customCloudEvent.Subject, commandDistributionRequest.httpStatusCode.ToString());
+                            _logger.LogInformation("Distribution request failed for Subejct: {subjectId} with httpStatusCode as {httpStatusCode}", customCloudEvent.Subject, commandDistributionRequest.httpStatusCode.ToString());
                             return GetEnsStubResponse(commandDistributionRequest.httpStatusCode);
                         }
                         return OkResponse();
@@ -96,7 +96,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
                 CustomCloudEvent? customCloudEvent = JsonConvert.DeserializeObject<CustomCloudEvent>(jsonContent);
                 if (customCloudEvent != null)
                 {
-                    bool distributorRequestSaved = DistributionService.SaveDistributorRequestForCommand(customCloudEvent, statusCode);
+                    bool distributorRequestSaved = _distributionService.SaveDistributorRequestForCommand(customCloudEvent, statusCode);
                     if (distributorRequestSaved)
                     {
                         _logger.LogInformation("Command Api webhook request stored in memory for Subject: {Subject}", customCloudEvent.Subject);
