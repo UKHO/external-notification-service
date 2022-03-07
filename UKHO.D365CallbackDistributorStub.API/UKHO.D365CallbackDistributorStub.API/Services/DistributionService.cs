@@ -27,7 +27,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                     Subject = cloudEvent.Subject,
                     Guid = new Guid(),
                     TimeStamp = CommonService.ToRfc3339String(DateTime.UtcNow),
-                    statusCode = httpStatusCode ?? _ok
+                    StatusCode = httpStatusCode ?? _ok
                 });
 
                 if (s_recordDistributorRequestQueue.Count >= 50)
@@ -67,7 +67,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                     }
                     else
                     {
-                        commanddistributorRequest.httpStatusCode = statusCode ?? _ok;
+                        commanddistributorRequest.HttpStatusCode = statusCode ?? _ok;
                     }
                 }
                 else
@@ -77,7 +77,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                         s_CommandDistributionList.Add(new CommandDistributionRequest
                         {
                             Subject = cloudEvent.Subject,
-                            httpStatusCode = statusCode ?? _ok
+                            HttpStatusCode = statusCode ?? _ok
                         });
                     }
                     else

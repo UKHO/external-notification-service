@@ -44,15 +44,15 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
                 {
                     CommandDistributionRequest? commandDistributionRequest = _distributionService.SubscriptionInCommandDistributionList(customCloudEvent.Subject);
                     bool distributionRequestSaved = DistributionService.SaveDistributorRequest(customCloudEvent,
-                                                                              commandDistributionRequest == null ? HttpStatusCode.OK : commandDistributionRequest.httpStatusCode);
+                                                                              commandDistributionRequest == null ? HttpStatusCode.OK : commandDistributionRequest.HttpStatusCode);
 
                     if (distributionRequestSaved)
                     {
                         _logger.LogInformation("Distributor webhook request stored in memory for Subject: {Subject}", customCloudEvent.Subject);
                         if (commandDistributionRequest != null)
                         {
-                            _logger.LogInformation("Distribution request failed for Subejct: {subjectId} with httpStatusCode as {httpStatusCode}", customCloudEvent.Subject, commandDistributionRequest.httpStatusCode.ToString());
-                            return GetEnsStubResponse(commandDistributionRequest.httpStatusCode);
+                            _logger.LogInformation("Distribution request failed for Subejct: {subjectId} with httpStatusCode as {httpStatusCode}", customCloudEvent.Subject, commandDistributionRequest.HttpStatusCode.ToString());
+                            return GetEnsStubResponse(commandDistributionRequest.HttpStatusCode);
                         }
                         return OkResponse();
                     }
