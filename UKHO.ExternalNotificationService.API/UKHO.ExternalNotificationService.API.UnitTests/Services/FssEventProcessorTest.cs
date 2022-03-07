@@ -47,6 +47,14 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         }
 
         [Test]
+        public void  WhenValidInRequest_ThenReceiveEventType()
+        {
+            string result = _fssEventProcessor.EventType;
+
+            Assert.AreEqual(_fakeCustomEventGridEvent.Type, result);
+        }
+
+        [Test]
         public async Task WhenInvalidPayloadInRequest_ThenReceiveSuccessfulResponse()
         {
             var validationMessage = new ValidationFailure("BatchId", "BatchId cannot be blank or null.")
