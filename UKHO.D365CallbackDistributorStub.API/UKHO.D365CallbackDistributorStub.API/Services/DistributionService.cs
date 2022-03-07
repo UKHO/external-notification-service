@@ -54,11 +54,11 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
             }
         }
 
-        public bool SaveDistributorRequestForCommand(CustomCloudEvent cloudEvent, HttpStatusCode? statusCode)
+        public bool SaveDistributorRequestForCommand(string subject, HttpStatusCode? statusCode)
         {
             try
             {
-                CommandDistributionRequest? commanddistributorRequest = s_CommandDistributionList.FirstOrDefault(a => a.Subject == cloudEvent.Subject);
+                CommandDistributionRequest? commanddistributorRequest = s_CommandDistributionList.FirstOrDefault(a => a.Subject == subject);
                 if (commanddistributorRequest != null)
                 {
                     if (statusCode == null)
@@ -76,14 +76,14 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                     {
                         s_CommandDistributionList.Add(new CommandDistributionRequest
                         {
-                            Subject = cloudEvent.Subject,
+                            Subject = subject,
                             HttpStatusCode = statusCode ?? _ok
                         });
                     }
                     else
                     {
-                        _logger.LogInformation("Request not found in memory for subject: {subject}", cloudEvent.Subject);
-                        return false;
+                        _logger.LogInformation("Request not found in memory for subject: {subject}", subject);
+                        return true;
                     }
                 }
 

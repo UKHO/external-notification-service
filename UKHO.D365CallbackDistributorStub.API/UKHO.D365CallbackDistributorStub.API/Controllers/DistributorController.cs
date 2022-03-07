@@ -85,34 +85,21 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
             return Ok(distributorRequest);
         }
 
-        [Route("command-to-return-status")]
-        [HttpPost]
-        public virtual async Task<IActionResult> CommandToReturnStatus(HttpStatusCode? statusCode)
+        [HttpPost("command-to-return-status/{subject}/{httpStatusCode?}")]
+        public IActionResult CommandToReturnStatus(string subject, HttpStatusCode? httpStatusCode)
         {
-            _logger.LogInformation("Command Api Webhook accessed");
-            using StreamReader reader = new(Request.Body, Encoding.UTF8);
+            _logger.LogInformation("Command for distributor webhook accessed for subject: {subject}", subject);
+
+            bool distributorRequestSaved = _distributionService.SaveDistributorRequestForCommand(subject, httpStatusCode);
+            if (distributorRequestSaved)
             {
-                string jsonContent = await reader.ReadToEndAsync();
-                CustomCloudEvent? customCloudEvent = JsonConvert.DeserializeObject<CustomCloudEvent>(jsonContent);
-                if (customCloudEvent != null)
-                {
-                    bool distributorRequestSaved = _distributionService.SaveDistributorRequestForCommand(customCloudEvent, statusCode);
-                    if (distributorRequestSaved)
-                    {
-                        _logger.LogInformation("Command Api webhook request stored in memory for Subject: {Subject}", customCloudEvent.Subject);
-                        return OkResponse();
-                    }
-                    else
-                    {
-                        _logger.LogInformation("Command Api webhook request not stored in memory for Subject: {Subject}", customCloudEvent.Subject);
-                        return BadRequestResponse();
-                    }
-                }
-                else
-                {
-                    _logger.LogInformation("Command Api webhook request cannot be null");
-                    return BadRequestResponse();
-                }
+                _logger.LogInformation("Command for distributor webhook request stored in memory for Subject: {Subject}", subject);
+                return OkResponse();
+            }
+            else
+            {
+                _logger.LogInformation("Command distributor webhook request not stored in memory for Subject: {Subject}", subject);
+                return BadRequestResponse();
             }
         }
     }

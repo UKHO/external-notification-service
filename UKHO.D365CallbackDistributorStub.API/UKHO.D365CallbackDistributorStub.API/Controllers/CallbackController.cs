@@ -75,6 +75,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
                 _logger.LogInformation("Command for callback stored in memory for subscriptionId: {subscriptionId} with httpStatusCode as {httpStatusCode}", subscriptionId, httpStatusCode.ToString());
                 return OkResponse();
             }
+            _logger.LogInformation("Command for callback request not stored in memory for subscriptionId: {subscriptionId}", subscriptionId);
             return BadRequestResponse();
         }
     }

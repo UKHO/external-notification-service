@@ -85,7 +85,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                     else
                     {
                         _logger.LogInformation("Request not found in memory for subscriptionId: {subscriptionId}", subscriptionId);
-                        return false;
+                        return true;
                     }
                 }
 
