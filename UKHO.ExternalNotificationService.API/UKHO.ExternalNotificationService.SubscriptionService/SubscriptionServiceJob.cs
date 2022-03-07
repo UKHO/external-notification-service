@@ -71,7 +71,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                         externalNotificationEntity.ResponseDetails = "Failed to add subscription @Time: " + Convert.ToString(DateTime.UtcNow) + " with exception " + subscriptionRequestResult.ErrorMessage;
 
                         _logger.LogError(EventIds.CreateSubscriptionRequestHandshakeFailureError.ToEventId(),
-                  "Subscription provisioning request failed with Webhook handshake failure with Exception:{e} with SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", e.Message, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+                  "Subscription provisioning request failed with Webhook handshake failure error with Exception:{e} with SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", e.Message, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
                     }
                     //other potential errors
                     else
