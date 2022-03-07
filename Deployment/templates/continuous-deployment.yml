@@ -25,6 +25,10 @@ steps:
       ARM_TENANT_ID: $(TERRAFORM-TENANT-ID)
       ARM_SUBSCRIPTION_ID: $(TERRAFORM-SUBSCRIPTION-ID)
 
+  - bash: echo "##vso[task.setvariable variable=D365CallbackConfiguration.D365ApiUri]$(D365ApiStubUri)"
+    name: SetStubURL
+    condition: and(succeeded(), eq(variables['Environment.Name'], 'Ens-Dev'))
+
   - task: FileTransform@1
     displayName: "File Transform: WebAppSettings"
     inputs:
@@ -49,16 +53,17 @@ steps:
 
   - task: FileTransform@1
     displayName: "File Transform: StubWebAppSettings"
+    condition: and(succeeded(), eq(variables['Environment.Name'], 'Ens-Dev'))
     inputs:
       folderPath: '$(Pipeline.Workspace)/StubWebAPI/*.zip'
       fileType: 'json'
-      targetFiles: '**/appsettings.json'
+      targetFiles: '**/appsettings.json'           
 
   - task: AzureWebApp@1
     displayName: "Azure App Deploy: ens-$(Environment)-stub-webapp"
+    condition: and(succeeded(), eq(variables['Environment.Name'], 'Ens-Dev'))
     inputs:
       azureSubscription: "${{ parameters.AzureSubscription }}"
       appType: webApp
       appName: "$(stubWebAppName)"
       package: "$(Pipeline.Workspace)/StubWebAPI/UKHO.D365CallbackDistributorStub.API.zip"
-
