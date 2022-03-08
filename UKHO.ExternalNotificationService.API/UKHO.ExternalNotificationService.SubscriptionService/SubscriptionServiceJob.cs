@@ -47,7 +47,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                 ExternalNotificationEntity externalNotificationEntity = new()
                 {
                     ResponseStatusCode = _d365CallbackConfiguration.Value.SucceededStatusCode,
-                    ResponseDetails = "Successfully added subscription @Time: " + Convert.ToString(DateTime.UtcNow)
+                    ResponseDetails = $"Successfully added subscription @Time: { DateTime.UtcNow}"
                 };
                 try
                 {
@@ -68,19 +68,19 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                     {
                         int startIndex = e.Message.IndexOf("Webhook validation handshake failed");
                         subscriptionRequestResult.ErrorMessage = e.Message.Substring(startIndex, e.Message.Length - startIndex);
-                        externalNotificationEntity.ResponseDetails = "Failed to add subscription @Time: " + Convert.ToString(DateTime.UtcNow) + " with exception " + subscriptionRequestResult.ErrorMessage;
+                        externalNotificationEntity.ResponseDetails = $"Failed to add subscription @Time: {DateTime.UtcNow} with exception {subscriptionRequestResult.ErrorMessage}";
 
                         _logger.LogError(EventIds.CreateSubscriptionRequestHandshakeFailureError.ToEventId(),
-                  "Subscription provisioning request failed with Webhook handshake failure error with Exception:{e} with SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", e.Message, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+                  "Subscription provisioning request failed with Webhook handshake failure error with Exception:{e} for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", e.Message, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
                     }
                     //other potential errors
                     else
                     {
                         subscriptionRequestResult.ErrorMessage = e.Message;                        
-                        externalNotificationEntity.ResponseDetails = "Failed to add subscription @Time: " + Convert.ToString(DateTime.UtcNow) + " with exception " + e.Message;
+                        externalNotificationEntity.ResponseDetails = $"Failed to add subscription @Time: {DateTime.UtcNow} with exception {e.Message}";                        
 
                         _logger.LogError(EventIds.CreateSubscriptionRequestOtherError.ToEventId(),
-                  "Subscription provisioning request failed with other potential errors with Exception:{e} with SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", e.Message, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+                  "Subscription provisioning request failed with other error with Exception:{e} for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", e.Message, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
                     }                   
                 }
 
