@@ -149,7 +149,7 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         CreateSubscriptionRequestPotentialError = 900036,
         /// <summary>
-        /// 900036 - Create subscription request error in case of handshake failure error exception in Webhook event
+        /// 900037 - Create subscription request error in case of handshake failure error exception in Webhook event
         /// </summary>
         CreateSubscriptionRequestHandshakeFailureError = 900037
     }
