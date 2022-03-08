@@ -58,16 +58,16 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
         {
             try
             {
-                CommandDistributionRequest? commanddistributorRequest = s_CommandDistributionList.Where(a => a.Subject == subject).LastOrDefault();
-                if (commanddistributorRequest != null)
+                CommandDistributionRequest? commandDistributorRequest = s_CommandDistributionList.Where(a => a.Subject == subject).LastOrDefault();
+                if (commandDistributorRequest != null)
                 {
                     if (statusCode == null)
                     {
-                        s_CommandDistributionList.Remove(commanddistributorRequest);
+                        s_CommandDistributionList.Remove(commandDistributorRequest);
                     }
                     else
                     {
-                        commanddistributorRequest.HttpStatusCode = statusCode ?? Ok;
+                        commandDistributorRequest.HttpStatusCode = statusCode ?? Ok;
                     }
                 }
                 else
