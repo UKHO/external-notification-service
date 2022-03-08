@@ -8,11 +8,10 @@ using Microsoft.Azure.Management.EventGrid.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Rest;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Configuration;
@@ -61,10 +60,7 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
 
             try
             {
-                string data = Encoding.ASCII.GetString(listCloudEvent[0].Data);
-                object cloudEventData = JsonConvert.DeserializeObject<object>(data);
-
-                _logger.LogInformation(EventIds.ENSEventPublishStart.ToEventId(), "External notification service event publish started for event:{listCloudEvent}, data:{cloudEventData}, subject:{subject} and _X-Correlation-ID:{correlationId}.", JsonConvert.SerializeObject(cloudEvent), JsonConvert.SerializeObject(cloudEventData), cloudEvent.Subject, correlationId);
+                _logger.LogInformation(EventIds.ENSEventPublishStart.ToEventId(), "External notification service event publish started for event:{cloudEvent}, subject:{subject} and _X-Correlation-ID:{correlationId}.", JsonSerializer.Serialize<CloudEvent>(cloudEvent), cloudEvent.Subject, correlationId);
                 await client.SendEventsAsync(listCloudEvent, cancellationToken);
                 _logger.LogInformation(EventIds.ENSEventPublishCompleted.ToEventId(), "External notification service event publish completed for subject:{subject} and _X-Correlation-ID:{correlationId}.", cloudEvent.Subject, correlationId);
 

@@ -46,7 +46,7 @@ namespace UKHO.ExternalNotificationService.API.Services
             ValidationResult validationFssEventData = await _fssEventValidationAndMappingService.ValidateFssEventData(fssEventData);
 
             if (!validationFssEventData.IsValid && validationFssEventData.HasOkErrors(out _errors))
-                return ReturnProcessResponse(fssEventData);
+                return ProcessResponse(fssEventData);
 
             if (fssEventData.BusinessUnit == _fssDataMappingConfiguration.Value.BusinessUnit)
             {
@@ -61,10 +61,10 @@ namespace UKHO.ExternalNotificationService.API.Services
                 _logger.LogInformation(EventIds.FssEventDataWithInvalidBusinessUnit.ToEventId(), "External notification service webhook request is failed due to invalid business unit for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customEventGridEvent.Subject, fssEventData.BusinessUnit, correlationId);
             }
 
-            return ReturnProcessResponse(fssEventData);
+            return ProcessResponse(fssEventData);
         }
 
-        private ExternalNotificationServiceProcessResponse ReturnProcessResponse(FssEventData fssEventData)
+        private ExternalNotificationServiceProcessResponse ProcessResponse(FssEventData fssEventData)
         {
             return new ExternalNotificationServiceProcessResponse() { BusinessUnit = fssEventData.BusinessUnit, Errors = _errors, StatusCode = HttpStatusCode.OK };
         }
