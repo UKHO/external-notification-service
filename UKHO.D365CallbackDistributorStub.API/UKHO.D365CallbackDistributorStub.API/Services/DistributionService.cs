@@ -54,7 +54,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
             }
         }
 
-        public bool SaveDistributorRequestForCommand(string subject, HttpStatusCode? statusCode)
+        public bool SaveCommandDistributorRequest(string subject, HttpStatusCode? statusCode)
         {
             try
             {
@@ -99,7 +99,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
             }
         }
 
-        public CommandDistributionRequest? SubscriptionInCommandDistributionList(string? subject)
+        public CommandDistributionRequest? SubjectInCommandDistributionList(string? subject)
         {
             return s_CommandDistributionList.Where(a => a.Subject == subject).FirstOrDefault();
         }

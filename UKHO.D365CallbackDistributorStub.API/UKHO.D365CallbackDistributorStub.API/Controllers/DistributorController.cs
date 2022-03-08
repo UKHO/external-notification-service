@@ -42,7 +42,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
                 CustomCloudEvent? customCloudEvent = JsonConvert.DeserializeObject<CustomCloudEvent>(jsonContent);
                 if (customCloudEvent != null)
                 {
-                    CommandDistributionRequest? commandDistributionRequest = _distributionService.SubscriptionInCommandDistributionList(customCloudEvent.Subject);
+                    CommandDistributionRequest? commandDistributionRequest = _distributionService.SubjectInCommandDistributionList(customCloudEvent.Subject);
                     bool distributionRequestSaved = DistributionService.SaveDistributorRequest(customCloudEvent,
                                                                               commandDistributionRequest == null ? HttpStatusCode.OK : commandDistributionRequest.HttpStatusCode);
 
@@ -90,8 +90,8 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
         {
             _logger.LogInformation("Command for distributor webhook accessed for subject: {subject}", subject);
 
-            bool distributorRequestSaved = _distributionService.SaveDistributorRequestForCommand(subject, httpStatusCode);
-            if (distributorRequestSaved)
+            bool commanddistributorRequestSaved = _distributionService.SaveCommandDistributorRequest(subject, httpStatusCode);
+            if (commanddistributorRequestSaved)
             {
                 _logger.LogInformation("Command for distributor webhook request stored in memory for Subject: {Subject}", subject);
                 return OkResponse();
