@@ -22,7 +22,8 @@ resource "azurerm_app_service" "webapp_service" {
     
     always_on  = true
     ftps_state = "Disabled"
-  }
+
+}
 
   app_settings = var.app_settings
 

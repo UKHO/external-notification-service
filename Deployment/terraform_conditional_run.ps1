@@ -58,7 +58,7 @@ Write-Host "##vso[task.setvariable variable=EnsStorageConnectionString;issecret=
 Write-Host "##vso[task.setvariable variable=EnsStorageQueueName]$($terraformOutput.event_storage_queue.value)"
 Write-Host "##vso[task.setvariable variable=SubscriptionStorageConfiguration.StorageContainerName]$($terraformOutput.dead_letter_storage_container.value)"
 Write-Host "##vso[task.setvariable variable=stubWebAppName]$($terraformOutput.stub_webappname.value)"
-Write-Host "##vso[task.setvariable variable=D365CallbackConfiguration.D365ApiUri]$($terraformOutput.ens_stub_web_app_url.value)"
+Write-Host "##vso[task.setvariable variable=D365ApiStubUri]$($terraformOutput.ens_stub_web_app_url.value)"
 Write-Host "##vso[task.setvariable variable=ResourceGroup]$($terraformOutput.webapp_rg.value)"
 
 $terraformOutput | ConvertTo-Json -Depth 5 > $terraformJsonOutputFile
