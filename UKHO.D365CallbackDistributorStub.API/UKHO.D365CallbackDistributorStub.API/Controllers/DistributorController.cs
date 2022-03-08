@@ -90,8 +90,8 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
         {
             _logger.LogInformation("Command for distributor webhook accessed for subject: {subject}", subject);
 
-            bool commanddistributorRequestSaved = _distributionService.SaveCommandDistributorRequest(subject, httpStatusCode);
-            if (commanddistributorRequestSaved)
+            bool commandDistributorRequestSaved = _distributionService.SaveCommandDistributorRequest(subject, httpStatusCode);
+            if (commandDistributorRequestSaved)
             {
                 _logger.LogInformation("Command for distributor webhook request stored in memory for Subject: {Subject}", subject);
                 return OkResponse();
