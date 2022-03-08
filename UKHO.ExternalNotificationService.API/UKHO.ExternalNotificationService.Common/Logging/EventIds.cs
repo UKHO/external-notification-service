@@ -145,11 +145,11 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         ADAuthenticationFailed = 900035,
         /// <summary>
-        /// 900036 - Create subscription request error in case of Potential errors exception in Webhook event
+        /// 900036 - Create subscription request error in case of other exception in Webhook event
         /// </summary>
-        CreateSubscriptionRequestPotentialError = 900036,
+        CreateSubscriptionRequestOtherError = 900036,
         /// <summary>
-        /// 900037 - Create subscription request error in case of handshake failure error exception in Webhook event
+        /// 900037 - Create subscription request error in case of handshake failure exception in Webhook event
         /// </summary>
         CreateSubscriptionRequestHandshakeFailureError = 900037
     }

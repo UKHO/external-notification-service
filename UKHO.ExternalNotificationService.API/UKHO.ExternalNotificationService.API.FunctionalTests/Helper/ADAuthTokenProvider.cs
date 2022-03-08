@@ -8,6 +8,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
     {
         private string EnsAccessToken { get; set; }
         static readonly TestConfiguration s_testConfig = new();
+
         public async Task<string> GetEnsAuthToken()
         {
             EnsAccessToken = await GenerateEnsToken(s_testConfig.ClientId, s_testConfig.D365ClientId, s_testConfig.D365Secret);
