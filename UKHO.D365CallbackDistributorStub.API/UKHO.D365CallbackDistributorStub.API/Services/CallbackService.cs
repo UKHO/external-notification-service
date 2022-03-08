@@ -9,7 +9,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
     {
         private static readonly Queue<RecordCallbackRequest> s_recordCallbackRequestQueue = new();
         private static readonly List<CommandCallbackRequest> s_commandCallbackRequestList = new();
-        private const HttpStatusCode _noContent = HttpStatusCode.NoContent;
+        private const HttpStatusCode NoContent = HttpStatusCode.NoContent;
         private readonly ILogger<CallbackService> _logger;
 
         public CallbackService(ILogger<CallbackService> logger)
@@ -27,7 +27,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                     Guid = Guid.NewGuid(),
                     SubscriptionId = subscriptionId,
                     TimeStamp = CommonService.ToRfc3339String(DateTime.UtcNow),
-                    HttpStatusCode = httpStatusCode ?? _noContent
+                    HttpStatusCode = httpStatusCode ?? NoContent
                 });
 
                 if (s_recordCallbackRequestQueue.Count >= 50)
@@ -59,7 +59,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
         {
             try
             {
-                CommandCallbackRequest? commandCallbackRequest = s_commandCallbackRequestList.FirstOrDefault(a => a.SubscriptionId == subscriptionId);
+                CommandCallbackRequest? commandCallbackRequest = s_commandCallbackRequestList.Where(a => a.SubscriptionId == subscriptionId).LastOrDefault();
 
                 if (commandCallbackRequest != null)
                 {
@@ -69,7 +69,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                     }
                     else
                     {
-                        commandCallbackRequest.HttpStatusCode = httpStatusCode ?? _noContent;
+                        commandCallbackRequest.HttpStatusCode = httpStatusCode ?? NoContent;
                     }
                 }
                 else
@@ -79,7 +79,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                         s_commandCallbackRequestList.Add(new CommandCallbackRequest
                         {
                             SubscriptionId = subscriptionId,
-                            HttpStatusCode = httpStatusCode ?? _noContent,
+                            HttpStatusCode = httpStatusCode ?? NoContent,
                         });
                     }
                     else
@@ -103,7 +103,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
 
         public CommandCallbackRequest? SubscriptionInCommandCallbackList(string subscriptionId)
         {
-           return s_commandCallbackRequestList.Where(a => a.SubscriptionId == subscriptionId).FirstOrDefault();
+           return s_commandCallbackRequestList.Where(a => a.SubscriptionId == subscriptionId).LastOrDefault();
         }
     }
 }

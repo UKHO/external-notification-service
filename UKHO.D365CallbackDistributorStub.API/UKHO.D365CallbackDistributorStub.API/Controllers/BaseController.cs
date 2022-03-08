@@ -30,26 +30,15 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
 
         protected IActionResult GetEnsStubResponse(HttpStatusCode httpStatusCode)
         {
-            switch (httpStatusCode)
+            return httpStatusCode switch
             {
-                case HttpStatusCode.OK:
-                    return OkResponse();
-
-                case HttpStatusCode.NoContent:
-                    return NoContentResponse();
-
-                case HttpStatusCode.InternalServerError:
-                    return StatusCode((int)HttpStatusCode.InternalServerError);
-
-                case HttpStatusCode.BadRequest:
-                    return BadRequestResponse();
-
-                case HttpStatusCode.NotFound:
-                    return NotFoundResponse();
-
-                default:
-                    return BadRequestResponse();
-            }
+                HttpStatusCode.OK => OkResponse(),
+                HttpStatusCode.NoContent => NoContentResponse(),
+                HttpStatusCode.InternalServerError => StatusCode((int)HttpStatusCode.InternalServerError),
+                HttpStatusCode.BadRequest => BadRequestResponse(),
+                HttpStatusCode.NotFound => NotFoundResponse(),
+                _ => BadRequestResponse(),
+            };
         }
 
     }

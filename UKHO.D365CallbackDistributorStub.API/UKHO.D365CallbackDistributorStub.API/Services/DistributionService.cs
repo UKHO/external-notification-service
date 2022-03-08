@@ -9,7 +9,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
     {
         private static readonly Queue<DistributorRequest> s_recordDistributorRequestQueue = new();
         private static readonly List<CommandDistributionRequest> s_CommandDistributionList = new();
-        private const HttpStatusCode _ok = HttpStatusCode.OK;
+        private const HttpStatusCode Ok = HttpStatusCode.OK;
         private readonly ILogger<DistributionService> _logger;
 
         public DistributionService(ILogger<DistributionService> logger)
@@ -27,7 +27,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                     Subject = cloudEvent.Subject,
                     Guid = Guid.NewGuid(),
                     TimeStamp = CommonService.ToRfc3339String(DateTime.UtcNow),
-                    StatusCode = httpStatusCode ?? _ok
+                    StatusCode = httpStatusCode ?? Ok
                 });
 
                 if (s_recordDistributorRequestQueue.Count >= 50)
@@ -58,7 +58,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
         {
             try
             {
-                CommandDistributionRequest? commanddistributorRequest = s_CommandDistributionList.FirstOrDefault(a => a.Subject == subject);
+                CommandDistributionRequest? commanddistributorRequest = s_CommandDistributionList.Where(a => a.Subject == subject).LastOrDefault();
                 if (commanddistributorRequest != null)
                 {
                     if (statusCode == null)
@@ -67,7 +67,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                     }
                     else
                     {
-                        commanddistributorRequest.HttpStatusCode = statusCode ?? _ok;
+                        commanddistributorRequest.HttpStatusCode = statusCode ?? Ok;
                     }
                 }
                 else
@@ -77,7 +77,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                         s_CommandDistributionList.Add(new CommandDistributionRequest
                         {
                             Subject = subject,
-                            HttpStatusCode = statusCode ?? _ok
+                            HttpStatusCode = statusCode ?? Ok
                         });
                     }
                     else
@@ -101,7 +101,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
 
         public CommandDistributionRequest? SubjectInCommandDistributionList(string? subject)
         {
-            return s_CommandDistributionList.Where(a => a.Subject == subject).FirstOrDefault();
+            return s_CommandDistributionList.Where(a => a.Subject == subject).LastOrDefault();
         }
     }
 }

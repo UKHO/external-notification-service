@@ -24,7 +24,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
         [HttpPatch]
         public IActionResult Patch([FromBody] CallbackRequest callbackRequest, string subscriptionId)
         {
-            _logger.LogInformation("POST callback accessed for subscriptionId: {subscriptionId}", subscriptionId);
+            _logger.LogInformation("Patch callback accessed for subscriptionId: {subscriptionId}", subscriptionId);
 
             CommandCallbackRequest? commandCallbackRequest = _callbackService.SubscriptionInCommandCallbackList(subscriptionId);
             bool callbackRequestSaved = CallbackService.SaveCallbackRequest(callbackRequest,
