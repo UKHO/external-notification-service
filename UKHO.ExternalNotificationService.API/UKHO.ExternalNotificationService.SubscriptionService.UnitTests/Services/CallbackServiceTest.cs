@@ -31,11 +31,20 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
         {
             _fakeAuthTokenProvider = A.Fake<IAuthTokenProvider>();
             _fakeLogger = A.Fake<ILogger<CallbackService>>();
-            _fakeCallbackClient = A.Fake<ICallbackClient>();
-            _callbackService = A.Fake<ICallbackService>();
+            _fakeCallbackClient = A.Fake<ICallbackClient>();            
 
             _callbackService = new CallbackService(_fakeAuthTokenProvider, _fakeLogger, _fakeCallbackClient);           
-        }     
+        }
+
+        [Test]
+        public async Task WhenInvalidTokenPassedToCallbackToD365UsingDataverse_ThenReturnsUnauthorized()
+        {          
+            A.CallTo(() => _fakeAuthTokenProvider.GetADAccessToken(A<SubscriptionRequestMessage>.Ignored)).Returns(string.Empty);
+            
+            HttpResponseMessage response = await _callbackService.CallbackToD365UsingDataverse(FakeExternalEntityPath, GetExternalNotificationEntity(), GetSubscriptionRequestMessage());
+            Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
+            Assert.IsFalse(response.IsSuccessStatusCode);
+        }
 
         [Test]
         public async Task WhenInvalidCallbackToD365UsingDataverseRequest_ThenReturnsBadRequest()
