@@ -90,6 +90,14 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         }
 
 
+        public static async Task<HttpResponseMessage> PostStubCommandToFailAsync(string d365ApiStubUrl, string subscriptionId,int statusCode)
+        {
+            string uri =$"{d365ApiStubUrl}/command-to-return-status/{subscriptionId}/{statusCode}";           
+            using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
+            return await s_httpClient.SendAsync(httpRequestMessage);
+        }
+
+
 
     }
 }

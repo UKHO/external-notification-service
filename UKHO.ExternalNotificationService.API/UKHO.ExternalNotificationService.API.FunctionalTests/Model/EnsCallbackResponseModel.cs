@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace UKHO.ExternalNotificationService.API.FunctionalTests.Model
 {
     public class EnsCallbackResponseModel
@@ -6,6 +8,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Model
         public CallBackRequest callBackRequest { get; set; }
         public string subscriptionId { get; set; }
         public string guid { get; set; }
+        public DateTime timeStamp { get; set; }
+        public int httpStatusCode { get; set; }
 
     }
     public class CallBackRequest
