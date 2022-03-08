@@ -79,7 +79,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                         subscriptionRequestResult.ErrorMessage = e.Message;                        
                         externalNotificationEntity.ResponseDetails = "Failed to add subscription @Time: " + Convert.ToString(DateTime.UtcNow) + " with exception " + e.Message;
 
-                        _logger.LogError(EventIds.CreateSubscriptionRequestPotentialError.ToEventId(),
+                        _logger.LogError(EventIds.CreateSubscriptionRequestOtherError.ToEventId(),
                   "Subscription provisioning request failed with other potential errors with Exception:{e} with SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", e.Message, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
                     }                   
                 }
