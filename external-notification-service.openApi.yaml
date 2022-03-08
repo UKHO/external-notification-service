@@ -1,0 +1,45 @@
+openapi: '3.0.1'
+info:
+  title: UKHO External Notification Service APIs
+  description: "This is a light weight open api spec for UKHO External Notification Service and it should not be used as formal API documentation. One of its main purpose is to allow importing ENS APIs in APIM."
+  version: '0.0.1'
+  contact:
+    email: AbzuDeliveryTeam@ukho.gov.uk
+    name: Abzu Team
+paths:
+  /api/subscription:
+    post:
+      summary: "Create, update or delete ENS subscription."
+      operationId: "updateSubscription"
+      description: "Create, update or delete ENS subscription. D365 calls this endpoint to register subscriptions in ENS. Request body is D365 payload. See <https://docs.microsoft.com/en-us/dynamics365/customerengagement/on-premises/developer/use-webhooks?view=op-9-1#request-body>"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: "D365 payload"
+      responses:
+        202:
+          description: Accepted
+        400:
+          description: "Bad request - Request missing some of required details or invalid notification type "
+  /api/webhook:
+    post:
+      summary: "Webhook to receive events from Enterprise Event Service."
+      operationId: "eesWebhook"
+      description: "Enterprise Event Service delivers internal events to this endpoint. ENS checks if event means a notification type based on event payload data. It builds out going payload data and publishes to Azure Event Grid domain topic for notification delivery. CloudEvent schema is used for event and notification payload. See <https://docs.microsoft.com/en-us/azure/event-grid/cloudevents-schema#cloudevent-schema>"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: "CloudEvent message"
+      responses:
+        200:
+          description: "OK"
+    options:
+      summary: "Handle CloudEvent webhook validation"
+      description: "Handles CloudEvent webhook validation request. See <https://github.com/cloudevents/spec/blob/v1.0/http-webhook.md#41-validation-request>"
+      responses:
+        200:
+          description: OK
