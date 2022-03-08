@@ -25,7 +25,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                 {
                     CloudEvent = cloudEvent,
                     Subject = cloudEvent.Subject,
-                    Guid = new Guid(),
+                    Guid = Guid.NewGuid(),
                     TimeStamp = CommonService.ToRfc3339String(DateTime.UtcNow),
                     StatusCode = httpStatusCode ?? _ok
                 });
