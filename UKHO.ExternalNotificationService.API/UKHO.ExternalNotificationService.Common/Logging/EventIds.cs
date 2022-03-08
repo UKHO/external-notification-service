@@ -85,9 +85,9 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         CreateOrUpdateAzureEventDomainTopicCompleted = 900020,
         /// <summary>
-        /// 900021 -  Create subscription request error in case of Potential errors exception in Webhook event.
+        /// 900021 -  Create Subscription Provising request succeeded for webhook event
         /// </summary>
-        CreateSubscriptionRequestPotentialError = 900021,
+        CreateSubscriptionRequestSuccess = 900021,
         /// <summary>
         /// 900022 - Azure blob storage for external notification service is healthy.
         /// </summary>
@@ -145,11 +145,11 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         ADAuthenticationFailed = 900035,
         /// <summary>
-        /// 900036 -  Create Subscription Provising request succeeded for webhook event
+        /// 900036 - Create subscription request error in case of Potential errors exception in Webhook event
         /// </summary>
-        CreateSubscriptionRequestSuccess = 900036,
+        CreateSubscriptionRequestPotentialError = 900036,
         /// <summary>
-        /// 900036 -  Create subscription request error in case of Potential errors exception in Webhook event
+        /// 900036 - Create subscription request error in case of handshake failure error exception in Webhook event
         /// </summary>
         CreateSubscriptionRequestHandshakeFailureError = 900037
     }
