@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -33,8 +34,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [Test]
         public async Task WhenICallTheEnsSubscriptionApiWithAValidSubscriptionId_ThenSuccessStatusResponseIsRetruns()
         {
-            //Get the subscriptionId from D365 payload
-
+            //Get the subscriptionId from D365 payload            
             string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
 
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
@@ -43,9 +43,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.D365ApiUri, subscriptionId);
             Assert.AreEqual(200, (int)callBackResponse.StatusCode, $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected 200.");
 
-            EnsCallbackResponseDetailsModel callBackResponseBody = await callBackResponse.ReadAsTypeAsync<EnsCallbackResponseDetailsModel>();
+            List<EnsCallbackResponseModel> callBackResponseBody =JsonConvert.DeserializeObject<List<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result);
 
-            foreach (EnsCallbackResponseModel entry in callBackResponseBody.CallBackRequests)
+            foreach (EnsCallbackResponseModel entry in callBackResponseBody)
             {
                 Assert.AreEqual(subscriptionId, entry.subscriptionId, $"Invalid subscriptionId {entry.subscriptionId} , Instead of expected subscriptionId {subscriptionId}.");
                 Assert.AreEqual(TestConfig.SucceededStatusCode, entry.callBackRequest.ukho_lastresponse, $"Invalid last response {TestConfig.SucceededStatusCode} , Instead of expected last response {entry.callBackRequest.ukho_lastresponse}.");
@@ -69,15 +69,6 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.D365ApiUri, newSubscriptionId);
             Assert.AreEqual(404, (int)callBackResponse.StatusCode, $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected 200.");
 
-            EnsCallbackResponseDetailsModel callBackResponseBody = await callBackResponse.ReadAsTypeAsync<EnsCallbackResponseDetailsModel>();
-
-            foreach (EnsCallbackResponseModel entry in callBackResponseBody.CallBackRequests)
-            {
-                Assert.AreEqual(newSubscriptionId, entry.subscriptionId, $"Invalid subscriptionId {entry.subscriptionId} , Instead of expected subscriptionId {newSubscriptionId}.");
-                Assert.AreEqual(TestConfig.SucceededStatusCode, entry.callBackRequest.ukho_lastresponse, $"Invalid last response {TestConfig.SucceededStatusCode} , Instead of expected last response {entry.callBackRequest.ukho_lastresponse}.");
-                Assert.IsTrue(entry.timeStamp <= new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, DateTime.UtcNow.Hour, DateTime.UtcNow.Minute, DateTime.UtcNow.Second), $"Response body returned timestamp date {entry.timeStamp} , greater than the expected value.");
-            }
-
         }
 
         [Test]
@@ -96,9 +87,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.D365ApiUri, subscriptionId);
             Assert.AreEqual(200, (int)callBackResponse.StatusCode, $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected 200.");
 
-            EnsCallbackResponseDetailsModel callBackResponseBody = await callBackResponse.ReadAsTypeAsync<EnsCallbackResponseDetailsModel>();
+            List<EnsCallbackResponseModel> callBackResponseBody = JsonConvert.DeserializeObject<List<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result);
 
-            foreach (EnsCallbackResponseModel entry in callBackResponseBody.CallBackRequests)
+            foreach (EnsCallbackResponseModel entry in callBackResponseBody)
             {
                 Assert.AreEqual(subscriptionId, entry.subscriptionId, $"Invalid subscriptionId {entry.subscriptionId} , Instead of expected subscriptionId {subscriptionId}.");
                 Assert.AreEqual(TestConfig.SucceededStatusCode, entry.callBackRequest.ukho_lastresponse, $"Invalid last response {TestConfig.SucceededStatusCode} , Instead of expected last response {entry.callBackRequest.ukho_lastresponse}.");
@@ -128,9 +119,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.D365ApiUri, newSubscriptionId);
             Assert.AreEqual(200, (int)callBackResponse.StatusCode, $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected 200.");
 
-            EnsCallbackResponseDetailsModel callBackResponseBody = await callBackResponse.ReadAsTypeAsync<EnsCallbackResponseDetailsModel>();
+            List<EnsCallbackResponseModel> callBackResponseBody = JsonConvert.DeserializeObject<List<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result);
 
-            foreach (EnsCallbackResponseModel entry in callBackResponseBody.CallBackRequests)
+            foreach (EnsCallbackResponseModel entry in callBackResponseBody)
             {
                 Assert.AreEqual(newSubscriptionId, entry.subscriptionId, $"Invalid subscriptionId {entry.subscriptionId} , Instead of expected subscriptionId {subscriptionId}.");
                 Assert.AreEqual(statusCode, entry.httpStatusCode, $"Invalid statusCode {entry.httpStatusCode} , Instead of expected statusCode {statusCode}.");

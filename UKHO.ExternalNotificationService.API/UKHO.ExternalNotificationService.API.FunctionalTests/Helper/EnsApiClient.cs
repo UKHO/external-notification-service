@@ -80,7 +80,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
 
         public static async Task<HttpResponseMessage> GetEnsCallBackAsync(string d365ApiStubUrl, string subscriptionId=null)
         {
-            string uri = d365ApiStubUrl;
+            string uri = d365ApiStubUrl.Remove(d365ApiStubUrl.Length-1);
             if (subscriptionId!=null)
             {
                 uri += $"?subscriptionId={subscriptionId}";
@@ -92,7 +92,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
 
         public static async Task<HttpResponseMessage> PostStubCommandToFailAsync(string d365ApiStubUrl, string subscriptionId,int statusCode)
         {
-            string uri =$"{d365ApiStubUrl}/command-to-return-status/{subscriptionId}/{statusCode}";           
+            string uri =$"{d365ApiStubUrl}command-to-return-status/{subscriptionId}/{statusCode}";           
             using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
             return await s_httpClient.SendAsync(httpRequestMessage);
         }
