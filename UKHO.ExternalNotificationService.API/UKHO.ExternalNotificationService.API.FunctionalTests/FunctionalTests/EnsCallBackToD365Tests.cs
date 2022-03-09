@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.FunctionalTests.Helper;
@@ -36,25 +37,30 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         {
             //Get the subscriptionId from D365 payload            
             string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
-
+            DateTime requestTime = DateTime.UtcNow;
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
             Assert.AreEqual(202, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
 
-            HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.D365ApiUri, subscriptionId);
-            Assert.AreEqual(200, (int)callBackResponse.StatusCode, $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected 200.");
-
-            List<EnsCallbackResponseModel> callBackResponseBody =JsonConvert.DeserializeObject<List<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result);
-
-            foreach (EnsCallbackResponseModel entry in callBackResponseBody)
+            while (DateTime.UtcNow - requestTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
             {
-                Assert.AreEqual(subscriptionId, entry.subscriptionId, $"Invalid subscriptionId {entry.subscriptionId} , Instead of expected subscriptionId {subscriptionId}.");
-                Assert.AreEqual(TestConfig.SucceededStatusCode, entry.callBackRequest.ukho_lastresponse, $"Invalid last response {TestConfig.SucceededStatusCode} , Instead of expected last response {entry.callBackRequest.ukho_lastresponse}.");
-                Assert.IsTrue(entry.timeStamp <= new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, DateTime.UtcNow.Hour, DateTime.UtcNow.Minute, DateTime.UtcNow.Second), $"Response body returned timestamp date {entry.timeStamp} , greater than the expected value.");
+                await Task.Delay(1000);
             }
 
+            HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, subscriptionId);
+            Assert.AreEqual(200, (int)callBackResponse.StatusCode, $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected 200.");
+
+            IEnumerable<EnsCallbackResponseModel> callBackResponseBody =JsonConvert.DeserializeObject<IEnumerable<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result);
+
+            EnsCallbackResponseModel callBackResponseLatest = callBackResponseBody.Where(x => x.TimeStamp >= requestTime).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
+
+            Assert.AreEqual(subscriptionId, callBackResponseLatest.SubscriptionId, $"Invalid subscriptionId {callBackResponseLatest.SubscriptionId} , Instead of expected subscriptionId {subscriptionId}.");
+            Assert.AreEqual(TestConfig.SucceededStatusCode, callBackResponseLatest.CallBackRequest.Ukho_lastresponse, $"Invalid last response {callBackResponseLatest.CallBackRequest.Ukho_lastresponse} , Instead of expected last response {TestConfig.SucceededStatusCode}.");
+            Assert.IsTrue(callBackResponseLatest.CallBackRequest.Ukho_responsedetails.Contains("Successfully added subscription"));
+            Assert.IsTrue(callBackResponseLatest.TimeStamp <= new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, DateTime.UtcNow.Hour, DateTime.UtcNow.Minute, DateTime.UtcNow.Second), $"Response body returned timestamp date {callBackResponseLatest.TimeStamp} , greater than the expected value.");
+            
         }
         [Test]
-        public async Task WhenICallTheEnsSubscriptionApiWithAInValidSubscriptionId_ThenFailedStatusResponseIsRetruns()
+        public async Task WhenICallTheEnsSubscriptionApiWithAInValidSubscriptionId_ThenNotFoundStatusResponseIsRetruns()
         {
 
             //Get the subscriptionId from D365 payload 
@@ -66,67 +72,77 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
             Assert.AreEqual(202, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
 
-            HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.D365ApiUri, newSubscriptionId);
+            HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, newSubscriptionId);
             Assert.AreEqual(404, (int)callBackResponse.StatusCode, $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected 200.");
 
         }
 
         [Test]
-        public async Task WhenICallTheEnsSubscriptionApiWithAMultipleSubscriptionId_ThenSucessStatusResponseIsRetruns()
+        public async Task WhenICallTheEnsSubscriptionApiWithAnInvalidWebhookUrl_ThenSucessStatusResponseIsRetrunsWithFailedResponseDetails()
         {
-          
+             D365Payload.InputParameters[0].Value.Attributes[9].Value = D365Payload.InputParameters[0].Value.Attributes[9].Value + "Failed";
            // Get the subscriptionId from D365 payload for first subcription id
             string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
-
+            DateTime requestTime = DateTime.UtcNow;
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
             Assert.AreEqual(202, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
 
-            HttpResponseMessage newapiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
-            Assert.AreEqual(202, (int)newapiResponse.StatusCode, $"Incorrect status code {newapiResponse.StatusCode}  is  returned, instead of the expected 202.");
+            while (DateTime.UtcNow - requestTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
+            {
+                await Task.Delay(1000);
+            }
 
-            HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.D365ApiUri, subscriptionId);
+            HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, subscriptionId);
             Assert.AreEqual(200, (int)callBackResponse.StatusCode, $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected 200.");
 
-            List<EnsCallbackResponseModel> callBackResponseBody = JsonConvert.DeserializeObject<List<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result);
+            IEnumerable<EnsCallbackResponseModel> callBackResponseBody = JsonConvert.DeserializeObject<IEnumerable<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result);
 
-            foreach (EnsCallbackResponseModel entry in callBackResponseBody)
-            {
-                Assert.AreEqual(subscriptionId, entry.subscriptionId, $"Invalid subscriptionId {entry.subscriptionId} , Instead of expected subscriptionId {subscriptionId}.");
-                Assert.AreEqual(TestConfig.SucceededStatusCode, entry.callBackRequest.ukho_lastresponse, $"Invalid last response {TestConfig.SucceededStatusCode} , Instead of expected last response {entry.callBackRequest.ukho_lastresponse}.");
-                Assert.IsTrue(entry.timeStamp <= new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, DateTime.UtcNow.Hour, DateTime.UtcNow.Minute, DateTime.UtcNow.Second), $"Response body returned timestamp date {entry.timeStamp} , greater than the expected value.");
-            }
+            EnsCallbackResponseModel callBackResponseLatest = callBackResponseBody.Where(x => x.TimeStamp >= requestTime).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
+
+            Assert.AreEqual(subscriptionId, callBackResponseLatest.SubscriptionId, $"Invalid subscriptionId {callBackResponseLatest.SubscriptionId} , Instead of expected subscriptionId {subscriptionId}.");
+            Assert.AreEqual(TestConfig.FailedStatusCode, callBackResponseLatest.CallBackRequest.Ukho_lastresponse, $"Invalid last response {callBackResponseLatest.CallBackRequest.Ukho_lastresponse} , Instead of expected last response {TestConfig.FailedStatusCode}.");
+            Assert.IsTrue(callBackResponseLatest.CallBackRequest.Ukho_responsedetails.Contains("Failed to add subscription"));
+            Assert.IsTrue(callBackResponseLatest.TimeStamp <= new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, DateTime.UtcNow.Hour, DateTime.UtcNow.Minute, DateTime.UtcNow.Second), $"Response body returned timestamp date {callBackResponseLatest.TimeStamp} , greater than the expected value.");
         }
 
-        [TestCase(204, "aaaa", TestName ="CallBack Stub Returns StausCode 204")]
-        [TestCase(404, "bbbb", TestName = "CallBack Stub Returns StausCode 404")]
-        [TestCase(400, "cccc", TestName = "CallBack Stub Returns StausCode 400")]
-        [TestCase(500, "dddd", TestName = "CallBack Stub Returns StausCode 500")]
-        public async Task WhenICallTheCallBackStubUrlToFailWithValidSubscriptionId_ThenValidResponseIsRetruns(int statusCode,string subscriptionCharChange)
+        
+        [TestCase(404, TestName = "CallBack Stub Returns StausCode As Not Found")]
+        [TestCase(400, TestName = "CallBack Stub Returns StausCode As Bad Request")]
+        [TestCase(500, TestName = "CallBack Stub Returns StausCode As Internal Server Error")]
+        public async Task WhenICallTheCallBackStubUrlToFailWithValidSubscriptionId_ThenValidResponseIsRetruns(int statusCode)
         {
             //Get the subscriptionId from D365 payload
 
             string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
-            string newSubscriptionId = subscriptionId.Remove(subscriptionId.Length - 4).Insert(subscriptionId.Length - 4, subscriptionCharChange);
-           
-            D365Payload.PostEntityImages[0].Value.Attributes[0].Value= newSubscriptionId;
-
+            
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
             Assert.AreEqual(202, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
-
-            HttpResponseMessage apiStubResponse = await EnsApiClient.PostStubCommandToFailAsync(TestConfig.D365ApiUri, newSubscriptionId, statusCode);
+            DateTime requestTime = DateTime.UtcNow;
+            HttpResponseMessage apiStubResponse = await EnsApiClient.PostStubCommandToFailAsync(TestConfig.StubBaseUri, subscriptionId, statusCode);
             Assert.AreEqual(200, (int)apiStubResponse.StatusCode, $"Incorrect status code {apiStubResponse.StatusCode}  is  returned, instead of the expected 200.");
 
-            HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.D365ApiUri, newSubscriptionId);
+            while (DateTime.UtcNow - requestTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
+            {
+                await Task.Delay(1000);
+            }
+
+            HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, subscriptionId);
             Assert.AreEqual(200, (int)callBackResponse.StatusCode, $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected 200.");
 
-            List<EnsCallbackResponseModel> callBackResponseBody = JsonConvert.DeserializeObject<List<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result);
+            IEnumerable<EnsCallbackResponseModel> callBackResponseBody = JsonConvert.DeserializeObject<IEnumerable<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result);
 
-            foreach (EnsCallbackResponseModel entry in callBackResponseBody)
-            {
-                Assert.AreEqual(newSubscriptionId, entry.subscriptionId, $"Invalid subscriptionId {entry.subscriptionId} , Instead of expected subscriptionId {subscriptionId}.");
-                Assert.AreEqual(statusCode, entry.httpStatusCode, $"Invalid statusCode {entry.httpStatusCode} , Instead of expected statusCode {statusCode}.");
-                Assert.IsTrue(entry.timeStamp <= new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, DateTime.UtcNow.Hour, DateTime.UtcNow.Minute, DateTime.UtcNow.Second), $"Response body returned timestamp date {entry.timeStamp} , greater than the expected value.");  
-            }
+            IEnumerable<EnsCallbackResponseModel> callBackResponseFailure = callBackResponseBody.Where(x => x.TimeStamp >= requestTime).OrderByDescending(a => a.TimeStamp);
+
+            //Verify Retry Count
+            Assert.Greater(callBackResponseFailure.Count(), 1);
+
+            EnsCallbackResponseModel callBackResponseLatest = callBackResponseBody.Where(x => x.TimeStamp >= requestTime).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
+
+            Assert.AreEqual(subscriptionId, callBackResponseLatest.SubscriptionId, $"Invalid subscriptionId {callBackResponseLatest.SubscriptionId} , Instead of expected subscriptionId {subscriptionId}.");
+            Assert.AreEqual(statusCode, callBackResponseLatest.HttpStatusCode, $"Invalid statusCode {callBackResponseLatest.HttpStatusCode} , Instead of expected statusCode {statusCode}.");
+            Assert.IsTrue(callBackResponseLatest.TimeStamp <= new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, DateTime.UtcNow.Hour, DateTime.UtcNow.Minute, DateTime.UtcNow.Second), $"Response body returned timestamp date {callBackResponseLatest.TimeStamp} , greater than the expected value.");
+                             
+            
         }       
     }
 }

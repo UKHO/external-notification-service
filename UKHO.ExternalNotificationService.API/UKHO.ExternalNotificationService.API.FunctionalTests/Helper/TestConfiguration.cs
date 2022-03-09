@@ -18,6 +18,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         public string ClientId { get; set; }
         public string D365ApiUri { get; set;}
         public int SucceededStatusCode { get; set; }
+        public int FailedStatusCode { get; set; }
+        public string StubBaseUri { get; set; }
 
         public TestConfiguration()
         {
@@ -38,6 +40,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             ClientId = ConfigurationRoot.GetSection("EnsAuthConfiguration:ClientId").Value;
             D365ApiUri = ConfigurationRoot.GetSection("D365CallbackConfiguration:D365ApiUri").Value;
             SucceededStatusCode=int.Parse(ConfigurationRoot.GetSection("D365CallbackConfiguration:SucceededStatusCode").Value);
+            FailedStatusCode= int.Parse(ConfigurationRoot.GetSection("D365CallbackConfiguration:FailedStatusCode").Value);
+            StubBaseUri = ConfigurationRoot.GetSection("StubConfiguration:BaseUri").Value;
         }
     }
 }
