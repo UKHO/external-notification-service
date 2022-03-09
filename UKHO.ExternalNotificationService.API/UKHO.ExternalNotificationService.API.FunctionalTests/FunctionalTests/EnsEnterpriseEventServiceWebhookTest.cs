@@ -91,7 +91,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         public async Task WhenICallTheEnsWebhookApiWithAValidJObjectBody_ThenOkStatusIsReturned()
         {
             string subject = "83d08093-7a67-4b3a-b431-92ba42feaea0";
-            Uri source = new("https://files.admiralty.co.uk");
+            string source = "https://admiralty.azure-api.net/";
             JObject ensWebhookJson = GetFssEventBodyData();
 
             FssEventData publishDataFromFss = GetFssEventData();
@@ -113,8 +113,13 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             Assert.AreEqual(HttpStatusCode.OK, getMatchingData.statusCode);
             Assert.AreEqual(subject, getMatchingData.Subject);
             Assert.IsInstanceOf<CustomCloudEvent>(getMatchingData.CloudEvent);
-            Assert.AreNotEqual("fss-filesPublished-AvcsData", getMatchingData.CloudEvent.Source);
-
+            Assert.AreEqual("fss-filesPublished-AvcsData", getMatchingData.CloudEvent.Source);
+            Uri filesLinkHref = new(publishDataFromFss.Files.FirstOrDefault().Links.Get.Href);
+            string data = JsonConvert.SerializeObject(getMatchingData.CloudEvent.Data);
+            FssEventData fssEventData = JsonConvert.DeserializeObject<FssEventData>(data);
+            Uri filesLinkHrefReplace = new(source + "fss" + filesLinkHref.AbsolutePath);
+            Assert.IsNotNull(filesLinkHrefReplace.ToString());
+            Assert.AreEqual(filesLinkHrefReplace.ToString(), fssEventData.Files.FirstOrDefault().Links.Get.Href);
         }
 
         [TestCase("83d08093-7a67-4b3a-b431-92ba42feaea0", HttpStatusCode.InternalServerError, TestName = "InternalServerError for WebHook")]
