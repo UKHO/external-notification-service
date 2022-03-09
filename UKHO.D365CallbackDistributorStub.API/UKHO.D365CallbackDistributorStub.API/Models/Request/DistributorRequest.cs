@@ -7,7 +7,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Models.Request
         public CustomCloudEvent? CloudEvent { get; set; }
         public string? Subject { get; set; }
         public Guid Guid { get; set; }
-        public string? TimeStamp { get; set; }
+        public DateTime? TimeStamp { get; set; }
         public HttpStatusCode? StatusCode { get; set; }
     }
 }

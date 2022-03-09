@@ -26,7 +26,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                     CallBackRequest = callbackRequest,
                     Guid = Guid.NewGuid(),
                     SubscriptionId = subscriptionId,
-                    TimeStamp = CommonService.ToRfc3339String(DateTime.UtcNow),
+                    TimeStamp = DateTime.UtcNow,
                     HttpStatusCode = httpStatusCode ?? NoContent
                 });
 
