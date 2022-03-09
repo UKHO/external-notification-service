@@ -1,7 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Text;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Diagnostics.CodeAnalysis;
+using System.Net;
+using System.Text;
 using UKHO.D365CallbackDistributorStub.API.Models.Request;
 using UKHO.D365CallbackDistributorStub.API.Services;
 
@@ -34,17 +35,26 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
         public virtual async Task<IActionResult> Post()
         {
             _logger.LogInformation("Distributor Webhook accessed");
+
             using StreamReader reader = new(Request.Body, Encoding.UTF8);
             {
                 string jsonContent = await reader.ReadToEndAsync();
                 CustomCloudEvent? customCloudEvent = JsonConvert.DeserializeObject<CustomCloudEvent>(jsonContent);
                 if (customCloudEvent != null)
                 {
-                    bool distributorRequestSaved = DistributionService.SaveDistributorRequest(customCloudEvent);
-                    if (distributorRequestSaved)
+                    CommandDistributionRequest? commandDistributionRequest = _distributionService.SubjectInCommandDistributionList(customCloudEvent.Subject);
+                    bool distributionRequestSaved = DistributionService.SaveDistributorRequest(customCloudEvent,
+                                                                              commandDistributionRequest == null ? HttpStatusCode.OK : commandDistributionRequest.HttpStatusCode);
+
+                    if (distributionRequestSaved)
                     {
                         _logger.LogInformation("Distributor webhook request stored in memory for Subject: {Subject}", customCloudEvent.Subject);
-                        return NoContentResponse();
+                        if (commandDistributionRequest != null)
+                        {
+                            _logger.LogInformation("Distribution request failed for Subject: {subjectId} with httpStatusCode as {httpStatusCode}", customCloudEvent.Subject, commandDistributionRequest.HttpStatusCode.ToString());
+                            return GetEnsStubResponse(commandDistributionRequest.HttpStatusCode);
+                        }
+                        return OkResponse();
                     }
                     else
                     {
@@ -71,9 +81,23 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
                 _logger.LogInformation("Distribution Request not found for Subject : {Subject}", subject);
                 return NotFoundResponse();
             }
-
             _logger.LogInformation("Distribution Request found and return for Subject : {Subject}", subject);
             return Ok(distributorRequest);
+        }
+
+        [HttpPost("command-to-return-status/{subject}/{httpStatusCode?}")]
+        public IActionResult CommandToReturnStatus(string subject, HttpStatusCode? httpStatusCode)
+        {
+            _logger.LogInformation("Command for distributor webhook accessed for subject: {subject}", subject);
+
+            bool commandDistributorRequestSaved = _distributionService.SaveCommandDistributorRequest(subject, httpStatusCode);
+            if (commandDistributorRequestSaved)
+            {
+                _logger.LogInformation("Command for distributor webhook request stored in memory for Subject: {Subject}", subject);
+                return OkResponse();
+            }
+            _logger.LogInformation("Command distributor webhook request not stored in memory for Subject: {Subject}", subject);
+            return BadRequestResponse();
         }
     }
 }
