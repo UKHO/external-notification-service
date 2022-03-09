@@ -85,9 +85,9 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         CreateOrUpdateAzureEventDomainTopicCompleted = 900020,
         /// <summary>
-        /// 900021 -  Create subscription request error in case of exception.
+        /// 900021 -  Create Subscription Provising request succeeded for webhook event
         /// </summary>
-        CreateSubscriptionRequestError = 900021,
+        CreateSubscriptionRequestSuccess = 900021,
         /// <summary>
         /// 900022 - Azure blob storage for external notification service is healthy.
         /// </summary>
@@ -145,45 +145,53 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         ADAuthenticationFailed = 900035,
         /// <summary>
-        /// 900036 -  Request for external notification service webhook post endpoint is Completed.
+        /// 900036 - Create subscription request error in case of other exception in Webhook event
         /// </summary>
-        ENSWebhookRequestCompleted = 900036,
+        CreateSubscriptionRequestOtherError = 900036,
         /// <summary>
-        /// 900037 -  Request event type for external notification service webhook not matched with processor.
+        /// 900037 - Create subscription request error in case of handshake failure exception in Webhook event
         /// </summary>
-        ENSWebhookRequestTypeNotMatch = 900037,
+        CreateSubscriptionRequestHandshakeFailureError = 900037,
         /// <summary>
-        /// 900038 -  Request invalid event payload for external notification service webhook post endpoint.
+        /// 900038 -  Request for external notification service webhook post endpoint is Completed.
         /// </summary>
-        ENSWebhookRequestInvalidEventPayload = 900038,
+        ENSWebhookRequestCompleted = 900038,
         /// <summary>
-        /// 900039 -  Request null event payload for external notification service webhook post endpoint.
+        /// 900039 -  Request event type for external notification service webhook not matched with processor.
         /// </summary>
-        ENSWebhookRequestWithNullEventPayload = 900039,
+        ENSWebhookRequestTypeNotMatch = 900039,
         /// <summary>
-        /// 900040 -  File share service event data mapping started.
+        /// 900040 -  Request invalid event payload for external notification service webhook post endpoint.
         /// </summary>
-        FssEventDataMappingStart = 900040,
+        ENSWebhookRequestInvalidEventPayload = 900040,
         /// <summary>
-        /// 900041 -  File share service event data mapping Completed.
+        /// 900041 -  Request null event payload for external notification service webhook post endpoint.
         /// </summary>
-        FssEventDataMappingCompleted = 900041,
+        ENSWebhookRequestWithNullEventPayload = 900041,
         /// <summary>
-        /// 900042 -  Request invalid business unit for external notification service webhook post endpoint.
+        /// 900042 -  File share service event data mapping started.
         /// </summary>
-        FssEventDataWithInvalidBusinessUnit = 900042,
+        FssEventDataMappingStart = 900042,
         /// <summary>
-        /// 900043 -  External notification service event publish started.
+        /// 900043 -  File share service event data mapping Completed.
         /// </summary>
-        ENSEventPublishStart = 900043,
+        FssEventDataMappingCompleted = 900043,
         /// <summary>
-        /// 900044 -  External notification service event publish Completed.
+        /// 900044 -  Request invalid business unit for external notification service webhook post endpoint.
         /// </summary>
-        ENSEventPublishCompleted = 900044,
+        FssEventDataWithInvalidBusinessUnit = 900044,
         /// <summary>
-        /// 900045 -  External notification service event publish is failed.
+        /// 900045 -  External notification service event publish started.
         /// </summary>
-        ENSEventNotPublished = 900045
+        ENSEventPublishStart = 900045,
+        /// <summary>
+        /// 900046 -  External notification service event publish Completed.
+        /// </summary>
+        ENSEventPublishCompleted = 900046,
+        /// <summary>
+        /// 900047 -  External notification service event publish is failed.
+        /// </summary>
+        ENSEventNotPublished = 900047
     }
 
     public static class EventIdExtensions
