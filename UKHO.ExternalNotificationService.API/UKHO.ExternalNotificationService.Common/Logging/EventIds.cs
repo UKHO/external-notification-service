@@ -85,9 +85,9 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         CreateOrUpdateAzureEventDomainTopicCompleted = 900020,
         /// <summary>
-        /// 900021 -  Create subscription request error in case of exception.
+        /// 900021 -  Create Subscription Provising request succeeded for webhook event
         /// </summary>
-        CreateSubscriptionRequestError = 900021,
+        CreateSubscriptionRequestSuccess = 900021,
         /// <summary>
         /// 900022 - Azure blob storage for external notification service is healthy.
         /// </summary>
@@ -143,7 +143,15 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900035 - Authorization failed with AD Authentication Token
         /// </summary>
-        ADAuthenticationFailed = 900035
+        ADAuthenticationFailed = 900035,
+        /// <summary>
+        /// 900036 - Create subscription request error in case of other exception in Webhook event
+        /// </summary>
+        CreateSubscriptionRequestOtherError = 900036,
+        /// <summary>
+        /// 900037 - Create subscription request error in case of handshake failure exception in Webhook event
+        /// </summary>
+        CreateSubscriptionRequestHandshakeFailureError = 900037
     }
 
     public static class EventIdExtensions

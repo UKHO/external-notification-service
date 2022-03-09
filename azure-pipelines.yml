@@ -284,6 +284,13 @@ stages:
               Contents: 'appsettings.json'
               TargetFolder: '$(Build.SourcesDirectory)\Deployment\src'
 
+          - task: CopyFiles@2
+            displayName: "Copy OpenAPI spec for deployment"
+            inputs:
+              SourceFolder: '$(Build.SourcesDirectory)'
+              Contents: 'external-notification-service.openApi.yaml'
+              TargetFolder: '$(Build.SourcesDirectory)\Deployment\src\APIM'
+
           - task: PublishBuildArtifacts@1
             displayName: "Publish terraform Artifacts"
             inputs:
@@ -364,11 +371,11 @@ stages:
           - name: "D365AuthConfiguration.ClientSecret"
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
           - name: "EnsAuthConfiguration.ClientId"
-            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-CLIENT-ID)
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
           - name: "EnsAuthConfiguration.TenantId"
-            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-TENANT-ID)
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
           - name: "EnsAuthConfiguration.ClientSecret"
-            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-VALUE)
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-SECRET-VALUE)
         strategy:
           runOnce:
             deploy:
@@ -377,6 +384,16 @@ stages:
                   parameters:
                     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
                     AzureSubscription: "External Notification Service Dev - A.008.02"
+
+                - template: Deployment/templates/continuous-deployment-apim.yml
+                  parameters:
+                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+                    AzureSubscription: "UKHO-APIM-Dev"
+                    TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
+                    APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
+                    APIMServiceInstance: $(APIM_SERVICE_NAME)
+                    tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
+                    tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
                   
                 - task: DownloadBuildArtifacts@0
                   displayName: "Download Functional test Artifact"
@@ -417,7 +434,7 @@ stages:
                     scriptType: 'pscore'
                     scriptLocation: 'scriptPath'
                     scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
-                    arguments: '-Stuburi $(D365ApiStubUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
+                    arguments: '-sandboxUri $(D365ApiSandboxUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
 
   - stage: QAdeploy
     displayName: QAdeploy (inc terraform, webapp deploy)
@@ -440,11 +457,11 @@ stages:
           - name: "D365AuthConfiguration.ClientSecret"
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
           - name: "EnsAuthConfiguration.ClientId"
-            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-CLIENT-ID)
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
           - name: "EnsAuthConfiguration.TenantId"
-            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-TENANT-ID)
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
           - name: "EnsAuthConfiguration.ClientSecret"
-            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-VALUE)
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-SECRET-VALUE)
         strategy:
           runOnce:
             deploy:
@@ -453,6 +470,16 @@ stages:
                   parameters:
                     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
                     AzureSubscription: "External Notification Service QA - A.008.02"
+
+                - template: Deployment/templates/continuous-deployment-apim.yml
+                  parameters:
+                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+                    AzureSubscription: "UKHO-APIM-Dev"
+                    TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
+                    APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
+                    APIMServiceInstance: $(APIM_SERVICE_NAME)
+                    tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
+                    tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
                     
                 - task: DownloadBuildArtifacts@0
                   displayName: "Download Functional test Artifact"
@@ -508,11 +535,11 @@ stages:
           - name: "D365AuthConfiguration.ClientSecret"
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
           - name: "EnsAuthConfiguration.ClientId"
-            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-CLIENT-ID)
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
           - name: "EnsAuthConfiguration.TenantId"
-            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-TENANT-ID)
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
           - name: "EnsAuthConfiguration.ClientSecret"
-            value: $(D365-NOTIFICATION-SERIVCE-APP-REGISTRATION-SECRET-VALUE)
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-SECRET-VALUE)
         strategy:
           runOnce:
             deploy:
@@ -521,3 +548,13 @@ stages:
                   parameters:
                     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
                     AzureSubscription: "External Notification Service Live - A.008.02"
+
+                - template: Deployment/templates/continuous-deployment-apim.yml
+                  parameters:
+                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+                    AzureSubscription: "UKHO-APIM-Live"
+                    TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
+                    APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
+                    APIMServiceInstance: $(APIM_SERVICE_NAME)
+                    tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
+                    tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
