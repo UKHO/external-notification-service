@@ -54,30 +54,30 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
             }
         }
 
-        public bool SaveCommandDistributorRequest(string subject, HttpStatusCode? statusCode)
+        public bool SaveCommandDistributorRequest(string subject, HttpStatusCode? httpStatusCode)
         {
             try
             {
                 CommandDistributionRequest? commandDistributorRequest = s_CommandDistributionList.LastOrDefault(a => a.Subject == subject);
                 if (commandDistributorRequest != null)
                 {
-                    if (statusCode == null)
+                    if (httpStatusCode == null)
                     {
                         s_CommandDistributionList.Remove(commandDistributorRequest);
                     }
                     else
                     {
-                        commandDistributorRequest.HttpStatusCode = statusCode ?? Ok;
+                        commandDistributorRequest.HttpStatusCode = (HttpStatusCode)httpStatusCode;
                     }
                 }
                 else
                 {
-                    if (statusCode != null)
+                    if (httpStatusCode != null)
                     {
                         s_CommandDistributionList.Add(new CommandDistributionRequest
                         {
                             Subject = subject,
-                            HttpStatusCode = statusCode ?? Ok
+                            HttpStatusCode = (HttpStatusCode)httpStatusCode
                         });
                     }
                     else

@@ -60,7 +60,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
                 return NotFoundResponse();
             }
 
-            _logger.LogInformation("Callback found and return for subscriptionId: {subscriptionId}", subscriptionId);
+            _logger.LogInformation("Callback found and returned for subscriptionId: {subscriptionId}", subscriptionId);
             return Ok(callbackRequest);
         }
 

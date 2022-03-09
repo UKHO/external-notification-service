@@ -69,7 +69,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                     }
                     else
                     {
-                        commandCallbackRequest.HttpStatusCode = httpStatusCode ?? NoContent;
+                        commandCallbackRequest.HttpStatusCode = (HttpStatusCode)httpStatusCode ;
                     }
                 }
                 else
@@ -79,7 +79,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                         s_commandCallbackRequestList.Add(new CommandCallbackRequest
                         {
                             SubscriptionId = subscriptionId,
-                            HttpStatusCode = httpStatusCode ?? NoContent,
+                            HttpStatusCode = (HttpStatusCode)httpStatusCode,
                         });
                     }
                     else
