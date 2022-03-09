@@ -39,7 +39,7 @@ namespace UKHO.ExternalNotificationService.API.Services
             fssEventData.Files.FirstOrDefault().Links.Get.Href = ReplceHostValueMethod(fssEventData.Files.FirstOrDefault().Links.Get.Href);
 
             CloudEvent cloudEvent = new(_fssDataMappingConfiguration.Value.Source,
-                                        _fssDataMappingConfiguration.Value.Type,
+                                        FssDataMappingValueConstant.Type,
                                         fssEventData)
             {
                 Time = DateTimeOffset.Parse(DateTimeExtensions.ToRfc3339String(DateTime.UtcNow)),
@@ -52,9 +52,9 @@ namespace UKHO.ExternalNotificationService.API.Services
             return cloudEvent;
         }
 
-        private string ReplceHostValueMethod(string href)
+        private static string ReplceHostValueMethod(string href)
         {
-            return href.Replace(_fssDataMappingConfiguration.Value.ExistingHostName, _fssDataMappingConfiguration.Value.ReplacingHostName);
+            return href.Replace(FssDataMappingValueConstant.ExistingHostName, FssDataMappingValueConstant.ReplacingHostName);
         }
     }
 }

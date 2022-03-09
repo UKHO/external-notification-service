@@ -1,9 +1,9 @@
 ﻿using Azure.Messaging;
 using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,7 +20,6 @@ namespace UKHO.ExternalNotificationService.API.Services
     public class FssEventProcessor : IEventProcessor
     {
         private readonly IFssEventValidationAndMappingService _fssEventValidationAndMappingService;
-        private readonly IOptions<FssDataMappingConfiguration> _fssDataMappingConfiguration;
         private readonly ILogger<FssEventProcessor> _logger;
         private List<Error> _errors;
         private readonly IAzureEventGridDomainService _azureEventGridDomainService;
@@ -28,12 +27,10 @@ namespace UKHO.ExternalNotificationService.API.Services
         public string EventType => EventProcessorTypes.FSS;
 
         public FssEventProcessor(IFssEventValidationAndMappingService fssEventValidationAndMappingService,
-                                 IOptions<FssDataMappingConfiguration> fssDataMappingConfiguration,
                                  ILogger<FssEventProcessor> logger,
                                  IAzureEventGridDomainService azureEventGridDomainService)
         {
             _fssEventValidationAndMappingService = fssEventValidationAndMappingService;
-            _fssDataMappingConfiguration = fssDataMappingConfiguration;
             _logger = logger;
             _azureEventGridDomainService = azureEventGridDomainService;
         }
@@ -48,7 +45,7 @@ namespace UKHO.ExternalNotificationService.API.Services
             if (!validationFssEventData.IsValid && validationFssEventData.HasOkErrors(out _errors))
                 return ProcessResponse(fssEventData);
 
-            if (fssEventData.BusinessUnit == _fssDataMappingConfiguration.Value.BusinessUnit)
+            if (!string.IsNullOrWhiteSpace(BusinessUnitTypes.BusinessUnit.FirstOrDefault(x => x.Equals(fssEventData.BusinessUnit))))
             {
                 _logger.LogInformation(EventIds.FssEventDataMappingStart.ToEventId(), "File share service event data mapping started for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customEventGridEvent.Subject, fssEventData.BusinessUnit, correlationId);
                 CloudEvent cloudEvent = _fssEventValidationAndMappingService.FssEventDataMapping(customEventGridEvent, correlationId);

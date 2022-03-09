@@ -73,14 +73,14 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         public void WhenValidFssEventDataMappingRequest_ThenReturnCloudEvent()
         {
             string correlationId = "7b838400-7d73-4a64-982b-f426bddc1296";
-            string batchDetailsUri = "https://admiralty.test/fss/batch/83d08093-7a67-4b3a-b431-92ba42feaea0";
+            string batchDetailsUri = "https://admiralty.azure-api.net/fss/batch/83d08093-7a67-4b3a-b431-92ba42feaea0";
 
             CloudEvent result =  _fssEventValidationAndMappingService.FssEventDataMapping(_fakeCustomEventGridEvent, correlationId);
 
             string data = Encoding.ASCII.GetString(result.Data);
             FssEventData cloudEventData = JsonConvert.DeserializeObject<FssEventData>(data);
 
-            Assert.AreEqual(_fakeFssDataMappingConfiguration.Value.Type, result.Type);
+            Assert.AreEqual(FssDataMappingValueConstant.Type, result.Type);
             Assert.AreEqual(_fakeFssDataMappingConfiguration.Value.Source, result.Source);
             Assert.AreEqual(batchDetailsUri, cloudEventData.Links.BatchDetails.Href);
             Assert.AreEqual(batchDetailsUri + "/status", cloudEventData.Links.BatchStatus.Href);

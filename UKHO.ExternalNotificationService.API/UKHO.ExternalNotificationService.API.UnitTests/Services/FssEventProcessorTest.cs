@@ -2,7 +2,6 @@
 using FakeItEasy;
 using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -11,7 +10,6 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Services;
-using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Helpers;
 using UKHO.ExternalNotificationService.Common.Models.EventModel;
 using UKHO.ExternalNotificationService.Common.Models.Request;
@@ -25,7 +23,6 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
     public class FssEventProcessorTest
     {
         private IFssEventValidationAndMappingService _fakeFssEventValidationAndMappingService;
-        private IOptions<FssDataMappingConfiguration> _fakeFssDataMappingConfiguration;
         private ILogger<FssEventProcessor> _fakeLogger;
         private IAzureEventGridDomainService _fakeAzureEventGridDomainService;
         private FssEventProcessor _fssEventProcessor;
@@ -35,14 +32,12 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [SetUp]
         public void Setup()
         {
-            _fakeFssDataMappingConfiguration = A.Fake<IOptions<FssDataMappingConfiguration>>();
             _fakeFssEventValidationAndMappingService = A.Fake<IFssEventValidationAndMappingService>();
             _fakeLogger = A.Fake<ILogger<FssEventProcessor>>();
             _fakeAzureEventGridDomainService = A.Fake<IAzureEventGridDomainService>();
             _fakeCustomEventGridEvent = GetCustomEventGridEvent();
-            _fakeFssDataMappingConfiguration.Value.BusinessUnit = "AVCSData";
 
-            _fssEventProcessor = new FssEventProcessor(_fakeFssEventValidationAndMappingService,_fakeFssDataMappingConfiguration,
+            _fssEventProcessor = new FssEventProcessor(_fakeFssEventValidationAndMappingService,
                                                        _fakeLogger, _fakeAzureEventGridDomainService);
         }
 
@@ -74,7 +69,9 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [Test]
         public async Task WhenInvalidBusinessUnitInRequest_ThenReceiveSuccessfulResponse()
         {
-            _fakeFssDataMappingConfiguration.Value.BusinessUnit = "test";
+            FssEventData fssEventData = GetFssEventData();
+            fssEventData.BusinessUnit = "test";
+            _fakeCustomEventGridEvent.Data = fssEventData;
 
             A.CallTo(() => _fakeFssEventValidationAndMappingService.ValidateFssEventData(A<FssEventData>.Ignored))
                             .Returns(new ValidationResult());
