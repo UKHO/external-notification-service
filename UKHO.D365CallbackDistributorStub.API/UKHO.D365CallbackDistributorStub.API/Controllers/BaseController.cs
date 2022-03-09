@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.CodeAnalysis;
+using System.Net;
 
 namespace UKHO.D365CallbackDistributorStub.API.Controllers
 {
@@ -25,6 +26,19 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
         protected IActionResult NotFoundResponse()
         {
             return NotFound();
+        }
+
+        protected IActionResult GetEnsStubResponse(HttpStatusCode httpStatusCode)
+        {
+            return httpStatusCode switch
+            {
+                HttpStatusCode.OK => OkResponse(),
+                HttpStatusCode.NoContent => NoContentResponse(),
+                HttpStatusCode.InternalServerError => StatusCode((int)HttpStatusCode.InternalServerError),
+                HttpStatusCode.BadRequest => BadRequestResponse(),
+                HttpStatusCode.NotFound => NotFoundResponse(),
+                _ => BadRequestResponse(),
+            };
         }
 
     }

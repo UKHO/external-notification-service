@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using UKHO.D365CallbackDistributorStub.API.Models.Request;
 
 namespace UKHO.D365CallbackDistributorStub.API.Services
@@ -7,7 +8,16 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
     public class DistributionService
     {
         private static readonly Queue<DistributorRequest> s_recordDistributorRequestQueue = new();
-        public static bool SaveDistributorRequest(CustomCloudEvent cloudEvent)
+        private static readonly List<CommandDistributionRequest> s_CommandDistributionList = new();
+        private const HttpStatusCode Ok = HttpStatusCode.OK;
+        private readonly ILogger<DistributionService> _logger;
+
+        public DistributionService(ILogger<DistributionService> logger)
+        {
+            _logger = logger;
+        }
+
+        public static bool SaveDistributorRequest(CustomCloudEvent cloudEvent, HttpStatusCode? httpStatusCode)
         {
             try
             {
@@ -15,7 +25,9 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                 {
                     CloudEvent = cloudEvent,
                     Subject = cloudEvent.Subject,
-                    Guid = new Guid(),
+                    Guid = Guid.NewGuid(),
+                    TimeStamp =DateTime.UtcNow,
+                    StatusCode = httpStatusCode ?? Ok
                 });
 
                 if (s_recordDistributorRequestQueue.Count >= 50)
@@ -32,7 +44,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
 
         public List<DistributorRequest>? GetDistributorRequest(string? subject)
         {
-            if(!string.IsNullOrEmpty(subject))
+            if (!string.IsNullOrEmpty(subject))
             {
                 return s_recordDistributorRequestQueue.Where(a => a.Subject == subject).ToList();
             }
@@ -40,6 +52,56 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
             {
                 return s_recordDistributorRequestQueue.ToList();
             }
+        }
+
+        public bool SaveCommandDistributorRequest(string subject, HttpStatusCode? httpStatusCode)
+        {
+            try
+            {
+                CommandDistributionRequest? commandDistributorRequest = s_CommandDistributionList.LastOrDefault(a => a.Subject == subject);
+                if (commandDistributorRequest != null)
+                {
+                    if (httpStatusCode == null)
+                    {
+                        s_CommandDistributionList.Remove(commandDistributorRequest);
+                    }
+                    else
+                    {
+                        commandDistributorRequest.HttpStatusCode = (HttpStatusCode)httpStatusCode;
+                    }
+                }
+                else
+                {
+                    if (httpStatusCode != null)
+                    {
+                        s_CommandDistributionList.Add(new CommandDistributionRequest
+                        {
+                            Subject = subject,
+                            HttpStatusCode = (HttpStatusCode)httpStatusCode
+                        });
+                    }
+                    else
+                    {
+                        _logger.LogInformation("Request not found in memory for subject: {subject}", subject);
+                        return true;
+                    }
+                }
+
+                if (s_CommandDistributionList.Count >= 50)
+                {
+                    s_CommandDistributionList.RemoveAt(0);
+                }
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public CommandDistributionRequest? SubjectInCommandDistributionList(string? subject)
+        {
+            return s_CommandDistributionList.LastOrDefault(a => a.Subject == subject);
         }
     }
 }

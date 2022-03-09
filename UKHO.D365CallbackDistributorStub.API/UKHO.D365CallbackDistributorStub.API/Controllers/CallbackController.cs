@@ -1,5 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using UKHO.D365CallbackDistributorStub.API.Models.Request;
 using UKHO.D365CallbackDistributorStub.API.Services;
 
@@ -19,14 +20,25 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
             _callbackService = callbackService;
         }
 
-        [HttpPost]
-        public IActionResult Post([FromBody] CallbackRequest callbackRequest, string subscriptionId)
+        [Route("ukho_externalnotifications({subscriptionId})")]
+        [HttpPatch]
+        public IActionResult Patch([FromBody] CallbackRequest callbackRequest, string subscriptionId)
         {
-            _logger.LogInformation("POST callback accessed for subscriptionId: {subscriptionId}", subscriptionId);
-            bool callbackRequestSaved = CallbackService.SaveCallbackRequest(callbackRequest, subscriptionId);
+            _logger.LogInformation("Patch callback accessed for subscriptionId: {subscriptionId}", subscriptionId);
+
+            CommandCallbackRequest? commandCallbackRequest = _callbackService.SubscriptionInCommandCallbackList(subscriptionId);
+            bool callbackRequestSaved = CallbackService.SaveCallbackRequest(callbackRequest,
+                                                                            subscriptionId,
+                                                                            commandCallbackRequest == null ? HttpStatusCode.NoContent : commandCallbackRequest.HttpStatusCode);
+
             if (callbackRequestSaved)
             {
                 _logger.LogInformation("Callback request stored in memory for subscriptionId: {subscriptionId}", subscriptionId);
+                if (commandCallbackRequest != null)
+                {
+                    _logger.LogInformation("Callback request failed for subscriptionId: {subscriptionId} with httpStatusCode as {httpStatusCode}", subscriptionId, commandCallbackRequest.HttpStatusCode.ToString());
+                    return GetEnsStubResponse(commandCallbackRequest.HttpStatusCode);
+                }
                 return NoContentResponse();
             }
             else
@@ -48,8 +60,23 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
                 return NotFoundResponse();
             }
 
-            _logger.LogInformation("Callback found and return for subscriptionId: {subscriptionId}", subscriptionId);
+            _logger.LogInformation("Callback found and returned for subscriptionId: {subscriptionId}", subscriptionId);
             return Ok(callbackRequest);
+        }
+
+        [HttpPost("command-to-return-status/{subscriptionId}/{httpStatusCode?}")]
+        public IActionResult CommandToReturnStatus(string subscriptionId, HttpStatusCode? httpStatusCode)
+        {
+            _logger.LogInformation("Command for callback accessed for subscriptionId: {subscriptionId}", subscriptionId);
+
+            bool commandCallbackRequestSaved = _callbackService.SaveCommandCallbackRequest(subscriptionId, httpStatusCode);
+            if (commandCallbackRequestSaved)
+            {
+                _logger.LogInformation("Command for callback stored in memory for subscriptionId: {subscriptionId} with httpStatusCode as {httpStatusCode}", subscriptionId, httpStatusCode.ToString());
+                return OkResponse();
+            }
+            _logger.LogInformation("Command for callback request not stored in memory for subscriptionId: {subscriptionId}", subscriptionId);
+            return BadRequestResponse();
         }
     }
 }
