@@ -59,7 +59,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
         {
             try
             {
-                CommandCallbackRequest? commandCallbackRequest = s_commandCallbackRequestList.Where(a => a.SubscriptionId == subscriptionId).LastOrDefault();
+                CommandCallbackRequest? commandCallbackRequest = s_commandCallbackRequestList.LastOrDefault(a => a.SubscriptionId == subscriptionId);
 
                 if (commandCallbackRequest != null)
                 {
@@ -103,7 +103,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
 
         public CommandCallbackRequest? SubscriptionInCommandCallbackList(string subscriptionId)
         {
-           return s_commandCallbackRequestList.Where(a => a.SubscriptionId == subscriptionId).LastOrDefault();
+           return s_commandCallbackRequestList.LastOrDefault(a => a.SubscriptionId == subscriptionId);
         }
     }
 }

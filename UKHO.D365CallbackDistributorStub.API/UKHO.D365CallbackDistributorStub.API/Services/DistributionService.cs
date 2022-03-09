@@ -58,7 +58,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
         {
             try
             {
-                CommandDistributionRequest? commandDistributorRequest = s_CommandDistributionList.Where(a => a.Subject == subject).LastOrDefault();
+                CommandDistributionRequest? commandDistributorRequest = s_CommandDistributionList.LastOrDefault(a => a.Subject == subject);
                 if (commandDistributorRequest != null)
                 {
                     if (statusCode == null)
@@ -101,7 +101,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
 
         public CommandDistributionRequest? SubjectInCommandDistributionList(string? subject)
         {
-            return s_CommandDistributionList.Where(a => a.Subject == subject).LastOrDefault();
+            return s_CommandDistributionList.LastOrDefault(a => a.Subject == subject);
         }
     }
 }
