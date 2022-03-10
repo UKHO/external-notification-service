@@ -108,8 +108,39 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         
         [TestCase(404, TestName = "CallBack Stub Returns StausCode As Not Found")]
         [TestCase(400, TestName = "CallBack Stub Returns StausCode As Bad Request")]
-        [TestCase(500, TestName = "CallBack Stub Returns StausCode As Internal Server Error")]
         public async Task WhenICallTheCallBackStubUrlToFailWithValidSubscriptionId_ThenValidResponseIsRetruns(int statusCode)
+        {
+            //Get the subscriptionId from D365 payload
+
+            string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
+
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
+            Assert.AreEqual(202, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
+            DateTime requestTime = DateTime.UtcNow;
+            HttpResponseMessage apiStubResponse = await EnsApiClient.PostStubCommandToFailAsync(TestConfig.StubBaseUri, subscriptionId, statusCode);
+            Assert.AreEqual(200, (int)apiStubResponse.StatusCode, $"Incorrect status code {apiStubResponse.StatusCode}  is  returned, instead of the expected 200.");
+
+            while (DateTime.UtcNow - requestTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
+            {
+                await Task.Delay(1000);
+            }
+
+            HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, subscriptionId);
+            Assert.AreEqual(200, (int)callBackResponse.StatusCode, $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected 200.");
+
+            IEnumerable<EnsCallbackResponseModel> callBackResponseBody = JsonConvert.DeserializeObject<IEnumerable<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result);
+
+            EnsCallbackResponseModel callBackResponseLatest = callBackResponseBody.Where(x => x.TimeStamp >= requestTime).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
+
+            Assert.AreEqual(subscriptionId, callBackResponseLatest.SubscriptionId, $"Invalid subscriptionId {callBackResponseLatest.SubscriptionId} , Instead of expected subscriptionId {subscriptionId}.");
+            Assert.AreEqual(statusCode, callBackResponseLatest.HttpStatusCode, $"Invalid statusCode {callBackResponseLatest.HttpStatusCode} , Instead of expected statusCode {statusCode}.");
+            Assert.IsTrue(callBackResponseLatest.TimeStamp <= new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, DateTime.UtcNow.Hour, DateTime.UtcNow.Minute, DateTime.UtcNow.Second), $"Response body returned timestamp date {callBackResponseLatest.TimeStamp} , greater than the expected value.");
+
+
+        }
+        [TestCase(500, TestName = "CallBack Stub Returns StausCode As Internal Server Error")]
+        [TestCase(503, TestName = "CallBack Stub Returns StausCode As Service UnAvailable")]
+        public async Task WhenICallTheCallBackStubUrlToFailWithValidSubscriptionId_ThenValidResponseIsRetrunsWithRetryCount(int statusCode)
         {
             //Get the subscriptionId from D365 payload
 
@@ -141,8 +172,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             Assert.AreEqual(subscriptionId, callBackResponseLatest.SubscriptionId, $"Invalid subscriptionId {callBackResponseLatest.SubscriptionId} , Instead of expected subscriptionId {subscriptionId}.");
             Assert.AreEqual(statusCode, callBackResponseLatest.HttpStatusCode, $"Invalid statusCode {callBackResponseLatest.HttpStatusCode} , Instead of expected statusCode {statusCode}.");
             Assert.IsTrue(callBackResponseLatest.TimeStamp <= new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, DateTime.UtcNow.Hour, DateTime.UtcNow.Minute, DateTime.UtcNow.Second), $"Response body returned timestamp date {callBackResponseLatest.TimeStamp} , greater than the expected value.");
-                             
-            
+                           
         }       
     }
 }
