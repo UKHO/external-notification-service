@@ -90,9 +90,15 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         }
 
 
-        public static async Task<HttpResponseMessage> PostStubCommandToFailAsync(string stubBaseUri, string subscriptionId,int statusCode)
+        public static async Task<HttpResponseMessage> PostStubCommandToFailAsync(string stubBaseUri, string subscriptionId,int? statusCode)
         {
-            string uri =$"{stubBaseUri}/api/dynamics/command-to-return-status/{subscriptionId}/{statusCode}";           
+             string uri = $"{stubBaseUri}/api/dynamics/command-to-return-status/{subscriptionId}";
+
+            if (statusCode!=null)
+            {
+                uri += $"/{statusCode}";
+            }
+                       
             using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
             return await s_httpClient.SendAsync(httpRequestMessage);
         }
