@@ -114,12 +114,21 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             Assert.AreEqual(subject, getMatchingData.Subject);
             Assert.IsInstanceOf<CustomCloudEvent>(getMatchingData.CloudEvent);
             Assert.AreEqual("fss-filesPublished-AvcsData", getMatchingData.CloudEvent.Source);
+            Assert.AreEqual("uk.co.admiralty.fss.filesPublished.v1", getMatchingData.CloudEvent.Type);
             Uri filesLinkHref = new(publishDataFromFss.Files.FirstOrDefault().Links.Get.Href);
             string data = JsonConvert.SerializeObject(getMatchingData.CloudEvent.Data);
             FssEventData fssEventData = JsonConvert.DeserializeObject<FssEventData>(data);
             Uri filesLinkHrefReplace = new(source + "fss" + filesLinkHref.AbsolutePath);
             Assert.IsNotNull(filesLinkHrefReplace.ToString());
             Assert.AreEqual(filesLinkHrefReplace.ToString(), fssEventData.Files.FirstOrDefault().Links.Get.Href);
+            Uri filesBatchStatusHref = new(publishDataFromFss.Links.BatchStatus.Href);
+            Uri filesBatchStatusHrefReplace = new(source + "fss" + filesBatchStatusHref.AbsolutePath);
+            Assert.IsNotNull(filesBatchStatusHrefReplace.ToString());
+            Assert.AreEqual(filesBatchStatusHrefReplace.ToString(), fssEventData.Links.BatchStatus.Href);
+            Uri filesBatchDetailHref = new(publishDataFromFss.Links.BatchDetails.Href);
+            Uri filesBatchDetailHrefReplace = new(source + "fss" + filesBatchDetailHref.AbsolutePath);
+            Assert.IsNotNull(filesBatchDetailHrefReplace.ToString());
+            Assert.AreEqual(filesBatchDetailHrefReplace.ToString(), fssEventData.Links.BatchDetails.Href);
         }
 
         [TestCase("83d08093-7a67-4b3a-b431-92ba42feaea0", HttpStatusCode.InternalServerError, TestName = "InternalServerError for WebHook")]
