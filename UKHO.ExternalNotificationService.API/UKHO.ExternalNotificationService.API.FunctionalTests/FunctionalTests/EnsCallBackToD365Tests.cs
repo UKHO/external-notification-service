@@ -55,7 +55,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             Assert.AreEqual(subscriptionId, callBackResponseLatest.SubscriptionId, $"Invalid subscriptionId {callBackResponseLatest.SubscriptionId} , Instead of expected subscriptionId {subscriptionId}.");
             Assert.AreEqual(TestConfig.SucceededStatusCode, callBackResponseLatest.CallBackRequest.Ukho_lastresponse, $"Invalid last response {callBackResponseLatest.CallBackRequest.Ukho_lastresponse} , Instead of expected last response {TestConfig.SucceededStatusCode}.");
-            Assert.IsTrue(callBackResponseLatest.CallBackRequest.Ukho_responsedetails.Contains("Successfully added subscription"));
+            Assert.IsTrue(callBackResponseLatest.CallBackRequest.Ukho_responsedetails.Contains("Successfully added subscription"), $"Last Response : {callBackResponseLatest.CallBackRequest.Ukho_responsedetails}");
             Assert.IsTrue(callBackResponseLatest.TimeStamp <= new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, DateTime.UtcNow.Hour, DateTime.UtcNow.Minute, DateTime.UtcNow.Second), $"Response body returned timestamp date {callBackResponseLatest.TimeStamp} , greater than the expected value.");
             
         }
@@ -100,8 +100,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             EnsCallbackResponseModel callBackResponseLatest = callBackResponseBody.Where(x => x.TimeStamp >= requestTime).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
 
             Assert.AreEqual(subscriptionId, callBackResponseLatest.SubscriptionId, $"Invalid subscriptionId {callBackResponseLatest.SubscriptionId} , Instead of expected subscriptionId {subscriptionId}.");
+            Assert.IsTrue(callBackResponseLatest.CallBackRequest.Ukho_responsedetails.Contains("Failed to add subscription"),$"Last Response : {callBackResponseLatest.CallBackRequest.Ukho_responsedetails}, Time : {callBackResponseLatest.TimeStamp}");
             Assert.AreEqual(TestConfig.FailedStatusCode, callBackResponseLatest.CallBackRequest.Ukho_lastresponse, $"Invalid last response {callBackResponseLatest.CallBackRequest.Ukho_lastresponse} , Instead of expected last response {TestConfig.FailedStatusCode}.");
-            Assert.IsTrue(callBackResponseLatest.CallBackRequest.Ukho_responsedetails.Contains("Failed to add subscription"));
             Assert.IsTrue(callBackResponseLatest.TimeStamp <= new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, DateTime.UtcNow.Hour, DateTime.UtcNow.Minute, DateTime.UtcNow.Second), $"Response body returned timestamp date {callBackResponseLatest.TimeStamp} , greater than the expected value.");
         }
 
@@ -112,14 +112,14 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         {
             //Get the subscriptionId from D365 payload
 
-            string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
-
-            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
-            Assert.AreEqual(202, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
-            DateTime requestTime = DateTime.UtcNow;
+            string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();            
+            
             HttpResponseMessage apiStubResponse = await EnsApiClient.PostStubCommandToFailAsync(TestConfig.StubBaseUri, subscriptionId, statusCode);
             Assert.AreEqual(200, (int)apiStubResponse.StatusCode, $"Incorrect status code {apiStubResponse.StatusCode}  is  returned, instead of the expected 200.");
 
+            DateTime requestTime = DateTime.UtcNow;
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
+            Assert.AreEqual(202, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
             while (DateTime.UtcNow - requestTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
             {
                 await Task.Delay(1000);
@@ -144,13 +144,14 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         {
             //Get the subscriptionId from D365 payload
 
-            string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
-            
-            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
-            Assert.AreEqual(202, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
-            DateTime requestTime = DateTime.UtcNow;
+            string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();          
+                       
             HttpResponseMessage apiStubResponse = await EnsApiClient.PostStubCommandToFailAsync(TestConfig.StubBaseUri, subscriptionId, statusCode);
             Assert.AreEqual(200, (int)apiStubResponse.StatusCode, $"Incorrect status code {apiStubResponse.StatusCode}  is  returned, instead of the expected 200.");
+
+            DateTime requestTime = DateTime.UtcNow;
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
+            Assert.AreEqual(202, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
 
             while (DateTime.UtcNow - requestTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
             {
