@@ -36,10 +36,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             _fakeFssEventDataValidator = A.Fake<IFssEventDataValidator>();
             _fakeFssDataMappingConfiguration = A.Fake<IOptions<FssDataMappingConfiguration>>();
             _fakeFssDataMappingConfiguration.Value.Source = "fss-Test";
-            _fakeFssDataMappingConfiguration.Value.ExistingHostName = "files.admiralty.co.uk";
-            _fakeFssDataMappingConfiguration.Value.ReplacingHostName = "admiralty.test/fss";
-            _fakeFssDataMappingConfiguration.Value.BusinessUnit = "AVCSTest";
-            _fakeFssDataMappingConfiguration.Value.Type = "uk.co.admiralty.fss.test";
+            _fakeFssDataMappingConfiguration.Value.EventHostName = "files.admiralty.co.uk";
+            _fakeFssDataMappingConfiguration.Value.PublishHostName = "test/fss";
 
             _fssEventValidationAndMappingService = new FssEventValidationAndMappingService(_fakeFssEventDataValidator, _fakeFssDataMappingConfiguration);
         }
@@ -73,7 +71,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         public void WhenValidFssEventDataMappingRequest_ThenReturnCloudEvent()
         {
             string correlationId = "7b838400-7d73-4a64-982b-f426bddc1296";
-            string batchDetailsUri = "https://admiralty.azure-api.net/fss/batch/83d08093-7a67-4b3a-b431-92ba42feaea0";
+            string batchDetailsUri = "https://test/fss/batch/83d08093-7a67-4b3a-b431-92ba42feaea0";
 
             CloudEvent result =  _fssEventValidationAndMappingService.FssEventDataMapping(_fakeCustomEventGridEvent, correlationId);
 

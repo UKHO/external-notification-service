@@ -2,10 +2,8 @@
 {
     public class FssDataMappingConfiguration
     {
-        public string BusinessUnit { get; set; }
-        public string Type { get; set; }
         public string Source { get; set; }
-        public string ExistingHostName { get; set; }
-        public string ReplacingHostName { get; set; }
+        public string EventHostName { get; set; }
+        public string PublishHostName { get; set; }
     }
 }

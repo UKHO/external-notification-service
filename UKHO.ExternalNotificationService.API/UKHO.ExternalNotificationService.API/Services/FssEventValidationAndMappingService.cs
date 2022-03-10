@@ -52,9 +52,9 @@ namespace UKHO.ExternalNotificationService.API.Services
             return cloudEvent;
         }
 
-        private static string ReplceHostValueMethod(string href)
+        private string ReplceHostValueMethod(string href)
         {
-            return href.Replace(FssDataMappingValueConstant.ExistingHostName, FssDataMappingValueConstant.ReplacingHostName);
+            return href.Replace(_fssDataMappingConfiguration.Value.EventHostName, _fssDataMappingConfiguration.Value.PublishHostName);
         }
     }
 }
