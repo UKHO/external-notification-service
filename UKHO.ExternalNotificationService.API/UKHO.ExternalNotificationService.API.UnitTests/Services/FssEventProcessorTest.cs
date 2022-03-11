@@ -26,7 +26,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         private ILogger<FssEventProcessor> _fakeLogger;
         private IAzureEventGridDomainService _fakeAzureEventGridDomainService;
         private FssEventProcessor _fssEventProcessor;
-        private CustomEventGridEvent _fakeCustomEventGridEvent;
+        private CustomCloudEvent _fakeCustomCloudEvent;
         private FssEventData _fakeFssEventData;
         public const string correlationId = "7b838400-7d73-4a64-982b-f426bddc1296";
 
@@ -36,7 +36,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             _fakeFssEventValidationAndMappingService = A.Fake<IFssEventValidationAndMappingService>();
             _fakeLogger = A.Fake<ILogger<FssEventProcessor>>();
             _fakeAzureEventGridDomainService = A.Fake<IAzureEventGridDomainService>();
-            _fakeCustomEventGridEvent = GetCustomEventGridEvent();
+            _fakeCustomCloudEvent = GetCustomCloudEvent();
             _fakeFssEventData = GetFssEventData();
 
             _fssEventProcessor = new FssEventProcessor(_fakeFssEventValidationAndMappingService,
@@ -48,7 +48,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         {
             string result = _fssEventProcessor.EventType;
 
-            Assert.AreEqual(_fakeCustomEventGridEvent.Type, result);
+            Assert.AreEqual(_fakeCustomCloudEvent.Type, result);
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             A.CallTo(() => _fakeFssEventValidationAndMappingService.ValidateFssEventData(A<FssEventData>.Ignored))
                             .Returns(new ValidationResult(new List<ValidationFailure> { validationMessage }));
 
-            ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomEventGridEvent, correlationId);
+            ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomCloudEvent, correlationId);
 
             Assert.AreEqual("BatchId cannot be blank or null.", result.Errors.Single().Description);
             Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
@@ -77,13 +77,13 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             A.CallTo(() => _fakeFssEventValidationAndMappingService.ValidateFssEventData(A<FssEventData>.Ignored)).Returns(new ValidationResult());
 
-            A.CallTo(() => _fakeFssEventValidationAndMappingService.FssEventDataMapping(A<CustomEventGridEvent>.Ignored, A<string>.Ignored)).Returns(cloudEvent);
+            A.CallTo(() => _fakeFssEventValidationAndMappingService.FssEventDataMapping(A<CustomCloudEvent>.Ignored, A<string>.Ignored)).Returns(cloudEvent);
 
             A.CallTo(() => _fakeAzureEventGridDomainService.JsonDeserialize<FssEventData>(A<object>.Ignored)).Returns(_fakeFssEventData);
 
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(cloudEvent, correlationId, cancellationToken));
 
-            ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomEventGridEvent, correlationId);
+            ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomCloudEvent, correlationId);
 
             Assert.AreEqual("Invalid business unit in an event.", result.Errors.Single().Description);
             Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
@@ -98,21 +98,21 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             A.CallTo(() => _fakeFssEventValidationAndMappingService.ValidateFssEventData(A<FssEventData>.Ignored)).Returns(new ValidationResult());
 
-            A.CallTo(() => _fakeFssEventValidationAndMappingService.FssEventDataMapping(A<CustomEventGridEvent>.Ignored, A<string>.Ignored)).Returns(cloudEvent);
+            A.CallTo(() => _fakeFssEventValidationAndMappingService.FssEventDataMapping(A<CustomCloudEvent>.Ignored, A<string>.Ignored)).Returns(cloudEvent);
 
             A.CallTo(() => _fakeAzureEventGridDomainService.JsonDeserialize<FssEventData>(A<object>.Ignored)).Returns(_fakeFssEventData);
 
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(cloudEvent, correlationId, cancellationToken));
 
-            ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomEventGridEvent, correlationId);
+            ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomCloudEvent, correlationId);
 
             Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
             Assert.IsNull(result.Errors);
         }
 
-        private static CustomEventGridEvent GetCustomEventGridEvent()
+        private static CustomCloudEvent GetCustomCloudEvent()
         {
-            return new CustomEventGridEvent()
+            return new CustomCloudEvent()
             {
                 Type = "uk.gov.UKHO.FileShareService.NewFilesPublished.v1",
                 Source = "https://files.admiralty.co.uk",

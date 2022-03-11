@@ -1,13 +1,13 @@
 ﻿using Azure.Messaging;
 using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Extensions;
+using UKHO.ExternalNotificationService.Common.BaseClass;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Helpers;
 using UKHO.ExternalNotificationService.Common.Logging;
@@ -17,7 +17,7 @@ using UKHO.ExternalNotificationService.Common.Models.Response;
 
 namespace UKHO.ExternalNotificationService.API.Services
 {
-    public class FssEventProcessor : IEventProcessor
+    public class FssEventProcessor : EventProcessorBase , IEventProcessor
     {
         private readonly IFssEventValidationAndMappingService _fssEventValidationAndMappingService;
         private readonly ILogger<FssEventProcessor> _logger;
@@ -29,15 +29,16 @@ namespace UKHO.ExternalNotificationService.API.Services
         public FssEventProcessor(IFssEventValidationAndMappingService fssEventValidationAndMappingService,
                                  ILogger<FssEventProcessor> logger,
                                  IAzureEventGridDomainService azureEventGridDomainService)
+                                : base(azureEventGridDomainService)
         {
             _fssEventValidationAndMappingService = fssEventValidationAndMappingService;
             _logger = logger;
             _azureEventGridDomainService = azureEventGridDomainService;
         }
 
-        public async Task<ExternalNotificationServiceProcessResponse> Process(CustomEventGridEvent customEventGridEvent, string correlationId, CancellationToken cancellationToken = default)
+        public async Task<ExternalNotificationServiceProcessResponse> Process(CustomCloudEvent customCloudEvent, string correlationId, CancellationToken cancellationToken = default)
         {
-            FssEventData fssEventData = _azureEventGridDomainService.JsonDeserialize<FssEventData>(customEventGridEvent.Data);
+            FssEventData fssEventData = GetEventData<FssEventData>(customCloudEvent.Data);
 
             ValidationResult validationFssEventData = await _fssEventValidationAndMappingService.ValidateFssEventData(fssEventData);
 
@@ -46,18 +47,18 @@ namespace UKHO.ExternalNotificationService.API.Services
 
             if (!string.IsNullOrWhiteSpace(BusinessUnitTypes.BusinessUnit.FirstOrDefault(x => x.Equals(fssEventData.BusinessUnit))))
             {
-                _logger.LogInformation(EventIds.FssEventDataMappingStart.ToEventId(), "File share service event data mapping started for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customEventGridEvent.Subject, fssEventData.BusinessUnit, correlationId);
-                CloudEvent cloudEvent = _fssEventValidationAndMappingService.FssEventDataMapping(customEventGridEvent, correlationId);
-                _logger.LogInformation(EventIds.FssEventDataMappingCompleted.ToEventId(), "File share service event data mapping successfully completed for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customEventGridEvent.Subject, fssEventData.BusinessUnit, correlationId);
+                _logger.LogInformation(EventIds.FssEventDataMappingStart.ToEventId(), "File share service event data mapping started for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customCloudEvent.Subject, fssEventData.BusinessUnit, correlationId);
+                CloudEvent cloudEvent = _fssEventValidationAndMappingService.FssEventDataMapping(customCloudEvent, correlationId);
+                _logger.LogInformation(EventIds.FssEventDataMappingCompleted.ToEventId(), "File share service event data mapping successfully completed for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customCloudEvent.Subject, fssEventData.BusinessUnit, correlationId);
 
-                await _azureEventGridDomainService.PublishEventAsync(cloudEvent, correlationId, cancellationToken);
+                await PublishEventAsync(cloudEvent, correlationId, cancellationToken);
             }
             else
             {
                 _errors = new List<Error>{ new Error(){  Source = "businessUnit",
                                                          Description = "Invalid business unit in an event."}};
 
-                _logger.LogInformation(EventIds.FssEventDataWithInvalidBusinessUnit.ToEventId(), "External notification service webhook request failed due to an invalid business unit for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customEventGridEvent.Subject, fssEventData.BusinessUnit, correlationId);
+                _logger.LogInformation(EventIds.FssEventDataWithInvalidBusinessUnit.ToEventId(), "External notification service webhook request failed due to an invalid business unit for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customCloudEvent.Subject, fssEventData.BusinessUnit, correlationId);
             }
 
             return ProcessResponse(fssEventData);

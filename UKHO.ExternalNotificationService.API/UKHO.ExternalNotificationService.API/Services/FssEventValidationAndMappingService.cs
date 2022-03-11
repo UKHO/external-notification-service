@@ -29,9 +29,9 @@ namespace UKHO.ExternalNotificationService.API.Services
             return _fssEventDataValidator.Validate(fssEventData);
         }
 
-        public CloudEvent FssEventDataMapping(CustomEventGridEvent customEventGridEvent, string correlationId)
+        public CloudEvent FssEventDataMapping(CustomCloudEvent customCloudEvent, string correlationId)
         {
-            string data = JsonConvert.SerializeObject(customEventGridEvent.Data);
+            string data = JsonConvert.SerializeObject(customCloudEvent.Data);
             FssEventData fssEventData = JsonConvert.DeserializeObject<FssEventData>(data);
 
             fssEventData.Links.BatchStatus.Href = ReplaceHostValueMethod(fssEventData.Links.BatchStatus.Href);
@@ -44,9 +44,9 @@ namespace UKHO.ExternalNotificationService.API.Services
             {
                 Time = DateTimeOffset.Parse(DateTimeExtensions.ToRfc3339String(DateTime.UtcNow)),
                 Id = Guid.NewGuid().ToString(),
-                Subject = customEventGridEvent.Subject,
-                DataContentType = customEventGridEvent.DataContentType,
-                DataSchema = customEventGridEvent.DataSchema
+                Subject = customCloudEvent.Subject,
+                DataContentType = customCloudEvent.DataContentType,
+                DataSchema = customCloudEvent.DataSchema
             };
 
             return cloudEvent;

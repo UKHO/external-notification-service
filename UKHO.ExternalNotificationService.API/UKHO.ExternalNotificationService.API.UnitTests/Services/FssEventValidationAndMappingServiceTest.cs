@@ -26,13 +26,13 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         private IOptions<FssDataMappingConfiguration> _fakeFssDataMappingConfiguration;
         private FssEventValidationAndMappingService _fssEventValidationAndMappingService;
         private FssEventData _fakeFssEventData;
-        private CustomEventGridEvent _fakeCustomEventGridEvent;
+        private CustomCloudEvent _fakeCustomCloudEvent;
 
         [SetUp]
         public void Setup()
         {
             _fakeFssEventData = GetFssEventData();
-            _fakeCustomEventGridEvent = GetCustomEventGridEvent();
+            _fakeCustomCloudEvent = GetCustomCloudEvent();
             _fakeFssEventDataValidator = A.Fake<IFssEventDataValidator>();
             _fakeFssDataMappingConfiguration = A.Fake<IOptions<FssDataMappingConfiguration>>();
             _fakeFssDataMappingConfiguration.Value.Source = "fss-Test";
@@ -73,7 +73,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             string correlationId = "7b838400-7d73-4a64-982b-f426bddc1296";
             string batchDetailsUri = "https://test/fss/batch/83d08093-7a67-4b3a-b431-92ba42feaea0";
 
-            CloudEvent result =  _fssEventValidationAndMappingService.FssEventDataMapping(_fakeCustomEventGridEvent, correlationId);
+            CloudEvent result =  _fssEventValidationAndMappingService.FssEventDataMapping(_fakeCustomCloudEvent, correlationId);
 
             string data = Encoding.ASCII.GetString(result.Data);
             FssEventData cloudEventData = JsonConvert.DeserializeObject<FssEventData>(data);
@@ -86,9 +86,9 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         }
         #endregion
 
-        private static CustomEventGridEvent GetCustomEventGridEvent()
+        private static CustomCloudEvent GetCustomCloudEvent()
         {
-            return new CustomEventGridEvent()
+            return new CustomCloudEvent()
             {
                 Type = "uk.gov.UKHO.FileShareService.NewFilesPublished.v1",
                 Source = "https://files.admiralty.co.uk",

@@ -48,32 +48,32 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         {
             using var reader = new StreamReader(Request.Body, Encoding.UTF8);
             string jsonContent = await reader.ReadToEndAsync();
-            CustomEventGridEvent customEventGridEvent = JsonConvert.DeserializeObject<CustomEventGridEvent>(jsonContent);
+            CustomCloudEvent customCloudEvent = JsonConvert.DeserializeObject<CustomCloudEvent>(jsonContent);
 
-            _logger.LogInformation(EventIds.ENSWebhookRequestStart.ToEventId(), "External notification service webhook request started for event:{eventGridEvent} and _X-Correlation-ID:{correlationId}.", JsonConvert.SerializeObject(customEventGridEvent), GetCurrentCorrelationId());
+            _logger.LogInformation(EventIds.ENSWebhookRequestStart.ToEventId(), "External notification service webhook request started for event:{eventGridEvent} and _X-Correlation-ID:{correlationId}.", JsonConvert.SerializeObject(customCloudEvent), GetCurrentCorrelationId());
 
-            if (customEventGridEvent.Type != null)
+            if (customCloudEvent.Type != null)
             {
-                IEventProcessor processor = _eventProcessorFactory.GetProcessor(customEventGridEvent.Type);
+                IEventProcessor processor = _eventProcessorFactory.GetProcessor(customCloudEvent.Type);
 
                 if (processor != null)
                 {
-                    ExternalNotificationServiceProcessResponse result = await processor.Process(customEventGridEvent, GetCurrentCorrelationId());
+                    ExternalNotificationServiceProcessResponse result = await processor.Process(customCloudEvent, GetCurrentCorrelationId());
 
                     if (result.Errors != null && result.Errors.Count > 0)
                     {
-                        _logger.LogInformation(EventIds.ENSWebhookRequestInvalidEventPayload.ToEventId(), "External notification service webhook request failed due to an invalid event payload for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customEventGridEvent.Subject, result.BusinessUnit, GetCurrentCorrelationId());
-                        _logger.LogInformation(EventIds.ENSWebhookRequestCompleted.ToEventId(), "External notification service webhook request successfully completed for subject:{subject} and _X-Correlation-ID:{correlationId}.", customEventGridEvent.Subject, GetCurrentCorrelationId());
+                        _logger.LogInformation(EventIds.ENSWebhookRequestInvalidEventPayload.ToEventId(), "External notification service webhook request failed due to an invalid event payload for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customCloudEvent.Subject, result.BusinessUnit, GetCurrentCorrelationId());
+                        _logger.LogInformation(EventIds.ENSWebhookRequestCompleted.ToEventId(), "External notification service webhook request successfully completed for subject:{subject} and _X-Correlation-ID:{correlationId}.", customCloudEvent.Subject, GetCurrentCorrelationId());
                         
                         return BuildOkRequestErrorResponse(result.Errors);
                     }
                 }
                 else 
                 {
-                    _logger.LogInformation(EventIds.ENSWebhookRequestTypeNotMatch.ToEventId(), "External notification service webhook request failed due to receiving an event with a type that cannot be handled for subject:{subject}, type:{type} and _X-Correlation-ID:{correlationId}.", customEventGridEvent.Subject, customEventGridEvent.Type, GetCurrentCorrelationId());
+                    _logger.LogInformation(EventIds.ENSWebhookRequestTypeNotMatch.ToEventId(), "External notification service webhook request failed due to receiving an event with a type that cannot be handled for subject:{subject}, type:{type} and _X-Correlation-ID:{correlationId}.", customCloudEvent.Subject, customCloudEvent.Type, GetCurrentCorrelationId());
                 }
 
-                _logger.LogInformation(EventIds.ENSWebhookRequestCompleted.ToEventId(), "External notification service webhook request successfully completed for subject:{subject} and _X-Correlation-ID:{correlationId}.", customEventGridEvent.Subject, GetCurrentCorrelationId());
+                _logger.LogInformation(EventIds.ENSWebhookRequestCompleted.ToEventId(), "External notification service webhook request successfully completed for subject:{subject} and _X-Correlation-ID:{correlationId}.", customCloudEvent.Subject, GetCurrentCorrelationId());
             }
             else
             {

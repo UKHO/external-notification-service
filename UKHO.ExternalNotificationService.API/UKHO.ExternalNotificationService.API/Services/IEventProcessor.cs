@@ -9,6 +9,6 @@ namespace UKHO.ExternalNotificationService.API.Services
     {
         string EventType { get; }
 
-        Task<ExternalNotificationServiceProcessResponse> Process(CustomEventGridEvent customEventGridEvent, string correlationId, CancellationToken cancellationToken = default);
+        Task<ExternalNotificationServiceProcessResponse> Process(CustomCloudEvent customCloudEvent, string correlationId, CancellationToken cancellationToken = default);
     }
 }

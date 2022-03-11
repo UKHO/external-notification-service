@@ -103,7 +103,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             _controller.HttpContext.Request.Body = _fakeFssEventBodyData;
 
             A.CallTo(() => _fakeEventProcessorFactory.GetProcessor(A<string>.Ignored)).Returns(_fakeEventProcessor);
-            A.CallTo(() => _fakeEventProcessor.Process(A<CustomEventGridEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored))
+            A.CallTo(() => _fakeEventProcessor.Process(A<CustomCloudEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored))
                            .Returns(new ExternalNotificationServiceProcessResponse() { Errors = new List<Error>() { new Error() {Description ="test", Source="test" } },
                                                                                        StatusCode = HttpStatusCode.OK });
 
@@ -119,7 +119,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             _controller.HttpContext.Request.Body = _fakeFssEventBodyData;
 
             A.CallTo(() => _fakeEventProcessorFactory.GetProcessor(A<string>.Ignored)).Returns(_fakeEventProcessor);
-            A.CallTo(() => _fakeEventProcessor.Process(A<CustomEventGridEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored))
+            A.CallTo(() => _fakeEventProcessor.Process(A<CustomCloudEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored))
                             .Returns( new ExternalNotificationServiceProcessResponse() {StatusCode = HttpStatusCode.OK });
 
             var result = (StatusCodeResult)await _controller.Post();
