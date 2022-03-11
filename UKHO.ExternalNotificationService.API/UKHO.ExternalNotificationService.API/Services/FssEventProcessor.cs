@@ -22,7 +22,6 @@ namespace UKHO.ExternalNotificationService.API.Services
         private readonly IFssEventValidationAndMappingService _fssEventValidationAndMappingService;
         private readonly ILogger<FssEventProcessor> _logger;
         private List<Error> _errors;
-        private readonly IAzureEventGridDomainService _azureEventGridDomainService;
 
         public string EventType => EventProcessorTypes.FSS;
 
@@ -33,7 +32,6 @@ namespace UKHO.ExternalNotificationService.API.Services
         {
             _fssEventValidationAndMappingService = fssEventValidationAndMappingService;
             _logger = logger;
-            _azureEventGridDomainService = azureEventGridDomainService;
         }
 
         public async Task<ExternalNotificationServiceProcessResponse> Process(CustomCloudEvent customCloudEvent, string correlationId, CancellationToken cancellationToken = default)
