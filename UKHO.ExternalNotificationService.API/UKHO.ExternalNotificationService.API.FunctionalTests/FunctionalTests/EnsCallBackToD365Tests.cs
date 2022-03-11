@@ -33,7 +33,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         }
 
         [Test]
-        public async Task WhenICallTheEnsSubscriptionApiWithAValidSubscriptionId_ThenSuccessStatusResponseIsRetruns()
+        public async Task WhenICallTheEnsSubscriptionApiWithAValidSubscriptionId_ThenSuccessStatusResponseIsReturned()
         {
             //Get the subscriptionId from D365 payload            
             string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
@@ -65,7 +65,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             
         }
         [Test]
-        public async Task WhenICallTheEnsSubscriptionApiWithAInValidSubscriptionId_ThenNotFoundStatusResponseIsRetruns()
+        public async Task WhenICallTheEnsSubscriptionApiWithAInValidSubscriptionId_ThenNotFoundStatusResponseIsReturned()
         {
 
             //Get the subscriptionId from D365 payload 
@@ -83,7 +83,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         }
 
         [Test]
-        public async Task WhenICallTheEnsSubscriptionApiWithAnInvalidWebhookUrl_ThenSucessStatusResponseIsRetrunsWithFailedResponseDetails()
+        public async Task WhenICallTheEnsSubscriptionApiWithAnInvalidWebhookUrl_ThenSucessStatusResponseIsReturnedWithFailedResponseDetails()
         {
              D365Payload.InputParameters[0].Value.Attributes[9].Value = D365Payload.InputParameters[0].Value.Attributes[9].Value + "Failed";
            // Get the subscriptionId from D365 payload for first subcription id
@@ -150,7 +150,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         }
         [TestCase(500, TestName = "CallBack Stub Returns StausCode As Internal Server Error")]
         [TestCase(503, TestName = "CallBack Stub Returns StausCode As Service UnAvailable")]
-        public async Task WhenICallTheCallBackStubUrlToFailWithValidSubscriptionId_ThenValidResponseIsRetrunsWithRetryCount(int statusCode)
+        public async Task WhenICallTheCallBackStubUrlToFailWithValidSubscriptionId_ThenValidResponseIsReturnedWithRetryCount(int statusCode)
         {
             //Get the subscriptionId from D365 payload
 
