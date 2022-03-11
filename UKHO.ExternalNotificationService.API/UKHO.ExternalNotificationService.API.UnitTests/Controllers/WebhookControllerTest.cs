@@ -72,7 +72,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         [Test]
         public async Task WhenPostFssNullEventInRequest_ThenReceiveSuccessfulResponse()
         {
-            MemoryStream requestData = new();
+            string jsonString = JsonConvert.SerializeObject(new JObject());
+            var requestData = new MemoryStream(Encoding.UTF8.GetBytes(jsonString));
 
             _controller.ControllerContext.HttpContext = new DefaultHttpContext();
             _controller.HttpContext.Request.Body = requestData;

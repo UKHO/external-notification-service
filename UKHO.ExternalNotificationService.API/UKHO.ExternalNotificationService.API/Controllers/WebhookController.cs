@@ -52,7 +52,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
 
             _logger.LogInformation(EventIds.ENSWebhookRequestStart.ToEventId(), "External notification service webhook request started for event:{eventGridEvent} and _X-Correlation-ID:{correlationId}.", JsonConvert.SerializeObject(customEventGridEvent), GetCurrentCorrelationId());
 
-            if (customEventGridEvent != null)
+            if (customEventGridEvent.Type != null)
             {
                 IEventProcessor processor = _eventProcessorFactory.GetProcessor(customEventGridEvent.Type);
 
