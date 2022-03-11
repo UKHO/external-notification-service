@@ -27,6 +27,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         private IAzureEventGridDomainService _fakeAzureEventGridDomainService;
         private FssEventProcessor _fssEventProcessor;
         private CustomEventGridEvent _fakeCustomEventGridEvent;
+        private FssEventData _fakeFssEventData;
         public const string correlationId = "7b838400-7d73-4a64-982b-f426bddc1296";
 
         [SetUp]
@@ -36,6 +37,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             _fakeLogger = A.Fake<ILogger<FssEventProcessor>>();
             _fakeAzureEventGridDomainService = A.Fake<IAzureEventGridDomainService>();
             _fakeCustomEventGridEvent = GetCustomEventGridEvent();
+            _fakeFssEventData = GetFssEventData();
 
             _fssEventProcessor = new FssEventProcessor(_fakeFssEventValidationAndMappingService,
                                                        _fakeLogger, _fakeAzureEventGridDomainService);
@@ -69,17 +71,24 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [Test]
         public async Task WhenInvalidBusinessUnitInRequest_ThenReceiveSuccessfulResponse()
         {
-            FssEventData fssEventData = GetFssEventData();
-            fssEventData.BusinessUnit = "test";
-            _fakeCustomEventGridEvent.Data = fssEventData;
+            CancellationToken cancellationToken = CancellationToken.None;
+            CloudEvent cloudEvent = new("test", "test", new object());
+            _fakeFssEventData.BusinessUnit = "test";
 
-            A.CallTo(() => _fakeFssEventValidationAndMappingService.ValidateFssEventData(A<FssEventData>.Ignored))
-                            .Returns(new ValidationResult());
+            A.CallTo(() => _fakeFssEventValidationAndMappingService.ValidateFssEventData(A<FssEventData>.Ignored)).Returns(new ValidationResult());
+
+            A.CallTo(() => _fakeFssEventValidationAndMappingService.FssEventDataMapping(A<CustomEventGridEvent>.Ignored, A<string>.Ignored)).Returns(cloudEvent);
+
+            A.CallTo(() => _fakeAzureEventGridDomainService.JsonDeserialize<FssEventData>(A<object>.Ignored)).Returns(_fakeFssEventData);
+
+            A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(A<CloudEvent>.Ignored, A<string>.Ignored, cancellationToken));
 
             ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomEventGridEvent, correlationId);
 
+            Assert.AreEqual("Invalid business unit in an event.", result.Errors.Single().Description);
             Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
         }
+
 
         [Test]
         public async Task WhenValidPayloadInRequest_ThenReceiveSuccessfulResponse()
@@ -89,8 +98,9 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             A.CallTo(() => _fakeFssEventValidationAndMappingService.ValidateFssEventData(A<FssEventData>.Ignored)).Returns(new ValidationResult());
 
-            A.CallTo(() => _fakeFssEventValidationAndMappingService.FssEventDataMapping(A<CustomEventGridEvent>.Ignored, A<string>.Ignored))
-                            .Returns(cloudEvent);
+            A.CallTo(() => _fakeFssEventValidationAndMappingService.FssEventDataMapping(A<CustomEventGridEvent>.Ignored, A<string>.Ignored)).Returns(cloudEvent);
+
+            A.CallTo(() => _fakeAzureEventGridDomainService.JsonDeserialize<FssEventData>(A<object>.Ignored)).Returns(_fakeFssEventData);
 
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(A<CloudEvent>.Ignored, A<string>.Ignored, cancellationToken));
 

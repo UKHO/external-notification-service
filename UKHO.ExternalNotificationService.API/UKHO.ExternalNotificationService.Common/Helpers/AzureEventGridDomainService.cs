@@ -8,15 +8,16 @@ using Microsoft.Azure.Management.EventGrid.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Rest;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Logging;
 using UKHO.ExternalNotificationService.Common.Models.Request;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace UKHO.ExternalNotificationService.Common.Helpers
 {
@@ -68,6 +69,13 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             {
                 _logger.LogError(EventIds.ENSEventNotPublished.ToEventId(), "External notification service event published failed for subject:{subject} and _X-Correlation-ID:{correlationId} with error:{Message}.", cloudEvent.Subject, correlationId, ex.Message);
             }
+        }
+
+        public T JsonDeserialize<T>(object data)
+        {
+            string jsonString = JsonConvert.SerializeObject(data);
+            T obj = JsonConvert.DeserializeObject<T>(jsonString);
+            return obj;
         }
 
         private static async Task<EventGridManagementClient> GetEventGridClient(string subscriptionId, CancellationToken cancellationToken)
