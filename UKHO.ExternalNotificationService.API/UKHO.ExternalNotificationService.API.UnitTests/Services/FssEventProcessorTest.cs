@@ -81,7 +81,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             A.CallTo(() => _fakeAzureEventGridDomainService.JsonDeserialize<FssEventData>(A<object>.Ignored)).Returns(_fakeFssEventData);
 
-            A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(A<CloudEvent>.Ignored, A<string>.Ignored, cancellationToken));
+            A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(cloudEvent, correlationId, cancellationToken));
 
             ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomEventGridEvent, correlationId);
 
@@ -102,7 +102,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             A.CallTo(() => _fakeAzureEventGridDomainService.JsonDeserialize<FssEventData>(A<object>.Ignored)).Returns(_fakeFssEventData);
 
-            A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(A<CloudEvent>.Ignored, A<string>.Ignored, cancellationToken));
+            A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(cloudEvent, correlationId, cancellationToken));
 
             ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomEventGridEvent, correlationId);
 
