@@ -11,5 +11,7 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
         Task<EventSubscription> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionRequestMessage, CancellationToken cancellationToken);
 
         Task PublishEventAsync(CloudEvent cloudEvent, string correlationId, CancellationToken cancellationToken = default);
+
+        T JsonDeserialize<T>(object data);
     }
 }

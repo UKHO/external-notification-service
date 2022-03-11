@@ -37,8 +37,7 @@ namespace UKHO.ExternalNotificationService.API.Services
 
         public async Task<ExternalNotificationServiceProcessResponse> Process(CustomEventGridEvent customEventGridEvent, string correlationId, CancellationToken cancellationToken = default)
         {
-            string data =JsonConvert.SerializeObject(customEventGridEvent.Data);
-            FssEventData fssEventData = JsonConvert.DeserializeObject<FssEventData>(data);
+            FssEventData fssEventData = _azureEventGridDomainService.JsonDeserialize<FssEventData>(customEventGridEvent.Data);
 
             ValidationResult validationFssEventData = await _fssEventValidationAndMappingService.ValidateFssEventData(fssEventData);
 
@@ -55,6 +54,9 @@ namespace UKHO.ExternalNotificationService.API.Services
             }
             else
             {
+                _errors = new List<Error>{ new Error(){  Source = "businessUnit",
+                                                         Description = "Invalid business unit in an event."}};
+
                 _logger.LogInformation(EventIds.FssEventDataWithInvalidBusinessUnit.ToEventId(), "External notification service webhook request failed due to an invalid business unit for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customEventGridEvent.Subject, fssEventData.BusinessUnit, correlationId);
             }
 
