@@ -34,9 +34,9 @@ namespace UKHO.ExternalNotificationService.API.Services
             string data = JsonConvert.SerializeObject(customEventGridEvent.Data);
             FssEventData fssEventData = JsonConvert.DeserializeObject<FssEventData>(data);
 
-            fssEventData.Links.BatchStatus.Href = ReplceHostValueMethod(fssEventData.Links.BatchStatus.Href);
-            fssEventData.Links.BatchDetails.Href = ReplceHostValueMethod(fssEventData.Links.BatchDetails.Href);
-            fssEventData.Files.FirstOrDefault().Links.Get.Href = ReplceHostValueMethod(fssEventData.Files.FirstOrDefault().Links.Get.Href);
+            fssEventData.Links.BatchStatus.Href = ReplaceHostValueMethod(fssEventData.Links.BatchStatus.Href);
+            fssEventData.Links.BatchDetails.Href = ReplaceHostValueMethod(fssEventData.Links.BatchDetails.Href);
+            fssEventData.Files.FirstOrDefault().Links.Get.Href = ReplaceHostValueMethod(fssEventData.Files.FirstOrDefault().Links.Get.Href);
 
             CloudEvent cloudEvent = new(_fssDataMappingConfiguration.Value.Source,
                                         FssDataMappingValueConstant.Type,
@@ -52,7 +52,7 @@ namespace UKHO.ExternalNotificationService.API.Services
             return cloudEvent;
         }
 
-        private string ReplceHostValueMethod(string href)
+        private string ReplaceHostValueMethod(string href)
         {
             return href.Replace(_fssDataMappingConfiguration.Value.EventHostName, _fssDataMappingConfiguration.Value.PublishHostName);
         }

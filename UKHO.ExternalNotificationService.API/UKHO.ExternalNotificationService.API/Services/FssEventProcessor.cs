@@ -49,13 +49,13 @@ namespace UKHO.ExternalNotificationService.API.Services
             {
                 _logger.LogInformation(EventIds.FssEventDataMappingStart.ToEventId(), "File share service event data mapping started for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customEventGridEvent.Subject, fssEventData.BusinessUnit, correlationId);
                 CloudEvent cloudEvent = _fssEventValidationAndMappingService.FssEventDataMapping(customEventGridEvent, correlationId);
-                _logger.LogInformation(EventIds.FssEventDataMappingCompleted.ToEventId(), "File share service event data mapping completed for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customEventGridEvent.Subject, fssEventData.BusinessUnit, correlationId);
+                _logger.LogInformation(EventIds.FssEventDataMappingCompleted.ToEventId(), "File share service event data mapping successfully completed for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customEventGridEvent.Subject, fssEventData.BusinessUnit, correlationId);
 
                 await _azureEventGridDomainService.PublishEventAsync(cloudEvent, correlationId, cancellationToken);
             }
             else
             {
-                _logger.LogInformation(EventIds.FssEventDataWithInvalidBusinessUnit.ToEventId(), "External notification service webhook request is failed due to invalid business unit for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customEventGridEvent.Subject, fssEventData.BusinessUnit, correlationId);
+                _logger.LogInformation(EventIds.FssEventDataWithInvalidBusinessUnit.ToEventId(), "External notification service webhook request failed due to an invalid business unit for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customEventGridEvent.Subject, fssEventData.BusinessUnit, correlationId);
             }
 
             return ProcessResponse(fssEventData);

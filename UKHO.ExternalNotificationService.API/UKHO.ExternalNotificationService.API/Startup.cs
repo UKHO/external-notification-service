@@ -96,7 +96,7 @@ namespace UKHO.ExternalNotificationService.API
             services.AddScoped<IAzureWebJobHelper, AzureWebJobHelper>();
             services.AddSingleton<IWebJobAccessKeyProvider>(_ => new WebJobAccessKeyProvider(_configuration));
             services.AddSingleton<INotificationRepository, NotificationRepository>();
-            services.AddScoped<IWebhookService, WebhookService>();
+            services.AddScoped<IEventProcessorFactory, EventProcessorFactory>();
             services.AddScoped<IFssEventValidationAndMappingService, FssEventValidationAndMappingService>();
             services.AddScoped<IFssEventDataValidator, FssEventDataValidator>();
             services.AddScoped<IEventProcessor, FssEventProcessor>();

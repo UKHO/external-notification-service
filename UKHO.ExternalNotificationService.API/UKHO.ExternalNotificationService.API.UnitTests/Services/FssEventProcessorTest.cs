@@ -92,8 +92,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             A.CallTo(() => _fakeFssEventValidationAndMappingService.FssEventDataMapping(A<CustomEventGridEvent>.Ignored, A<string>.Ignored))
                             .Returns(cloudEvent);
 
-            A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(A<CloudEvent>.Ignored, A<string>.Ignored, cancellationToken))
-                            .Returns(true);
+            A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(A<CloudEvent>.Ignored, A<string>.Ignored, cancellationToken));
 
             ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomEventGridEvent, correlationId);
 

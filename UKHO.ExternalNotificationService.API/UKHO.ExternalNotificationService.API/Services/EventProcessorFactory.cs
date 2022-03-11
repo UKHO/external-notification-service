@@ -3,11 +3,11 @@ using System.Linq;
 
 namespace UKHO.ExternalNotificationService.API.Services
 {
-    public class WebhookService : IWebhookService
+    public class EventProcessorFactory : IEventProcessorFactory
     {
         private readonly IEnumerable<IEventProcessor> _eventProcessors;
 
-        public WebhookService(IEnumerable<IEventProcessor> eventProcessors)
+        public EventProcessorFactory(IEnumerable<IEventProcessor> eventProcessors)
         {
             _eventProcessors = eventProcessors;
         }

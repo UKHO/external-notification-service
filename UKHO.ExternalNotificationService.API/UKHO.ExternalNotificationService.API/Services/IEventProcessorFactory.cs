@@ -1,7 +1,7 @@
 ﻿
 namespace UKHO.ExternalNotificationService.API.Services
 {
-    public interface IWebhookService
+    public interface IEventProcessorFactory
     {
         IEventProcessor GetProcessor(string eventType);
     }

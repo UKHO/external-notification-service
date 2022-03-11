@@ -29,7 +29,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         private WebhookController _controller;
         private ILogger<WebhookController> _fakeLogger;
         private IHttpContextAccessor _fakeHttpContextAccessor;
-        private IWebhookService _fakeWebhookService;
+        private IEventProcessorFactory _fakeEventProcessorFactory;
         private IEventProcessor _fakeEventProcessor;
         private MemoryStream _fakeFssEventBodyData;
 
@@ -38,11 +38,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         {
             _fakeLogger = A.Fake<ILogger<WebhookController>>();
             _fakeHttpContextAccessor = A.Fake<IHttpContextAccessor>();
-            _fakeWebhookService = A.Fake<IWebhookService>();
+            _fakeEventProcessorFactory = A.Fake<IEventProcessorFactory>();
             _fakeEventProcessor = A.Fake<IEventProcessor>();
             _fakeFssEventBodyData = GetFssEventBodyData();
 
-            _controller = new WebhookController(_fakeHttpContextAccessor, _fakeLogger, _fakeWebhookService);
+            _controller = new WebhookController(_fakeHttpContextAccessor, _fakeLogger, _fakeEventProcessorFactory);
         }
 
         #region Options
@@ -88,7 +88,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             _controller.ControllerContext.HttpContext = new DefaultHttpContext();
             _controller.HttpContext.Request.Body = _fakeFssEventBodyData;
 
-            A.CallTo(() => _fakeWebhookService.GetProcessor(A<string>.Ignored)).Returns(null);
+            A.CallTo(() => _fakeEventProcessorFactory.GetProcessor(A<string>.Ignored)).Returns(null);
 
             var result = (StatusCodeResult)await _controller.Post();
 
@@ -101,7 +101,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             _controller.ControllerContext.HttpContext = new DefaultHttpContext();
             _controller.HttpContext.Request.Body = _fakeFssEventBodyData;
 
-            A.CallTo(() => _fakeWebhookService.GetProcessor(A<string>.Ignored)).Returns(_fakeEventProcessor);
+            A.CallTo(() => _fakeEventProcessorFactory.GetProcessor(A<string>.Ignored)).Returns(_fakeEventProcessor);
             A.CallTo(() => _fakeEventProcessor.Process(A<CustomEventGridEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored))
                            .Returns(new ExternalNotificationServiceProcessResponse() { Errors = new List<Error>() { new Error() {Description ="test", Source="test" } },
                                                                                        StatusCode = HttpStatusCode.OK });
@@ -117,7 +117,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             _controller.ControllerContext.HttpContext = new DefaultHttpContext();
             _controller.HttpContext.Request.Body = _fakeFssEventBodyData;
 
-            A.CallTo(() => _fakeWebhookService.GetProcessor(A<string>.Ignored)).Returns(_fakeEventProcessor);
+            A.CallTo(() => _fakeEventProcessorFactory.GetProcessor(A<string>.Ignored)).Returns(_fakeEventProcessor);
             A.CallTo(() => _fakeEventProcessor.Process(A<CustomEventGridEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored))
                             .Returns( new ExternalNotificationServiceProcessResponse() {StatusCode = HttpStatusCode.OK });
 

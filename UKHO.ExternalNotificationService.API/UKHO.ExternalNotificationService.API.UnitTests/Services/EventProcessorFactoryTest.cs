@@ -6,10 +6,10 @@ using UKHO.ExternalNotificationService.API.Services;
 namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 {
     [TestFixture]
-    public class WebhookServiceTest
+    public class EventProcessorFactoryTest
     {
         private List<IEventProcessor> _fakeEventProcessors;
-        private WebhookService _webhookService;
+        private EventProcessorFactory _eventProcessorFactory;
         private FssEventProcessor _fakeFssEventProcessor;
 
         [SetUp]
@@ -21,13 +21,13 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
                 _fakeFssEventProcessor
             };
 
-            _webhookService = new WebhookService(_fakeEventProcessors);
+            _eventProcessorFactory = new EventProcessorFactory(_fakeEventProcessors);
         }
 
         [Test]
         public void WhenInvalidValidEventTypeInRequest_ThenReturnNullValue()
         {
-            var result = _webhookService.GetProcessor("uk.gov.UKHO.NewFilesPublished.v1");
+            IEventProcessor result = _eventProcessorFactory.GetProcessor("uk.gov.UKHO.NewFilesPublished.v1");
 
             Assert.IsNull(result);
         }
@@ -35,7 +35,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [Test]
         public void WhenValidPayloadInRequest_ThenReturnIEventProcessorService()
         {
-            var result = _webhookService.GetProcessor("uk.gov.UKHO.FileShareService.NewFilesPublished.v1");
+            IEventProcessor result = _eventProcessorFactory.GetProcessor("uk.gov.UKHO.FileShareService.NewFilesPublished.v1");
 
             Assert.IsNotNull(result);
         }
