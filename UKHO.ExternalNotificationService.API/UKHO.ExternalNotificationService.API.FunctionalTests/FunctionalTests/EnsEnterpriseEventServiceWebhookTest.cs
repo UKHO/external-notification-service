@@ -90,6 +90,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         public async Task WhenICallTheEnsWebhookApiWithAValidJObjectBody_ThenOkStatusIsReturned()
         {
             string subject = "83d08093-7a67-4b3a-b431-92ba42feaea0";
+            string addHttps = "https://";
             JObject ensWebhookJson = GetFssEventBodyData();
 
             FssEventData publishDataFromFss = GetFssEventData();
@@ -124,19 +125,19 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             FssEventData fssEventData = JsonConvert.DeserializeObject<FssEventData>(data);
 
             // Validating Files Link Href
-            Uri filesLinkHrefReplace = new(TestConfig.FssPublishHostName + filesLinkHref.AbsolutePath);
+            Uri filesLinkHrefReplace = new(addHttps + TestConfig.FssPublishHostName + filesLinkHref.AbsolutePath);
             Assert.IsNotNull(filesLinkHrefReplace.ToString());
             Assert.AreEqual(filesLinkHrefReplace.ToString(), fssEventData.Files.FirstOrDefault().Links.Get.Href);
 
             // Validating Files Batch Status Href
             Uri filesBatchStatusHref = new(publishDataFromFss.Links.BatchStatus.Href);
-            Uri filesBatchStatusHrefReplace = new(TestConfig.FssPublishHostName + filesBatchStatusHref.AbsolutePath);
+            Uri filesBatchStatusHrefReplace = new(addHttps + TestConfig.FssPublishHostName + filesBatchStatusHref.AbsolutePath);
             Assert.IsNotNull(filesBatchStatusHrefReplace.ToString());
             Assert.AreEqual(filesBatchStatusHrefReplace.ToString(), fssEventData.Links.BatchStatus.Href);
 
             // Validating Files Batch Detail Href
             Uri filesBatchDetailHref = new(publishDataFromFss.Links.BatchDetails.Href);
-            Uri filesBatchDetailHrefReplace = new(TestConfig.FssPublishHostName + filesBatchDetailHref.AbsolutePath);
+            Uri filesBatchDetailHrefReplace = new(addHttps + TestConfig.FssPublishHostName + filesBatchDetailHref.AbsolutePath);
             Assert.IsNotNull(filesBatchDetailHrefReplace.ToString());
             Assert.AreEqual(filesBatchDetailHrefReplace.ToString(), fssEventData.Links.BatchDetails.Href);
         }
