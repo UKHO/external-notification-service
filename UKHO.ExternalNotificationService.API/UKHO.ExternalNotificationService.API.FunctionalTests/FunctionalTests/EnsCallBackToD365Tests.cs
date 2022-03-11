@@ -72,7 +72,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
 
-            string newSubscriptionId = subscriptionId.Remove(subscriptionId.Length - 2).Insert(subscriptionId.Length - 2, "AA");
+            string newSubscriptionId = subscriptionId.Remove(subscriptionId.Length - 10).Insert(subscriptionId.Length - 10, "AAAAAAAAAA");
 
             //Clear return status
             HttpResponseMessage apiStubResponse = await EnsApiClient.PostStubCommandToFailAsync(TestConfig.StubBaseUri, newSubscriptionId, null);
