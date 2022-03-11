@@ -100,7 +100,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             DateTime startTime = DateTime.UtcNow;
             while (DateTime.UtcNow - startTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
             {
-                await Task.Delay(1000);
+                await Task.Delay(10000);
             }
 
             Assert.AreEqual(200, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 200.");
