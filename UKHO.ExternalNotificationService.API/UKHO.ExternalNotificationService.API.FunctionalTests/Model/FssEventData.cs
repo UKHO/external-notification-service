@@ -10,6 +10,6 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Model
         public IEnumerable<Attribute> Attributes { get; set; }
         public string BusinessUnit { get; set; }
         public DateTime? BatchPublishedDate { get; set; }
-        public IEnumerable<File> Files { get; set; }
+        public IEnumerable<BatchFile> Files { get; set; }
     }
 }

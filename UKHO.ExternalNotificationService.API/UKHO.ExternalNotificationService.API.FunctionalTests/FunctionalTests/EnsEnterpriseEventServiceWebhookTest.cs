@@ -9,7 +9,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.FunctionalTests.Helper;
 using UKHO.ExternalNotificationService.API.FunctionalTests.Model;
-using File = UKHO.ExternalNotificationService.API.FunctionalTests.Model.File;
 
 namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 {
@@ -67,7 +66,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [Test]
         public async Task WhenICallTheEnsWebhookApiWithAValidJObjectBodyWithoutAuthToken_ThenAnUnauthorisedResponseIsReturned()
         {
-            var ensWebhookJson = GetFssEventBodyData();
+            JObject ensWebhookJson = GetFssEventBodyData();
 
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson);
 
@@ -79,7 +78,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         public async Task WhenICallTheEnsWebhookApiWithAValidJObjectBodyWitInvalidAuthToken_ThenAnUnauthorisedResponseIsReturned()
         {
             string invalidToken = EnsToken.Remove(EnsToken.Length - 4).Insert(EnsToken.Length - 4, "ABAA");
-            var ensWebhookJson = GetFssEventBodyData();
+            JObject ensWebhookJson = GetFssEventBodyData();
 
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, invalidToken);
 
@@ -91,7 +90,6 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         public async Task WhenICallTheEnsWebhookApiWithAValidJObjectBody_ThenOkStatusIsReturned()
         {
             string subject = "83d08093-7a67-4b3a-b431-92ba42feaea0";
-            string source = "https://admiralty.azure-api.net/";
             JObject ensWebhookJson = GetFssEventBodyData();
 
             FssEventData publishDataFromFss = GetFssEventData();
@@ -111,22 +109,34 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             DistributorRequest getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.statusCode.HasValue && x.statusCode.Value == HttpStatusCode.OK).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
             Assert.NotNull(getMatchingData);
             Assert.AreEqual(HttpStatusCode.OK, getMatchingData.statusCode);
+
+            // Validating Event Subject
             Assert.AreEqual(subject, getMatchingData.Subject);
             Assert.IsInstanceOf<CustomCloudEvent>(getMatchingData.CloudEvent);
-            Assert.AreEqual("fss-filesPublished-AvcsData", getMatchingData.CloudEvent.Source);
+
+            // Validating Event Source
+            Assert.AreEqual(TestConfig.FssSource, getMatchingData.CloudEvent.Source);
+
+            // Validating Event Type
             Assert.AreEqual("uk.co.admiralty.fss.filesPublished.v1", getMatchingData.CloudEvent.Type);
             Uri filesLinkHref = new(publishDataFromFss.Files.FirstOrDefault().Links.Get.Href);
             string data = JsonConvert.SerializeObject(getMatchingData.CloudEvent.Data);
             FssEventData fssEventData = JsonConvert.DeserializeObject<FssEventData>(data);
-            Uri filesLinkHrefReplace = new(source + "fss" + filesLinkHref.AbsolutePath);
+
+            // Validating Files Link Href
+            Uri filesLinkHrefReplace = new(TestConfig.FssPublishHostName + filesLinkHref.AbsolutePath);
             Assert.IsNotNull(filesLinkHrefReplace.ToString());
             Assert.AreEqual(filesLinkHrefReplace.ToString(), fssEventData.Files.FirstOrDefault().Links.Get.Href);
+
+            // Validating Files Batch Status Href
             Uri filesBatchStatusHref = new(publishDataFromFss.Links.BatchStatus.Href);
-            Uri filesBatchStatusHrefReplace = new(source + "fss" + filesBatchStatusHref.AbsolutePath);
+            Uri filesBatchStatusHrefReplace = new(TestConfig.FssPublishHostName + filesBatchStatusHref.AbsolutePath);
             Assert.IsNotNull(filesBatchStatusHrefReplace.ToString());
             Assert.AreEqual(filesBatchStatusHrefReplace.ToString(), fssEventData.Links.BatchStatus.Href);
+
+            // Validating Files Batch Detail Href
             Uri filesBatchDetailHref = new(publishDataFromFss.Links.BatchDetails.Href);
-            Uri filesBatchDetailHrefReplace = new(source + "fss" + filesBatchDetailHref.AbsolutePath);
+            Uri filesBatchDetailHrefReplace = new(TestConfig.FssPublishHostName + filesBatchDetailHref.AbsolutePath);
             Assert.IsNotNull(filesBatchDetailHrefReplace.ToString());
             Assert.AreEqual(filesBatchDetailHrefReplace.ToString(), fssEventData.Links.BatchDetails.Href);
         }
@@ -199,7 +209,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
                 Attributes = new List<Attribute> { },
                 BatchId = "83d08093-7a67-4b3a-b431-92ba42feaea0",
                 BatchPublishedDate = DateTime.UtcNow,
-                Files = new File[] {new() { MIMEType= "application/zip",
+                Files = new BatchFile[] {new() { MIMEType= "application/zip",
                                                                     FileName= "AVCS_S631-1_Update_Wk45_21_Only.zip",
                                                                     FileSize=99073923,
                                                                     Hash="yNpJTWFKhD3iasV8B/ePKw==",

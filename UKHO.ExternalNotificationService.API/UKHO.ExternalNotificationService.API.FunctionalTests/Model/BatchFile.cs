@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace UKHO.ExternalNotificationService.API.FunctionalTests.Model
 {
-    public class File
+    public class BatchFile
     {
         public string FileName { get; set; }
         public long FileSize { get; set; }
