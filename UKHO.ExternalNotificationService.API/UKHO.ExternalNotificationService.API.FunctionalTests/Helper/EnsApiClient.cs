@@ -83,7 +83,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             string uri =$"{stubBaseUri}/api/dynamics";
             if (subscriptionId!=null)
             {
-                uri += $"?subscriptionId={subscriptionId}";
+                uri += $"?subscription={subscriptionId}";
             }                     
             using var httpRequestMessage =new HttpRequestMessage(HttpMethod.Get, uri);
             return await s_httpClient.SendAsync(httpRequestMessage);
