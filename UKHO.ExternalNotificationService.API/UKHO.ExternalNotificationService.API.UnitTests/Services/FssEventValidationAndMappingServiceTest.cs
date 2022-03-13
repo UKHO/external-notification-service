@@ -70,8 +70,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [Test]
         public void WhenValidFssEventDataMappingRequest_ThenReturnCloudEvent()
         {
-            string correlationId = "7b838400-7d73-4a64-982b-f426bddc1296";
-            string batchDetailsUri = "https://test/fss/batch/83d08093-7a67-4b3a-b431-92ba42feaea0";
+            const string correlationId = "7b838400-7d73-4a64-982b-f426bddc1296";
+            const string batchDetailsUri = "https://test/fss/batch/83d08093-7a67-4b3a-b431-92ba42feaea0";
 
             CloudEvent result =  _fssEventValidationAndMappingService.FssEventDataMapping(_fakeCustomCloudEvent, correlationId);
 

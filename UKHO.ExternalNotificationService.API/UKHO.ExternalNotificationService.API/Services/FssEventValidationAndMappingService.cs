@@ -42,7 +42,7 @@ namespace UKHO.ExternalNotificationService.API.Services
                                         FssDataMappingValueConstant.Type,
                                         fssEventData)
             {
-                Time = DateTimeOffset.Parse(DateTimeExtensions.ToRfc3339String(DateTime.UtcNow)),
+                Time = DateTimeOffset.Parse(DateTime.UtcNow.ToRfc3339String()),
                 Id = Guid.NewGuid().ToString(),
                 Subject = customCloudEvent.Subject,
                 DataContentType = customCloudEvent.DataContentType,

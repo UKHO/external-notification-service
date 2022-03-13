@@ -89,8 +89,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [Test]
         public async Task WhenICallTheEnsWebhookApiWithAValidJObjectBody_ThenOkStatusIsReturned()
         {
-            string subject = "83d08093-7a67-4b3a-b431-92ba42feaea0";
-            string addHttps = "https://";
+            const string subject = "83d08093-7a67-4b3a-b431-92ba42feaea0";
+            const string addHttps = "https://";
             JObject ensWebhookJson = GetFssEventBodyData();
 
             FssEventData publishDataFromFss = GetFssEventData();
@@ -104,8 +104,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             }
 
             Assert.AreEqual(200, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 200.");
-            HttpResponseMessage stubresponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
-            string customerJsonString = await stubresponse.Content.ReadAsStringAsync();
+            HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
+            string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
             IEnumerable<DistributorRequest> deserialized = JsonConvert.DeserializeObject<IEnumerable<DistributorRequest>>(custome‌​rJsonString);
             DistributorRequest getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.statusCode.HasValue && x.statusCode.Value == HttpStatusCode.OK).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
             Assert.NotNull(getMatchingData);
@@ -143,7 +143,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         }
 
         [TestCase("83d08093-7a67-4b3a-b431-92ba42feaea0", HttpStatusCode.InternalServerError, TestName = "InternalServerError for WebHook")]
-        [TestCase("83d08093-7a67-4b3a-b431-92ba42feaea0", HttpStatusCode.BadRequest, TestName = "Badrequest for WebHook")]
+        [TestCase("83d08093-7a67-4b3a-b431-92ba42feaea0", HttpStatusCode.BadRequest, TestName = "BadRequest for WebHook")]
         [TestCase("83d08093-7a67-4b3a-b431-92ba42feaea0", HttpStatusCode.NotFound, TestName = "NotFound for WebHook")]
         public async Task WhenICallTheEnsWebhookApiWithAValidJObjectBody_ThenNonOkStatusIsReturned(string subject, HttpStatusCode statusCode)
         {
@@ -159,9 +159,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             }
 
             Assert.AreEqual(200, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 200.");
-            HttpResponseMessage stubresponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
+            HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
             // Get the response
-            string customerJsonString = await stubresponse.Content.ReadAsStringAsync();
+            string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
             IEnumerable<DistributorRequest> deserialized = JsonConvert.DeserializeObject<IEnumerable<DistributorRequest>>(custome‌​rJsonString);
             IEnumerable<DistributorRequest> getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.statusCode.HasValue && x.statusCode.Value == statusCode)
                 .OrderByDescending(a => a.TimeStamp);

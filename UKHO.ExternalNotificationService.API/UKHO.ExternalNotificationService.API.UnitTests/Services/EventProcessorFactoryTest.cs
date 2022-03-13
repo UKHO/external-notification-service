@@ -25,7 +25,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         }
 
         [Test]
-        public void WhenInvalidValidEventTypeInRequest_ThenReturnNullValue()
+        public void WhenInvalidEventTypeInRequest_ThenReturnNullValue()
         {
             IEventProcessor result = _eventProcessorFactory.GetProcessor("uk.gov.UKHO.NewFilesPublished.v1");
 

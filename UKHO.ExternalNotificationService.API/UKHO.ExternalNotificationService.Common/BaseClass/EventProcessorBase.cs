@@ -16,8 +16,7 @@ namespace UKHO.ExternalNotificationService.Common.BaseClass
 
         public T GetEventData<T>(object data)
         {
-            T obj = _azureEventGridDomainService.JsonDeserialize<T>(data);
-            return obj;
+            return _azureEventGridDomainService.JsonDeserialize<T>(data);
         }
 
         public async Task PublishEventAsync(CloudEvent cloudEvent, string correlationId, CancellationToken cancellationToken = default)

@@ -56,7 +56,7 @@ namespace UKHO.ExternalNotificationService.API.Services
                 _errors = new List<Error>{ new Error(){  Source = "businessUnit",
                                                          Description = "Invalid business unit in an event."}};
 
-                _logger.LogInformation(EventIds.FssEventDataWithInvalidBusinessUnit.ToEventId(), "External notification service webhook request failed due to an invalid business unit for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customCloudEvent.Subject, fssEventData.BusinessUnit, correlationId);
+                _logger.LogInformation(EventIds.FssEventDataWithInvalidBusinessUnit.ToEventId(), "File share service event data mapping failed due to an invalid business unit for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customCloudEvent.Subject, fssEventData.BusinessUnit, correlationId);
             }
 
             return ProcessResponse(fssEventData);

@@ -18,7 +18,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.BaseClass
         private IAzureEventGridDomainService _fakeAzureEventGridDomainService;
         private EventProcessorBase _eventProcessorBase;
         private FssEventData _fssEventData;
-        public const string correlationId = "7b838400-7d73-4a64-982b-f426bddc1296";
+        public const string CorrelationId = "7b838400-7d73-4a64-982b-f426bddc1296";
 
         [SetUp]
         public void Setup()
@@ -47,9 +47,9 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.BaseClass
             CancellationToken cancellationToken = CancellationToken.None;
             CloudEvent cloudEvent = new("test", "test", new object());
 
-            A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(cloudEvent, correlationId, cancellationToken));
+            A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken));
 
-            var response = _eventProcessorBase.PublishEventAsync(cloudEvent, correlationId, cancellationToken);
+            var response = _eventProcessorBase.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken);
 
             Assert.IsTrue(response.IsCompleted);
         }
