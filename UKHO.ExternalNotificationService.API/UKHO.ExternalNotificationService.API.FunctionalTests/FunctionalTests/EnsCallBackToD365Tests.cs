@@ -100,7 +100,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             {
                 await Task.Delay(1000);
             }
-            
+
+            //added delay to complete webjob
+            await Task.Delay(30000);
 
             HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, subscriptionId);
             Assert.AreEqual(200, (int)callBackResponse.StatusCode, $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected 200.");
