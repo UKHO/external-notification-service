@@ -152,7 +152,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
         }
         
-        [TestCase(500, TestName = "CallBack Stub Returns StausCode As Internal Server Error")]
+        [TestCase(500, TestName = "CallBack Stub Returns StatusCode As Internal Server Error")]
         public async Task WhenICallTheCallBackStubUrlToFailWithValidSubscriptionId_ThenValidResponseIsReturnedWithRetryCount(int statusCode)
         {
             //Get the subscriptionId from D365 payload
