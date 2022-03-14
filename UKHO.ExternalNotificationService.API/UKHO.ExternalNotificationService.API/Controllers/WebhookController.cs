@@ -62,7 +62,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
 
                     if (result.Errors != null && result.Errors.Count > 0)
                     {
-                        _logger.LogInformation(EventIds.ENSWebhookRequestInvalidEventPayload.ToEventId(), "External notification service webhook request failed due to an invalid event payload for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customCloudEvent.Subject, result.BusinessUnit, GetCurrentCorrelationId());
+                        _logger.LogInformation(EventIds.ENSWebhookRequestInvalidEventPayload.ToEventId(), "External notification service webhook request has an invalid payload for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customCloudEvent.Subject, result.BusinessUnit, GetCurrentCorrelationId());
                         _logger.LogInformation(EventIds.ENSWebhookRequestCompleted.ToEventId(), "External notification service webhook request successfully completed for subject:{subject} and _X-Correlation-ID:{correlationId}.", customCloudEvent.Subject, GetCurrentCorrelationId());
                         
                         return BuildOkRequestErrorResponse(result.Errors);
@@ -77,7 +77,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
             }
             else
             {
-                _logger.LogInformation(EventIds.ENSWebhookRequestWithNullEventPayload.ToEventId(), "External notification service webhook request failed due to the event payload being null for _X-Correlation-ID:{correlationId}.", GetCurrentCorrelationId());
+                _logger.LogInformation(EventIds.ENSWebhookRequestWithNullEventPayload.ToEventId(), "External notification service webhook request has an invalid payload being null for _X-Correlation-ID:{correlationId}.", GetCurrentCorrelationId());
                 _logger.LogInformation(EventIds.ENSWebhookRequestCompleted.ToEventId(), "External notification service webhook request successfully completed for _X-Correlation-ID:{correlationId}.", GetCurrentCorrelationId());
             }
 

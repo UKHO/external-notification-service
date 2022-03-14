@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,11 +14,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Controllers;
 using UKHO.ExternalNotificationService.API.Services;
-using UKHO.ExternalNotificationService.Common.Models.EventModel;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 using UKHO.ExternalNotificationService.Common.Models.Response;
-using Attribute = UKHO.ExternalNotificationService.Common.Models.EventModel.Attribute;
-using File = UKHO.ExternalNotificationService.Common.Models.EventModel.File;
+using UKHO.ExternalNotificationService.Common.UnitTests.BaseClass;
 
 namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 {
@@ -36,11 +33,14 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         [SetUp]
         public void Setup()
         {
+            string jsonString = JsonConvert.SerializeObject(CustomCloudEventBase.GetCustomCloudEvent());
+            MemoryStream FssEventBodyData = new(Encoding.UTF8.GetBytes(jsonString));
+            _fakeFssEventBodyData = FssEventBodyData;
+
             _fakeLogger = A.Fake<ILogger<WebhookController>>();
             _fakeHttpContextAccessor = A.Fake<IHttpContextAccessor>();
             _fakeEventProcessorFactory = A.Fake<IEventProcessorFactory>();
             _fakeEventProcessor = A.Fake<IEventProcessor>();
-            _fakeFssEventBodyData = GetFssEventBodyData();
 
             _controller = new WebhookController(_fakeHttpContextAccessor, _fakeLogger, _fakeEventProcessorFactory);
         }
@@ -127,54 +127,5 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             Assert.AreEqual(StatusCodes.Status200OK, result.StatusCode);
         }
         #endregion
-
-        private static MemoryStream GetFssEventBodyData()
-        {
-            var ensWebhookJson = JObject.Parse(@"{""Type"":""uk.gov.UKHO.FileShareService.NewFilesPublished.v1""}");
-            ensWebhookJson["Source"] = "https://files.admiralty.co.uk";
-            ensWebhookJson["Id"] = "49c67cca-9cca-4655-a38e-583693af55ea";
-            ensWebhookJson["Subject"] = "83d08093-7a67-4b3a-b431-92ba42feaea0";
-            ensWebhookJson["DataContentType"] = "application/json";
-            ensWebhookJson["Data"] = JObject.FromObject(GetFssEventData());
-
-            string jsonString = JsonConvert.SerializeObject(ensWebhookJson);
-            var requestData = new MemoryStream(Encoding.UTF8.GetBytes(jsonString));
-            return requestData;
-        }
-
-        private static FssEventData GetFssEventData()
-        {
-            Link linkBatchDetails = new()
-            {
-                Href = @"https://files.admiralty.co.uk/batch/83d08093-7a67-4b3a-b431-92ba42feaea0"
-            };
-            Link linkBatchStatus = new()
-            {
-                Href = @"https://files.admiralty.co.uk/batch/83d08093-7a67-4b3a-b431-92ba42feaea0/status"
-            };
-
-            FileLinks fileLinks = new()
-            {
-               Get  = new Link() { Href = @"https://files.admiralty.co.uk/batch/83d08093-7a67-4b3a-b431-92ba42feaea0/files/AVCS_S631-1_Update_Wk45_21_Only.zip" },
-            };
-
-            BatchLinks links = new()
-            {
-                BatchDetails = linkBatchDetails,
-                BatchStatus = linkBatchStatus
-            };
-
-            return new FssEventData() { Links = links,
-                                        BusinessUnit = "AVCSData",
-                                        Attributes = new List<Attribute> {},
-                                        BatchId = "83d08093-7a67-4b3a-b431-92ba42feaea0",
-                                        BatchPublishedDate = DateTime.UtcNow,
-                                        Files = new File[] {new() { MIMEType= "application/zip",
-                                                                    FileName= "AVCS_S631-1_Update_Wk45_21_Only.zip",
-                                                                    FileSize=99073923,
-                                                                    Hash="yNpJTWFKhD3iasV8B/ePKw==",
-                                                                    Attributes=new List<Attribute> {},
-                                                                    Links = fileLinks   }}};
-        }
     }
 }

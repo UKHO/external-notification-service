@@ -1,12 +1,9 @@
 ﻿using FluentValidation.TestHelper;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using UKHO.ExternalNotificationService.API.Validation;
 using UKHO.ExternalNotificationService.Common.Models.EventModel;
-using Attribute = UKHO.ExternalNotificationService.Common.Models.EventModel.Attribute;
-using File = UKHO.ExternalNotificationService.Common.Models.EventModel.File;
+using UKHO.ExternalNotificationService.Common.UnitTests.BaseClass;
 
 namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
 {
@@ -19,7 +16,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         [SetUp]
         public void Setup()
         {
-            _fakeFssEventData = GetFssEventData();
+            _fakeFssEventData = CustomCloudEventBase.GetFssEventData();
             _fssEventDataValidator = new FssEventDataValidator();
         }
 
@@ -214,43 +211,5 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             Assert.AreEqual(0, result.Errors.Count);
         }
         #endregion
-
-        private static FssEventData GetFssEventData()
-        {
-            Link linkBatchDetails = new()
-            {
-                Href = @"https://files.admiralty.co.uk/batch/83d08093-7a67-4b3a-b431-92ba42feaea0"
-            };
-            Link linkBatchStatus = new()
-            {
-                Href = @"https://files.admiralty.co.uk/batch/83d08093-7a67-4b3a-b431-92ba42feaea0/status"
-            };
-
-            FileLinks fileLinks = new()
-            {
-                Get = new Link() { Href = @"https://files.admiralty.co.uk/batch/83d08093-7a67-4b3a-b431-92ba42feaea0/files/AVCS_S631-1_Update_Wk45_21_Only.zip" },
-            };
-
-            BatchLinks links = new()
-            {
-                BatchDetails = linkBatchDetails,
-                BatchStatus = linkBatchStatus
-            };
-
-            return new FssEventData()
-            {
-                Links = links,
-                BusinessUnit = "AVCSData",
-                Attributes = new List<Attribute> { },
-                BatchId = "83d08093-7a67-4b3a-b431-92ba42feaea0",
-                BatchPublishedDate = DateTime.UtcNow,
-                Files = new File[] {new() { MIMEType= "application/zip",
-                                                                    FileName= "AVCS_S631-1_Update_Wk45_21_Only.zip",
-                                                                    FileSize=99073923,
-                                                                    Hash="yNpJTWFKhD3iasV8B/ePKw==",
-                                                                    Attributes=new List<Attribute> {},
-                                                                    Links = fileLinks   }}
-            };
-        }
     }
 }
