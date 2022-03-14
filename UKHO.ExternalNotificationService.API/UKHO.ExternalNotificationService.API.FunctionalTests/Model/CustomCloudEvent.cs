@@ -1,8 +1,8 @@
 ﻿using Microsoft.Azure.EventGrid.Models;
 
-namespace UKHO.ExternalNotificationService.Common.Models.Request
+namespace UKHO.ExternalNotificationService.API.FunctionalTests.Model
 {
-    public class CustomEventGridEvent : EventGridEvent
+    public class CustomCloudEvent : EventGridEvent
     {
         public string Type { get; set; }
         public string Time { get; set; }

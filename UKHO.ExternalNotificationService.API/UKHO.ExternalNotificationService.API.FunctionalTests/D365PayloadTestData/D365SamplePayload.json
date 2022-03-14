@@ -71,7 +71,7 @@
                     },
                     {
                         "key": "ukho_webhookurl",
-                        "value": "https://dummy.address"
+                        "value": "https://ens-dev-webapp-stub.azurewebsites.net/webhook/notification"
                     },
                     {
                         "key": "ukho_externalnotificationid",
@@ -135,7 +135,7 @@
                     },
                     {
                         "key": "ukho_subscriptiontype",
-                        "value": "ADDS Data Pipeline"
+                        "value": "File Share Service - AVCS Data"
                     },
                     {
                         "key": "ukho_subscriptionstate",
@@ -187,7 +187,7 @@
                     "Attributes": [
                         {
                             "key": "ukho_webhookurl",
-                            "value": "https://dummy.address"
+                            "value": "https://ens-dev-webapp-stub.azurewebsites.net/webhook/notification"
                         },
                         {
                             "key": "ukho_distributorapplicationname",

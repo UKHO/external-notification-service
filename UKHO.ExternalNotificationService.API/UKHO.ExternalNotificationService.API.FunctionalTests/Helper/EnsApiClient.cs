@@ -52,7 +52,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         {
             string uri = $"{_apiHost}/api/webhook";
             string payloadJson = JsonConvert.SerializeObject(request);
-            using var httpRequestMessage = GetHttpRequestMessage(accessToken, uri, payloadJson);
+            using HttpRequestMessage httpRequestMessage = GetHttpRequestMessage(accessToken, uri, payloadJson);
 
             return await s_httpClient.SendAsync(httpRequestMessage);
         }

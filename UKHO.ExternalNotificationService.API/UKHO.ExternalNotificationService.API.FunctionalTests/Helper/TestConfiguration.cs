@@ -16,6 +16,10 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         public string D365ClientId { get; set; }
         public string D365Secret { get; set; }
         public string ClientId { get; set; }
+        public string StubApiUri { get; set; }
+        public string FssSource { get; set; }
+        public string FssEventHostName { get; set; }
+        public string FssPublishHostName { get; set; }
 
         public TestConfiguration()
         {
@@ -34,6 +38,10 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             D365ClientId = ConfigurationRoot.GetSection("D365AuthConfiguration:ClientId").Value;
             D365Secret = ConfigurationRoot.GetSection("D365AuthConfiguration:ClientSecret").Value;
             ClientId = ConfigurationRoot.GetSection("EnsAuthConfiguration:ClientId").Value;
+            StubApiUri = ConfigurationRoot.GetSection("StubConfiguration:BaseUri").Value;
+            FssSource = ConfigurationRoot.GetSection("FssDataMappingConfiguration:Source").Value;
+            FssEventHostName = ConfigurationRoot.GetSection("FssDataMappingConfiguration:EventHostName").Value;
+            FssPublishHostName = ConfigurationRoot.GetSection("FssDataMappingConfiguration:PublishHostName").Value;
         }
     }
 }
