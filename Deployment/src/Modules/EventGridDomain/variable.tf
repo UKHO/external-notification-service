@@ -18,6 +18,6 @@ variable "webapp_principal_id" {
   type  = string
 }
 
-variable "storage_account_id" {
+variable "eventhub_authorization_rule_id" {
   type = string
 }

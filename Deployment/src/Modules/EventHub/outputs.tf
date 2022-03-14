@@ -11,3 +11,7 @@ output "logstash_primary_connection_string" {
 output "entity_path" {
   value = azurerm_eventhub.eventhub.name
 }
+
+output "eventgrid_authorization_id" {
+  value = azurerm_eventhub_authorization_rule.eventgrid.id
+}
