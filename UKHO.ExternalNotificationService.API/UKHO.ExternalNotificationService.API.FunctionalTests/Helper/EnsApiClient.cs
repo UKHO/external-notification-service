@@ -74,7 +74,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         /// <summary>
         /// Get Ens Call back status
         /// </summary>
-        /// <param name="d365ApiStubUrl"></param>
+        /// <param name="stubBaseUri"></param>
         /// <param name="subscriptionId"></param>
         /// <returns></returns>
 
