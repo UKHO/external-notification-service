@@ -87,12 +87,12 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
              D365Payload.InputParameters[0].Value.Attributes[9].Value = D365Payload.InputParameters[0].Value.Attributes[9].Value + "Failed";
            // Get the subscriptionId from D365 payload for first subcription id
             string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
-
+            DateTime requestTime = DateTime.UtcNow;
             //Clear return status
             HttpResponseMessage apiStubResponse = await EnsApiClient.PostStubCommandToFailAsync(TestConfig.StubBaseUri, subscriptionId, null);
             Assert.AreEqual(200, (int)apiStubResponse.StatusCode, $"Incorrect status code {apiStubResponse.StatusCode}  is  returned, instead of the expected 200.");
 
-            DateTime requestTime = DateTime.UtcNow;
+            
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
             Assert.AreEqual(202, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
 
@@ -100,11 +100,13 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             {
                 await Task.Delay(1000);
             }
+            
 
             HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, subscriptionId);
             Assert.AreEqual(200, (int)callBackResponse.StatusCode, $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected 200.");
 
             IEnumerable<EnsCallbackResponseModel> callBackResponseBody = JsonConvert.DeserializeObject<IEnumerable<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result);
+
 
             EnsCallbackResponseModel callBackResponseLatest = callBackResponseBody.Where(x => x.TimeStamp >= requestTime).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
 
@@ -117,6 +119,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         
         [TestCase(404, TestName = "CallBack Stub Returns StausCode As Not Found")]
         [TestCase(400, TestName = "CallBack Stub Returns StausCode As Bad Request")]
+        [TestCase(503, TestName = "CallBack Stub Returns StausCode As Service UnAvailable")]
         public async Task WhenICallTheCallBackStubUrlToFailWithValidSubscriptionId_ThenValidResponseIsReturned(int statusCode)
         {
             //Get the subscriptionId from D365 payload
@@ -147,8 +150,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
 
         }
+        
         [TestCase(500, TestName = "CallBack Stub Returns StausCode As Internal Server Error")]
-        [TestCase(503, TestName = "CallBack Stub Returns StausCode As Service UnAvailable")]
         public async Task WhenICallTheCallBackStubUrlToFailWithValidSubscriptionId_ThenValidResponseIsReturnedWithRetryCount(int statusCode)
         {
             //Get the subscriptionId from D365 payload
