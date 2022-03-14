@@ -18,10 +18,14 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         private StubApiClient StubApiClient { get; set; }
         private TestConfiguration TestConfig { get; set; }
         private string EnsToken { get; set; }
+        private JObject FssEventBody { get; set; }
+        private FssEventData FssEventData { get; set; }
 
         [SetUp]
         public async Task SetupAsync()
         {
+            FssEventBody = FssEventDataBase.GetFssEventBodyData();
+            FssEventData = FssEventDataBase.GetFssEventData();
             TestConfig = new TestConfiguration();
             StubApiClient = new(TestConfig.StubApiUri);
             EnsApiClient = new EnsApiClient(TestConfig.EnsApiBaseUrl);
@@ -66,7 +70,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [Test]
         public async Task WhenICallTheEnsWebhookApiWithAValidJObjectBodyWithoutAuthToken_ThenAnUnauthorisedResponseIsReturned()
         {
-            JObject ensWebhookJson = GetFssEventBodyData();
+            JObject ensWebhookJson = FssEventBody;
 
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson);
 
@@ -78,7 +82,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         public async Task WhenICallTheEnsWebhookApiWithAValidJObjectBodyWitInvalidAuthToken_ThenAnUnauthorisedResponseIsReturned()
         {
             string invalidToken = EnsToken.Remove(EnsToken.Length - 4).Insert(EnsToken.Length - 4, "ABAA");
-            JObject ensWebhookJson = GetFssEventBodyData();
+            JObject ensWebhookJson = FssEventBody;
 
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, invalidToken);
 
@@ -91,9 +95,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         {
             const string subject = "83d08093-7a67-4b3a-b431-92ba42feaea0";
             const string addHttps = "https://";
-            JObject ensWebhookJson = GetFssEventBodyData();
+            JObject ensWebhookJson = FssEventBody;
 
-            FssEventData publishDataFromFss = GetFssEventData();
+            FssEventData publishDataFromFss = FssEventData;
             await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, null);
 
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
@@ -147,7 +151,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [TestCase("83d08093-7a67-4b3a-b431-92ba42feaea0", HttpStatusCode.NotFound, TestName = "NotFound for WebHook")]
         public async Task WhenICallTheEnsWebhookApiWithAValidJObjectBody_ThenNonOkStatusIsReturned(string subject, HttpStatusCode statusCode)
         {
-            JObject ensWebhookJson = GetFssEventBodyData();
+            JObject ensWebhookJson = FssEventBody;
             await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, statusCode);
 
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
@@ -167,56 +171,6 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
                 .OrderByDescending(a => a.TimeStamp);
             Assert.NotNull(getMatchingData);
             Assert.Greater(getMatchingData.Count(), 1);
-        }
-
-        private static JObject GetFssEventBodyData()
-        {
-            var ensWebhookJson = JObject.Parse(@"{""Type"":""uk.gov.UKHO.FileShareService.NewFilesPublished.v1""}");
-            ensWebhookJson["Source"] = "https://files.admiralty.co.uk";
-            ensWebhookJson["Id"] = "49c67cca-9cca-4655-a38e-583693af55ea";
-            ensWebhookJson["Subject"] = "83d08093-7a67-4b3a-b431-92ba42feaea0";
-            ensWebhookJson["DataContentType"] = "application/json";
-            ensWebhookJson["Data"] = JObject.FromObject(GetFssEventData());
-
-            return ensWebhookJson;
-        }
-
-        private static FssEventData GetFssEventData()
-        {
-            Link linkBatchDetails = new()
-            {
-                Href = @"https://files.admiralty.co.uk/batch/83d08093-7a67-4b3a-b431-92ba42feaea0"
-            };
-            Link linkBatchStatus = new()
-            {
-                Href = @"https://files.admiralty.co.uk/batch/83d08093-7a67-4b3a-b431-92ba42feaea0/status"
-            };
-
-            FileLinks fileLinks = new()
-            {
-                Get = new Link() { Href = @"https://files.admiralty.co.uk/batch/83d08093-7a67-4b3a-b431-92ba42feaea0/files/AVCS_S631-1_Update_Wk45_21_Only.zip" },
-            };
-
-            BatchLinks links = new()
-            {
-                BatchDetails = linkBatchDetails,
-                BatchStatus = linkBatchStatus
-            };
-
-            return new FssEventData()
-            {
-                Links = links,
-                BusinessUnit = "AVCSData",
-                Attributes = new List<Attribute> { },
-                BatchId = "83d08093-7a67-4b3a-b431-92ba42feaea0",
-                BatchPublishedDate = DateTime.UtcNow,
-                Files = new BatchFile[] {new() { MIMEType= "application/zip",
-                                                                    FileName= "AVCS_S631-1_Update_Wk45_21_Only.zip",
-                                                                    FileSize=99073923,
-                                                                    Hash="yNpJTWFKhD3iasV8B/ePKw==",
-                                                                    Attributes=new List<Attribute> {},
-                                                                    Links = fileLinks   }}
-            };
         }
     }
 }
