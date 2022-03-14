@@ -187,7 +187,7 @@
                     "Attributes": [
                         {
                             "key": "ukho_webhookurl",
-                            "value": "https://dummy.address"
+                            "value": "https://ens-dev-webapp-stub.azurewebsites.net/webhook/notification"
                         },
                         {
                             "key": "ukho_distributorapplicationname",

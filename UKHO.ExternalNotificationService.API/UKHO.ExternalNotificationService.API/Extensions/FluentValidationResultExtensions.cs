@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using FluentValidation.Results;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text.Json;
-using FluentValidation.Results;
 using UKHO.ExternalNotificationService.Common.Models.Response;
 
 namespace UKHO.ExternalNotificationService.API.Extensions
@@ -12,6 +12,11 @@ namespace UKHO.ExternalNotificationService.API.Extensions
         public static bool HasBadRequestErrors(this ValidationResult validationResult, out List<Error> badRequestErrors)
         {
             return HasErrors(validationResult, HttpStatusCode.BadRequest, out badRequestErrors);
+        }
+
+        public static bool HasOkErrors(this ValidationResult validationResult, out List<Error> badRequestErrors)
+        {
+            return HasErrors(validationResult, HttpStatusCode.OK, out badRequestErrors);
         }
 
         private static bool HasErrors(this ValidationResult validationResult, HttpStatusCode errorCode, out List<Error> errors)
