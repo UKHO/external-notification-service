@@ -96,13 +96,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
             Assert.AreEqual(202, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
 
-            while (DateTime.UtcNow - requestTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
-            {
-                await Task.Delay(1000);
-            }
-
-            //added delay to complete webjob
-            await Task.Delay(30000);
+           //added delay to complete webjob
+            await Task.Delay(60000);
 
             HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, subscriptionId);
             Assert.AreEqual(200, (int)callBackResponse.StatusCode, $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected 200.");
