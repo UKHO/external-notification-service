@@ -24,10 +24,10 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [SetUp]
         public async Task SetupAsync()
         {
-            FssEventBody = FssEventDataBase.GetFssEventBodyData();
-            FssEventData = FssEventDataBase.GetFssEventData();
             TestConfig = new TestConfiguration();
             StubApiClient = new(TestConfig.StubApiUri);
+            FssEventBody = FssEventDataBase.GetFssEventBodyData(TestConfig);
+            FssEventData = FssEventDataBase.GetFssEventData();
             EnsApiClient = new EnsApiClient(TestConfig.EnsApiBaseUrl);
             ADAuthTokenProvider adAuthTokenProvider = new();
             EnsToken = await adAuthTokenProvider.GetEnsAuthToken();
