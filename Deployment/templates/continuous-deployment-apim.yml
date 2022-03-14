@@ -45,3 +45,6 @@ steps:
       TF_VAR_client_credentials_scope: "$(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)/.default"
       TF_VAR_ens_app_client_id: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
       TF_VAR_d365_product_daily_quota_limit: $(d365productquotalimit)
+      TF_VAR_d365_product_call_limit: $(d365productcalllimit)
+      TF_VAR_d365_product_call_renewal_period: $(d365productrenewalperiod)
+      TF_VAR_ees_product_call_limit: $(eesproductcalllimit)
