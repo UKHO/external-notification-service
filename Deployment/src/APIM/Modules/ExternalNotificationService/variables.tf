@@ -49,3 +49,18 @@ variable "ens_app_client_id" {
 locals {
   formatted_env = lower(replace(trimspace(var.env), " ", "-"))  
 }
+
+variable "d365_product_call_limit" {
+  type = number
+  default = 5
+}
+
+variable "d365_product_call_renewal_period" {
+  type = number
+  default = 5
+}
+
+variable "ees_product_call_limit" {
+  type = number
+  default = 20
+}
