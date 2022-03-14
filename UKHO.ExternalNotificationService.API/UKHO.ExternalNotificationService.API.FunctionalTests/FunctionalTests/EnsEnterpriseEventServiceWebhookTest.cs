@@ -27,7 +27,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             TestConfig = new TestConfiguration();
             StubApiClient = new(TestConfig.StubApiUri);
             FssEventBody = FssEventDataBase.GetFssEventBodyData(TestConfig);
-            FssEventData = FssEventDataBase.GetFssEventData();
+            FssEventData = FssEventDataBase.GetFssEventData(TestConfig);
             EnsApiClient = new EnsApiClient(TestConfig.EnsApiBaseUrl);
             ADAuthTokenProvider adAuthTokenProvider = new();
             EnsToken = await adAuthTokenProvider.GetEnsAuthToken();
