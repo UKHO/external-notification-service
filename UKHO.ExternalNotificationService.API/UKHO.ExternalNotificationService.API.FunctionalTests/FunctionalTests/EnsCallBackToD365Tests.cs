@@ -118,8 +118,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
         
         [TestCase(404, TestName = "CallBack Stub Returns StausCode As Not Found")]
-        [TestCase(400, TestName = "CallBack Stub Returns StausCode As Bad Request")]
-        [TestCase(503, TestName = "CallBack Stub Returns StausCode As Service UnAvailable")]
+        [TestCase(400, TestName = "CallBack Stub Returns StausCode As Bad Request")]       
         public async Task WhenICallTheCallBackStubUrlToFailWithValidSubscriptionId_ThenValidResponseIsReturned(int statusCode)
         {
             //Get the subscriptionId from D365 payload
