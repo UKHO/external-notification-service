@@ -85,8 +85,10 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         public async Task WhenICallTheEnsSubscriptionApiWithAnInvalidWebhookUrl_ThenSuccessStatusResponseIsReturnedWithFailedResponseDetails()
         {
              D365Payload.InputParameters[0].Value.Attributes[9].Value = D365Payload.InputParameters[0].Value.Attributes[9].Value + "Failed";
-            // Get the subscriptionId from D365 payload for first subscription id            
-            string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
+            // Get the new subscriptionId for D365 payload
+            string subscriptionId = Guid.NewGuid().ToString();
+            D365Payload.PostEntityImages[0].Value.Attributes[0].Value = subscriptionId;            
+            D365Payload.InputParameters[0].Value.Attributes[10].Value = subscriptionId;
             DateTime requestTime = DateTime.UtcNow;
             //Clear return status
             HttpResponseMessage apiStubResponse = await EnsApiClient.PostStubCommandToFailAsync(TestConfig.StubBaseUri, subscriptionId, null);
