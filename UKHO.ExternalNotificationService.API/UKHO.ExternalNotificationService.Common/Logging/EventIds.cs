@@ -191,7 +191,15 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900047 -  External notification service event publish is failed.
         /// </summary>
-        ENSEventNotPublished = 900047
+        ENSEventNotPublished = 900047,
+        /// <summary>
+        /// 900048 -  Sales catalogue service event data mapping started.
+        /// </summary>
+        ScsEventDataMappingStart = 900048,
+        /// <summary>
+        /// 900049 -  Sales catalogue service event data mapping Completed.
+        /// </summary>
+        ScsEventDataMappingCompleted = 900049,
     }
 
     public static class EventIdExtensions
