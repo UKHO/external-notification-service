@@ -61,7 +61,7 @@ steps:
 
   - task: AzureWebApp@1
     displayName: "Azure App Deploy: ens-$(Environment)-stub-webapp"
-    condition: and(succeeded(), eq(variables['Environment.Name'], 'Ens-Dev','Ens-QA'))
+    condition: and(succeeded(), eq(variables['Environment.Name'], 'Ens-Dev'))
     inputs:
       azureSubscription: "${{ parameters.AzureSubscription }}"
       appType: webApp
