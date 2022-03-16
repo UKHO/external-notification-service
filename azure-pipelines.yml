@@ -519,7 +519,7 @@ stages:
                     azureSubscription: "External Notification Service QA - A.008.02"
                     scriptType: 'pscore'
                     scriptLocation: 'scriptPath'
-                    scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
+                    scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_qa_stub_url.ps1'
                     arguments: '-d365qauri $(D365ApiQaUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
 
   - stage: Livedeploy
