@@ -438,7 +438,6 @@ stages:
 
   - stage: QAdeploy
     displayName: QAdeploy (inc terraform, webapp deploy)
-    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
       - deployment: QADeployApp
         displayName: QA - deploy terraform and dotnet App
@@ -512,6 +511,16 @@ stages:
                       !**/obj/**
                     testRunTitle: "QA-AutomationTests"
                     workingDirectory: '$(Build.SourcesDirectory)/functionaltests'
+
+                - task: AzureCLI@2
+                  displayName: "Swap QA Stub URL"
+                  condition: and(succeeded(), eq(variables['Environment.Name'], 'Ens-QA'))
+                  inputs:
+                    azureSubscription: "External Notification Service QA - A.008.02"
+                    scriptType: 'pscore'
+                    scriptLocation: 'scriptPath'
+                    scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
+                    arguments: '-d365qauri $(D365ApiQaUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
 
   - stage: Livedeploy
     

@@ -27,7 +27,7 @@ steps:
 
   - bash: echo "##vso[task.setvariable variable=D365CallbackConfiguration.D365ApiUri]$(D365ApiStubUri)"
     name: SetStubURL
-    condition: and(succeeded(), eq(variables['Environment.Name'], 'Ens-Dev'))
+    condition: and(succeeded(), eq(variables['Environment.Name'], 'Ens-Dev','Ens-QA'))
 
   - task: FileTransform@1
     displayName: "File Transform: WebAppSettings"
@@ -61,7 +61,7 @@ steps:
 
   - task: AzureWebApp@1
     displayName: "Azure App Deploy: ens-$(Environment)-stub-webapp"
-    condition: and(succeeded(), eq(variables['Environment.Name'], 'Ens-Dev'))
+    condition: and(succeeded(), eq(variables['Environment.Name'], 'Ens-Dev','Ens-QA'))
     inputs:
       azureSubscription: "${{ parameters.AzureSubscription }}"
       appType: webApp
