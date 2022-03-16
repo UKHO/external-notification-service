@@ -85,7 +85,7 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         CreateOrUpdateAzureEventDomainTopicCompleted = 900020,
         /// <summary>
-        /// 900021 -  Create Subscription Provising request succeeded for webhook event
+        /// 900021 -  Create Subscription Provisioning request succeeded for webhook event
         /// </summary>
         CreateSubscriptionRequestSuccess = 900021,
         /// <summary>
@@ -191,7 +191,31 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900047 -  External notification service event publish is failed.
         /// </summary>
-        ENSEventNotPublished = 900047
+        ENSEventNotPublished = 900047,
+        /// <summary>
+        /// 900048 - Delete Event Subscription Provisioning request succeeded for webhook event
+        /// </summary>
+        DeleteSubscriptionRequestSuccess = 900048,
+        /// <summary>
+        /// 900049 -  Delete Event Subscription Provisioning request error in case of exception for webhook event
+        /// </summary>
+        DeleteSubscriptionRequestError = 900049,
+        /// <summary>
+        /// 900050 - Delete Subscription Service event started
+        /// </summary>
+        DeleteSubscriptionServiceStart = 900050,
+        /// <summary>
+        /// 900051 - Delete Subscription Service event completed
+        /// </summary>
+        DeleteSubscriptionServiceCompleted = 900051,
+        /// <summary>
+        /// 900052 -  Delete Azure Event Domain Topic Start
+        /// </summary>
+        DeleteAzureEventDomainTopicStart = 900052,
+        /// <summary>
+        /// 900053 -  Delete Azure Event Domain Topic Completed
+        /// </summary>
+        DeleteAzureEventDomainTopicCompleted = 900053
     }
 
     public static class EventIdExtensions

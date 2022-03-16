@@ -9,6 +9,7 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
     public interface IAzureEventGridDomainService
     {
         Task<EventSubscription> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionRequestMessage, CancellationToken cancellationToken);
+        Task DeleteSubscription(SubscriptionRequestMessage subscriptionRequestMessage, CancellationToken cancellationToken);
 
         Task PublishEventAsync(CloudEvent cloudEvent, string correlationId, CancellationToken cancellationToken = default);
 
