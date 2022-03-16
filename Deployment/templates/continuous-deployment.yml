@@ -26,8 +26,13 @@ steps:
       ARM_SUBSCRIPTION_ID: $(TERRAFORM-SUBSCRIPTION-ID)
 
   - bash: echo "##vso[task.setvariable variable=D365CallbackConfiguration.D365ApiUri]$(D365ApiStubUri)"
-    name: SetStubURL
-    condition: and(succeeded(), or(eq(variables['Environment.Name'], 'Ens-Dev'),eq(variables['Environment.Name'], 'Ens-QA')))
+    name: SetDevStubURL
+    condition: and(succeeded(), eq(variables['Environment.Name'], 'Ens-Dev'))
+
+  - bash: echo "##vso[task.setvariable variable=D365CallbackConfiguration.D365ApiUri]$(D365ApiQaStubUri)"
+    name: SetQAStubURL
+    condition: and(succeeded(), eq(variables['Environment.Name'], 'Ens-QA'))
+
 
   - task: FileTransform@1
     displayName: "File Transform: WebAppSettings"
