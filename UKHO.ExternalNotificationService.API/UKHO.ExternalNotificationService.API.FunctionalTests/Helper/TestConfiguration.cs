@@ -20,6 +20,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         public string FssSource { get; set; }
         public string FssEventHostName { get; set; }
         public string FssPublishHostName { get; set; }
+        public int SucceededStatusCode { get; set; }
+        public int FailedStatusCode { get; set; }
+        public string StubBaseUri { get; set; }
 
         public TestConfiguration()
         {
@@ -42,6 +45,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             FssSource = ConfigurationRoot.GetSection("FssDataMappingConfiguration:Source").Value;
             FssEventHostName = ConfigurationRoot.GetSection("FssDataMappingConfiguration:EventHostName").Value;
             FssPublishHostName = ConfigurationRoot.GetSection("FssDataMappingConfiguration:PublishHostName").Value;
+            SucceededStatusCode=int.Parse(ConfigurationRoot.GetSection("D365CallbackConfiguration:SucceededStatusCode").Value);
+            FailedStatusCode= int.Parse(ConfigurationRoot.GetSection("D365CallbackConfiguration:FailedStatusCode").Value);
+            StubBaseUri = ConfigurationRoot.GetSection("StubConfiguration:BaseUri").Value;
         }
     }
 }
