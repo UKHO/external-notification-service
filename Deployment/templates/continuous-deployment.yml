@@ -27,7 +27,7 @@ steps:
 
   - bash: echo "##vso[task.setvariable variable=D365CallbackConfiguration.D365ApiUri]$(D365ApiStubUri)"
     name: SetStubURL
-    condition: and(succeeded(), eq(variables['Environment.Name'], 'Ens-Dev','Ens-QA'))
+    condition: and(succeeded(), or(eq(variables['Environment.Name'], 'Ens-Dev'),eq(variables['Environment.Name'], 'Ens-QA)))
 
   - task: FileTransform@1
     displayName: "File Transform: WebAppSettings"
