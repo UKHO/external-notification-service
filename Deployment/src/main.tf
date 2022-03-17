@@ -46,7 +46,6 @@ module "webapp_service" {
     "WEBSITE_ENABLE_SYNC_UPDATE_SITE"                          = "true"
     "EventGridDomainConfiguration:ResourceGroup"               = azurerm_resource_group.rg.name
     "EventGridDomainConfiguration:EventGridDomainName"         = module.eventgriddomain.event_grid_domain_name
-    "D365CallbackConfiguration:D365ApiUri"                     = "https://${module.webapp_service.default_site_hostname_ens_stub}/api/dynamics"
   }
   app_settings_stub = {
     "ASPNETCORE_ENVIRONMENT"                               = local.env_name
@@ -80,6 +79,7 @@ module "key_vault" {
         "SubscriptionStorageConfiguration--StorageAccountKey"       = module.storage.primary_access_key
         "SubscriptionStorageConfiguration--StorageConnectionString" = module.storage.connection_string
         "AzureWebJobsStorage"                                       = module.storage.connection_string
+        "EventGridDomainConfiguration--EventGridDomainAccessKey"    = module.eventgriddomain.event_grid_domain_primary_access_key
       })
   tags                = local.tags
 }
@@ -91,6 +91,7 @@ module "eventgriddomain" {
   location            = azurerm_resource_group.rg.location
   tags                = local.tags
   webapp_principal_id = module.webapp_service.web_app_object_id
+  storage_account_id  = module.storage.id
 }
 
 module "storage" {

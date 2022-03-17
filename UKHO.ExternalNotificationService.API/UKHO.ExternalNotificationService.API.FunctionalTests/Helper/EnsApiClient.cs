@@ -52,7 +52,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         {
             string uri = $"{_apiHost}/api/webhook";
             string payloadJson = JsonConvert.SerializeObject(request);
-            using var httpRequestMessage = GetHttpRequestMessage(accessToken, uri, payloadJson);
+            using HttpRequestMessage httpRequestMessage = GetHttpRequestMessage(accessToken, uri, payloadJson);
 
             return await s_httpClient.SendAsync(httpRequestMessage);
         }
@@ -70,5 +70,41 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
 
             return httpRequestMessage;
         }
+
+        /// <summary>
+        /// Get Ens Call back status
+        /// </summary>
+        /// <param name="stubBaseUri"></param>
+        /// <param name="subscriptionId"></param>
+        /// <returns></returns>
+
+        public static async Task<HttpResponseMessage> GetEnsCallBackAsync(string stubBaseUri, string subscriptionId=null)
+        {
+            string uri =$"{stubBaseUri}/api/dynamics";
+            if (subscriptionId!=null)
+            {
+                uri += $"?subscriptionid={subscriptionId}";
+            }                     
+            using var httpRequestMessage =new HttpRequestMessage(HttpMethod.Get, uri);
+            return await s_httpClient.SendAsync(httpRequestMessage);
+        }
+
+
+        public static async Task<HttpResponseMessage> PostStubCommandToFailAsync(string stubBaseUri, string subscriptionId,int? statusCode)
+        {
+             string uri = $"{stubBaseUri}/api/dynamics/command-to-return-status/{subscriptionId}";
+
+            if (statusCode!=null)
+            {
+                uri += $"/{statusCode}";
+            }
+                       
+            using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
+            return await s_httpClient.SendAsync(httpRequestMessage);
+        }
+
+       
+
+
     }
 }

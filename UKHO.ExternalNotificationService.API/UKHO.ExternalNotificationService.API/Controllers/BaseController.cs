@@ -42,6 +42,16 @@ namespace UKHO.ExternalNotificationService.API.Controllers
             });
         }
 
+        protected IActionResult BuildOkRequestErrorResponse(List<Error> errors)
+        {
+            LogError(EventIds.OK.ToEventId(), errors, "Ok", GetCurrentCorrelationId());
+
+            return new OkObjectResult(new ErrorDescription
+            {
+                Errors = errors,
+                CorrelationId = GetCurrentCorrelationId()
+            });
+        }
         protected IActionResult BuildInternalServerErrorResponse()
         {
             LogError(EventIds.InternalServerError.ToEventId(), null, "InternalServerError", GetCurrentCorrelationId());

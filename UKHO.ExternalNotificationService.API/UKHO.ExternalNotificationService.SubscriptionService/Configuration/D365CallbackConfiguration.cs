@@ -11,6 +11,8 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Configuration
 
         public int SucceededStatusCode { get; set; }
 
+        public int FailedStatusCode { get; set; }        
+
         public int TimeOutInMins { get; set; }
 
         public int RetryCount { get; set; }

@@ -19,3 +19,7 @@ output event_storage_queue {
 output dead_letter_storage_container {
   value     = azurerm_storage_container.ens_storage_container.name
 }
+
+output id {
+  value     = azurerm_storage_account.ens_storage.id
+}
