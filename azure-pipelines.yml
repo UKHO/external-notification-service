@@ -429,6 +429,7 @@ stages:
 
                 - task: AzureCLI@2
                   displayName: "Swap Stub URL"
+                  condition: always()
                   inputs:
                     azureSubscription: "External Notification Service Dev - A.008.02"
                     scriptType: 'pscore'
@@ -515,7 +516,7 @@ stages:
 
                 - task: AzureCLI@2
                   displayName: "Swap QA Stub URL"
-                  condition: and(succeeded(), eq(variables['Environment.Name'], 'Ens-QA'))
+                  condition: always()
                   inputs:
                     azureSubscription: "External Notification Service QA - A.008.02"
                     scriptType: 'pscore'
