@@ -85,8 +85,10 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         public async Task WhenICallTheEnsSubscriptionApiWithAnInvalidWebhookUrl_ThenSuccessStatusResponseIsReturnedWithFailedResponseDetails()
         {
              D365Payload.InputParameters[0].Value.Attributes[9].Value = D365Payload.InputParameters[0].Value.Attributes[9].Value + "Failed";
-            // Get the subscriptionId from D365 payload for first subscription id            
-            string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
+            // Get the new subscriptionId for D365 payload
+            string subscriptionId = Guid.NewGuid().ToString();
+            D365Payload.PostEntityImages[0].Value.Attributes[0].Value = subscriptionId;            
+            D365Payload.InputParameters[0].Value.Attributes[10].Value = subscriptionId;
             DateTime requestTime = DateTime.UtcNow;
             //Clear return status
             HttpResponseMessage apiStubResponse = await EnsApiClient.PostStubCommandToFailAsync(TestConfig.StubBaseUri, subscriptionId, null);
@@ -100,9 +102,6 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             {
                 await Task.Delay(1000);
             }
-
-            //added delay to complete webjob
-            await Task.Delay(30000);
 
             HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, subscriptionId);
             Assert.AreEqual(200, (int)callBackResponse.StatusCode, $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected 200.");
