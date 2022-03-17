@@ -12,7 +12,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             var ensWebhookJson = JObject.Parse(@"{""Type"":""uk.gov.UKHO.catalogue.productUpdated.v1""}");
             ensWebhookJson["Source"] = $"{testConfigure.ScsSource}";
             ensWebhookJson["Id"] = "0d2f05f5-3691-476a-9011-6007bcaa9cbf";
-            ensWebhookJson["Subject"] = "NO4F1615";
+            ensWebhookJson["Subject"] = "NO4F1617";
             ensWebhookJson["DataContentType"] = "application/json";
             ensWebhookJson["Data"] = JObject.FromObject(GetScsEventData());
 
@@ -24,7 +24,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             return new ScsEventData()
             {
                 ProductType = "ENC S57",
-                ProductName = "NO4F1615",
+                ProductName = "NO4F1617",
                 EditionNumber = 15,
                 UpdateNumber = 18,
                 BoundingBox = new ProductBoundingBox {

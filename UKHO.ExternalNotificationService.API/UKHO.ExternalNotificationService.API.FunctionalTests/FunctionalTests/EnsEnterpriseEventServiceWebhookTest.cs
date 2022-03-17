@@ -105,8 +105,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             FssEventData publishDataFromFss = FssEventData;
             await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, null);
 
-            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
             DateTime startTime = DateTime.UtcNow;
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
+           
             while (DateTime.UtcNow - startTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
             {
                 await Task.Delay(10000);
@@ -159,8 +160,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             JObject ensWebhookJson = FssEventBody;
             await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, statusCode);
 
-            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
             DateTime startTime = DateTime.UtcNow;
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
 
             while (DateTime.UtcNow - startTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
             {
@@ -181,14 +182,14 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [Test]
         public async Task WhenICallTheEnsWebhookApiWithAValidScsJObjectBody_ThenOkStatusIsReturned()
         {
-            const string subject = "83d08093-7a67-4b3a-b431-92ba42feaea0";
+            const string subject = "NO4F1617";
             JObject ensWebhookJson = ScsEventBody;
 
-            ScsEventData publishDataFromScs = ScsEventData;
             await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, null);
 
-            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
             DateTime startTime = DateTime.UtcNow;
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
+            
             while (DateTime.UtcNow - startTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
             {
                 await Task.Delay(10000);
@@ -211,22 +212,20 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             // Validating Event Type
             Assert.AreEqual("uk.co.admiralty.avcsData.contentPublished.v1", getMatchingData.CloudEvent.Type);
-            string data = JsonConvert.SerializeObject(getMatchingData.CloudEvent.Data);
-            ScsEventData scsEventData = JsonConvert.DeserializeObject<ScsEventData>(data);
 
         }
 
-        [TestCase("83d08093-7a67-4b3a-b431-92ba42feaea0", HttpStatusCode.InternalServerError, TestName = "InternalServerError for WebHook")]
-        [TestCase("83d08093-7a67-4b3a-b431-92ba42feaea0", HttpStatusCode.BadRequest, TestName = "BadRequest for WebHook")]
-        [TestCase("83d08093-7a67-4b3a-b431-92ba42feaea0", HttpStatusCode.NotFound, TestName = "NotFound for WebHook")]
+        [TestCase("NO4F1617", HttpStatusCode.InternalServerError, TestName = "InternalServerError for WebHook")]
+        [TestCase("NO4F1617", HttpStatusCode.BadRequest, TestName = "BadRequest for WebHook")]
+        [TestCase("NO4F1617", HttpStatusCode.NotFound, TestName = "NotFound for WebHook")]
         public async Task WhenICallTheEnsWebhookApiWithAValidScsJObjectBody_ThenNonOkStatusIsReturned(string subject, HttpStatusCode statusCode)
         {
             JObject ensWebhookJson = ScsEventBody;
             await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, statusCode);
 
-            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
             DateTime startTime = DateTime.UtcNow;
-
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
+            
             while (DateTime.UtcNow - startTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
             {
                 await Task.Delay(10000);
