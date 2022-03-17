@@ -438,6 +438,7 @@ stages:
 
   - stage: QAdeploy
     displayName: QAdeploy (inc terraform, webapp deploy)
+    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
       - deployment: QADeployApp
         displayName: QA - deploy terraform and dotnet App
@@ -523,7 +524,6 @@ stages:
                     arguments: '-d365qauri $(D365ApiQaUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
 
   - stage: Livedeploy
-    
     displayName: Livedeploy (inc terraform, webapp deploy)
     condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
