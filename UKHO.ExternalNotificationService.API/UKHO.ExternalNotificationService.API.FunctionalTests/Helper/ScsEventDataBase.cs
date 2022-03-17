@@ -27,20 +27,15 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
                 ProductName = "NO4F1615",
                 EditionNumber = 15,
                 UpdateNumber = 18,
-                BoundingBox =
-                {
-                    NorthLimit =63.25,
-                    SouthLimit =63,
-                    EastLimit =8,
-                    WestLimit= 7.75
-
-                },
-                Status =
-                {
-                    StatusDate = DateTime.UtcNow,
-                    IsNewCell = false,
-                    StatusName = "Update",
-                },
+                BoundingBox = new ProductBoundingBox {
+                                    NorthLimit =63.25,
+                                    SouthLimit =63,
+                                    EastLimit =8,
+                                    WestLimit= 7.75 },
+                Status = new ProductUpdateStatus {
+                                    StatusDate = DateTime.UtcNow,
+                                    IsNewCell = false,
+                                    StatusName = "Update" },
                 IsPermitUpdateRequired = false,
                 FileSize = 1584,
             };
