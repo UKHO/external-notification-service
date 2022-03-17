@@ -10,16 +10,16 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         public static JObject GetScsEventBodyData(TestConfiguration testConfigure)
         {
             var ensWebhookJson = JObject.Parse(@"{""Type"":""uk.gov.UKHO.catalogue.productUpdated.v1""}");
-            ensWebhookJson["Source"] = $"https://{testConfigure.ScsEventHostName}";
+            ensWebhookJson["Source"] = $"{testConfigure.ScsSource}";
             ensWebhookJson["Id"] = "0d2f05f5-3691-476a-9011-6007bcaa9cbf";
             ensWebhookJson["Subject"] = "NO4F1615";
             ensWebhookJson["DataContentType"] = "application/json";
-            ensWebhookJson["Data"] = JObject.FromObject(GetScsEventData(testConfigure));
+            ensWebhookJson["Data"] = JObject.FromObject(GetScsEventData());
 
             return ensWebhookJson;
         }
 
-        public static ScsEventData GetScsEventData(TestConfiguration testConfigure)
+        public static ScsEventData GetScsEventData()
         {
             return new ScsEventData()
             {

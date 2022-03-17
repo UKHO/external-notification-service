@@ -23,7 +23,6 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         public int SucceededStatusCode { get; set; }
         public int FailedStatusCode { get; set; }
         public string StubBaseUri { get; set; }
-        public string ScsEventHostName { get; set; }
         public string ScsSource { get; set; }
 
         public TestConfiguration()
@@ -50,7 +49,6 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             SucceededStatusCode=int.Parse(ConfigurationRoot.GetSection("D365CallbackConfiguration:SucceededStatusCode").Value);
             FailedStatusCode= int.Parse(ConfigurationRoot.GetSection("D365CallbackConfiguration:FailedStatusCode").Value);
             StubBaseUri = ConfigurationRoot.GetSection("StubConfiguration:BaseUri").Value;
-            ScsEventHostName = ConfigurationRoot.GetSection("ScsDataMappingConfiguration:EventHostName").Value;
             ScsSource = ConfigurationRoot.GetSection("ScsDataMappingConfiguration:Source").Value;
         }
     }

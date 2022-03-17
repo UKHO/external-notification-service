@@ -31,11 +31,11 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             StubApiClient = new(TestConfig.StubApiUri);
             FssEventBody = FssEventDataBase.GetFssEventBodyData(TestConfig);
             FssEventData = FssEventDataBase.GetFssEventData(TestConfig);
+            ScsEventBody = ScsEventDataBase.GetScsEventBodyData(TestConfig);
+            ScsEventData = ScsEventDataBase.GetScsEventData();
             EnsApiClient = new EnsApiClient(TestConfig.EnsApiBaseUrl);
             ADAuthTokenProvider adAuthTokenProvider = new();
             EnsToken = await adAuthTokenProvider.GetEnsAuthToken();
-            ScsEventBody = ScsEventDataBase.GetScsEventBodyData(TestConfig);
-            ScsEventData = ScsEventDataBase.GetScsEventData(TestConfig);
         }
 
         [Test]
