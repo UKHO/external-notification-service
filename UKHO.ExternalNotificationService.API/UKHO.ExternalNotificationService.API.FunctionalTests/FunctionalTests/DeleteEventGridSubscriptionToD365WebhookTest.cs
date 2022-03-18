@@ -34,7 +34,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         }
 
         [Test]
-        public async Task WhenICallTheEnsSubscriptionApiWithAnInvalidWebhookUrl_ThenSuccessStatusResponseIsReturnedWithFailedResponseDetails()
+        public async Task WhenICallTheEnsSubscriptionApiWithStatusInActive_ThenSubscriptionHasbeenDeleted()
         {
             // Set the new subscriptionId for D365 payload
             string subscriptionId = Guid.NewGuid().ToString();
