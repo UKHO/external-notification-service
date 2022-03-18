@@ -42,23 +42,27 @@ namespace UKHO.ExternalNotificationService.API.Validation
                 .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("BoundingBox cannot be blank or null.");
 
-            RuleFor(v => v.BoundingBox.NorthLimit).NotEmpty().NotNull().GreaterThanOrEqualTo(0)
+            RuleFor(v => v.BoundingBox.NorthLimit).NotEmpty().NotNull().GreaterThanOrEqualTo(0).OverridePropertyName("NorthLimit")
                 .Must(ru => ru >= 0)
+                .When(x => x.BoundingBox != null)
                 .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("NorthLimit cannot be less than zero or blank.");
 
-            RuleFor(v => v.BoundingBox.SouthLimit).NotEmpty().NotNull().GreaterThanOrEqualTo(0)
+            RuleFor(v => v.BoundingBox.SouthLimit).NotEmpty().NotNull().GreaterThanOrEqualTo(0).OverridePropertyName("SouthLimit")
                 .Must(ru => ru >= 0)
+                .When(x => x.BoundingBox != null)
                 .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("SouthLimit cannot be less than zero or blank.");
 
-            RuleFor(v => v.BoundingBox.EastLimit).NotEmpty().NotNull().GreaterThanOrEqualTo(0)
+            RuleFor(v => v.BoundingBox.EastLimit).NotEmpty().NotNull().GreaterThanOrEqualTo(0).OverridePropertyName("EastLimit")
                 .Must(ru => ru >= 0)
+                .When(x => x.BoundingBox != null)
                 .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("EastLimit cannot be less than zero or blank.");
 
-            RuleFor(v => v.BoundingBox.WestLimit).NotEmpty().NotNull().GreaterThanOrEqualTo(0)
+            RuleFor(v => v.BoundingBox.WestLimit).NotEmpty().NotNull().GreaterThanOrEqualTo(0).OverridePropertyName("WestLimit")
                 .Must(ru => ru >= 0)
+                .When(x => x.BoundingBox != null)
                 .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("WestLimit cannot be less than zero or blank.");
 
@@ -66,11 +70,13 @@ namespace UKHO.ExternalNotificationService.API.Validation
                 .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("Status cannot be blank or null.");
 
-            RuleFor(v => v.Status.StatusDate).NotNull().NotEmpty()
+            RuleFor(v => v.Status.StatusDate).NotNull().NotEmpty().OverridePropertyName("StatusDate")
+                .When(x => x.Status != null)
                 .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("StatusDate cannot be blank or null.");
 
-            RuleFor(v => v.Status.StatusName).NotNull().NotEmpty()
+            RuleFor(v => v.Status.StatusName).NotNull().NotEmpty().OverridePropertyName("StatusName")
+                .When(x => x.Status != null)
                 .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("StatusName cannot be blank or null.");
         }

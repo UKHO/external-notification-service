@@ -24,7 +24,7 @@ namespace UKHO.ExternalNotificationService.Common.Models.EventModel
 
     public class ProductUpdateStatus
     {
-        public DateTime StatusDate { get; set; }
+        public DateTime? StatusDate { get; set; }
         public bool IsNewCell { get; set; }
         public string StatusName { get; set; }
     }
