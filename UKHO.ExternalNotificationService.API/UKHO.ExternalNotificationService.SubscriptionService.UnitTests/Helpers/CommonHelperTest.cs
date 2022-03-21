@@ -5,6 +5,9 @@ using NUnit.Framework;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using UKHO.ExternalNotificationService.Common.Models.AzureEventGridDomain;
+using UKHO.ExternalNotificationService.Common.Models.Request;
+using UKHO.ExternalNotificationService.SubscriptionService.D365Callback;
 using UKHO.ExternalNotificationService.SubscriptionService.Helpers;
 using UKHO.ExternalNotificationService.SubscriptionService.Services;
 
@@ -17,12 +20,12 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
         private int _retryCount = 3;
         private const double SleepDuration = 2;
         private const string TestClient = "TestClient";
-        private bool _isRetryCalled;
+        private bool _isRetryCalled;        
 
         [SetUp]
         public void Setup()
         {
-            _fakeLogger = A.Fake<ILogger<CallbackService>>();
+            _fakeLogger = A.Fake<ILogger<CallbackService>>();            
         }
 
         [Test]
@@ -62,6 +65,26 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
             Assert.AreEqual(HttpStatusCode.InternalServerError, result.StatusCode);
         }
 
+        [Test]
+        public void WhenValidGetExternalNotificationEntityEventThenReturnSuccessResponse()
+        {            
+            SubscriptionRequestResult subscriptionRequestResult = GetSubscriptionRequestResult();
+            bool fakeIsActive = true;
+            int fakeSuccessStatusCode = 1000001;
+            ExternalNotificationEntity response = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, fakeIsActive, fakeSuccessStatusCode);
+            Assert.IsNotNull(response);
+         }
+
+        [Test]
+        public void WhenInvalidGetExternalNotificationEntityEventThenReturnFailResponse()
+        {
+            SubscriptionRequestResult subscriptionRequestResult = GetSubscriptionRequestResult();
+            bool fakeIsActive = false;
+            int fakeFailureStatusCode = 1000002;
+            ExternalNotificationEntity response = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, fakeIsActive, fakeFailureStatusCode);
+            Assert.IsNotNull(response);
+        }
+
         private static HttpClient CreateClient(IServiceCollection services)
         {
             return services
@@ -69,5 +92,17 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
                     .GetRequiredService<IHttpClientFactory>()
                     .CreateClient(TestClient);
         }
+
+        private static SubscriptionRequestResult GetSubscriptionRequestResult()
+        {
+            return new SubscriptionRequestResult(new SubscriptionRequestMessage())
+            {
+                SubscriptionId = "246d71e7-1475-ec11-8943-002248818222",
+                NotificationType = "Data test",                
+                ProvisioningState="Succeeded",                
+                WebhookUrl = "https://testurl.com",
+                ErrorMessage= null
+            };
+        }       
     }
 }

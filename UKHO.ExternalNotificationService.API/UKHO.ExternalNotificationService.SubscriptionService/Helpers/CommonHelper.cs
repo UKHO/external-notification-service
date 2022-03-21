@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-
 using Polly;
 using System;
 using System.Collections.Generic;
