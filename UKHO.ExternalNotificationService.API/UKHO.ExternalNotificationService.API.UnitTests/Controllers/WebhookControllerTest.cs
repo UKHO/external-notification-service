@@ -14,9 +14,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Controllers;
 using UKHO.ExternalNotificationService.API.Services;
+using UKHO.ExternalNotificationService.API.UnitTests.BaseClass;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 using UKHO.ExternalNotificationService.Common.Models.Response;
-using UKHO.ExternalNotificationService.Common.UnitTests.BaseClass;
 
 namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 {

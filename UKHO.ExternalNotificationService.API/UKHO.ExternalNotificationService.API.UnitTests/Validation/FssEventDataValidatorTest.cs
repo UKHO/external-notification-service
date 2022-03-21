@@ -1,9 +1,9 @@
 ﻿using FluentValidation.TestHelper;
 using NUnit.Framework;
 using System.Linq;
+using UKHO.ExternalNotificationService.API.UnitTests.BaseClass;
 using UKHO.ExternalNotificationService.API.Validation;
 using UKHO.ExternalNotificationService.Common.Models.EventModel;
-using UKHO.ExternalNotificationService.Common.UnitTests.BaseClass;
 
 namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
 {
