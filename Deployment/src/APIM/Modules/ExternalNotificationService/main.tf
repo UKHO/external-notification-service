@@ -196,7 +196,7 @@ resource "azurerm_api_management_product_policy" "ees_product_policy" {
 	<policies>
 	  <inbound>
       <base />
-      <rate-limit calls="${var.ees_product_call_limit}" renewal-period="60" retry-after-header-name="retry-after" remaining-calls-header-name="remaining-calls" />
+      <rate-limit calls="${var.ees_product_call_limit}" renewal-period="1" retry-after-header-name="retry-after" remaining-calls-header-name="remaining-calls" />
 
       <!-- Validate AD token -->
       <validate-jwt header-name="Authorization" failed-validation-httpcode="401" failed-validation-error-message="Access token is missing or invalid.">
