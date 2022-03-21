@@ -20,12 +20,12 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
         private int _retryCount = 3;
         private const double SleepDuration = 2;
         private const string TestClient = "TestClient";
-        private bool _isRetryCalled;        
+        private bool _isRetryCalled;
 
         [SetUp]
         public void Setup()
         {
-            _fakeLogger = A.Fake<ILogger<CallbackService>>();            
+            _fakeLogger = A.Fake<ILogger<CallbackService>>();
         }
 
         [Test]
@@ -67,13 +67,13 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
 
         [Test]
         public void WhenValidGetExternalNotificationEntityEventThenReturnSuccessResponse()
-        {            
+        {
             SubscriptionRequestResult subscriptionRequestResult = GetSubscriptionSuccessRequestResult();
             bool fakeIsActive = true;
             int fakeSuccessStatusCode = 1000001;
             ExternalNotificationEntity response = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, fakeIsActive, fakeSuccessStatusCode);
             Assert.IsNotNull(response);
-         }
+        }
 
         [Test]
         public void WhenInvalidGetExternalNotificationEntityEventThenReturnFailResponse()
@@ -98,10 +98,10 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
             return new SubscriptionRequestResult(new SubscriptionRequestMessage())
             {
                 SubscriptionId = "246d71e7-1475-ec11-8943-002248818222",
-                NotificationType = "Data test",                
-                ProvisioningState="Succeeded",                
+                NotificationType = "Data test",
+                ProvisioningState = "Succeeded",
                 WebhookUrl = "https://testurl.com",
-                ErrorMessage= null
+                ErrorMessage = null
             };
         }
 
@@ -113,7 +113,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
                 NotificationType = "Data test",
                 ProvisioningState = "Failed",
                 WebhookUrl = "https://testurl.com",
-                ErrorMessage = null
+                ErrorMessage = "Operation returned invalid"
             };
         }
     }

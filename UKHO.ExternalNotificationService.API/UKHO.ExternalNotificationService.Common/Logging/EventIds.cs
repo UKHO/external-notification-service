@@ -203,11 +203,11 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900050 - Delete Subscription Service event started
         /// </summary>
-        DeleteSubscriptionServiceStart = 900050,
+        DeleteSubscriptionServiceEventStart = 900050,
         /// <summary>
         /// 900051 - Delete Subscription Service event completed
         /// </summary>
-        DeleteSubscriptionServiceCompleted = 900051,
+        DeleteSubscriptionServiceEventCompleted = 900051,
         /// <summary>
         /// 900052 -  Delete Azure Event Domain Topic Start
         /// </summary>
