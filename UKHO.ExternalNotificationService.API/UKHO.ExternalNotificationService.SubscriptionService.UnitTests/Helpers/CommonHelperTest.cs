@@ -68,7 +68,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
         [Test]
         public void WhenValidGetExternalNotificationEntityEventThenReturnSuccessResponse()
         {            
-            SubscriptionRequestResult subscriptionRequestResult = GetSubscriptionRequestResult();
+            SubscriptionRequestResult subscriptionRequestResult = GetSubscriptionSuccessRequestResult();
             bool fakeIsActive = true;
             int fakeSuccessStatusCode = 1000001;
             ExternalNotificationEntity response = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, fakeIsActive, fakeSuccessStatusCode);
@@ -78,7 +78,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
         [Test]
         public void WhenInvalidGetExternalNotificationEntityEventThenReturnFailResponse()
         {
-            SubscriptionRequestResult subscriptionRequestResult = GetSubscriptionRequestResult();
+            SubscriptionRequestResult subscriptionRequestResult = GetSubscriptionFailureRequestResult();
             bool fakeIsActive = false;
             int fakeFailureStatusCode = 1000002;
             ExternalNotificationEntity response = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, fakeIsActive, fakeFailureStatusCode);
@@ -93,7 +93,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
                     .CreateClient(TestClient);
         }
 
-        private static SubscriptionRequestResult GetSubscriptionRequestResult()
+        private static SubscriptionRequestResult GetSubscriptionSuccessRequestResult()
         {
             return new SubscriptionRequestResult(new SubscriptionRequestMessage())
             {
@@ -103,6 +103,18 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
                 WebhookUrl = "https://testurl.com",
                 ErrorMessage= null
             };
-        }       
+        }
+
+        private static SubscriptionRequestResult GetSubscriptionFailureRequestResult()
+        {
+            return new SubscriptionRequestResult(new SubscriptionRequestMessage())
+            {
+                SubscriptionId = "246d71e7-1475-ec11-8943-002248818222",
+                NotificationType = "Data test",
+                ProvisioningState = "Failed",
+                WebhookUrl = "https://testurl.com",
+                ErrorMessage = null
+            };
+        }
     }
 }
