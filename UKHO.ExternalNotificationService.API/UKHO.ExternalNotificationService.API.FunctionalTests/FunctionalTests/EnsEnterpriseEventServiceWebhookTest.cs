@@ -157,26 +157,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [TestCase("83d08093-7a67-4b3a-b431-92ba42feaea0", HttpStatusCode.NotFound, TestName = "NotFound for WebHook")]
         public async Task WhenICallTheEnsWebhookApiWithAValidJObjectBody_ThenNonOkStatusIsReturned(string subject, HttpStatusCode statusCode)
         {
-            JObject ensWebhookJson = FssEventBody;
-            await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, statusCode);
-
-            DateTime startTime = DateTime.UtcNow;
-            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
-
-            while (DateTime.UtcNow - startTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
-            {
-                await Task.Delay(10000);
-            }
-
-            Assert.AreEqual(200, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 200.");
-            HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
-            // Get the response
-            string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
-            IEnumerable<DistributorRequest> deserialized = JsonConvert.DeserializeObject<IEnumerable<DistributorRequest>>(custome‌​rJsonString);
-            IEnumerable<DistributorRequest> getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.statusCode.HasValue && x.statusCode.Value == statusCode)
-                .OrderByDescending(a => a.TimeStamp);
-            Assert.NotNull(getMatchingData);
-            Assert.Greater(getMatchingData.Count(), 1);
+            await EnsWebhookApiWithAValidJObjectBody(FssEventBody, subject,statusCode);
         }
 
         [Test]
@@ -220,12 +201,15 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [TestCase("NO4F1617", HttpStatusCode.NotFound, TestName = "NotFound for WebHook")]
         public async Task WhenICallTheEnsWebhookApiWithAValidScsJObjectBody_ThenNonOkStatusIsReturned(string subject, HttpStatusCode statusCode)
         {
-            JObject ensWebhookJson = ScsEventBody;
+            await EnsWebhookApiWithAValidJObjectBody(ScsEventBody, subject, statusCode);
+        }
+        private async Task EnsWebhookApiWithAValidJObjectBody(JObject ensWebhookJson, string subject, HttpStatusCode statusCode)
+        {
             await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, statusCode);
 
             DateTime startTime = DateTime.UtcNow;
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
-            
+
             while (DateTime.UtcNow - startTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
             {
                 await Task.Delay(10000);
