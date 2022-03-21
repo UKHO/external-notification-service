@@ -10,7 +10,7 @@ trigger:
   - main
   - release/*
 
-pool: NautilusRelease
+pool: NautilusBuild
 
 variables:
   - name: BuildConfiguration
