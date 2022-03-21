@@ -10,7 +10,7 @@ trigger:
   - main
   - release/*
 
-pool: NautilusBuild
+pool: UKHO Ubuntu 1804
 
 variables:
   - name: BuildConfiguration
