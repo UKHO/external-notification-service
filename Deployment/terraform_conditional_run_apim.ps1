@@ -7,6 +7,8 @@ param (
 
 cd $env:AGENT_BUILDDIRECTORY/terraformartifact/src/APIM/
 
+terraform --version
+
 Write-output "Executing terraform scripts for APIM deployment in $workSpace enviroment..."
 
 terraform init -backend-config="resource_group_name=$deploymentResourceGroupName" -backend-config="storage_account_name=$deploymentStorageAccountName" -backend-config="key=terraform.deployment.apim.ens.tfplan"
