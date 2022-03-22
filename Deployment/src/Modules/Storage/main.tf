@@ -8,6 +8,12 @@ resource "azurerm_storage_account" "ens_storage" {
   allow_blob_public_access  = false
   tags                      = var.tags
   min_tls_version           = "TLS1_2"
+    network_rules {
+    default_action             = "Deny"
+    ip_rules                   = var.allowed_ips
+    bypass                     = ["Logging", "Metrics", "AzureServices"]
+    virtual_network_subnet_ids = [var.m_spoke_subnet,var.agent_subnet]
+   }
 }
 
 resource "azurerm_storage_container" "ens_storage_container" {

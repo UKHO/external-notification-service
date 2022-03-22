@@ -10,10 +10,6 @@ variable "location" {
   type = string
 }
 
-variable "logstashStorageName"{
-  type=string
-}
-
 variable "tags" {
 
 }
