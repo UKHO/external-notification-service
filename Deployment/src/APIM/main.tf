@@ -13,4 +13,7 @@ module "APIM" {
   client_credentials_secret       = var.client_credentials_secret
   client_credentials_scope        = var.client_credentials_scope
   ens_app_client_id               = var.ens_app_client_id
+  d365_product_call_limit         = var.d365_product_call_limit
+  d365_product_call_renewal_period = var.d365_product_call_renewal_period
+  ees_product_call_limit          = var.ees_product_call_limit
 }
