@@ -2,6 +2,7 @@
 using FakeItEasy;
 using NUnit.Framework;
 using System.Threading;
+using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.BaseClass;
 using UKHO.ExternalNotificationService.Common.Helpers;
 using UKHO.ExternalNotificationService.Common.Models.EventModel;
@@ -45,7 +46,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.BaseClass
 
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken));
 
-            var response = _eventProcessorBase.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken);
+            Task response = _eventProcessorBase.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken);
 
             Assert.IsTrue(response.IsCompleted);
         }

@@ -9,11 +9,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Services;
+using UKHO.ExternalNotificationService.API.UnitTests.BaseClass;
 using UKHO.ExternalNotificationService.API.Validation;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Models.EventModel;
 using UKHO.ExternalNotificationService.Common.Models.Request;
-using UKHO.ExternalNotificationService.Common.UnitTests.BaseClass;
 
 namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 {

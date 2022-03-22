@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using UKHO.ExternalNotificationService.Common.Models.EventModel;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 using Attribute = UKHO.ExternalNotificationService.Common.Models.EventModel.Attribute;
@@ -8,7 +7,6 @@ using File = UKHO.ExternalNotificationService.Common.Models.EventModel.File;
 
 namespace UKHO.ExternalNotificationService.Common.UnitTests.BaseClass
 {
-    [ExcludeFromCodeCoverage]
     public static class CustomCloudEventBase
     {
         public static CustomCloudEvent GetCustomCloudEvent()
