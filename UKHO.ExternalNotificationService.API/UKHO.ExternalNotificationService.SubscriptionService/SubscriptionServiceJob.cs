@@ -93,7 +93,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                     externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, subscriptionMessage.IsActive, _d365CallbackConfiguration.Value.SucceededStatusCode);
 
                     _logger.LogError(EventIds.DeleteSubscriptionRequestSuccess.ToEventId(),
-                 "Delete Event Grid Subscription provisioning request Succeeded for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+                 "Delete Event Grid Domain Subscription request Succeeded for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
                 }
                 catch (Exception ex)
                 {
@@ -103,7 +103,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                     externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, subscriptionMessage.IsActive, _d365CallbackConfiguration.Value.FailedStatusCode);
 
                     _logger.LogError(EventIds.DeleteSubscriptionRequestError.ToEventId(),
-                  "Delete Event Grid Subscription provisioning request failed with error with Exception:{ex} for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", ex.Message, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+                  "Delete Event Grid Domain Subscription request failed with error with Exception:{ex} for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", ex.Message, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
                 }
             }
             //Callback to D365

@@ -54,8 +54,8 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
         }
         public async Task DeleteSubscription(SubscriptionRequestMessage subscriptionRequestMessage, CancellationToken cancellationToken)
         {
-            _logger.LogInformation(EventIds.DeleteAzureEventDomainTopicStart.ToEventId(),
-                    "Delete azure event subscription started for SubscriptionId:{SubscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId} with Event domain topic {NotificationTypeTopicName}", subscriptionRequestMessage.SubscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId, subscriptionRequestMessage.NotificationTypeTopicName);
+            _logger.LogInformation(EventIds.DeleteAzureEventDomainSubscriptionStart.ToEventId(),
+                    "Delete azure event grid domain subscription started for SubscriptionId:{SubscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId} with Event domain topic {NotificationTypeTopicName}", subscriptionRequestMessage.SubscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId, subscriptionRequestMessage.NotificationTypeTopicName);
 
             EventGridManagementClient eventGridMgmtClient = await GetEventGridClient(_eventGridDomainConfig.SubscriptionId, cancellationToken);
             DomainTopic topic = await GetDomainTopic(eventGridMgmtClient, subscriptionRequestMessage.NotificationTypeTopicName, cancellationToken);
@@ -63,8 +63,8 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
         
             await eventGridMgmtClient.EventSubscriptions.DeleteAsync(eventSubscriptionScope, subscriptionRequestMessage.SubscriptionId, cancellationToken);
 
-            _logger.LogInformation(EventIds.DeleteAzureEventDomainTopicCompleted.ToEventId(),
-                    "Delete azure event subscription completed for SubscriptionId:{SubscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId} for Event domain topic {topic}",
+            _logger.LogInformation(EventIds.DeleteAzureEventDomainSubscriptionCompleted.ToEventId(),
+                    "Delete azure event grid domain subscription completed for SubscriptionId:{SubscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId} for Event domain topic {topic}",
                     subscriptionRequestMessage.SubscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId, topic.Name);           
         }
 

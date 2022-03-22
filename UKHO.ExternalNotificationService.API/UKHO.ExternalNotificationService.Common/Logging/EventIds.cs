@@ -209,13 +209,13 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         DeleteSubscriptionServiceEventCompleted = 900051,
         /// <summary>
-        /// 900052 -  Delete Azure Event Domain Topic Start
+        /// 900052 -  Delete Azure Event Domain Subscription Start
         /// </summary>
-        DeleteAzureEventDomainTopicStart = 900052,
+        DeleteAzureEventDomainSubscriptionStart = 900052,
         /// <summary>
-        /// 900053 -  Delete Azure Event Domain Topic Completed
+        /// 900053 -  Delete Azure Event Domain Subscription Completed
         /// </summary>
-        DeleteAzureEventDomainTopicCompleted = 900053
+        DeleteAzureEventDomainSubscriptionCompleted = 900053
     }
 
     public static class EventIdExtensions
