@@ -20,3 +20,14 @@ variable "service_name" {
 variable "env_name" {
   type  = string
 }
+
+variable "allowed_ips" {
+
+}
+variable "m_spoke_subnet" {
+  type = string
+}
+
+variable "agent_subnet" {
+  type = string
+}
