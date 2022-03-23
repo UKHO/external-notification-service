@@ -123,9 +123,13 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         public async Task WhenICallTheCallBackStubUrlToFailWithValidSubscriptionId_ThenValidResponseIsReturned(int statusCode)
         {
             //Get the subscriptionId from D365 payload
+            //string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
+            D365Payload.InputParameters[0].Value.Attributes[9].Value = D365Payload.InputParameters[0].Value.Attributes[9].Value + "Failed";
+            // Get the new subscriptionId for D365 payload
+            string subscriptionId = Guid.NewGuid().ToString();
+            D365Payload.PostEntityImages[0].Value.Attributes[0].Value = subscriptionId;
+            D365Payload.InputParameters[0].Value.Attributes[10].Value = subscriptionId;
 
-            string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();            
-            
             HttpResponseMessage apiStubResponse = await EnsApiClient.PostStubCommandToFailAsync(TestConfig.StubBaseUri, subscriptionId, statusCode);
             Assert.AreEqual(200, (int)apiStubResponse.StatusCode, $"Incorrect status code {apiStubResponse.StatusCode}  is  returned, instead of the expected 200.");
 
@@ -155,9 +159,13 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         public async Task WhenICallTheCallBackStubUrlToFailWithValidSubscriptionId_ThenValidResponseIsReturnedWithRetryCount(int statusCode)
         {
             //Get the subscriptionId from D365 payload
+            ////string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
+            D365Payload.InputParameters[0].Value.Attributes[9].Value = D365Payload.InputParameters[0].Value.Attributes[9].Value + "Failed";
+            // Get the new subscriptionId for D365 payload
+            string subscriptionId = Guid.NewGuid().ToString();
+            D365Payload.PostEntityImages[0].Value.Attributes[0].Value = subscriptionId;
+            D365Payload.InputParameters[0].Value.Attributes[10].Value = subscriptionId;
 
-            string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();          
-                       
             HttpResponseMessage apiStubResponse = await EnsApiClient.PostStubCommandToFailAsync(TestConfig.StubBaseUri, subscriptionId, statusCode);
             Assert.AreEqual(200, (int)apiStubResponse.StatusCode, $"Incorrect status code {apiStubResponse.StatusCode}  is  returned, instead of the expected 200.");
 
