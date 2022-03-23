@@ -38,19 +38,19 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Helpers
                 });
         }
               
-        public static ExternalNotificationEntity GetExternalNotificationEntity(SubscriptionRequestResult subscriptionRequestResult, bool IsActive, int StatusCode)
+        public static ExternalNotificationEntity GetExternalNotificationEntity(SubscriptionRequestResult subscriptionRequestResult, bool isActive, int statusCode)
         {
             ExternalNotificationEntity externalNotificationEntity = new();
             if (subscriptionRequestResult.ProvisioningState == "Succeeded")
             {
-                externalNotificationEntity.ResponseStatusCode = StatusCode;
-                externalNotificationEntity.ResponseDetails = IsActive ? $"Successfully added subscription @Time: { DateTime.UtcNow}" : $"Successfully removed subscription @Time: { DateTime.UtcNow}";
+                externalNotificationEntity.ResponseStatusCode = statusCode;
+                externalNotificationEntity.ResponseDetails = isActive ? $"Successfully added subscription @Time: { DateTime.UtcNow}" : $"Successfully removed subscription @Time: { DateTime.UtcNow}";
             }
 
             if (subscriptionRequestResult.ProvisioningState == "Failed")
             {
-                externalNotificationEntity.ResponseStatusCode = StatusCode;
-                externalNotificationEntity.ResponseDetails = IsActive ? $"Failed to add subscription @Time: {DateTime.UtcNow} with exception {subscriptionRequestResult.ErrorMessage}" : $"Failed to remove subscription @Time: {DateTime.UtcNow} with exception {subscriptionRequestResult.ErrorMessage}";
+                externalNotificationEntity.ResponseStatusCode = statusCode;
+                externalNotificationEntity.ResponseDetails = isActive ? $"Failed to add subscription @Time: {DateTime.UtcNow} with exception {subscriptionRequestResult.ErrorMessage}" : $"Failed to remove subscription @Time: {DateTime.UtcNow} with exception {subscriptionRequestResult.ErrorMessage}";
             }
             return externalNotificationEntity;
         }

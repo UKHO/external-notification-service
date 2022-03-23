@@ -34,7 +34,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         }
 
         [Test]
-        public async Task WhenICallTheEnsSubscriptionApiWithStatusInActive_ThenSubscriptionHasbeenDeleted()
+        public async Task WhenICallTheEnsSubscriptionApiWithStatusInActive_ThenSubscriptionHasBeenDeleted()
         {
             // Set the new subscriptionId for D365 payload
             string subscriptionId = Guid.NewGuid().ToString();
@@ -67,7 +67,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             Assert.IsTrue(callBackResponseLatest.CallBackRequest.Ukho_responsedetails.Contains("Successfully added subscription"), $"Last Response : {callBackResponseLatest.CallBackRequest.Ukho_responsedetails}");
             Assert.IsTrue(callBackResponseLatest.TimeStamp <= new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, DateTime.UtcNow.Hour, DateTime.UtcNow.Minute, DateTime.UtcNow.Second), $"Response body returned timestamp date {callBackResponseLatest.TimeStamp} , greater than the expected value.");
 
-            //set the subscriptionstate as In Active
+            //set the subscription state as InActive
             D365Payload.InputParameters[0].Value.FormattedValues[0].Value = "Inactive";
             requestTime = DateTime.UtcNow;
 
@@ -92,7 +92,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             Assert.IsTrue(callBackResponseLatest.CallBackRequest.Ukho_responsedetails.Contains("Successfully removed subscription"), $"Last Response : {callBackResponseLatest.CallBackRequest.Ukho_responsedetails}");
             Assert.IsTrue(callBackResponseLatest.TimeStamp <= new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, DateTime.UtcNow.Hour, DateTime.UtcNow.Minute, DateTime.UtcNow.Second), $"Response body returned timestamp date {callBackResponseLatest.TimeStamp} , greater than the expected value.");
 
-            //set the subscriptionstate as Active
+            //set the subscription state as Active
             
             D365Payload.InputParameters[0].Value.FormattedValues[0].Value = "Active";
             requestTime = DateTime.UtcNow;

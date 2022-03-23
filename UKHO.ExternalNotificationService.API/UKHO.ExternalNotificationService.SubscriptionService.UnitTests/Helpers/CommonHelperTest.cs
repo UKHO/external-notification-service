@@ -69,9 +69,9 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
         public void WhenValidGetExternalNotificationEntityEventThenReturnSuccessResponse()
         {
             SubscriptionRequestResult subscriptionRequestResult = GetSubscriptionSuccessRequestResult();
-            bool fakeIsActive = true;
-            int fakeSuccessStatusCode = 1000001;
-            ExternalNotificationEntity response = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, fakeIsActive, fakeSuccessStatusCode);
+            const bool isActive = true;
+            const int successStatusCode = 1000001;
+            ExternalNotificationEntity response = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, isActive, successStatusCode);
             Assert.IsNotNull(response);
         }
 
@@ -79,9 +79,9 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
         public void WhenInvalidGetExternalNotificationEntityEventThenReturnFailResponse()
         {
             SubscriptionRequestResult subscriptionRequestResult = GetSubscriptionFailureRequestResult();
-            bool fakeIsActive = false;
-            int fakeFailureStatusCode = 1000002;
-            ExternalNotificationEntity response = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, fakeIsActive, fakeFailureStatusCode);
+            const bool isActive = false;
+            const int failureStatusCode = 1000002;
+            ExternalNotificationEntity response = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, isActive, failureStatusCode);
             Assert.IsNotNull(response);
         }
 
