@@ -120,8 +120,10 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [TestCase(400, TestName = "CallBack Stub Returns StatusCode As Bad Request")]       
         public async Task WhenICallTheCallBackStubUrlToFailWithValidSubscriptionId_ThenValidResponseIsReturned(int statusCode)
         {
-            //Get the subscriptionId from D365 payload            
-            string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
+            // Get the new subscriptionId for D365 payload
+            string subscriptionId = Guid.NewGuid().ToString();
+            D365Payload.PostEntityImages[0].Value.Attributes[0].Value = subscriptionId;
+            D365Payload.InputParameters[0].Value.Attributes[10].Value = subscriptionId;
 
             HttpResponseMessage apiStubResponse = await EnsApiClient.PostStubCommandToFailAsync(TestConfig.StubBaseUri, subscriptionId, statusCode);
             Assert.AreEqual(200, (int)apiStubResponse.StatusCode, $"Incorrect status code {apiStubResponse.StatusCode}  is  returned, instead of the expected 200.");
@@ -151,8 +153,10 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [TestCase(500, TestName = "CallBack Stub Returns StatusCode As Internal Server Error")]
         public async Task WhenICallTheCallBackStubUrlToFailWithValidSubscriptionId_ThenValidResponseIsReturnedWithRetryCount(int statusCode)
         {
-            //Get the subscriptionId from D365 payload            
-            string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
+            // Get the new subscriptionId for D365 payload
+            string subscriptionId = Guid.NewGuid().ToString();
+            D365Payload.PostEntityImages[0].Value.Attributes[0].Value = subscriptionId;
+            D365Payload.InputParameters[0].Value.Attributes[10].Value = subscriptionId;
 
             HttpResponseMessage apiStubResponse = await EnsApiClient.PostStubCommandToFailAsync(TestConfig.StubBaseUri, subscriptionId, statusCode);
             Assert.AreEqual(200, (int)apiStubResponse.StatusCode, $"Incorrect status code {apiStubResponse.StatusCode}  is  returned, instead of the expected 200.");
@@ -163,7 +167,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             while (DateTime.UtcNow - requestTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
             {
-                await Task.Delay(5000);
+                await Task.Delay(10000);
             }
 
             HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, subscriptionId);
