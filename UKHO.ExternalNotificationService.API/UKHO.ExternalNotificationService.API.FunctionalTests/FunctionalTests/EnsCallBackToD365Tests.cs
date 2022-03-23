@@ -122,8 +122,6 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [TestCase(400, TestName = "CallBack Stub Returns StatusCode As Bad Request")]       
         public async Task WhenICallTheCallBackStubUrlToFailWithValidSubscriptionId_ThenValidResponseIsReturned(int statusCode)
         {
-            //Get the subscriptionId from D365 payload
-            //string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
             D365Payload.InputParameters[0].Value.Attributes[9].Value = D365Payload.InputParameters[0].Value.Attributes[9].Value + "Failed";
             // Get the new subscriptionId for D365 payload
             string subscriptionId = Guid.NewGuid().ToString();
@@ -158,8 +156,6 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [TestCase(500, TestName = "CallBack Stub Returns StatusCode As Internal Server Error")]
         public async Task WhenICallTheCallBackStubUrlToFailWithValidSubscriptionId_ThenValidResponseIsReturnedWithRetryCount(int statusCode)
         {
-            //Get the subscriptionId from D365 payload
-            ////string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
             D365Payload.InputParameters[0].Value.Attributes[9].Value = D365Payload.InputParameters[0].Value.Attributes[9].Value + "Failed";
             // Get the new subscriptionId for D365 payload
             string subscriptionId = Guid.NewGuid().ToString();
