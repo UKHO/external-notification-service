@@ -21,9 +21,9 @@ output "webapp_scm_credentials"{
 }
 
 output "webapp_name" {
-  value = azurerm_app_service.stub_webapp_service.name
+  value = azurerm_app_service.stub_webapp_service[count.index].name
 }
 
 output "default_site_hostname_ens_stub" {
-  value = azurerm_app_service.stub_webapp_service.default_site_hostname
+  value = azurerm_app_service.stub_webapp_service[count.index].default_site_hostname
 }
