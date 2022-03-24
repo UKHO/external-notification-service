@@ -215,7 +215,7 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900053 -  Delete Azure Event Domain Subscription Completed
         /// </summary>
-        DeleteAzureEventDomainSubscriptionCompleted = 900053
+        DeleteAzureEventDomainSubscriptionCompleted = 900053,
         /// <summary>
         /// 900054 -  Sales catalogue service event data mapping started.
         /// </summary>
