@@ -17,7 +17,7 @@ resource "azurerm_api_management_api" "ens_api" {
   resource_group_name = data.azurerm_api_management.apim_instance.resource_group_name
   api_management_name = data.azurerm_api_management.apim_instance.name 
   name                = "ens-api-${local.formatted_env}"
-  display_name        = "External Notification Service API ${var.env_suffix}"
+  display_name        = "${var.env}" == "live" ? "External Notification Service API" : "External Notification Service API ${var.env_suffix}"
   description         = "The External Notification Service API provides the ability to subscribe and deliver notifications."
   revision            = "1"
   path                = "ens-api-${local.formatted_env}"

@@ -29,11 +29,11 @@ output "dead_letter_storage_container" {
 }
 
 output "stub_webappname" {
-  value = module.webapp_service.webapp_name
+  value = lower(terraform.workspace) == "dev" ? module.webapp_service.webapp_name : null
 }
 
 output "ens_stub_web_app_url" {
-  value = "https://${module.webapp_service.default_site_hostname_ens_stub}/api/dynamics/"
+  value = lower(terraform.workspace) == "dev" ? "https://${module.webapp_service.default_site_hostname_ens_stub}/api/dynamics/" : null
 }
 
 output "event_grid_domain_endpoint_url" {
