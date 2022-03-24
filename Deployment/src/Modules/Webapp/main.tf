@@ -50,6 +50,7 @@ resource "azurerm_app_service" "webapp_service" {
 }
 
 resource "azurerm_app_service" "stub_webapp_service" {
+  count               = var.env_name == "dev" ? 1 : 0
   name                = "${var.name}-stub"
   location            = var.location
   resource_group_name = var.resource_group_name

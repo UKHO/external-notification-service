@@ -41,7 +41,6 @@ steps:
     name: SetQAStubURL
     condition: and(succeeded(), eq(variables['Environment.Name'], 'Ens-QA'))
 
-
   - task: FileTransform@1
     displayName: "File Transform: WebAppSettings"
     inputs:
