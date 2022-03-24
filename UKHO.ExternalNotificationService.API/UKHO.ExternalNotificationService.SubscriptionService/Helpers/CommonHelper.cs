@@ -7,11 +7,13 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Logging;
+using UKHO.ExternalNotificationService.Common.Models.AzureEventGridDomain;
+using UKHO.ExternalNotificationService.SubscriptionService.D365Callback;
 
 namespace UKHO.ExternalNotificationService.SubscriptionService.Helpers
 {
     public static class CommonHelper
-    {
+    {      
         public static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(ILogger logger, int retryCount, double sleepDuration)
         {
             return Policy
@@ -34,6 +36,23 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Helpers
                     .LogInformation(EventIds.RetryHttpClientD365CallbackRequest.ToEventId(), "Re-trying D365 Callback service request with uri {RequestUri} and delay {delay}ms and retry attempt {retry} with _X-Correlation-ID:{correlationId} as previous request was responded with {StatusCode}.",
                     response.Result.RequestMessage.RequestUri, timespan.Add(TimeSpan.FromMilliseconds(retryAfter)).TotalMilliseconds, retryAttempt, correlationId.Value, response.Result.StatusCode);
                 });
+        }
+              
+        public static ExternalNotificationEntity GetExternalNotificationEntity(SubscriptionRequestResult subscriptionRequestResult, bool isActive, int statusCode)
+        {
+            ExternalNotificationEntity externalNotificationEntity = new();
+            if (subscriptionRequestResult.ProvisioningState == "Succeeded")
+            {
+                externalNotificationEntity.ResponseStatusCode = statusCode;
+                externalNotificationEntity.ResponseDetails = isActive ? $"Successfully added subscription @Time: { DateTime.UtcNow}" : $"Successfully removed subscription @Time: { DateTime.UtcNow}";
+            }
+
+            if (subscriptionRequestResult.ProvisioningState == "Failed")
+            {
+                externalNotificationEntity.ResponseStatusCode = statusCode;
+                externalNotificationEntity.ResponseDetails = isActive ? $"Failed to add subscription @Time: {DateTime.UtcNow} with exception {subscriptionRequestResult.ErrorMessage}" : $"Failed to remove subscription @Time: {DateTime.UtcNow} with exception {subscriptionRequestResult.ErrorMessage}";
+            }
+            return externalNotificationEntity;
         }
     }
 }

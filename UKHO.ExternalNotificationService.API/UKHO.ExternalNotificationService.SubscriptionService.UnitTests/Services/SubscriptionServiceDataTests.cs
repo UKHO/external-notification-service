@@ -38,6 +38,17 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
             Assert.IsInstanceOf<EventSubscription>(response);
         }
 
+        [Test]
+        public async Task WhenDeleteSubscriptionEventCalledThenDeleteSubscription()
+        {
+            CancellationToken cancellationToken = CancellationToken.None;
+            SubscriptionRequestMessage subscriptionRequestMessage = GetSubscriptionRequestMessage();
+
+            await _subscriptionServiceData.DeleteSubscription(subscriptionRequestMessage, cancellationToken);
+
+            A.CallTo(() => _fakeAzureEventGridDomainService.DeleteSubscription(subscriptionRequestMessage, cancellationToken)).MustHaveHappenedOnceExactly();
+        }
+
         private static SubscriptionRequestMessage GetSubscriptionRequestMessage()
         {
             return new SubscriptionRequestMessage()
