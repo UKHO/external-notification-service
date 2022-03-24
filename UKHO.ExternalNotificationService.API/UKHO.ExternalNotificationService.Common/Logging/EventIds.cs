@@ -85,7 +85,7 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         CreateOrUpdateAzureEventDomainTopicCompleted = 900020,
         /// <summary>
-        /// 900021 -  Create Subscription Provising request succeeded for webhook event
+        /// 900021 -  Create Subscription Provisioning request succeeded for webhook event
         /// </summary>
         CreateSubscriptionRequestSuccess = 900021,
         /// <summary>
@@ -193,13 +193,37 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         ENSEventNotPublished = 900047,
         /// <summary>
-        /// 900048 -  Sales catalogue service event data mapping started.
+        /// 900048 - Delete Event Subscription Provisioning request succeeded for webhook event
         /// </summary>
-        ScsEventDataMappingStart = 900048,
+        DeleteSubscriptionRequestSuccess = 900048,
         /// <summary>
-        /// 900049 -  Sales catalogue service event data mapping Completed.
+        /// 900049 -  Delete Event Subscription Provisioning request error in case of exception for webhook event
         /// </summary>
-        ScsEventDataMappingCompleted = 900049,
+        DeleteSubscriptionRequestError = 900049,
+        /// <summary>
+        /// 900050 - Delete Subscription Service event started
+        /// </summary>
+        DeleteSubscriptionServiceEventStart = 900050,
+        /// <summary>
+        /// 900051 - Delete Subscription Service event completed
+        /// </summary>
+        DeleteSubscriptionServiceEventCompleted = 900051,
+        /// <summary>
+        /// 900052 -  Delete Azure Event Domain Subscription Start
+        /// </summary>
+        DeleteAzureEventDomainSubscriptionStart = 900052,
+        /// <summary>
+        /// 900053 -  Delete Azure Event Domain Subscription Completed
+        /// </summary>
+        DeleteAzureEventDomainSubscriptionCompleted = 900053
+        /// <summary>
+        /// 900054 -  Sales catalogue service event data mapping started.
+        /// </summary>
+        ScsEventDataMappingStart = 900054,
+        /// <summary>
+        /// 900055 -  Sales catalogue service event data mapping Completed.
+        /// </summary>
+        ScsEventDataMappingCompleted = 900055
     }
 
     public static class EventIdExtensions

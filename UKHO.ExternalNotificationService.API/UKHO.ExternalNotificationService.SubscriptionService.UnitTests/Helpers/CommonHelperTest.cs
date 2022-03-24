@@ -5,6 +5,9 @@ using NUnit.Framework;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using UKHO.ExternalNotificationService.Common.Models.AzureEventGridDomain;
+using UKHO.ExternalNotificationService.Common.Models.Request;
+using UKHO.ExternalNotificationService.SubscriptionService.D365Callback;
 using UKHO.ExternalNotificationService.SubscriptionService.Helpers;
 using UKHO.ExternalNotificationService.SubscriptionService.Services;
 
@@ -62,12 +65,56 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
             Assert.AreEqual(HttpStatusCode.InternalServerError, result.StatusCode);
         }
 
+        [Test]
+        public void WhenValidGetExternalNotificationEntityEventThenReturnSuccessResponse()
+        {
+            SubscriptionRequestResult subscriptionRequestResult = GetSubscriptionSuccessRequestResult();
+            const bool isActive = true;
+            const int successStatusCode = 1000001;
+            ExternalNotificationEntity response = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, isActive, successStatusCode);
+            Assert.IsNotNull(response);
+        }
+
+        [Test]
+        public void WhenInvalidGetExternalNotificationEntityEventThenReturnFailResponse()
+        {
+            SubscriptionRequestResult subscriptionRequestResult = GetSubscriptionFailureRequestResult();
+            const bool isActive = false;
+            const int failureStatusCode = 1000002;
+            ExternalNotificationEntity response = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, isActive, failureStatusCode);
+            Assert.IsNotNull(response);
+        }
+
         private static HttpClient CreateClient(IServiceCollection services)
         {
             return services
                     .BuildServiceProvider()
                     .GetRequiredService<IHttpClientFactory>()
                     .CreateClient(TestClient);
+        }
+
+        private static SubscriptionRequestResult GetSubscriptionSuccessRequestResult()
+        {
+            return new SubscriptionRequestResult(new SubscriptionRequestMessage())
+            {
+                SubscriptionId = "246d71e7-1475-ec11-8943-002248818222",
+                NotificationType = "Data test",
+                ProvisioningState = "Succeeded",
+                WebhookUrl = "https://testurl.com",
+                ErrorMessage = null
+            };
+        }
+
+        private static SubscriptionRequestResult GetSubscriptionFailureRequestResult()
+        {
+            return new SubscriptionRequestResult(new SubscriptionRequestMessage())
+            {
+                SubscriptionId = "246d71e7-1475-ec11-8943-002248818222",
+                NotificationType = "Data test",
+                ProvisioningState = "Failed",
+                WebhookUrl = "https://testurl.com",
+                ErrorMessage = "Operation returned invalid"
+            };
         }
     }
 }
