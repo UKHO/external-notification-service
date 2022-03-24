@@ -19,7 +19,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             return ensWebhookJson;
         }
 
-        public static ScsEventData GetScsEventData()
+        private static ScsEventData GetScsEventData()
         {
             return new ScsEventData()
             {

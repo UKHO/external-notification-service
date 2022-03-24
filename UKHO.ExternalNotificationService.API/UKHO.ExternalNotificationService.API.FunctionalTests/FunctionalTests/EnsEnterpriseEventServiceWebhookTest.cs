@@ -9,7 +9,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.FunctionalTests.Helper;
 using UKHO.ExternalNotificationService.API.FunctionalTests.Model;
-using UKHO.ExternalNotificationService.Common.Models.EventModel;
 
 namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 {
@@ -22,7 +21,6 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         private JObject FssEventBody { get; set; }
         private FssEventData FssEventData { get; set; }
         private JObject ScsEventBody { get; set; }
-        private ScsEventData ScsEventData { get; set; }
 
         [SetUp]
         public async Task SetupAsync()
@@ -32,7 +30,6 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             FssEventBody = FssEventDataBase.GetFssEventBodyData(TestConfig);
             FssEventData = FssEventDataBase.GetFssEventData(TestConfig);
             ScsEventBody = ScsEventDataBase.GetScsEventBodyData(TestConfig);
-            ScsEventData = ScsEventDataBase.GetScsEventData();
             EnsApiClient = new EnsApiClient(TestConfig.EnsApiBaseUrl);
             ADAuthTokenProvider adAuthTokenProvider = new();
             EnsToken = await adAuthTokenProvider.GetEnsAuthToken();
