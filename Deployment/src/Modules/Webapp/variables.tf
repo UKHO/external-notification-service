@@ -38,3 +38,7 @@ variable "subnet_id" {
 variable "agent_id" {
   type = string
 }
+
+variable "env_name" {
+  type = string
+}
