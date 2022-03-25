@@ -66,6 +66,7 @@ namespace UKHO.ExternalNotificationService.API
             services.Configure<SubscriptionStorageConfiguration>(_configuration.GetSection("SubscriptionStorageConfiguration"));
             services.Configure<EventGridDomainConfiguration>(_configuration.GetSection("EventGridDomainConfiguration"));
             services.Configure<FssDataMappingConfiguration>(_configuration.GetSection("FssDataMappingConfiguration"));
+            services.Configure<ScsDataMappingConfiguration>(_configuration.GetSection("ScsDataMappingConfiguration"));
 
             services.AddApplicationInsightsTelemetry();
             services.AddLogging(loggingBuilder =>
@@ -102,6 +103,9 @@ namespace UKHO.ExternalNotificationService.API
             services.AddScoped<IEventProcessor, FssEventProcessor>();
             services.AddScoped<IAzureEventGridDomainService, AzureEventGridDomainService>();
             services.AddScoped<IEventSubscriptionConfiguration, EventSubscriptionConfiguration>();
+            services.AddScoped<IScsEventValidationAndMappingService, ScsEventValidationAndMappingService>();
+            services.AddScoped<IScsEventDataValidator, ScsEventDataValidator>();
+            services.AddScoped<IEventProcessor, ScsEventProcessor>();
 
             services.AddHealthChecks()
                 .AddCheck<EventHubLoggingHealthCheck>("EventHubLoggingHealthCheck")

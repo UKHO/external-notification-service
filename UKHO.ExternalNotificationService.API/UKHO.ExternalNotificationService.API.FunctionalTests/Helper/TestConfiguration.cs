@@ -7,7 +7,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         protected IConfigurationRoot ConfigurationRoot;
         public string EnsApiBaseUrl { get; set; }
         public string PayloadFolder { get; set; }
-        public string PayloadFileName { get; set; }
+        public string FssPayloadFileName { get; set; }
+        public string ScsPayloadFileName { get; set; }
         public string EnsStorageConnectionString { get; set; }
         public string EnsStorageQueueName { get; set; }
         public int WaitingTimeForQueueInSeconds { get; set; }
@@ -23,6 +24,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         public int SucceededStatusCode { get; set; }
         public int FailedStatusCode { get; set; }
         public string StubBaseUri { get; set; }
+        public string ScsSource { get; set; }
 
         public TestConfiguration()
         {
@@ -32,7 +34,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
 
             EnsApiBaseUrl = ConfigurationRoot.GetSection("EnsApiUrl").Value;
             PayloadFolder = ConfigurationRoot.GetSection("PayloadFolder").Value;
-            PayloadFileName = ConfigurationRoot.GetSection("PayloadFileName").Value;
+            FssPayloadFileName = ConfigurationRoot.GetSection("FssPayloadFileName").Value;
+            ScsPayloadFileName = ConfigurationRoot.GetSection("ScsPayloadFileName").Value;
             EnsStorageConnectionString = ConfigurationRoot.GetSection("EnsStorageConnectionString").Value;
             EnsStorageQueueName = ConfigurationRoot.GetSection("EnsStorageQueueName").Value;
             WaitingTimeForQueueInSeconds = int.Parse(ConfigurationRoot.GetSection("WaitingTimeForQueueInSeconds").Value);
@@ -48,6 +51,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             SucceededStatusCode=int.Parse(ConfigurationRoot.GetSection("D365CallbackConfiguration:SucceededStatusCode").Value);
             FailedStatusCode= int.Parse(ConfigurationRoot.GetSection("D365CallbackConfiguration:FailedStatusCode").Value);
             StubBaseUri = ConfigurationRoot.GetSection("StubConfiguration:BaseUri").Value;
+            ScsSource = ConfigurationRoot.GetSection("ScsDataMappingConfiguration:Source").Value;
         }
     }
 }
