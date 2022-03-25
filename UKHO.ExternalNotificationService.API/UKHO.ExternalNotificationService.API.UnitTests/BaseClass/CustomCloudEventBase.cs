@@ -60,5 +60,31 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.BaseClass
                                                                     Links = fileLinks   }}
             };
         }
+
+        public static ScsEventData GetScsEventData()
+        {
+            return new ScsEventData()
+            {
+                ProductType = "ENC S57",
+                ProductName = "NO4F1615",
+                EditionNumber = 15,
+                UpdateNumber = 18,
+                BoundingBox = new ProductBoundingBox()
+                {
+                    NorthLimit = 63.25,
+                    SouthLimit = 63,
+                    EastLimit = 8,
+                    WestLimit = 7.75
+                },
+                Status = new ProductUpdateStatus()
+                {
+                    StatusDate = DateTime.UtcNow,
+                    IsNewCell = false,
+                    StatusName = "Update"
+                },
+                FileSize = 1584,
+                IsPermitUpdateRequired = false
+            };
+        }
     }
 }
