@@ -374,8 +374,6 @@ stages:
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
           - name: "EnsAuthConfiguration.TenantId"
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
-          - name: "EnsAuthConfiguration.ClientSecret"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-SECRET-VALUE)
         strategy:
           runOnce:
             deploy:
@@ -461,8 +459,6 @@ stages:
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
           - name: "EnsAuthConfiguration.TenantId"
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
-          - name: "EnsAuthConfiguration.ClientSecret"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-SECRET-VALUE)
         strategy:
           runOnce:
             deploy:
@@ -548,8 +544,6 @@ stages:
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
           - name: "EnsAuthConfiguration.TenantId"
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
-          - name: "EnsAuthConfiguration.ClientSecret"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-SECRET-VALUE)
         strategy:
           runOnce:
             deploy:
