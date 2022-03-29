@@ -49,21 +49,7 @@ resource "azurerm_eventhub_authorization_rule" "log" {
   manage              = false
 }
 
-resource "azurerm_storage_account" "logstashStorage" {
-  name                      = var.logstashStorageName
-  resource_group_name       = var.resource_group_name
-  location                  = var.location
-  account_kind              = "StorageV2"
-  account_tier              = "Standard"
-  account_replication_type  = "LRS"
-  access_tier               = "Hot"
-  enable_https_traffic_only = true
-  tags                      = var.tags
-  allow_blob_public_access  = false
- 
-  }
-
-  resource "azurerm_eventhub" "eventhubGrid" {
+resource "azurerm_eventhub" "eventhubGrid" {
   name                = "${var.name}-eventgrid"
   namespace_name      = azurerm_eventhub_namespace.eventhub_namespace.name
   resource_group_name = var.resource_group_name
