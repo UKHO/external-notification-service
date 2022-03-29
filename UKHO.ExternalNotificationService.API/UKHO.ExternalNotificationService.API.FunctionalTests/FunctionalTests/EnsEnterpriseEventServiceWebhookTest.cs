@@ -20,14 +20,16 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         private string EnsToken { get; set; }
         private JObject FssEventBody { get; set; }
         private FssEventData FssEventData { get; set; }
+        private JObject ScsEventBody { get; set; }
 
         [SetUp]
         public async Task SetupAsync()
         {
-            FssEventBody = FssEventDataBase.GetFssEventBodyData();
-            FssEventData = FssEventDataBase.GetFssEventData();
             TestConfig = new TestConfiguration();
             StubApiClient = new(TestConfig.StubApiUri);
+            FssEventBody = FssEventDataBase.GetFssEventBodyData(TestConfig);
+            FssEventData = FssEventDataBase.GetFssEventData(TestConfig);
+            ScsEventBody = ScsEventDataBase.GetScsEventBodyData(TestConfig);
             EnsApiClient = new EnsApiClient(TestConfig.EnsApiBaseUrl);
             ADAuthTokenProvider adAuthTokenProvider = new();
             EnsToken = await adAuthTokenProvider.GetEnsAuthToken();
@@ -68,7 +70,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         }
 
         [Test]
-        public async Task WhenICallTheEnsWebhookApiWithAValidJObjectBodyWithoutAuthToken_ThenAnUnauthorisedResponseIsReturned()
+        public async Task WhenICallTheEnsWebhookApiWithAValidFssJObjectBodyWithoutAuthToken_ThenAnUnauthorisedResponseIsReturned()
         {
             JObject ensWebhookJson = FssEventBody;
 
@@ -79,7 +81,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         }
 
         [Test]
-        public async Task WhenICallTheEnsWebhookApiWithAValidJObjectBodyWitInvalidAuthToken_ThenAnUnauthorisedResponseIsReturned()
+        public async Task WhenICallTheEnsWebhookApiWithAValidFssJObjectBodyWithInvalidAuthToken_ThenAnUnauthorisedResponseIsReturned()
         {
             string invalidToken = EnsToken.Remove(EnsToken.Length - 4).Insert(EnsToken.Length - 4, "ABAA");
             JObject ensWebhookJson = FssEventBody;
@@ -91,7 +93,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         }
 
         [Test]
-        public async Task WhenICallTheEnsWebhookApiWithAValidJObjectBody_ThenOkStatusIsReturned()
+        public async Task WhenICallTheEnsWebhookApiWithAValidFssJObjectBody_ThenOkStatusIsReturned()
         {
             const string subject = "83d08093-7a67-4b3a-b431-92ba42feaea0";
             const string addHttps = "https://";
@@ -100,8 +102,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             FssEventData publishDataFromFss = FssEventData;
             await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, null);
 
-            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
             DateTime startTime = DateTime.UtcNow;
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
+           
             while (DateTime.UtcNow - startTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
             {
                 await Task.Delay(10000);
@@ -149,7 +152,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [TestCase("83d08093-7a67-4b3a-b431-92ba42feaea0", HttpStatusCode.InternalServerError, TestName = "InternalServerError for WebHook")]
         [TestCase("83d08093-7a67-4b3a-b431-92ba42feaea0", HttpStatusCode.BadRequest, TestName = "BadRequest for WebHook")]
         [TestCase("83d08093-7a67-4b3a-b431-92ba42feaea0", HttpStatusCode.NotFound, TestName = "NotFound for WebHook")]
-        public async Task WhenICallTheEnsWebhookApiWithAValidJObjectBody_ThenNonOkStatusIsReturned(string subject, HttpStatusCode statusCode)
+        public async Task WhenICallTheEnsWebhookApiWithAValidFssJObjectBody_ThenNonOkStatusIsReturned(string subject, HttpStatusCode statusCode)
         {
             JObject ensWebhookJson = FssEventBody;
             await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, statusCode);
@@ -171,6 +174,42 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
                 .OrderByDescending(a => a.TimeStamp);
             Assert.NotNull(getMatchingData);
             Assert.Greater(getMatchingData.Count(), 1);
+        }
+
+        [Test]
+        public async Task WhenICallTheEnsWebhookApiWithAValidScsJObjectBody_ThenOkStatusIsReturned()
+        {
+            const string subject = "NO4F1617";
+            JObject ensWebhookJson = ScsEventBody;
+
+            await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, null);
+
+            DateTime startTime = DateTime.UtcNow;
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
+            
+            while (DateTime.UtcNow - startTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
+            {
+                await Task.Delay(10000);
+            }
+
+            Assert.AreEqual(200, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 200.");
+            HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
+            string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
+            IEnumerable<DistributorRequest> deserialized = JsonConvert.DeserializeObject<IEnumerable<DistributorRequest>>(custome‌​rJsonString);
+            DistributorRequest getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.statusCode.HasValue && x.statusCode.Value == HttpStatusCode.OK).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
+            Assert.NotNull(getMatchingData);
+            Assert.AreEqual(HttpStatusCode.OK, getMatchingData.statusCode);
+
+            // Validating Event Subject
+            Assert.AreEqual(subject, getMatchingData.Subject);
+            Assert.IsInstanceOf<CustomCloudEvent>(getMatchingData.CloudEvent);
+
+            // Validating Event Source
+            Assert.AreEqual(TestConfig.ScsSource, getMatchingData.CloudEvent.Source);
+
+            // Validating Event Type
+            Assert.AreEqual("uk.co.admiralty.avcsData.contentPublished.v1", getMatchingData.CloudEvent.Type);
+
         }
     }
 }

@@ -41,10 +41,25 @@ variable "env_suffix_text" {
     "dev"     = "Dev"
     "qa"      = "QA"
     "distdev" = "Dist Dev"
-    "prod"    = " "
+    "live"    = " "
   }
 }
 
 locals {
-  env_name                        = lower(terraform.workspace)
+  env_name    = lower(terraform.workspace)
+}
+
+variable "d365_product_call_limit" {
+  type = number
+  default = 5
+}
+
+variable "d365_product_call_renewal_period" {
+  type = number
+  default = 5
+}
+
+variable "ees_product_call_limit" {
+  type = number
+  default = 20
 }

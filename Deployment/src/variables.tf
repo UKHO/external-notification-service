@@ -42,3 +42,34 @@ variable "app_service_sku" {
   }
 }
 
+variable "spoke_rg" {
+  type = string
+}
+
+variable "spoke_vnet_name" {
+  type = string
+}
+
+variable "spoke_subnet_name" {
+  type = string
+}
+
+variable "agent_rg" {
+  type = string
+}
+
+variable "agent_vnet_name" {
+  type = string
+}
+
+variable "agent_subnet_name" {
+  type = string
+}
+
+variable "agent_subscription_id" {
+  type = string
+}
+
+variable "allowed_ips" {
+  type = list
+}

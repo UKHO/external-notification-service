@@ -28,5 +28,14 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
                     "Create Subscription service completed for _D365-Correlation-ID:{CorrelationId} and _X-Correlation-ID:{CorrelationId}", subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
             return response;
         }
+
+        public async Task DeleteSubscription(SubscriptionRequestMessage subscriptionMessage, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation(EventIds.DeleteSubscriptionServiceEventStart.ToEventId(),
+                    "Delete Subscription service started for _D365-Correlation-ID:{CorrelationId} and _X-Correlation-ID:{CorrelationId}", subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+           await _azureEventGridDomainService.DeleteSubscription(subscriptionMessage, cancellationToken);
+            _logger.LogInformation(EventIds.DeleteSubscriptionServiceEventCompleted.ToEventId(),
+                    "Delete Subscription service completed for _D365-Correlation-ID:{CorrelationId} and _X-Correlation-ID:{CorrelationId}", subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);          
+        }
     }
 }

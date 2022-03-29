@@ -52,6 +52,21 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
                     subscriptionRequestMessage.SubscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId, topic.Name);
             return createdOrUpdatedEventSubscription;
         }
+        public async Task DeleteSubscription(SubscriptionRequestMessage subscriptionRequestMessage, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation(EventIds.DeleteAzureEventDomainSubscriptionStart.ToEventId(),
+                    "Delete azure event grid domain subscription started for SubscriptionId:{SubscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId} with Event domain topic {NotificationTypeTopicName}", subscriptionRequestMessage.SubscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId, subscriptionRequestMessage.NotificationTypeTopicName);
+
+            EventGridManagementClient eventGridMgmtClient = await GetEventGridClient(_eventGridDomainConfig.SubscriptionId, cancellationToken);
+            DomainTopic topic = await GetDomainTopic(eventGridMgmtClient, subscriptionRequestMessage.NotificationTypeTopicName, cancellationToken);
+            string eventSubscriptionScope = topic.Id;
+        
+            await eventGridMgmtClient.EventSubscriptions.DeleteAsync(eventSubscriptionScope, subscriptionRequestMessage.SubscriptionId, cancellationToken);
+
+            _logger.LogInformation(EventIds.DeleteAzureEventDomainSubscriptionCompleted.ToEventId(),
+                    "Delete azure event grid domain subscription completed for SubscriptionId:{SubscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId} for Event domain topic {topic}",
+                    subscriptionRequestMessage.SubscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId, topic.Name);           
+        }
 
         public async Task PublishEventAsync(CloudEvent cloudEvent, string correlationId, CancellationToken cancellationToken = default)
         {

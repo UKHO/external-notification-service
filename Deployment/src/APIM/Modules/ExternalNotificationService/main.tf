@@ -17,7 +17,7 @@ resource "azurerm_api_management_api" "ens_api" {
   resource_group_name = data.azurerm_api_management.apim_instance.resource_group_name
   api_management_name = data.azurerm_api_management.apim_instance.name 
   name                = "ens-api-${local.formatted_env}"
-  display_name        = "External Notification Service API ${var.env_suffix}"
+  display_name        = "${var.env}" == "live" ? "External Notification Service API" : "External Notification Service API ${var.env_suffix}"
   description         = "The External Notification Service API provides the ability to subscribe and deliver notifications."
   revision            = "1"
   path                = "ens-api-${local.formatted_env}"
@@ -113,6 +113,7 @@ resource "azurerm_api_management_product_policy" "d365_product_policy" {
 	<policies>
 	  <inbound>
       <base />
+      <rate-limit calls="${var.d365_product_call_limit}" renewal-period="${var.d365_product_call_renewal_period}" retry-after-header-name="retry-after" remaining-calls-header-name="remaining-calls" />
       <quota calls="${var.d365_product_daily_quota_limit}" renewal-period="86400" />
 
       <!-- Send request to generate-token url with required values -->
@@ -195,6 +196,7 @@ resource "azurerm_api_management_product_policy" "ees_product_policy" {
 	<policies>
 	  <inbound>
       <base />
+      <rate-limit calls="${var.ees_product_call_limit}" renewal-period="1" retry-after-header-name="retry-after" remaining-calls-header-name="remaining-calls" />
 
       <!-- Validate AD token -->
       <validate-jwt header-name="Authorization" failed-validation-httpcode="401" failed-validation-error-message="Access token is missing or invalid.">

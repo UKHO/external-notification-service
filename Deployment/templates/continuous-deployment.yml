@@ -24,10 +24,22 @@ steps:
       ARM_CLIENT_SECRET: $(TERRAFORM-CLIENT-SECRET)
       ARM_TENANT_ID: $(TERRAFORM-TENANT-ID)
       ARM_SUBSCRIPTION_ID: $(TERRAFORM-SUBSCRIPTION-ID)
+      TF_VAR_allowed_ips: $(whiteListedIps)
+      TF_VAR_spoke_rg: $(spokeRG)
+      TF_VAR_spoke_vnet_name: $(spokeVnetName)
+      TF_VAR_spoke_subnet_name: $(spokeSubnetName)
+      TF_VAR_agent_rg: $(agentRG)
+      TF_VAR_agent_vnet_name: $(agentVnetName)
+      TF_VAR_agent_subnet_name: $(agentSubnetName)
+      TF_VAR_agent_subscription_id: $(agentSubscriptionId)
 
   - bash: echo "##vso[task.setvariable variable=D365CallbackConfiguration.D365ApiUri]$(D365ApiStubUri)"
-    name: SetStubURL
+    name: SetDevStubURL
     condition: and(succeeded(), eq(variables['Environment.Name'], 'Ens-Dev'))
+
+  - bash: echo "##vso[task.setvariable variable=D365CallbackConfiguration.D365ApiUri]$(D365ApiQaStubUri)"
+    name: SetQAStubURL
+    condition: and(succeeded(), eq(variables['Environment.Name'], 'Ens-QA'))
 
   - task: FileTransform@1
     displayName: "File Transform: WebAppSettings"

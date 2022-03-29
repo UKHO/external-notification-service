@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\UKHO.ExternalNotificationService.API\UKHO.ExternalNotificationService.API.csproj" />
-    <ProjectReference Include="..\UKHO.ExternalNotificationService.Common.UnitTests\UKHO.ExternalNotificationService.Common.UnitTests.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,7 +5,7 @@ using UKHO.ExternalNotificationService.Common.Models.Request;
 using Attribute = UKHO.ExternalNotificationService.Common.Models.EventModel.Attribute;
 using File = UKHO.ExternalNotificationService.Common.Models.EventModel.File;
 
-namespace UKHO.ExternalNotificationService.Common.UnitTests.BaseClass
+namespace UKHO.ExternalNotificationService.API.UnitTests.BaseClass
 {
     public static class CustomCloudEventBase
     {
