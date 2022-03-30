@@ -22,4 +22,5 @@ variable "tags" {
 }
 
 variable "private_dns_zone_resource_id" {
+  type = string
 }
