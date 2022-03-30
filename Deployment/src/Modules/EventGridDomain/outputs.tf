@@ -11,3 +11,7 @@ output "event_grid_domain_primary_access_key" {
 output "event_grid_domain_name" {
   value     = azurerm_eventgrid_domain.eventgrid_domain.name
 }
+
+output "event_grid_domain_resource_id" {
+  value     = azurerm_eventgrid_domain.eventgrid_domain.id
+}
