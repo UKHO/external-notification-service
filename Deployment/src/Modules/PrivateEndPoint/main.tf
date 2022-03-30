@@ -1,5 +1,5 @@
 resource "azurerm_private_endpoint" "eventgriddomain_endpoint" {
-  name                    = "EventGridDomain-${var.env_name}-EndPoint"
+  name                    = "EventGridDomain-${var.env_name}-endpoint"
   resource_group_name     = var.resource_group_name
   location                = var.location
   subnet_id               = var.subnet_id
