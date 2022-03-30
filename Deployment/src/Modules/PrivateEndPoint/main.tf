@@ -12,6 +12,6 @@ resource "azurerm_private_endpoint" "eventgriddomain_endpoint" {
   }
   private_dns_zone_group {
     name                 = "privatelink.eventgrid.azure.net"
-    private_dns_zone_ids = var.private_dns_zone_resource_id
+    private_dns_zone_ids = [var.private_dns_zone_resource_id]
   }
 }
