@@ -12,6 +12,6 @@ output "entity_path" {
   value = azurerm_eventhub.eventhub.name
 }
 
-output "eventgrid_authorization_id" {
-  value = azurerm_eventhub_authorization_rule.eventgrid.id
+output "eventhub_namespace_authorization_rule_id" {
+  value = azurerm_eventhub_namespace_authorization_rule.namespace_rule.id
 }
