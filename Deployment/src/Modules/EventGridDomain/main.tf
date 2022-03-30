@@ -13,8 +13,9 @@ resource "azurerm_role_assignment" "eventgrid_domain_role" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "egdiagnosticsetting" {
-  name               = "${var.name}-diagnostic"
-  target_resource_id = azurerm_eventgrid_domain.eventgrid_domain.id
+  name                           = "${var.name}-diagnostic"
+  target_resource_id             = azurerm_eventgrid_domain.eventgrid_domain.id 
+  eventhub_name                  = 
   eventhub_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
 
   log {

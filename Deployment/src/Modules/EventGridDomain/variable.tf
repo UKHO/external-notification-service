@@ -21,3 +21,7 @@ variable "webapp_principal_id" {
 variable "eventhub_namespace_authorization_rule_id" {
   type = string
 }
+
+variable "eventhub_name" {
+  type = string
+}

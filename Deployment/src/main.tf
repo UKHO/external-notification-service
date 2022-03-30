@@ -86,12 +86,13 @@ module "key_vault" {
 }
 
 module "eventgriddomain" {
-  source              = "./Modules/EventGridDomain"
-  name                = "${local.service_name}-${local.env_name}-eventgriddomain"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
-  tags                = local.tags
-  webapp_principal_id = module.webapp_service.web_app_object_id
+  source                                   = "./Modules/EventGridDomain"
+  name                                     = "${local.service_name}-${local.env_name}-eventgriddomain"
+  resource_group_name                      = azurerm_resource_group.rg.name
+  location                                 = azurerm_resource_group.rg.location
+  tags                                     = local.tags
+  webapp_principal_id                      = module.webapp_service.
+  eventhub_name                            = module.eventhub.eventhub_name
   eventhub_namespace_authorization_rule_id = module.eventhub.eventhub_namespace_authorization_rule_id
 }
 
