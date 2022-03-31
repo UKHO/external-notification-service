@@ -122,7 +122,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
         {
             string SubscriptionId = "2faf02dd-30af-ec11-9840-000d3a272942";
 
-            ExternalNotificationEntity externalNotificationEntity = new() { ResponseStateCode = "1"};
+            ExternalNotificationEntity externalNotificationEntity = new() { ResponseDetails = "Succeeded" };
             SubscriptionRequestMessage subscriptionRequestMessage = new() { CorrelationId = Guid.NewGuid().ToString()};
 
             _logger.LogInformation(EventIds.ProcessBlobTriggerStart.ToEventId(),
