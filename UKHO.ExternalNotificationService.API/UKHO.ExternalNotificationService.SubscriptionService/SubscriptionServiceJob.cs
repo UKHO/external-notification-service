@@ -120,7 +120,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
 
         public async Task ProcessBlobTrigger([BlobTrigger("%SubscriptionStorageConfiguration:StorageContainerName%/{name}")] Stream myBlob, string name)
         {
-            string SubscriptionId = "ad0ccbc8-2975-ec11-8943-002248818233";
+            string SubscriptionId = "2faf02dd-30af-ec11-9840-000d3a272942";
 
             ExternalNotificationEntity externalNotificationEntity = new() { ResponseStateCode = "1"};
             SubscriptionRequestMessage subscriptionRequestMessage = new() { CorrelationId = Guid.NewGuid().ToString()};
