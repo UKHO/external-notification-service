@@ -134,6 +134,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
               {
                   b.AddAzureStorageCoreServices();
                   b.AddAzureStorageQueues();
+                  b.AddAzureStorageBlobs();
               });
 
             return hostBuilder;

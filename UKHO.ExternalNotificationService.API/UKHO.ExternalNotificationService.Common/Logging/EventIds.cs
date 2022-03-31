@@ -223,7 +223,9 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900055 -  Sales catalogue service event data mapping Completed.
         /// </summary>
-        ScsEventDataMappingCompleted = 900055
+        ScsEventDataMappingCompleted = 900055,
+        ProcessBlobTriggerStart = 900056,
+        ProcessBlobTriggerCompleted = 900057
     }
 
     public static class EventIdExtensions

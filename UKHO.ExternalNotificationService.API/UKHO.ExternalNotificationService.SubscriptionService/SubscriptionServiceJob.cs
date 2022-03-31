@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Logging;
@@ -115,6 +116,26 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
             
             _logger.LogInformation(EventIds.CreateSubscriptionRequestCompleted.ToEventId(),
                     "Subscription provisioning request Completed for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionMessage.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+        }
+
+        public async Task ProcessBlobTrigger([BlobTrigger("%SubscriptionStorageConfiguration:StorageContainerName%/{name}")] Stream myBlob, string name)
+        {
+            string SubscriptionId = "ad0ccbc8-2975-ec11-8943-002248818233";
+
+            ExternalNotificationEntity externalNotificationEntity = new() { ResponseStateCode = "1"};
+            SubscriptionRequestMessage subscriptionRequestMessage = new() { CorrelationId = Guid.NewGuid().ToString()};
+
+            _logger.LogInformation(EventIds.ProcessBlobTriggerStart.ToEventId(),
+                   "Process blob trigger request started for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", SubscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
+
+            string entityPath = $"ukho_externalnotifications({SubscriptionId})";
+            await _callbackService.CallbackToD365UsingDataverse(entityPath, externalNotificationEntity, subscriptionRequestMessage);
+
+            _logger.LogInformation(EventIds.ProcessBlobTriggerCompleted.ToEventId(),
+                   "Process blob trigger request completed for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", SubscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
+
+
+            _logger.LogInformation($"C# Blob trigger function Processed blob\n Name:{name} \n Size: {myBlob.Length} Bytes");
         }
     }
 }
