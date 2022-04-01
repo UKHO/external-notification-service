@@ -225,7 +225,10 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         ScsEventDataMappingCompleted = 900055,
         ProcessBlobTriggerStart = 900056,
-        ProcessBlobTriggerCompleted = 900057
+        ProcessBlobTriggerCompleted = 900057,
+        DeadLetterCallbackToD365Started = 900058,
+        DeadLetterMoveBlobStarted = 900059,
+        DeadLetterMoveBlobCompleted = 900060
     }
 
     public static class EventIdExtensions

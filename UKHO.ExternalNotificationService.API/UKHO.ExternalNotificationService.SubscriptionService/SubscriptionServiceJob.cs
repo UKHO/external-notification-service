@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Logging;
@@ -24,16 +25,19 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
         private readonly ISubscriptionServiceData _subscriptionServiceData;
         private readonly ILogger<SubscriptionServiceJob> _logger;        
         private readonly IOptions<D365CallbackConfiguration> _d365CallbackConfiguration;
-        private readonly ICallbackService _callbackService;        
+        private readonly ICallbackService _callbackService;
+        private readonly IHandleDeadLetterService _handleDeadLetterService;
 
         public SubscriptionServiceJob(ISubscriptionServiceData subscriptionServiceData,
             ILogger<SubscriptionServiceJob> logger, IOptions<D365CallbackConfiguration> d365CallbackConfiguration,
-            ICallbackService callbackService)
+            ICallbackService callbackService,
+            IHandleDeadLetterService handleDeadLetterService)
         {
             _subscriptionServiceData = subscriptionServiceData;           
             _logger = logger;
             _d365CallbackConfiguration = d365CallbackConfiguration;           
             _callbackService =  callbackService;
+            _handleDeadLetterService = handleDeadLetterService;
         }
 
         public async Task ProcessQueueMessage([QueueTrigger("%SubscriptionStorageConfiguration:QueueName%")] QueueMessage message)
@@ -118,25 +122,34 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                     "Subscription provisioning request Completed for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionMessage.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
         }
 
-        public async Task ProcessBlobTrigger([BlobTrigger("%SubscriptionStorageConfiguration:StorageContainerName%/{name}")] Stream myBlob, string name)
+        public async Task ProcessBlobTrigger([BlobTrigger("%SubscriptionStorageConfiguration:StorageContainerName%/{filePath}")] Stream myBlob, string filePath)
         {
-            string SubscriptionId = "2faf02dd-30af-ec11-9840-000d3a272942";
-            string result = Path.GetFileName(name);
+            string subscriptionId = GetContainerName(filePath);
+            string fileName = Path.GetFileName(filePath);
 
-            ExternalNotificationEntity externalNotificationEntity = new() { ResponseDetails = "Succeeded" };
             SubscriptionRequestMessage subscriptionRequestMessage = new() { CorrelationId = Guid.NewGuid().ToString()};
 
             _logger.LogInformation(EventIds.ProcessBlobTriggerStart.ToEventId(),
-                   "Process blob trigger request started for FileName:{result} , SubscriptionId : {SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", result, SubscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
+                   "Process blob trigger request started for SubscriptionId:{SubscriptionId}, FileName:{fileName} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, fileName, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
 
-            string entityPath = $"ukho_externalnotifications({SubscriptionId})";
-            await _callbackService.CallbackToD365UsingDataverse(entityPath, externalNotificationEntity, subscriptionRequestMessage);
+            await _handleDeadLetterService.ProcessDeadLetter(filePath, subscriptionId, subscriptionRequestMessage);
 
             _logger.LogInformation(EventIds.ProcessBlobTriggerCompleted.ToEventId(),
-                   "Process blob trigger request completed for FileName:{result} , SubscriptionId : {SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", result, SubscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
+                   "Process blob trigger request completed for SubscriptionId:{SubscriptionId}, FileName:{fileName} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, fileName, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
+        }
 
-
-            _logger.LogInformation($"C# Blob trigger function Processed blob\n Name:{name} \n Size: {myBlob.Length} Bytes");
+        private static string GetContainerName(string filePath)
+        {
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                string[] splitFilePath = filePath.Split("/");
+                if (splitFilePath.Count() > 1)
+                {
+                    return splitFilePath[1];
+                }
+                return string.Empty;
+            }
+            return string.Empty;
         }
     }
 }
