@@ -122,5 +122,4 @@ module "PrivateEndPoint" {
   tags                = local.tags
   env_name            = local.env_name
   event_grid_domain_resource_id = module.eventgriddomain.event_grid_domain_resource_id
-  private_dns_zone_resource_id  = var.private_dns_zone_resource_id
 }
