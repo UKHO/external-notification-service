@@ -25,5 +25,5 @@ output "webapp_name" {
 }
 
 output "default_site_hostname_ens_stub" {
-  value = var.env_name == "dev" ?  null : azurerm_app_service.stub_webapp_service[0].default_site_hostname
+  value = var.env_name == "live" ?  null : azurerm_app_service.stub_webapp_service[0].default_site_hostname
 }
