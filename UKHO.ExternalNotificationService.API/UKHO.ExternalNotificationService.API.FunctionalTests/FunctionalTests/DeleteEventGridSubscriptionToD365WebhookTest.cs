@@ -45,7 +45,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             HttpResponseMessage apiStubResponse = await EnsApiClient.PostStubCommandToFailAsync(TestConfig.StubBaseUri, subscriptionId, null);
             Assert.AreEqual(200, (int)apiStubResponse.StatusCode, $"Incorrect status code {apiStubResponse.StatusCode}  is  returned, instead of the expected 200.");
 
-
+            await Task.Delay(30000);
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
             Assert.AreEqual(202, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
 
@@ -71,6 +71,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             D365Payload.InputParameters[0].Value.FormattedValues[0].Value = "Inactive";
             requestTime = DateTime.UtcNow;
 
+            await Task.Delay(30000);
             apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
             Assert.AreEqual(202, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
 
@@ -97,6 +98,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             D365Payload.InputParameters[0].Value.FormattedValues[0].Value = "Active";
             requestTime = DateTime.UtcNow;
 
+            await Task.Delay(30000);
             apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
             Assert.AreEqual(202, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
 
