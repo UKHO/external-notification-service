@@ -25,6 +25,7 @@ module "eventhub" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   tags                = local.tags
+  env_name            = local.env_name
 }
 
 module "webapp_service" {
@@ -92,7 +93,7 @@ module "eventgriddomain" {
   location                                 = azurerm_resource_group.rg.location
   tags                                     = local.tags
   webapp_principal_id                      = module.webapp_service.web_app_object_id
-  eventhub_name                            = module.eventhub.entity_path
+  eventhub_name                            = module.eventhub.eventgrid_eventhub_name
   eventhub_namespace_authorization_rule_id = module.eventhub.eventhub_namespace_authorization_rule_id
 }
 
