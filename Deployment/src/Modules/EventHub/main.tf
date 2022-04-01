@@ -60,7 +60,7 @@ resource "azurerm_eventhub_authorization_rule" "log" {
 }
 
 resource "azurerm_eventhub" "eventhub_logging" {
-  name                = "eventgrid-${env_name}-logging"
+  name                = "eventgrid-${var.env_name}-logging"
   namespace_name      = azurerm_eventhub_namespace.eventhub_namespace.name
   resource_group_name = var.resource_group_name
   partition_count     = 2
