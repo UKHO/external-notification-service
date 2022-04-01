@@ -34,7 +34,7 @@ steps:
       TF_VAR_agent_subscription_id: $(agentSubscriptionId)
 
   - bash: echo "##vso[task.setvariable variable=D365CallbackConfiguration.D365ApiUri]$(D365ApiStubUri)"
-    name: "Set Stub URL"
+    name: SetStubURL
     condition: and(succeeded(), ne(variables['Environment.Name'], 'Ens-Live'))
 
   - task: FileTransform@1
