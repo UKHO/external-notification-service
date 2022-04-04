@@ -10,4 +10,11 @@ resource "azurerm_private_endpoint" "eventgriddomain_endpoint" {
     is_manual_connection              = false
     subresource_names                 = ["domain"]
   }
+
+  lifecycle {
+    ignore_changes = [
+      private_dns_zone_configs,
+      private_dns_zone_group
+    ]
+  }
 }
