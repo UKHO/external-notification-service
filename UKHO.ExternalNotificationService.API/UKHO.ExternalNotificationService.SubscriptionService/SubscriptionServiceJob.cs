@@ -127,7 +127,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
             string subscriptionId = GetContainerName(filePath);
             string fileName = Path.GetFileName(filePath);
 
-            SubscriptionRequestMessage subscriptionRequestMessage = new() { CorrelationId = Guid.NewGuid().ToString()};
+            SubscriptionRequestMessage subscriptionRequestMessage = new() { CorrelationId = Guid.NewGuid().ToString(), SubscriptionId = subscriptionId };
 
             _logger.LogInformation(EventIds.ProcessBlobTriggerStart.ToEventId(),
                    "Process blob trigger request started for SubscriptionId:{SubscriptionId}, FileName:{fileName} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, fileName, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
