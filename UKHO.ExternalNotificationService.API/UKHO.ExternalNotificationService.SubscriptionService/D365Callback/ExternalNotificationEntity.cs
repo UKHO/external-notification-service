@@ -11,7 +11,6 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.D365Callback
         [JsonProperty("ukho_responsedetails")]
         public string ResponseDetails { get; set; }
 
-        [JsonProperty("statecode")]
-        public int ResponseStateCode { get; set; }
+        public int statecode { get; set; }
     }
 }

@@ -39,7 +39,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
             {
                 ResponseStatusCode = _d365CallbackConfiguration.Value.FailedStatusCode,
                 ResponseDetails = $"Failed to notify hence subscription is inactive @Time: {DateTime.UtcNow}.",
-                ResponseStateCode = 1
+                statecode = 1
             };
                                                                             
             string entityPath = $"ukho_externalnotifications({subscriptionId})";
