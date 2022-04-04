@@ -35,8 +35,13 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
 
         public async Task ProcessDeadLetter(string filePath, string subscriptionId, SubscriptionRequestMessage subscriptionRequestMessage)
         {
-            ExternalNotificationEntity externalNotificationEntity = new() { ResponseStatusCode = _d365CallbackConfiguration.Value.FailedStatusCode, 
-                                                                            ResponseDetails = $"Failed to notify hence subscription is inactive @Time: {DateTime.UtcNow}."};
+            ExternalNotificationEntity externalNotificationEntity = new()
+            {
+                ResponseStatusCode = _d365CallbackConfiguration.Value.FailedStatusCode,
+                ResponseDetails = $"Failed to notify hence subscription is inactive @Time: {DateTime.UtcNow}.",
+                ResponseStateCode = 1
+            };
+                                                                            
             string entityPath = $"ukho_externalnotifications({subscriptionId})";
             ////string fileName = Path.GetFileName(filePath);
 

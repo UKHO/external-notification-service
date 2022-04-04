@@ -56,7 +56,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                     eventSubscription = await _subscriptionServiceData.CreateOrUpdateSubscription(subscriptionMessage, CancellationToken.None);
                     subscriptionRequestResult.ProvisioningState = "Succeeded";
 
-                    externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, subscriptionMessage.IsActive, _d365CallbackConfiguration.Value.SucceededStatusCode);
+                    externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, subscriptionMessage.IsActive, _d365CallbackConfiguration.Value.SucceededStatusCode, 0);
 
                     _logger.LogError(EventIds.CreateSubscriptionRequestSuccess.ToEventId(),
                  "Subscription provisioning request Succeeded for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
@@ -71,7 +71,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                         int startIndex = e.Message.IndexOf("Webhook validation handshake failed");
                         subscriptionRequestResult.ErrorMessage = e.Message.Substring(startIndex, e.Message.Length - startIndex);
 
-                        externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, subscriptionMessage.IsActive, _d365CallbackConfiguration.Value.FailedStatusCode);
+                        externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, subscriptionMessage.IsActive, _d365CallbackConfiguration.Value.FailedStatusCode, 0);
 
                         _logger.LogError(EventIds.CreateSubscriptionRequestHandshakeFailureError.ToEventId(),
                   "Subscription provisioning request failed with Webhook handshake failure error with Exception:{e} for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", e.Message, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
@@ -80,7 +80,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                     else
                     {
                         subscriptionRequestResult.ErrorMessage = e.Message;
-                        externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, subscriptionMessage.IsActive, _d365CallbackConfiguration.Value.FailedStatusCode);
+                        externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, subscriptionMessage.IsActive, _d365CallbackConfiguration.Value.FailedStatusCode, 0);
 
                         _logger.LogError(EventIds.CreateSubscriptionRequestOtherError.ToEventId(),
                   "Subscription provisioning request failed with other error with Exception:{e} for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", e.Message, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
@@ -95,7 +95,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                     await _subscriptionServiceData.DeleteSubscription(subscriptionMessage, CancellationToken.None);
                     subscriptionRequestResult.ProvisioningState = "Succeeded";
 
-                    externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, subscriptionMessage.IsActive, _d365CallbackConfiguration.Value.SucceededStatusCode);
+                    externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, subscriptionMessage.IsActive, _d365CallbackConfiguration.Value.SucceededStatusCode, 1);
 
                     _logger.LogError(EventIds.DeleteSubscriptionRequestSuccess.ToEventId(),
                  "Delete Event Grid Domain Subscription request Succeeded for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
@@ -105,7 +105,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                     subscriptionRequestResult.ProvisioningState = "Failed";
                     subscriptionRequestResult.ErrorMessage = ex.Message;
 
-                    externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, subscriptionMessage.IsActive, _d365CallbackConfiguration.Value.FailedStatusCode);
+                    externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, subscriptionMessage.IsActive, _d365CallbackConfiguration.Value.FailedStatusCode, 0);
 
                     _logger.LogError(EventIds.DeleteSubscriptionRequestError.ToEventId(),
                   "Delete Event Grid Domain Subscription request failed with error with Exception:{ex} for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", ex.Message, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
