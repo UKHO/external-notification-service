@@ -37,7 +37,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
                 if (httpResponse.StatusCode != HttpStatusCode.NoContent)
                 {
                     _logger.LogError(EventIds.ErrorInCallbackToD365HttpClient.ToEventId(),
-                "Callback to D365 using Dataverse failed with Status:{StatusCode} and RequestUri:{RequestUri} and SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", httpResponse.StatusCode, httpResponse.RequestMessage.RequestUri, subscriptionMessage.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+                "Callback to D365 using Dataverse failed with Status:{StatusCode} and RequestUri:{RequestUri} and SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId} and ReasonPhrase:{ReasonPhrase}", httpResponse.StatusCode, httpResponse.RequestMessage.RequestUri, subscriptionMessage.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId, httpResponse.ReasonPhrase);
                     return httpResponse;
                 }
                 _logger.LogInformation(EventIds.CallbackToD365Completed.ToEventId(),
