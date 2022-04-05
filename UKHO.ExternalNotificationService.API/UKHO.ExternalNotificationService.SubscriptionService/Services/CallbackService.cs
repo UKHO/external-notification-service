@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -28,6 +29,9 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
 
             if (accessToken != string.Empty)
             {
+                _logger.LogError(EventIds.ErrorInCallbackToD365HttpClient.ToEventId(),
+              "Test externalNotificationEntity value externalNotificationEntity :{externalNotificationEntity} and correlationID :{CorrelationId} and accessToken:{accessToken}", JsonConvert.SerializeObject(externalNotificationEntity), subscriptionMessage.CorrelationId, accessToken);
+
                 HttpResponseMessage httpResponse = await _callbackClient.GetCallbackD365Client(externalEntityPath, accessToken, externalNotificationEntity, subscriptionMessage.CorrelationId, CancellationToken.None);
 
                 if (httpResponse.StatusCode != HttpStatusCode.NoContent)
