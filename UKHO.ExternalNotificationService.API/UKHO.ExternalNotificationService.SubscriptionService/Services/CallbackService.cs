@@ -30,7 +30,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
             if (accessToken != string.Empty)
             {
                 _logger.LogError(EventIds.ErrorInCallbackToD365HttpClient.ToEventId(),
-               "Test externalNotificationEntity value externalNotificationEntity :{externalNotificationEntity} and correlationID :{CorrelationId}", JsonConvert.SerializeObject(externalNotificationEntity), subscriptionMessage.CorrelationId);
+               "Test externalNotificationEntity value externalNotificationEntity :{externalNotificationEntity} and correlationID :{CorrelationId} and accessToken:{accessToken}", JsonConvert.SerializeObject(externalNotificationEntity), subscriptionMessage.CorrelationId, accessToken);
 
                 HttpResponseMessage httpResponse = await _callbackClient.GetCallbackD365Client(externalEntityPath, accessToken, externalNotificationEntity, subscriptionMessage.CorrelationId, CancellationToken.None);
 
