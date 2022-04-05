@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Configuration;
 
 namespace UKHO.ExternalNotificationService.Common.Helpers
@@ -6,5 +7,7 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
     public interface IAzureMoveBlobHelper
     {
         Task DeadLetterMoveBlob(SubscriptionStorageConfiguration ensStorageConfiguration, string path);
+
+        Task<DateTime> GetBlockBlobLastModifiedDate(SubscriptionStorageConfiguration ensStorageConfiguration, string path);
     }
 }

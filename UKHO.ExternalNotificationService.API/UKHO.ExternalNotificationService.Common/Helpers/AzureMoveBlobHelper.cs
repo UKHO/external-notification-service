@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using System;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Configuration;
 
@@ -39,6 +40,22 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             {
                 await sourceBlob.DeleteIfExistsAsync();
             }
+        }
+
+        public async Task<DateTime> GetBlockBlobLastModifiedDate(SubscriptionStorageConfiguration ensStorageConfiguration, string path)
+        {
+            string storageAccountConnectionString = $"DefaultEndpointsProtocol=https;AccountName={ensStorageConfiguration.StorageAccountName};AccountKey={ensStorageConfiguration.StorageAccountKey};EndpointSuffix=core.windows.net";
+            string blobName = path;
+
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageAccountConnectionString);
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+            CloudBlobContainer container = blobClient.GetContainerReference(ensStorageConfiguration.StorageContainerName);
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(blobName);
+
+            await blockBlob.FetchAttributesAsync();
+            var lastModifiedDate = blockBlob.Properties.LastModified;
+
+            return lastModifiedDate.Value.UtcDateTime;
         }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Helpers;
@@ -57,6 +58,11 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
 
             ////_logger.LogInformation(EventIds.DeadLetterMoveBlobCompleted.ToEventId(),
             ////"DeadLetter file moves to the destination container completed FileName:{fileName} for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", fileName, subscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
+        }
+
+        public async Task<DateTime> GetBlockBlobLastModifiedDate(string filePath)
+        {
+            return await _azureMoveBlobHelper.GetBlockBlobLastModifiedDate(_ensStorageConfiguration.Value, filePath);
         }
     }
 }

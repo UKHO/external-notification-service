@@ -126,16 +126,22 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
         {
             string subscriptionId = GetContainerName(filePath);
             string fileName = Path.GetFileName(filePath);
+            DateTime lastModifiedDateTime = await _handleDeadLetterService.GetBlockBlobLastModifiedDate(filePath);
+            DateTime currentDateTime = DateTime.UtcNow.AddMinutes(-2);
 
-            SubscriptionRequestMessage subscriptionRequestMessage = new() { CorrelationId = Guid.NewGuid().ToString(), SubscriptionId = subscriptionId };
+            if (lastModifiedDateTime >= currentDateTime)
+            {
+                SubscriptionRequestMessage subscriptionRequestMessage = new() { CorrelationId = Guid.NewGuid().ToString(), SubscriptionId = subscriptionId };
 
-            _logger.LogInformation(EventIds.ProcessBlobTriggerStart.ToEventId(),
-                   "Process blob trigger request started for SubscriptionId:{SubscriptionId}, FileName:{fileName} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, fileName, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
+                _logger.LogInformation(EventIds.ProcessBlobTriggerStart.ToEventId(),
+                       "Process blob trigger request started for SubscriptionId:{SubscriptionId}, FileName:{fileName} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, fileName, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
 
-            await _handleDeadLetterService.ProcessDeadLetter(filePath, subscriptionId, subscriptionRequestMessage);
+                await _handleDeadLetterService.ProcessDeadLetter(filePath, subscriptionId, subscriptionRequestMessage);
 
-            _logger.LogInformation(EventIds.ProcessBlobTriggerCompleted.ToEventId(),
-                   "Process blob trigger request completed for SubscriptionId:{SubscriptionId}, FileName:{fileName} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, fileName, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
+                _logger.LogInformation(EventIds.ProcessBlobTriggerCompleted.ToEventId(),
+                       "Process blob trigger request completed for SubscriptionId:{SubscriptionId}, FileName:{fileName} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, fileName, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
+
+            }
         }
 
         private static string GetContainerName(string filePath)
