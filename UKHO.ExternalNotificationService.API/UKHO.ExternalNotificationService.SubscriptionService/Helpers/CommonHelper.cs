@@ -45,14 +45,14 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Helpers
             {
                 externalNotificationEntity.ResponseStatusCode = statusCode;
                 externalNotificationEntity.ResponseDetails = isActive ? $"Successfully added subscription @Time: { DateTime.UtcNow}" : $"Successfully removed subscription @Time: { DateTime.UtcNow}";
-                externalNotificationEntity.statecode = statecode;
+                externalNotificationEntity.ResponseStateCode = statecode;
             }
 
             if (subscriptionRequestResult.ProvisioningState == "Failed")
             {
                 externalNotificationEntity.ResponseStatusCode = statusCode;
                 externalNotificationEntity.ResponseDetails = isActive ? $"Failed to add subscription @Time: {DateTime.UtcNow} with exception {subscriptionRequestResult.ErrorMessage}" : $"Failed to remove subscription @Time: {DateTime.UtcNow} with exception {subscriptionRequestResult.ErrorMessage}";
-                externalNotificationEntity.statecode = statecode;
+                externalNotificationEntity.ResponseStateCode = statecode;
             }
             return externalNotificationEntity;
         }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -29,15 +28,12 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
 
             if (accessToken != string.Empty)
             {
-                _logger.LogError(EventIds.ErrorInCallbackToD365HttpClient.ToEventId(),
-               "Test externalNotificationEntity value externalNotificationEntity :{externalNotificationEntity} and correlationID :{CorrelationId} and accessToken:{accessToken}", JsonConvert.SerializeObject(externalNotificationEntity), subscriptionMessage.CorrelationId, accessToken);
-
                 HttpResponseMessage httpResponse = await _callbackClient.GetCallbackD365Client(externalEntityPath, accessToken, externalNotificationEntity, subscriptionMessage.CorrelationId, CancellationToken.None);
 
                 if (httpResponse.StatusCode != HttpStatusCode.NoContent)
                 {
                     _logger.LogError(EventIds.ErrorInCallbackToD365HttpClient.ToEventId(),
-                "Callback to D365 using Dataverse failed with Status:{StatusCode} and RequestUri:{RequestUri} and SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId} and ReasonPhrase:{ReasonPhrase}", httpResponse.StatusCode, httpResponse.RequestMessage.RequestUri, subscriptionMessage.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId, httpResponse.ReasonPhrase);
+                "Callback to D365 using Dataverse failed with Status:{StatusCode} and RequestUri:{RequestUri} and SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", httpResponse.StatusCode, httpResponse.RequestMessage.RequestUri, subscriptionMessage.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
                     return httpResponse;
                 }
                 _logger.LogInformation(EventIds.CallbackToD365Completed.ToEventId(),
