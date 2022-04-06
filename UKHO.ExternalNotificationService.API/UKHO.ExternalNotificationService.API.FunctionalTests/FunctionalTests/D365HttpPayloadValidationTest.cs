@@ -28,6 +28,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             D365FssPayload = JsonConvert.DeserializeObject<D365Payload>(await File.ReadAllTextAsync(filePathFss));
             D365ScsPayload = JsonConvert.DeserializeObject<D365Payload>(await File.ReadAllTextAsync(filePathScs));
+            D365FssPayload.InputParameters[0].Value.Attributes[9].Value = TestConfig.StubBaseUri;
+            D365ScsPayload.InputParameters[0].Value.Attributes[9].Value = TestConfig.StubBaseUri;
 
             ADAuthTokenProvider adAuthTokenProvider = new();
             EnsToken = await adAuthTokenProvider.GetEnsAuthToken();
