@@ -224,11 +224,9 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// 900055 -  Sales catalogue service event data mapping Completed.
         /// </summary>
         ScsEventDataMappingCompleted = 900055,
-        ProcessBlobTriggerStart = 900056,
-        ProcessBlobTriggerCompleted = 900057,
-        DeadLetterCallbackToD365Started = 900058,
-        DeadLetterMoveBlobStarted = 900059,
-        DeadLetterMoveBlobCompleted = 900060
+        ENSDeadLetterJobRequestStart = 900056,
+        ENSDeadLetterJobRequestCompleted = 900057,
+        DeadLetterCallbackToD365Started = 900058
     }
 
     public static class EventIdExtensions
