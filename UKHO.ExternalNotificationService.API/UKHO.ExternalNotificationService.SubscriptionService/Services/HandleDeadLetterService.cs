@@ -14,19 +14,19 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
     public class HandleDeadLetterService : IHandleDeadLetterService
     {
         private readonly ICallbackService _callbackService;
-        private readonly IAzureMoveBlobHelper _azureMoveBlobHelper;
+        private readonly IAzureMessageQueueHelper _azureMessageQueueHelper;
         private readonly IOptions<SubscriptionStorageConfiguration> _ensStorageConfiguration;
         private readonly ILogger<HandleDeadLetterService> _logger;
         private readonly IOptions<D365CallbackConfiguration> _d365CallbackConfiguration;
 
         public HandleDeadLetterService(ICallbackService callbackService,
-                                       IAzureMoveBlobHelper azureMoveBlobHelper,
+                                       IAzureMessageQueueHelper azureMessageQueueHelper,
                                        IOptions<SubscriptionStorageConfiguration> ensStorageConfiguration,
                                        ILogger<HandleDeadLetterService> logger,
                                        IOptions<D365CallbackConfiguration> d365CallbackConfiguration)
         {
             _callbackService = callbackService;
-            _azureMoveBlobHelper = azureMoveBlobHelper;
+            _azureMessageQueueHelper = azureMessageQueueHelper;
             _ensStorageConfiguration = ensStorageConfiguration;
             _logger = logger;
             _d365CallbackConfiguration = d365CallbackConfiguration;
@@ -34,23 +34,23 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
 
         public async Task ProcessDeadLetter(string filePath, string subscriptionId, SubscriptionRequestMessage subscriptionRequestMessage)
         {
-            ExternalNotificationEntity externalNotificationEntity = new()
+            ExternalNotificationEntityWithStateCode externalNotificationEntityWithStateCode = new()
             {
                 ResponseStatusCode = _d365CallbackConfiguration.Value.FailedStatusCode,
-                ResponseDetails = $"Failed to notify therefore subscription is inactive @Time: {DateTime.UtcNow}.",
-                ResponseStateCode = 1
+                ResponseDetails = $"Failed to deliver notification therefore subscription marked as inactive @Time: {DateTime.UtcNow}.",
+                ResponseStateCode = _d365CallbackConfiguration.Value.InactiveStateCode
             };                                                       
             string entityPath = $"ukho_externalnotifications({subscriptionId})";
 
             _logger.LogInformation(EventIds.DeadLetterCallbackToD365Started.ToEventId(),
-            "DeadLetter process send request callback to D365 using Dataverse start with ResponseStatusCode:{ResponseStatusCode} and ResponseDetails:{externalNotificationEntity} for SubscriptionId:{subscriptionId} and _D365-Correlation-ID:{correlationId} , _X-Correlation-ID:{CorrelationId}", externalNotificationEntity.ResponseStatusCode, externalNotificationEntity.ResponseDetails, subscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
+            "DeadLetter process send request callback to D365 using Dataverse start with ResponseStatusCode:{ResponseStatusCode} and ResponseDetails:{externalNotificationEntity} for SubscriptionId:{subscriptionId} and _D365-Correlation-ID:{correlationId} , _X-Correlation-ID:{CorrelationId}", externalNotificationEntityWithStateCode.ResponseStatusCode, externalNotificationEntityWithStateCode.ResponseDetails, subscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
 
-            await _callbackService.CallbackToD365UsingDataverse(entityPath, externalNotificationEntity, subscriptionRequestMessage);
+            await _callbackService.DeadLetterCallbackToD365UsingDataverse(entityPath, externalNotificationEntityWithStateCode, subscriptionRequestMessage);
         }
 
         public async Task<DateTime> GetBlockBlobLastModifiedDate(string filePath)
         {
-            return await _azureMoveBlobHelper.GetBlockBlobLastModifiedDate(_ensStorageConfiguration.Value, filePath);
+            return await _azureMessageQueueHelper.GetBlockBlobLastModifiedDate(_ensStorageConfiguration.Value, filePath);
         }
     }
 }

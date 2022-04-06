@@ -3,6 +3,7 @@ using Azure.Storage.Queues;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.Queue;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -52,6 +53,22 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
                 return HealthCheckResult.Healthy("Azure message queue is healthy");
             else
                 return HealthCheckResult.Unhealthy("Azure message queue is unhealthy", new Exception($"Azure message queue {queueName} does not exists"));
+        }
+
+        public async Task<DateTime> GetBlockBlobLastModifiedDate(SubscriptionStorageConfiguration ensStorageConfiguration, string path)
+        {
+            string storageAccountConnectionString = $"DefaultEndpointsProtocol=https;AccountName={ensStorageConfiguration.StorageAccountName};AccountKey={ensStorageConfiguration.StorageAccountKey};EndpointSuffix=core.windows.net";
+            string blobName = path;
+
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageAccountConnectionString);
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+            CloudBlobContainer container = blobClient.GetContainerReference(ensStorageConfiguration.StorageContainerName);
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(blobName);
+
+            await blockBlob.FetchAttributesAsync();
+            var lastModifiedDate = blockBlob.Properties.LastModified;
+
+            return lastModifiedDate.Value.UtcDateTime;
         }
     }
 }

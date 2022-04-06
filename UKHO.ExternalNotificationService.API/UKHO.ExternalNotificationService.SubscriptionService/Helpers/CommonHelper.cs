@@ -38,21 +38,19 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Helpers
                 });
         }
               
-        public static ExternalNotificationEntity GetExternalNotificationEntity(SubscriptionRequestResult subscriptionRequestResult, bool isActive, int statusCode, int statecode)
+        public static ExternalNotificationEntity GetExternalNotificationEntity(SubscriptionRequestResult subscriptionRequestResult, bool isActive, int statusCode)
         {
             ExternalNotificationEntity externalNotificationEntity = new();
             if (subscriptionRequestResult.ProvisioningState == "Succeeded")
             {
                 externalNotificationEntity.ResponseStatusCode = statusCode;
                 externalNotificationEntity.ResponseDetails = isActive ? $"Successfully added subscription @Time: { DateTime.UtcNow}" : $"Successfully removed subscription @Time: { DateTime.UtcNow}";
-                externalNotificationEntity.ResponseStateCode = statecode;
             }
 
             if (subscriptionRequestResult.ProvisioningState == "Failed")
             {
                 externalNotificationEntity.ResponseStatusCode = statusCode;
                 externalNotificationEntity.ResponseDetails = isActive ? $"Failed to add subscription @Time: {DateTime.UtcNow} with exception {subscriptionRequestResult.ErrorMessage}" : $"Failed to remove subscription @Time: {DateTime.UtcNow} with exception {subscriptionRequestResult.ErrorMessage}";
-                externalNotificationEntity.ResponseStateCode = statecode;
             }
             return externalNotificationEntity;
         }

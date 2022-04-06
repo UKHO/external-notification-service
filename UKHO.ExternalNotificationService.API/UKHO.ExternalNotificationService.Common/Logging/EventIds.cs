@@ -224,11 +224,28 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// 900055 -  Sales catalogue service event data mapping Completed.
         /// </summary>
         ScsEventDataMappingCompleted = 900055,
+        /// <summary>
+        /// 900056 -  External notification service dead letter web job request started.
+        /// </summary>
         ENSDeadLetterJobRequestStart = 900056,
+        /// <summary>
+        /// 900057 -  External notification service dead letter web job request Completed.
+        /// </summary>
         ENSDeadLetterJobRequestCompleted = 900057,
-        DeadLetterCallbackToD365Started = 900058
+        /// <summary>
+        /// 900058 -  DeadLetter process send request callback to D365 using Dataverse started.
+        /// </summary>
+        DeadLetterCallbackToD365Started = 900058,
+        /// <summary>
+        /// 900059 - Log an error if dead letter call back to D365 API returns statusCode other than 204
+        /// </summary>
+        ErrorInDeadLetterCallbackToD365HttpClient = 900059,
+        /// <summary>
+        /// 900060 - Http Client request completed for dead letter call back to D365
+        /// </summary>
+        DeadLetterCallbackToD365Completed = 900060
     }
-
+    
     public static class EventIdExtensions
     {
         public static EventId ToEventId(this EventIds eventId)
