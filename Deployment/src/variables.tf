@@ -77,7 +77,3 @@ variable "agent_subscription_id" {
 variable "allowed_ips" {
   type = list
 }
-
-variable "private_dns_zone_resource_id" {
-  type = string
-}

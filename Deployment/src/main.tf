@@ -114,8 +114,8 @@ module "storage" {
   service_name        = local.service_name
 }
 
-module "PrivateEndPoint" {
-  source              = "./Modules/PrivateEndPoint"
+module "EventGridDomainPrivateEndpoint " {
+  source              = "./Modules/EventGridDomainPrivateEndpoint "
   resource_group_name = azurerm_resource_group.rg.name
   subnet_id           = data.azurerm_subnet.private_endpoint_subnet.id
   location            = var.location
