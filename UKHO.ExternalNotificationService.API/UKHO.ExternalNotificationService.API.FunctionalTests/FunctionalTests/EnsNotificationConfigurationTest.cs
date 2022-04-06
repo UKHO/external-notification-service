@@ -27,7 +27,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), TestConfig.PayloadFolder, TestConfig.FssPayloadFileName);
 
             D365Payload = JsonConvert.DeserializeObject<D365Payload>(await File.ReadAllTextAsync(filePath));
-            D365Payload.InputParameters[0].Value.Attributes[9].Value = Path.Combine(TestConfig.StubBaseUri,"/webhook/notification"); ;
+            D365Payload.InputParameters[0].Value.Attributes[9].Value = string.Concat(TestConfig.StubBaseUri, TestConfig.WebhookUrlExtension);
         }
 
         [Test]
