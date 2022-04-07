@@ -13,7 +13,7 @@ using UKHO.ExternalNotificationService.API.FunctionalTests.Model;
 
 namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 {
-     class DeadLetterCallbackToD365UsingDataverse
+     class DeadLetterCallbackToD365Test
     {
         private EnsApiClient EnsApiClient { get; set; }
         private TestConfiguration TestConfig { get; set; }
@@ -21,9 +21,6 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         private string EnsToken { get; set; }
         private StubApiClient StubApiClient { get; set; }
         private JObject FssEventBody { get; set; }
-        private FssEventData FssEventData { get; set; }
-        private JObject ScsEventBody { get; set; }
-
 
 
         [SetUp]
@@ -31,7 +28,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         {
             TestConfig = new TestConfiguration();
             EnsApiClient = new EnsApiClient(TestConfig.EnsApiBaseUrl);
-
+            StubApiClient = new(TestConfig.StubApiUri);
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), TestConfig.PayloadFolder, TestConfig.FssPayloadFileName);
             D365Payload = JsonConvert.DeserializeObject<D365Payload>(await File.ReadAllTextAsync(filePath));
 
@@ -67,7 +64,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             DateTime requestTime = DateTime.UtcNow;
 
-            await Task.Delay(30000);
+            await Task.Delay(420000);
              
             HttpResponseMessage callBackResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
 
@@ -77,7 +74,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             EnsCallbackResponseModel callBackResponseLatest = callBackResponseBody.Where(x => x.TimeStamp >= requestTime).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
 
-          //  Assert.AreEqual(TestConfig.SucceededStatusCode, callBackResponseLatest.CallBackRequest.Ukho_lastresponse, $"Invalid last response {callBackResponseLatest.CallBackRequest.Ukho_lastresponse} , Instead of expected last response {TestConfig.SucceededStatusCode}.");
+            Assert.AreEqual(TestConfig.FailedStatusCode, callBackResponseLatest.CallBackRequest.Ukho_lastresponse, $"Invalid last response {callBackResponseLatest.CallBackRequest.Ukho_lastresponse} , Instead of expected last response {TestConfig.FailedStatusCode}.");
             Assert.IsTrue(callBackResponseLatest.CallBackRequest.Ukho_responsedetails.Contains("Failed to deliver notification therefore subscription marked as inactive"), $"Last Response : {callBackResponseLatest.CallBackRequest.Ukho_responsedetails}");
             Assert.IsTrue(callBackResponseLatest.TimeStamp <= new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, DateTime.UtcNow.Hour, DateTime.UtcNow.Minute, DateTime.UtcNow.Second), $"Response body returned timestamp date {callBackResponseLatest.TimeStamp} , greater than the expected value.");
 
