@@ -111,8 +111,10 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             }
 
             Assert.AreEqual(200, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 200.");
+            Console.WriteLine(" FSS- OkStatusIsReturned before calling GetStubApiCacheReturnStatusAsync ");
             HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
             string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
+            Console.WriteLine(" FSS- OkStatusIsReturned: " + customerJsonString);
             IEnumerable<DistributorRequest> deserialized = JsonConvert.DeserializeObject<IEnumerable<DistributorRequest>>(custome‌​rJsonString);
             DistributorRequest getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.statusCode.HasValue && x.statusCode.Value == HttpStatusCode.OK).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
             Assert.NotNull(getMatchingData);
@@ -169,6 +171,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
             // Get the response
             string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
+            Console.WriteLine(" ThenNonOkStatusIsReturned : " + customerJsonString);
             IEnumerable<DistributorRequest> deserialized = JsonConvert.DeserializeObject<IEnumerable<DistributorRequest>>(custome‌​rJsonString);
             IEnumerable<DistributorRequest> getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.statusCode.HasValue && x.statusCode.Value == statusCode)
                 .OrderByDescending(a => a.TimeStamp);
@@ -181,9 +184,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         {
             const string subject = "NO4F1617";
             JObject ensWebhookJson = ScsEventBody;
-
+            Console.WriteLine(ensWebhookJson);
             await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, null);
-
+            Console.WriteLine("After commandToReturnStatus- SCS:  ");
             DateTime startTime = DateTime.UtcNow;
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
             
