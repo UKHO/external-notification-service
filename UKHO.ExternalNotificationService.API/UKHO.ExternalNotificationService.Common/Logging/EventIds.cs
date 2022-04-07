@@ -243,7 +243,15 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900060 - Http Client request completed for dead letter call back to D365
         /// </summary>
-        DeadLetterCallbackToD365Completed = 900060
+        DeadLetterCallbackToD365Completed = 900060,
+        /// <summary>
+        /// 900061 - Failed to deliver notification therefore subscription marked as inactive started.
+        /// </summary>
+        ENSSubscriptionMarkedAsInactiveStart = 900061,
+        /// <summary>
+        /// 900062 - Failed to deliver notification therefore subscription marked as inactive completed.
+        /// </summary>
+        ENSSubscriptionMarkedAsInactiveCompleted = 900062
     }
     
     public static class EventIdExtensions

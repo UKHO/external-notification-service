@@ -34,6 +34,9 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
 
         public async Task ProcessDeadLetter(string filePath, string subscriptionId, SubscriptionRequestMessage subscriptionRequestMessage)
         {
+            _logger.LogInformation(EventIds.ENSSubscriptionMarkedAsInactiveStart.ToEventId(),
+                      "Failed to deliver notification therefore subscription marked as inactive started for SubscriptionId:{SubscriptionId}, _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
+
             ExternalNotificationEntityWithStateCode externalNotificationEntityWithStateCode = new()
             {
                 ResponseStatusCode = _d365CallbackConfiguration.Value.FailedStatusCode,
@@ -46,6 +49,10 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
             "DeadLetter process send request callback to D365 using Dataverse start with ResponseStatusCode:{ResponseStatusCode} and ResponseDetails:{externalNotificationEntity} for SubscriptionId:{subscriptionId} and _D365-Correlation-ID:{correlationId} , _X-Correlation-ID:{CorrelationId}", externalNotificationEntityWithStateCode.ResponseStatusCode, externalNotificationEntityWithStateCode.ResponseDetails, subscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
 
             await _callbackService.DeadLetterCallbackToD365UsingDataverse(entityPath, externalNotificationEntityWithStateCode, subscriptionRequestMessage);
+
+            _logger.LogInformation(EventIds.ENSSubscriptionMarkedAsInactiveCompleted.ToEventId(),
+                 "Failed to deliver notification therefore subscription marked as inactive completed for SubscriptionId:{SubscriptionId}, _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
+
         }
 
         public async Task<DateTime> GetBlockBlobLastModifiedDate(string filePath)
