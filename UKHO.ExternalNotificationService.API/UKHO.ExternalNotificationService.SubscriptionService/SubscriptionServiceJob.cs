@@ -133,13 +133,13 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
             {
                 SubscriptionRequestMessage subscriptionRequestMessage = new() { CorrelationId = Guid.NewGuid().ToString(), SubscriptionId = subscriptionId };
 
-                _logger.LogInformation(EventIds.ENSDeadLetterJobRequestStart.ToEventId(),
-                       "External notification service dead letter web job request started for SubscriptionId:{SubscriptionId}, FileName:{fileName}, _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, fileName, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
+                _logger.LogInformation(EventIds.ENSDeadLetterContainerJobRequestStart.ToEventId(),
+                       "External notification service - dead letter container webjob request started for SubscriptionId:{SubscriptionId}, FileName:{fileName}, _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, fileName, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
 
                 await _handleDeadLetterService.ProcessDeadLetter(filePath, subscriptionId, subscriptionRequestMessage);
 
-                _logger.LogInformation(EventIds.ENSDeadLetterJobRequestCompleted.ToEventId(),
-                       "External notification service dead letter web job request completed for SubscriptionId:{SubscriptionId}, FileName:{fileName}, _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, fileName, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
+                _logger.LogInformation(EventIds.ENSDeadLetterContainerJobRequestCompleted.ToEventId(),
+                       "External notification service - dead letter container webjob request completed for SubscriptionId:{SubscriptionId}, FileName:{fileName}, _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, fileName, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
 
             }
         }
