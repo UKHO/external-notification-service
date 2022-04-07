@@ -177,9 +177,9 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         FssEventDataMappingCompleted = 900043,
         /// <summary>
-        /// 900044 -  Request invalid business unit for external notification service webhook post endpoint.
+        /// 900044 -  File share service event data discarded for business unit.
         /// </summary>
-        FssEventDataWithInvalidBusinessUnit = 900044,
+        FssEventDataDiscardedForBusinessUnit = 900044,
         /// <summary>
         /// 900045 -  External notification service event publish started.
         /// </summary>

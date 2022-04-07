@@ -83,7 +83,6 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
 
-            Assert.AreEqual("Invalid business unit in an event.", result.Errors.Single().Description);
             Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
         }
 

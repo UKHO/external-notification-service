@@ -41,7 +41,9 @@ namespace UKHO.ExternalNotificationService.API.Services
             ValidationResult validationFssEventData = await _fssEventValidationAndMappingService.ValidateFssEventData(fssEventData);
 
             if (!validationFssEventData.IsValid && validationFssEventData.HasOkErrors(out _errors))
+            {
                 return ProcessResponse(fssEventData);
+            }
 
             if (!string.IsNullOrWhiteSpace(BusinessUnitTypes.BusinessUnit.FirstOrDefault(x => x.Equals(fssEventData.BusinessUnit))))
             {
@@ -53,10 +55,7 @@ namespace UKHO.ExternalNotificationService.API.Services
             }
             else
             {
-                _errors = new List<Error>{ new Error(){  Source = "businessUnit",
-                                                         Description = "Invalid business unit in an event."}};
-
-                _logger.LogInformation(EventIds.FssEventDataWithInvalidBusinessUnit.ToEventId(), "File share service event data mapping failed due to an invalid business unit for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customCloudEvent.Subject, fssEventData.BusinessUnit, correlationId);
+                _logger.LogInformation(EventIds.FssEventDataDiscardedForBusinessUnit.ToEventId(), "File share service event discarded for unwanted business unit for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customCloudEvent.Subject, fssEventData.BusinessUnit, correlationId);
             }
 
             return ProcessResponse(fssEventData);
@@ -64,7 +63,12 @@ namespace UKHO.ExternalNotificationService.API.Services
 
         private ExternalNotificationServiceProcessResponse ProcessResponse(FssEventData fssEventData)
         {
-            return new ExternalNotificationServiceProcessResponse() { BusinessUnit = fssEventData.BusinessUnit, Errors = _errors, StatusCode = HttpStatusCode.OK };
+            return new ExternalNotificationServiceProcessResponse
+            {
+                BusinessUnit = fssEventData.BusinessUnit,
+                Errors = _errors,
+                StatusCode = HttpStatusCode.OK
+            };
         }
     }
 }
