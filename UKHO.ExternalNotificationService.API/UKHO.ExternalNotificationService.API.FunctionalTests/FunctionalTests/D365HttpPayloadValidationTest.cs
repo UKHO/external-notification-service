@@ -28,6 +28,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             D365FssPayload = JsonConvert.DeserializeObject<D365Payload>(await File.ReadAllTextAsync(filePathFss));
             D365ScsPayload = JsonConvert.DeserializeObject<D365Payload>(await File.ReadAllTextAsync(filePathScs));
+
+            System.Console.WriteLine(string.Concat(TestConfig.StubBaseUri, TestConfig.WebhookUrlExtension));
             D365FssPayload.InputParameters[0].Value.Attributes[9].Value = string.Concat(TestConfig.StubBaseUri, TestConfig.WebhookUrlExtension);
             D365ScsPayload.InputParameters[0].Value.Attributes[9].Value = string.Concat(TestConfig.StubBaseUri, TestConfig.WebhookUrlExtension);
 
