@@ -225,31 +225,31 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         ScsEventDataMappingCompleted = 900055,
         /// <summary>
-        /// 900056 -  External notification service dead letter web job request started.
+        /// 900056 -  External notification service - dead letter container webjob request started.
         /// </summary>
-        ENSDeadLetterJobRequestStart = 900056,
+        ENSDeadLetterContainerJobRequestStart = 900056,
         /// <summary>
-        /// 900057 -  External notification service dead letter web job request Completed.
+        /// 900057 -  External notification service - dead letter container webjob request completed.
         /// </summary>
-        ENSDeadLetterJobRequestCompleted = 900057,
+        ENSDeadLetterContainerJobRequestCompleted = 900057,
         /// <summary>
-        /// 900058 -  DeadLetter process send request callback to D365 using Dataverse started.
+        /// 900058 -  Callback to D365 started for dead letter processing to mark subscription as inactive.
         /// </summary>
-        DeadLetterCallbackToD365Started = 900058,
+        CallbackToD365ForDeadLetterProcessingStarted = 900058,
         /// <summary>
-        /// 900059 - Log an error if dead letter call back to D365 API returns statusCode other than 204
+        /// 900059 - Log an error if call back to D365 API for dead letter processing returns statusCode other than 204
         /// </summary>
         ErrorInDeadLetterCallbackToD365HttpClient = 900059,
         /// <summary>
-        /// 900060 - Http Client request completed for dead letter call back to D365
+        /// 900060 - Callback to D365 succeeded for dead letter processing to mark subscription as inactive.
         /// </summary>
-        DeadLetterCallbackToD365Completed = 900060,
+        CallbackToD365ForDeadLetterProcessingSucceeded = 900060,
         /// <summary>
-        /// 900061 - Failed to deliver notification therefore subscription marked as inactive started.
+        /// 900061 - Process to mark subscription as inactive due to failed notification delivery started.
         /// </summary>
         ENSSubscriptionMarkedAsInactiveStart = 900061,
         /// <summary>
-        /// 900062 - Failed to deliver notification therefore subscription marked as inactive completed.
+        /// 900062 - Process to mark subscription as inactive due to failed notification delivery completed.
         /// </summary>
         ENSSubscriptionMarkedAsInactiveCompleted = 900062
     }

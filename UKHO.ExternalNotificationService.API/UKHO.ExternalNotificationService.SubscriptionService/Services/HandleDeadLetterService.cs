@@ -35,7 +35,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
         public async Task ProcessDeadLetter(string filePath, string subscriptionId, SubscriptionRequestMessage subscriptionRequestMessage)
         {
             _logger.LogInformation(EventIds.ENSSubscriptionMarkedAsInactiveStart.ToEventId(),
-                      "Failed to deliver notification therefore subscription marked as inactive started for SubscriptionId:{SubscriptionId}, _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
+                      "Process to mark subscription as inactive due to failed notification delivery started for SubscriptionId:{SubscriptionId}, _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
 
             ExternalNotificationEntityWithStateCode externalNotificationEntityWithStateCode = new()
             {
@@ -45,13 +45,13 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
             };                                                       
             string entityPath = $"ukho_externalnotifications({subscriptionId})";
 
-            _logger.LogInformation(EventIds.DeadLetterCallbackToD365Started.ToEventId(),
-            "DeadLetter process send request callback to D365 using Dataverse start with ResponseStatusCode:{ResponseStatusCode} and ResponseDetails:{externalNotificationEntity} for SubscriptionId:{subscriptionId} and _D365-Correlation-ID:{correlationId} , _X-Correlation-ID:{CorrelationId}", externalNotificationEntityWithStateCode.ResponseStatusCode, externalNotificationEntityWithStateCode.ResponseDetails, subscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
+            _logger.LogInformation(EventIds.CallbackToD365ForDeadLetterProcessingStarted.ToEventId(),
+            "Callback to D365 started for dead letter processing to mark subscription as inactive with ResponseStatusCode:{ResponseStatusCode} and ResponseDetails:{externalNotificationEntity} for SubscriptionId:{subscriptionId} and _D365-Correlation-ID:{correlationId} , _X-Correlation-ID:{CorrelationId}", externalNotificationEntityWithStateCode.ResponseStatusCode, externalNotificationEntityWithStateCode.ResponseDetails, subscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
 
             await _callbackService.DeadLetterCallbackToD365UsingDataverse(entityPath, externalNotificationEntityWithStateCode, subscriptionRequestMessage);
 
             _logger.LogInformation(EventIds.ENSSubscriptionMarkedAsInactiveCompleted.ToEventId(),
-                 "Failed to deliver notification therefore subscription marked as inactive completed for SubscriptionId:{SubscriptionId}, _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
+                 "Process to mark subscription as inactive due to failed notification delivery completed for SubscriptionId:{SubscriptionId}, _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
 
         }
 
