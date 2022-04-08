@@ -518,6 +518,7 @@ stages:
         pool: $(DeploymentPool)
         variables:
           - group: "ADDS-E2E"
+          - group: "ENS-QA-Variables"
         container: ${{variables.Container}}
         steps:
         - task: PowerShell@2          
