@@ -31,6 +31,7 @@ module "eventhub" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   tags                = local.tags
+  env_name            = local.env_name
 }
 
 module "webapp_service" {
@@ -92,13 +93,14 @@ module "key_vault" {
 }
 
 module "eventgriddomain" {
-  source              = "./Modules/EventGridDomain"
-  name                = "${local.service_name}-${local.env_name}-eventgriddomain"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
-  tags                = local.tags
-  webapp_principal_id = module.webapp_service.web_app_object_id
-  storage_account_id  = module.storage.id
+  source                                   = "./Modules/EventGridDomain"
+  name                                     = "${local.service_name}-${local.env_name}-eventgriddomain"
+  resource_group_name                      = azurerm_resource_group.rg.name
+  location                                 = azurerm_resource_group.rg.location
+  tags                                     = local.tags
+  webapp_principal_id                      = module.webapp_service.web_app_object_id
+  eventhub_name                            = module.eventhub.eventgrid_eventhub_name
+  eventhub_namespace_authorization_rule_id = module.eventhub.eventhub_namespace_authorization_rule_id
 }
 
 module "storage" {
