@@ -433,8 +433,10 @@ stages:
         variables:
           - group: "ADDS-E2E"
           - group: "ENS-QA-Variables"
-          ResourceGroup: $[ dependencies.QADeployApp.outputs['setvariable.ResourceGroup'] ]
-          WEB_APP_NAME: $[ dependencies.QADeployApp.outputs['setvariable.WEB_APP_NAME'] ]
+          - name : ResourceGroup
+            value : $[ dependencies.QADeployApp.outputs['setvariable.ResourceGroup'] ]
+          - name : WEB_APP_NAME
+            value : $[ dependencies.QADeployApp.outputs['setvariable.WEB_APP_NAME'] ]
         container: ${{variables.Container}}
         steps:
         - bash: |
