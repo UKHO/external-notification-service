@@ -4,6 +4,7 @@ resource "azurerm_eventgrid_domain" "eventgrid_domain" {
   resource_group_name = var.resource_group_name
   tags                = var.tags
   input_schema        = "CloudEventSchemaV1_0"
+  public_network_access_enabled   = false
 }
 
 resource "azurerm_role_assignment" "eventgrid_domain_role" {
@@ -13,9 +14,10 @@ resource "azurerm_role_assignment" "eventgrid_domain_role" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "egdiagnosticsetting" {
-  name               = "${var.name}-diagnostic"
-  target_resource_id = azurerm_eventgrid_domain.eventgrid_domain.id
-  storage_account_id = var.storage_account_id
+  name                           = "${var.name}-diagnostic"
+  target_resource_id             = azurerm_eventgrid_domain.eventgrid_domain.id 
+  eventhub_name                  = var.eventhub_name
+  eventhub_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
 
   log {
     category = "DeliveryFailures"
@@ -23,7 +25,6 @@ resource "azurerm_monitor_diagnostic_setting" "egdiagnosticsetting" {
 
     retention_policy {
       enabled = true
-      days    = 7
     }
     }
 
@@ -33,7 +34,6 @@ resource "azurerm_monitor_diagnostic_setting" "egdiagnosticsetting" {
 
     retention_policy {
       enabled = true
-      days    = 7
     }
   }
 }
