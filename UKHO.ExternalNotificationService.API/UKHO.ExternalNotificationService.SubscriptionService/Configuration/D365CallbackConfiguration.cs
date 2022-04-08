@@ -20,5 +20,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Configuration
         public int RetryCount { get; set; }
 
         public int SleepDuration { get; set; }
+
+        public int SubtractMinutesFromCurrentTime { get; set; }
     }
 }

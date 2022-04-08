@@ -127,9 +127,9 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
             string subscriptionId = GetContainerName(filePath);
             string fileName = Path.GetFileName(filePath);
             DateTime lastModifiedDateTime = await _handleDeadLetterService.GetBlockBlobLastModifiedDate(filePath);
-            DateTime currentDateTime = DateTime.UtcNow.AddMinutes(-2);
+            DateTime subtractMinutesFromCurrentTime = DateTime.UtcNow.AddMinutes(_d365CallbackConfiguration.Value.SubtractMinutesFromCurrentTime);
 
-            if (lastModifiedDateTime >= currentDateTime)
+            if (lastModifiedDateTime >= subtractMinutesFromCurrentTime)
             {
                 SubscriptionRequestMessage subscriptionRequestMessage = new() { CorrelationId = Guid.NewGuid().ToString(), SubscriptionId = subscriptionId };
 

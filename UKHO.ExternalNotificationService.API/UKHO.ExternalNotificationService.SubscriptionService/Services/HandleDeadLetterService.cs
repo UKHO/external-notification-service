@@ -35,7 +35,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
         public async Task ProcessDeadLetter(string filePath, string subscriptionId, SubscriptionRequestMessage subscriptionRequestMessage)
         {
             _logger.LogInformation(EventIds.ENSSubscriptionMarkedAsInactiveStart.ToEventId(),
-                      "Process to mark subscription as inactive due to failed notification delivery started for SubscriptionId:{SubscriptionId}, _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
+                      "Process to mark subscription as inactive started for SubscriptionId:{SubscriptionId}, _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
 
             ExternalNotificationEntityWithStateCode externalNotificationEntityWithStateCode = new()
             {
@@ -51,7 +51,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
             await _callbackService.DeadLetterCallbackToD365UsingDataverse(entityPath, externalNotificationEntityWithStateCode, subscriptionRequestMessage);
 
             _logger.LogInformation(EventIds.ENSSubscriptionMarkedAsInactiveCompleted.ToEventId(),
-                 "Process to mark subscription as inactive due to failed notification delivery completed for SubscriptionId:{SubscriptionId}, _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
+                 "Process to mark subscription as inactive completed for SubscriptionId:{SubscriptionId}, _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
 
         }
 
