@@ -71,7 +71,7 @@
                     },
                     {
                         "key": "ukho_webhookurl",
-                        "value": "https://ens-dev-webapp-stub.azurewebsites.net/webhook/notification"
+                        "value": "https://ens-qa-webapp-stub.azurewebsites.net/webhook/notification"
                     },
                     {
                         "key": "ukho_externalnotificationid",
