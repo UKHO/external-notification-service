@@ -67,7 +67,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         }
 
         [Test]
-        public async Task WhenInvalidBusinessUnitInRequest_ThenReceiveSuccessfulResponse()
+        public async Task WhenDiscardedBusinessUnitInRequest_ThenReceiveSuccessfulResponse()
         {
             CancellationToken cancellationToken = CancellationToken.None;
             CloudEvent cloudEvent = new("test", "test", new object());
@@ -83,8 +83,9 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
 
-            Assert.AreEqual("Invalid business unit in an event.", result.Errors.Single().Description);
             Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
+            Assert.IsNull(result.Errors);
+            A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(A<CloudEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();
         }
 
 
@@ -106,6 +107,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
             Assert.IsNull(result.Errors);
+            A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(A<CloudEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored)).MustHaveHappenedOnceExactly();
         }
     }
 }
