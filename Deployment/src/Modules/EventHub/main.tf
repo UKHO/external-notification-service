@@ -7,6 +7,16 @@ resource "azurerm_eventhub_namespace" "eventhub_namespace" {
   tags                = var.tags
 }
 
+resource "azurerm_eventhub_namespace_authorization_rule" "namespace_rule" {
+  name                = "${var.name}-namespace-rule"
+  namespace_name      = azurerm_eventhub_namespace.eventhub_namespace.name
+  resource_group_name = var.resource_group_name
+
+  listen = true
+  send   = true
+  manage = true
+}
+
 resource "azurerm_eventhub" "eventhub" {
   name                = var.name
   namespace_name      = azurerm_eventhub_namespace.eventhub_namespace.name
@@ -48,3 +58,14 @@ resource "azurerm_eventhub_authorization_rule" "log" {
   send                = true
   manage              = false
 }
+
+resource "azurerm_eventhub" "eventhub_logging" {
+  name                = "eventgrid-${var.env_name}-logging"
+  namespace_name      = azurerm_eventhub_namespace.eventhub_namespace.name
+  resource_group_name = var.resource_group_name
+  partition_count     = 2
+  message_retention   = 7
+}
+
+
+
