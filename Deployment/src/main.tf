@@ -4,6 +4,12 @@ data "azurerm_subnet" "main_subnet" {
   resource_group_name  = var.spoke_rg
 }
 
+data "azurerm_subnet" "private_endpoint_subnet" {
+  name                 = var.private_endpoint_subnet_name
+  virtual_network_name = var.spoke_vnet_name
+  resource_group_name  = var.spoke_rg
+}
+
 data "azurerm_subnet" "agent_subnet" {
   provider             = azurerm.build_agent
   name                 = var.agent_subnet_name
@@ -117,4 +123,14 @@ module "azure-dashboard" {
   environment    = local.env_name
   resource_group = azurerm_resource_group.rg
   tags           = local.tags
+}
+
+module "EventGridDomainPrivateEndpoint" {
+  source              = "./Modules/EventGridDomainPrivateEndpoint"
+  resource_group_name = azurerm_resource_group.rg.name
+  subnet_id           = data.azurerm_subnet.private_endpoint_subnet.id
+  location            = var.location
+  tags                = local.tags
+  env_name            = local.env_name
+  event_grid_domain_resource_id = module.eventgriddomain.event_grid_domain_resource_id
 }

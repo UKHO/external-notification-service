@@ -54,6 +54,10 @@ variable "spoke_subnet_name" {
   type = string
 }
 
+variable "private_endpoint_subnet_name" {
+  type = string
+}
+
 variable "agent_rg" {
   type = string
 }
