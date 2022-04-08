@@ -126,22 +126,16 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
         {
             string subscriptionId = GetSubscriptionIdName(filePath);
             string fileName = Path.GetFileName(filePath);
-            DateTime lastModifiedDateTime = await _handleDeadLetterService.GetBlockBlobLastModifiedDate(filePath);
-            DateTime subtractMinutesFromCurrentTime = DateTime.UtcNow.AddMinutes(_d365CallbackConfiguration.Value.SubtractMinutesFromCurrentTime);
 
-            if (lastModifiedDateTime >= subtractMinutesFromCurrentTime)
-            {
-                SubscriptionRequestMessage subscriptionRequestMessage = new() { CorrelationId = Guid.NewGuid().ToString(), SubscriptionId = subscriptionId };
+            SubscriptionRequestMessage subscriptionRequestMessage = new() { CorrelationId = Guid.NewGuid().ToString(), SubscriptionId = subscriptionId };
 
-                _logger.LogInformation(EventIds.ENSDeadLetterContainerJobRequestStart.ToEventId(),
-                       "External notification service - dead letter container webjob request started for SubscriptionId:{SubscriptionId}, FileName:{fileName}, _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, fileName, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
+            _logger.LogInformation(EventIds.ENSDeadLetterContainerJobRequestStart.ToEventId(),
+                    "External notification service - dead letter container webjob request started for SubscriptionId:{SubscriptionId}, FileName:{fileName}, _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, fileName, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
 
-                await _handleDeadLetterService.ProcessDeadLetter(filePath, subscriptionId, subscriptionRequestMessage);
+            await _handleDeadLetterService.ProcessDeadLetter(filePath, subscriptionId, subscriptionRequestMessage);
 
-                _logger.LogInformation(EventIds.ENSDeadLetterContainerJobRequestCompleted.ToEventId(),
-                       "External notification service - dead letter container webjob request completed for SubscriptionId:{SubscriptionId}, FileName:{fileName}, _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, fileName, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
-
-            }
+            _logger.LogInformation(EventIds.ENSDeadLetterContainerJobRequestCompleted.ToEventId(),
+                    "External notification service - dead letter container webjob request completed for SubscriptionId:{SubscriptionId}, FileName:{fileName}, _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, fileName, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
         }
 
         private static string GetSubscriptionIdName(string filePath)

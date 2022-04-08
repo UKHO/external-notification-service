@@ -251,7 +251,15 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900062 - Process to mark subscription as inactive due to failed notification delivery completed.
         /// </summary>
-        ENSSubscriptionMarkedAsInactiveCompleted = 900062
+        ENSSubscriptionMarkedAsInactiveCompleted = 900062,
+        /// <summary>
+        /// 900063 - Process to move dead letter container blob to destination container blob started.
+        /// </summary>
+        ENSMoveDeadLetterContainerBlobStarted = 900063,
+        /// <summary>
+        /// 900064 - Process to move dead letter container blob to destination container blob completed.
+        /// </summary>
+        ENSMoveDeadLetterContainerBlobCompleted = 900064
     }
     
     public static class EventIdExtensions

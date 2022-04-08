@@ -53,11 +53,13 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
             _logger.LogInformation(EventIds.ENSSubscriptionMarkedAsInactiveCompleted.ToEventId(),
                  "Process to mark subscription as inactive completed for SubscriptionId:{SubscriptionId}, _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
 
-        }
+            _logger.LogInformation(EventIds.ENSMoveDeadLetterContainerBlobStarted.ToEventId(),
+                 "Process to move dead letter container blob to destination container blob started for SubscriptionId:{SubscriptionId}, _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
 
-        public async Task<DateTime> GetBlockBlobLastModifiedDate(string filePath)
-        {
-            return await _azureMessageQueueHelper.GetBlockBlobLastModifiedDate(_ensStorageConfiguration.Value, filePath);
+            await _azureMessageQueueHelper.DeadLetterMoveBlob(_ensStorageConfiguration.Value, filePath);
+
+            _logger.LogInformation(EventIds.ENSMoveDeadLetterContainerBlobCompleted.ToEventId(),
+                 "Process to move dead letter container blob to destination container blob completed for SubscriptionId:{SubscriptionId}, _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
         }
     }
 }

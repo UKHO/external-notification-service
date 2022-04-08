@@ -46,18 +46,9 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
 
             Task response =  _handleDeadLetterService.ProcessDeadLetter(FilePath, subscriptionId, new SubscriptionRequestMessage());
 
+            A.CallTo(() => _fakeAzureMessageQueueHelper.DeadLetterMoveBlob(A<SubscriptionStorageConfiguration>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+
             Assert.IsTrue(response.IsCompleted);
-        }
-
-        [Test]
-        public async Task WhenCallGetBlockBlobLastModifiedDate_ThenReturnsBlobLastModifiedDate()
-        {
-            DateTime dateTime = DateTime.UtcNow;
-            A.CallTo(() => _fakeAzureMessageQueueHelper.GetBlockBlobLastModifiedDate(A<SubscriptionStorageConfiguration>.Ignored, A<string>.Ignored)).Returns(dateTime);
-
-            DateTime response = await _handleDeadLetterService.GetBlockBlobLastModifiedDate(FilePath);
-
-            Assert.AreEqual(dateTime, response);
         }
     }
 }

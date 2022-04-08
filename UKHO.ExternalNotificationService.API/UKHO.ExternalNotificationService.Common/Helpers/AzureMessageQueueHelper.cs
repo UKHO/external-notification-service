@@ -55,20 +55,29 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
                 return HealthCheckResult.Unhealthy("Azure message queue is unhealthy", new Exception($"Azure message queue {queueName} does not exists"));
         }
 
-        public async Task<DateTime> GetBlockBlobLastModifiedDate(SubscriptionStorageConfiguration ensStorageConfiguration, string path)
+        public async Task DeadLetterMoveBlob(SubscriptionStorageConfiguration ensStorageConfiguration, string path)
         {
             string storageAccountConnectionString = $"DefaultEndpointsProtocol=https;AccountName={ensStorageConfiguration.StorageAccountName};AccountKey={ensStorageConfiguration.StorageAccountKey};EndpointSuffix=core.windows.net";
-            string blobName = path;
 
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageAccountConnectionString);
-            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-            CloudBlobContainer container = blobClient.GetContainerReference(ensStorageConfiguration.StorageContainerName);
-            CloudBlockBlob blockBlob = container.GetBlockBlobReference(blobName);
+            CloudStorageAccount sourceStorageConnectionString = CloudStorageAccount.Parse(storageAccountConnectionString);
+            CloudStorageAccount destinationStorageConnectionString = CloudStorageAccount.Parse(storageAccountConnectionString);
 
-            await blockBlob.FetchAttributesAsync();
-            var lastModifiedDate = blockBlob.Properties.LastModified;
+            CloudBlobClient sourceCloudBlobClient = sourceStorageConnectionString.CreateCloudBlobClient();
+            CloudBlobClient targetCloudBlobClient = destinationStorageConnectionString.CreateCloudBlobClient();
+            CloudBlobContainer sourceContainer = sourceCloudBlobClient.GetContainerReference(ensStorageConfiguration.StorageContainerName);
+            CloudBlobContainer destinationContainer = targetCloudBlobClient.GetContainerReference(ensStorageConfiguration.DeadLetterDestinationContainerName);
 
-            return lastModifiedDate.Value.UtcDateTime;
+            await destinationContainer.CreateIfNotExistsAsync();
+
+            CloudBlockBlob sourceBlob = sourceContainer.GetBlockBlobReference(path);
+            CloudBlockBlob targetBlob = destinationContainer.GetBlockBlobReference(path);
+
+            await targetBlob.StartCopyAsync(sourceBlob);
+
+            if (await targetBlob.ExistsAsync())
+            {
+                await sourceBlob.DeleteIfExistsAsync();
+            }
         }
     }
 }
