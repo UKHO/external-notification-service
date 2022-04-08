@@ -9,5 +9,6 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
     {
         Task AddQueueMessage(SubscriptionStorageConfiguration ensStorageConfiguration, SubscriptionRequestMessage subscriptionRequestMessage);
         Task<HealthCheckResult> CheckMessageQueueHealth(string storageAccountConnectionString, string queueName);
+        Task CopyDeadLetterBlob(SubscriptionStorageConfiguration ensStorageConfiguration, string path);
     }
 }

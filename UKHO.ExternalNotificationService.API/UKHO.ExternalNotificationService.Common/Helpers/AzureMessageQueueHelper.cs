@@ -3,6 +3,7 @@ using Azure.Storage.Queues;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.Queue;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -52,6 +53,31 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
                 return HealthCheckResult.Healthy("Azure message queue is healthy");
             else
                 return HealthCheckResult.Unhealthy("Azure message queue is unhealthy", new Exception($"Azure message queue {queueName} does not exists"));
+        }
+
+        public async Task CopyDeadLetterBlob(SubscriptionStorageConfiguration ensStorageConfiguration, string path)
+        {
+            string storageAccountConnectionString = $"DefaultEndpointsProtocol=https;AccountName={ensStorageConfiguration.StorageAccountName};AccountKey={ensStorageConfiguration.StorageAccountKey};EndpointSuffix=core.windows.net";
+
+            CloudStorageAccount sourceStorageConnectionString = CloudStorageAccount.Parse(storageAccountConnectionString);
+            CloudStorageAccount destinationStorageConnectionString = CloudStorageAccount.Parse(storageAccountConnectionString);
+
+            CloudBlobClient sourceCloudBlobClient = sourceStorageConnectionString.CreateCloudBlobClient();
+            CloudBlobClient targetCloudBlobClient = destinationStorageConnectionString.CreateCloudBlobClient();
+            CloudBlobContainer sourceContainer = sourceCloudBlobClient.GetContainerReference(ensStorageConfiguration.StorageContainerName);
+            CloudBlobContainer destinationContainer = targetCloudBlobClient.GetContainerReference(ensStorageConfiguration.DeadLetterDestinationContainerName);
+
+            await destinationContainer.CreateIfNotExistsAsync();
+
+            CloudBlockBlob sourceBlob = sourceContainer.GetBlockBlobReference(path);
+            CloudBlockBlob targetBlob = destinationContainer.GetBlockBlobReference(path);
+
+            await targetBlob.StartCopyAsync(sourceBlob);
+
+            if (await targetBlob.ExistsAsync())
+            {
+                await sourceBlob.DeleteIfExistsAsync();
+            }
         }
     }
 }
