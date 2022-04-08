@@ -114,7 +114,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             Console.WriteLine(" FSS- OkStatusIsReturned before calling GetStubApiCacheReturnStatusAsync ");
             HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
             string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
-            Console.WriteLine(" FSS- OkStatusIsReturned: " + customerJsonString);
+            Console.WriteLine(" FSS- OkStatusIsReturned: " + stubResponse.StatusCode, " RequestMessage :" + stubResponse.RequestMessage);
             IEnumerable<DistributorRequest> deserialized = JsonConvert.DeserializeObject<IEnumerable<DistributorRequest>>(custome‌​rJsonString);
             DistributorRequest getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.statusCode.HasValue && x.statusCode.Value == HttpStatusCode.OK).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
             Assert.NotNull(getMatchingData);

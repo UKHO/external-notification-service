@@ -46,7 +46,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
         {
             if(!string.IsNullOrEmpty(subscriptionId))
             {
-                return s_recordCallbackRequestQueue.Where(a => a.SubscriptionId == subscriptionId).ToList();
+                return s_recordCallbackRequestQueue.Where(a => a != null && a.SubscriptionId == subscriptionId).ToList();
             }
             else
             {
