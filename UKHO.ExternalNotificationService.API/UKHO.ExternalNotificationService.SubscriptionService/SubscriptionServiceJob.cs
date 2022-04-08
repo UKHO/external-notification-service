@@ -124,7 +124,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
 
         public async Task ProcessBlobTrigger([BlobTrigger("%SubscriptionStorageConfiguration:StorageContainerName%/{filePath}")] Stream myBlob, string filePath)
         {
-            string subscriptionId = GetContainerName(filePath);
+            string subscriptionId = GetSubscriptionIdName(filePath);
             string fileName = Path.GetFileName(filePath);
             DateTime lastModifiedDateTime = await _handleDeadLetterService.GetBlockBlobLastModifiedDate(filePath);
             DateTime subtractMinutesFromCurrentTime = DateTime.UtcNow.AddMinutes(_d365CallbackConfiguration.Value.SubtractMinutesFromCurrentTime);
@@ -144,12 +144,12 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
             }
         }
 
-        private static string GetContainerName(string filePath)
+        private static string GetSubscriptionIdName(string filePath)
         {
             if (!string.IsNullOrEmpty(filePath))
             {
                 string[] splitFilePath = filePath.Split("/");
-                if (splitFilePath.Count() > 1)
+                if (splitFilePath.Length > 1)
                 {
                     return splitFilePath[1];
                 }
