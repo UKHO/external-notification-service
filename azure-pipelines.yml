@@ -440,7 +440,7 @@ stages:
         container: ${{variables.Container}}
         steps:
         - bash: |
-        "the variable value is $(ResourceGroup)."
+           "the variable value is $(ResourceGroup)."
 
         - task: PowerShell@2          
           displayName: "Run ADDS E2E pipeline tests"
