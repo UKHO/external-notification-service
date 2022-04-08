@@ -114,6 +114,15 @@ module "storage" {
   service_name        = local.service_name
 }
 
+module "azure-dashboard" {
+  source         = "./Modules/AzureDashboard"
+  name           = "ENS-${local.env_name}-monitoring-dashboard"
+  location       = azurerm_resource_group.rg.location
+  environment    = local.env_name
+  resource_group = azurerm_resource_group.rg
+  tags           = local.tags
+}
+
 module "EventGridDomainPrivateEndpoint " {
   source              = "./Modules/EventGridDomainPrivateEndpoint "
   resource_group_name = azurerm_resource_group.rg.name
