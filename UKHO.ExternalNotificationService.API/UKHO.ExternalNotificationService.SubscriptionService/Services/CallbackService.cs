@@ -56,7 +56,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
                 if (httpResponse.StatusCode != HttpStatusCode.NoContent)
                 {
                     _logger.LogError(EventIds.ErrorInDeadLetterCallbackToD365HttpClient.ToEventId(),
-                    "Callback to D365 failed as Status is inactive with :{StatusCode} and RequestUri:{RequestUri} and SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", httpResponse.StatusCode, httpResponse.RequestMessage.RequestUri, subscriptionMessage.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+                    "Callback to D365 failed as status is inactive with Status:{StatusCode} and RequestUri:{RequestUri} and SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", httpResponse.StatusCode, httpResponse.RequestMessage.RequestUri, subscriptionMessage.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
                     return httpResponse;
                 }
                 _logger.LogInformation(EventIds.CallbackToD365ForDeadLetterProcessingSucceeded.ToEventId(),

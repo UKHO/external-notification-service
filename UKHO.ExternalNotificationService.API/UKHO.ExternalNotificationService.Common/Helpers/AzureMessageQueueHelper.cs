@@ -55,7 +55,7 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
                 return HealthCheckResult.Unhealthy("Azure message queue is unhealthy", new Exception($"Azure message queue {queueName} does not exists"));
         }
 
-        public async Task DeadLetterMoveBlob(SubscriptionStorageConfiguration ensStorageConfiguration, string path)
+        public async Task CopyDeadLetterBlob(SubscriptionStorageConfiguration ensStorageConfiguration, string path)
         {
             string storageAccountConnectionString = $"DefaultEndpointsProtocol=https;AccountName={ensStorageConfiguration.StorageAccountName};AccountKey={ensStorageConfiguration.StorageAccountKey};EndpointSuffix=core.windows.net";
 

@@ -5,6 +5,6 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
 {
     public interface IHandleDeadLetterService
     {
-        Task ProcessDeadLetter(string filePath, string subscriptionId, SubscriptionRequestMessage subscriptionRequestMessage);
+        Task ProcessDeadLetter(string filePath, string subscriptionId, SubscriptionRequestMessage subscriptionRequestMessage, string fileName);
     }
 }

@@ -253,13 +253,13 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         ENSSubscriptionMarkedAsInactiveCompleted = 900062,
         /// <summary>
-        /// 900063 - Process to move dead letter container blob to destination container blob started.
+        /// 900063 - Process to copy dead letter container blob to destination container blob started.
         /// </summary>
-        ENSMoveDeadLetterContainerBlobStarted = 900063,
+        ENSCopyDeadLetterContainerBlobStarted = 900063,
         /// <summary>
-        /// 900064 - Process to move dead letter container blob to destination container blob completed.
+        /// 900064 - Process to copy dead letter container blob to destination container blob completed.
         /// </summary>
-        ENSMoveDeadLetterContainerBlobCompleted = 900064
+        ENSCopyDeadLetterContainerBlobCompleted = 900064
     }
     
     public static class EventIdExtensions

@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NUnit.Framework;
-using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Configuration;
@@ -22,7 +21,8 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
         private ILogger<HandleDeadLetterService> _fakeLogger;
         private IOptions<D365CallbackConfiguration> _fakeD365CallbackConfiguration;
         private HandleDeadLetterService _handleDeadLetterService;
-        public string FilePath = "test";
+        private const string FilePath = "test";
+        private const string FileName = "f257e462-3a2e-452e-81af-ef58b6e3b9fb.json";
 
         [SetUp]
         public void Setup()
@@ -44,9 +44,9 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
 
             A.CallTo(() => _fakeCallbackService.CallbackToD365UsingDataverse(A<string>.Ignored, A<object>.Ignored, A<SubscriptionRequestMessage>.Ignored)).Returns( new HttpResponseMessage());
 
-            Task response =  _handleDeadLetterService.ProcessDeadLetter(FilePath, subscriptionId, new SubscriptionRequestMessage());
+            Task response =  _handleDeadLetterService.ProcessDeadLetter(FilePath, subscriptionId, new SubscriptionRequestMessage(), FileName);
 
-            A.CallTo(() => _fakeAzureMessageQueueHelper.DeadLetterMoveBlob(A<SubscriptionStorageConfiguration>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _fakeAzureMessageQueueHelper.CopyDeadLetterBlob(A<SubscriptionStorageConfiguration>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
 
             Assert.IsTrue(response.IsCompleted);
         }
