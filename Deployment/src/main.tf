@@ -123,7 +123,7 @@ module "azure-dashboard" {
   tags           = local.tags
 }
 
-module "EventGridDomainPrivateEndpoint " {
+module "EventGridDomainPrivateEndpoint" {
   source              = "./Modules/EventGridDomainPrivateEndpoint "
   resource_group_name = azurerm_resource_group.rg.name
   subnet_id           = data.azurerm_subnet.private_endpoint_subnet.id
