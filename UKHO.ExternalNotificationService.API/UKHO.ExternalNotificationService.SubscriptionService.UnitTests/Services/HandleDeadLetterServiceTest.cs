@@ -40,7 +40,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
         [Test]
         public void WhenDeadLetterCallbackToD365UsingDataverse()
         {
-            string  subscriptionId = "9dbdec8b-7ff3-4792-b085-cf1e5a41ca5e";
+            const string subscriptionId = "9dbdec8b-7ff3-4792-b085-cf1e5a41ca5e";
 
             A.CallTo(() => _fakeCallbackService.CallbackToD365UsingDataverse(A<string>.Ignored, A<object>.Ignored, A<SubscriptionRequestMessage>.Ignored)).Returns( new HttpResponseMessage());
 

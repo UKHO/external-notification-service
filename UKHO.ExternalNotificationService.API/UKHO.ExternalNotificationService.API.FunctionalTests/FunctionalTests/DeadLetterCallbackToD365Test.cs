@@ -13,7 +13,7 @@ using UKHO.ExternalNotificationService.API.FunctionalTests.Model;
 
 namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 {
-     class DeadLetterCallbackToD365Test
+    class DeadLetterCallbackToD365Test
     {
         private EnsApiClient EnsApiClient { get; set; }
         private TestConfiguration TestConfig { get; set; }
