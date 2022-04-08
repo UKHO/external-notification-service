@@ -223,9 +223,45 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900055 -  Sales catalogue service event data mapping Completed.
         /// </summary>
-        ScsEventDataMappingCompleted = 900055
+        ScsEventDataMappingCompleted = 900055,
+        /// <summary>
+        /// 900056 -  External notification service - dead letter container webjob request started.
+        /// </summary>
+        ENSDeadLetterContainerJobRequestStart = 900056,
+        /// <summary>
+        /// 900057 -  External notification service - dead letter container webjob request completed.
+        /// </summary>
+        ENSDeadLetterContainerJobRequestCompleted = 900057,
+        /// <summary>
+        /// 900058 -  Callback to D365 started for dead letter processing to mark subscription as inactive.
+        /// </summary>
+        CallbackToD365ForDeadLetterProcessingStarted = 900058,
+        /// <summary>
+        /// 900059 - Log an error if call back to D365 API for dead letter processing returns statusCode other than 204
+        /// </summary>
+        ErrorInDeadLetterCallbackToD365HttpClient = 900059,
+        /// <summary>
+        /// 900060 - Callback to D365 succeeded for dead letter processing to mark subscription as inactive.
+        /// </summary>
+        CallbackToD365ForDeadLetterProcessingSucceeded = 900060,
+        /// <summary>
+        /// 900061 - Process to mark subscription as inactive due to failed notification delivery started.
+        /// </summary>
+        ENSSubscriptionMarkedAsInactiveStart = 900061,
+        /// <summary>
+        /// 900062 - Process to mark subscription as inactive due to failed notification delivery completed.
+        /// </summary>
+        ENSSubscriptionMarkedAsInactiveCompleted = 900062,
+        /// <summary>
+        /// 900063 - Process to copy dead letter container blob to destination container blob started.
+        /// </summary>
+        ENSCopyDeadLetterContainerBlobStarted = 900063,
+        /// <summary>
+        /// 900064 - Process to copy dead letter container blob to destination container blob completed.
+        /// </summary>
+        ENSCopyDeadLetterContainerBlobCompleted = 900064
     }
-
+    
     public static class EventIdExtensions
     {
         public static EventId ToEventId(this EventIds eventId)

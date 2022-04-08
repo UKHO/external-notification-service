@@ -28,6 +28,10 @@ output "dead_letter_storage_container" {
   value = module.storage.dead_letter_storage_container
 }
 
+output "dead_letter_storage_destination_container" {
+  value = module.storage.dead_letter_storage_destination_container
+}
+
 output "stub_webappname" {
   value = lower(terraform.workspace) == "dev" ? module.webapp_service.webapp_name : null
 }

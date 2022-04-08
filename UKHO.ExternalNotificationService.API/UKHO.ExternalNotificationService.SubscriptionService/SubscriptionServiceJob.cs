@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Logging;
@@ -23,16 +24,19 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
         private readonly ISubscriptionServiceData _subscriptionServiceData;
         private readonly ILogger<SubscriptionServiceJob> _logger;        
         private readonly IOptions<D365CallbackConfiguration> _d365CallbackConfiguration;
-        private readonly ICallbackService _callbackService;        
+        private readonly ICallbackService _callbackService;
+        private readonly IHandleDeadLetterService _handleDeadLetterService;
 
         public SubscriptionServiceJob(ISubscriptionServiceData subscriptionServiceData,
             ILogger<SubscriptionServiceJob> logger, IOptions<D365CallbackConfiguration> d365CallbackConfiguration,
-            ICallbackService callbackService)
+            ICallbackService callbackService,
+            IHandleDeadLetterService handleDeadLetterService)
         {
             _subscriptionServiceData = subscriptionServiceData;           
             _logger = logger;
             _d365CallbackConfiguration = d365CallbackConfiguration;           
             _callbackService =  callbackService;
+            _handleDeadLetterService = handleDeadLetterService;
         }
 
         public async Task ProcessQueueMessage([QueueTrigger("%SubscriptionStorageConfiguration:QueueName%")] QueueMessage message)
@@ -115,6 +119,36 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
             
             _logger.LogInformation(EventIds.CreateSubscriptionRequestCompleted.ToEventId(),
                     "Subscription provisioning request Completed for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionMessage.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+        }
+
+        public async Task ProcessDeadLetterMessage([BlobTrigger("%SubscriptionStorageConfiguration:StorageContainerName%/{filePath}")] Stream myBlob, string filePath)
+        {
+            string subscriptionId = GetSubscriptionId(filePath);
+            string fileName = Path.GetFileName(filePath);
+
+            SubscriptionRequestMessage subscriptionRequestMessage = new() { CorrelationId = Guid.NewGuid().ToString(), SubscriptionId = subscriptionId };
+
+            _logger.LogInformation(EventIds.ENSDeadLetterContainerJobRequestStart.ToEventId(),
+                    "External notification service - dead letter container webjob request started for SubscriptionId:{SubscriptionId}, FileName:{fileName}, _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, fileName, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
+
+            await _handleDeadLetterService.ProcessDeadLetter(filePath, subscriptionId, subscriptionRequestMessage, fileName);
+
+            _logger.LogInformation(EventIds.ENSDeadLetterContainerJobRequestCompleted.ToEventId(),
+                    "External notification service - dead letter container webjob request completed for SubscriptionId:{SubscriptionId}, FileName:{fileName}, _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionId, fileName, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId);
+        }
+
+        private static string GetSubscriptionId(string filePath)
+        {
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                string[] splitFilePath = filePath.Split("/");
+                if (splitFilePath.Length > 1)
+                {
+                    return splitFilePath[1];
+                }
+                return string.Empty;
+            }
+            return string.Empty;
         }
     }
 }
