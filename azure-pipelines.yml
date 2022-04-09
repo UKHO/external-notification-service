@@ -404,7 +404,7 @@ stages:
           - name : ResourceGroup
             value : $[ dependencies.QADeployApp.outputs['QADeployApp.setVariable.ResourceGroup'] ]
           - name : WEB_APP_NAME
-            value : $[ dependencies.QADeployApp.outputs['QADeployApp.setVariable.WEB_APP_NAME'] ]
+            value : $[ dependencies.QADeployApp.outputs['QADeployApp.setVariable.WEB_APP'] ]
         container: ${{variables.Container}}
         steps:
         - bash: |
