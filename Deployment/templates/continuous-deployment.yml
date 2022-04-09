@@ -15,7 +15,7 @@ steps:
 
   - task: PowerShell@2
     displayName: "terraform $(Environment)deploy"
-    name: setvariable
+    name: setVariable
     inputs:
       targetType: filePath
       filePath: '$(Pipeline.Workspace)/terraformartifact/terraform_conditional_run.ps1'

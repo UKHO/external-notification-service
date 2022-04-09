@@ -434,13 +434,13 @@ stages:
           - group: "ADDS-E2E"
           - group: "ENS-QA-Variables"
           - name : ResourceGroup
-            value : $[ dependencies.QADeployApp.outputs['setvariable.ResourceGroup'] ]
+            value : $[ dependencies.QADeployApp.outputs['QADeployApp.setVariable.ResourceGroup'] ]
           - name : WEB_APP_NAME
-            value : $[ dependencies.QADeployApp.outputs['setvariable.WEB_APP_NAME'] ]
+            value : $[ dependencies.QADeployApp.outputs['QADeployApp.setVariable.WEB_APP_NAME'] ]
         container: ${{variables.Container}}
         steps:
         - bash: |
-           "the variable value is $(ResourceGroup)."
+           "the variable value is $(ResourceGroup)"
 
         - task: PowerShell@2          
           displayName: "Run ADDS E2E pipeline tests"
