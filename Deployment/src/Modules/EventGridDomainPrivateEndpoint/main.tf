@@ -1,8 +1,3 @@
-data "azurerm_resource_group" "core_services" {
-  provider = azurerm.coreservices
-  name     = var.core_services_rg
-}
-
 data "azurerm_private_dns_zone" "main" {
   provider            = azurerm.coreservices
   name                = "privatelink.eventgrid.azure.net"
