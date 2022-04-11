@@ -436,7 +436,7 @@ stages:
           - name : ResourceGroup
             value : $[ dependencies.QADeployApp.outputs['QADeployApp.setVariable.ResourceGroup'] ]
           - name : WEB_APP_NAME
-            value : $[ dependencies.QADeployApp.outputs['QADeployApp.setVariable.WEB_APP'] ]
+            value : $[ dependencies.QADeployApp.outputs['QADeployApp.setVariable.WEB_APP_NAME'] ]
         container: ${{variables.Container}}
         steps:
         - task: PowerShell@2          

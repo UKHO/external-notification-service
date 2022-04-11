@@ -52,8 +52,8 @@ Write-output "Terraform output as json"
 $terraformOutput = terraform output -json | ConvertFrom-Json
 
 write-output "Set JSON output into pipeline variables"
-Write-Host "##vso[task.setvariable variable=WEB_APP_NAME]$($terraformOutput.web_app_name.value)"
-Write-Host "##vso[task.setvariable variable=WEB_APP;isOutput=true]$($terraformOutput.web_app_name.value)"
+Write-Host "##vso[task.setvariable variable=WEB_APP_NAME;isOutput=true]$($terraformOutput.web_app_name.value)"
+#Write-Host "##vso[task.setvariable variable=WEB_APP;isOutput=true]$($terraformOutput.web_app_name.value)"
 Write-Host "##vso[task.setvariable variable=EnsApiUrl]$env:SERVICE_DNS_URL"
 Write-Host "##vso[task.setvariable variable=SubscriptionStorageConfiguration.QueueName]$($terraformOutput.event_storage_queue.value)"
 Write-Host "##vso[task.setvariable variable=EventHubLoggingConfiguration.Environment]$($terraformOutput.env_name.value)"
