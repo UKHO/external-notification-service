@@ -393,6 +393,37 @@ stages:
                     tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
                     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
                   
+                - task: DownloadBuildArtifacts@0
+                  displayName: "Download Functional test Artifact"
+                  inputs:
+                    buildType: 'current'
+                    downloadType: 'single'
+                    artifactName: 'functionaltests'
+                    downloadPath: '$(Build.SourcesDirectory)'
+
+                - task: FileTransform@1
+                  displayName: "File Transform: functionaltests"
+                  inputs:
+                    folderPath: '$(Build.SourcesDirectory)/functionaltests/'
+                    fileType: json
+                    targetFiles: '**/appsettings.json'
+
+                - task: UseDotNet@2
+                  displayName: 'Use .NET 6.0.x sdk'
+                  inputs:
+                    packageType: sdk
+                    version: 6.0.x
+
+                - task: DotNetCoreCLI@2
+                  displayName: "Run Functional tests"
+                  inputs:
+                    command: "test"
+                    projects: |
+                      **/*FunctionalTest*.dll
+                      !**/*TestAdapter.dll
+                      !**/obj/**
+                    testRunTitle: "Dev-AutomationTests"
+                    workingDirectory: '$(Build.SourcesDirectory)/functionaltests'
 
                 - task: AzureCLI@2
                   displayName: "Swap Stub URL"
@@ -402,7 +433,7 @@ stages:
                     scriptType: 'pscore'
                     scriptLocation: 'scriptPath'
                     scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
-                    arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(setVariable.ResourceGroup) -webappName $(WEB_APP_NAME)'
+                    arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
 
   - stage: QAdeploy
     displayName: QAdeploy (inc terraform, webapp deploy)
@@ -487,7 +518,7 @@ stages:
           - group: "ADDS-E2E"
           - group: "ENS-QA-Variables"
           - name : ResourceGroup
-            value : $[ dependencies.QADeployApp.outputs['QADeployApp.setVariable.ResourceGroup'] ]
+            value : $[ dependencies.QADeployApp.outputs['QADeployApp.setVariable.ResourceGroupName'] ]
           - name : WEB_APP_NAME
             value : $[ dependencies.QADeployApp.outputs['QADeployApp.setVariable.WEB_APP'] ]
         container: ${{variables.Container}}

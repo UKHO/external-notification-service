@@ -62,8 +62,8 @@ Write-Host "##vso[task.setvariable variable=EnsStorageQueueName]$($terraformOutp
 Write-Host "##vso[task.setvariable variable=SubscriptionStorageConfiguration.StorageContainerName]$($terraformOutput.dead_letter_storage_container.value)"
 Write-Host "##vso[task.setvariable variable=stubWebAppName]$($terraformOutput.stub_webappname.value)"
 Write-Host "##vso[task.setvariable variable=D365ApiStubUri]$($terraformOutput.ens_stub_web_app_url.value)"
-Write-Host "##vso[task.setvariable variable=ResourceGroup;isOutput=true]$($terraformOutput.webapp_rg.value)"
-
+Write-Host "##vso[task.setvariable variable=ResourceGroup]$($terraformOutput.webapp_rg.value)"
+Write-Host "##vso[task.setvariable variable=ResourceGroupName;isOutput=true]$($terraformOutput.webapp_rg.value)"
 Write-Host "##vso[task.setvariable variable=EventGridDomainConfiguration.EventGridDomainEndpoint;issecret=true]$($terraformOutput.event_grid_domain_endpoint_url.value)"
 Write-Host "##vso[task.setvariable variable=SubscriptionStorageConfiguration.DeadLetterDestinationContainerName]$($terraformOutput.dead_letter_storage_destination_container.value)"
 
