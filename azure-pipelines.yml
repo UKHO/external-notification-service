@@ -349,7 +349,91 @@ stages:
             displayName: "Publish Stub WebAPI Artifact"
             inputs:
               PathtoPublish: '$(Build.ArtifactStagingDirectory)\StubWebAPI'
-              ArtifactName: StubWebAPI              
+              ArtifactName: StubWebAPI
+
+  - stage: Devdeploy
+    displayName: "Devdeploy (inc terraform, webapp deploy)"
+    jobs:
+      - deployment: DevDeployApp
+        displayName: "Dev - deploy terraform and dotnet App"
+        environment: "Ens-Dev"
+        pool: $(DeploymentPool)
+        container: ${{variables.Container}}
+        workspace:
+          clean: all
+        variables:
+          - group: "ENS-Dev-TF-Variables"
+          - group: "ENS-Dev-Variables" 
+          - name: "D365AuthConfiguration.TenantId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
+          - name: "D365AuthConfiguration.ClientId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
+          - name: "D365AuthConfiguration.ClientSecret"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
+          - name: "EnsAuthConfiguration.ClientId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
+          - name: "EnsAuthConfiguration.TenantId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: Deployment/templates/continuous-deployment.yml
+                  parameters:
+                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+                    AzureSubscription: "External Notification Service Dev - A.008.02"
+
+                - template: Deployment/templates/continuous-deployment-apim.yml
+                  parameters:
+                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+                    AzureSubscription: "UKHO-APIM-Dev"
+                    TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
+                    APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
+                    APIMServiceInstance: $(APIM_SERVICE_NAME)
+                    tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
+                    tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
+                  
+                - task: DownloadBuildArtifacts@0
+                  displayName: "Download Functional test Artifact"
+                  inputs:
+                    buildType: 'current'
+                    downloadType: 'single'
+                    artifactName: 'functionaltests'
+                    downloadPath: '$(Build.SourcesDirectory)'
+
+                - task: FileTransform@1
+                  displayName: "File Transform: functionaltests"
+                  inputs:
+                    folderPath: '$(Build.SourcesDirectory)/functionaltests/'
+                    fileType: json
+                    targetFiles: '**/appsettings.json'
+
+                - task: UseDotNet@2
+                  displayName: 'Use .NET 6.0.x sdk'
+                  inputs:
+                    packageType: sdk
+                    version: 6.0.x
+
+                - task: DotNetCoreCLI@2
+                  displayName: "Run Functional tests"
+                  inputs:
+                    command: "test"
+                    projects: |
+                      **/*FunctionalTest*.dll
+                      !**/*TestAdapter.dll
+                      !**/obj/**
+                    testRunTitle: "Dev-AutomationTests"
+                    workingDirectory: '$(Build.SourcesDirectory)/functionaltests'
+
+                - task: AzureCLI@2
+                  displayName: "Swap Stub URL"
+                  condition: always()
+                  inputs:
+                    azureSubscription: "External Notification Service Dev - A.008.02"
+                    scriptType: 'pscore'
+                    scriptLocation: 'scriptPath'
+                    scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
+                    arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
 
   - stage: QAdeploy
     displayName: QAdeploy (inc terraform, webapp deploy)
