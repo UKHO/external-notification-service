@@ -139,4 +139,5 @@ module "EventGridDomainPrivateEndpoint" {
   tags                = local.tags
   env_name            = local.env_name
   event_grid_domain_resource_id = module.eventgriddomain.event_grid_domain_resource_id
+  private_dns_zone_id           = data.azurerm_private_dns_zone.eventgrid_private_endpoint.id
 }

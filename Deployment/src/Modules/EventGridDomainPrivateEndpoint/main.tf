@@ -13,6 +13,6 @@ resource "azurerm_private_endpoint" "eventgriddomain_endpoint" {
 
   private_dns_zone_group {
     name                 = "private-dns-zone-group-${var.env_name}"
-    private_dns_zone_ids = [data.azurerm_private_dns_zone.eventgrid_private_endpoint.id]
+    private_dns_zone_ids = [var.private_dns_zone_id]
   }
 }
