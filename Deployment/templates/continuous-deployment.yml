@@ -33,6 +33,7 @@ steps:
       TF_VAR_agent_vnet_name: $(agentVnetName)
       TF_VAR_agent_subnet_name: $(agentSubnetName)
       TF_VAR_agent_subscription_id: $(agentSubscriptionId)
+      TF_VAR_private_endpoint_subnet_name: $(privateEndpointSubnet)
 
   - bash: echo "##vso[task.setvariable variable=D365CallbackConfiguration.D365ApiUri]$(D365ApiStubUri)"
     name: SetStubURL

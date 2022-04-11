@@ -126,6 +126,8 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                   services.AddScoped<IEventSubscriptionConfiguration, EventSubscriptionConfiguration>();
                   services.AddScoped<IAuthTokenProvider, AuthTokenProvider>();
                   services.AddScoped<ICallbackService, CallbackService>();
+                  services.AddScoped<IHandleDeadLetterService, HandleDeadLetterService>();
+                  services.AddScoped<IAzureMessageQueueHelper, AzureMessageQueueHelper>();
 
                   services.AddHttpClient("D365DataverseApi").AddPolicyHandler((service, _) => CommonHelper.GetRetryPolicy(service.GetService<ILogger<ICallbackService>>(), retryCount, sleepDuration));
                   services.AddScoped<ICallbackClient, CallbackClient>();
@@ -134,6 +136,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
               {
                   b.AddAzureStorageCoreServices();
                   b.AddAzureStorageQueues();
+                  b.AddAzureStorageBlobs();
               });
 
             return hostBuilder;

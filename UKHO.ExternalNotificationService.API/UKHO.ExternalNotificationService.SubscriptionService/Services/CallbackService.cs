@@ -27,7 +27,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
             string accessToken = await _authTokenProvider.GetADAccessToken(subscriptionMessage);
 
             if (accessToken != string.Empty)
-            {                
+            {
                 HttpResponseMessage httpResponse = await _callbackClient.GetCallbackD365Client(externalEntityPath, accessToken, externalNotificationEntity, subscriptionMessage.CorrelationId, CancellationToken.None);
 
                 if (httpResponse.StatusCode != HttpStatusCode.NoContent)
@@ -38,6 +38,29 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
                 }
                 _logger.LogInformation(EventIds.CallbackToD365Completed.ToEventId(),
                     "Callback to D365 using Dataverse succeeded with Status:{StatusCode} and RequestUri:{RequestUri} and SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", httpResponse.StatusCode, httpResponse.RequestMessage.RequestUri, subscriptionMessage.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+                return httpResponse;
+            }
+            _logger.LogError(EventIds.ErrorInCallbackToD365HttpClient.ToEventId(),
+                "As Authorization to AD Token failed with Status:{StatusCode} and SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", HttpStatusCode.Unauthorized, subscriptionMessage.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+            return new HttpResponseMessage { StatusCode = HttpStatusCode.Unauthorized };
+        }
+
+        public async Task<HttpResponseMessage> DeadLetterCallbackToD365UsingDataverse(string externalEntityPath, object externalNotificationEntityStateCode, SubscriptionRequestMessage subscriptionMessage)
+        {
+            string accessToken = await _authTokenProvider.GetADAccessToken(subscriptionMessage);
+           
+            if (accessToken != string.Empty)
+            {
+                HttpResponseMessage httpResponse = await _callbackClient.GetCallbackD365Client(externalEntityPath, accessToken, externalNotificationEntityStateCode, subscriptionMessage.CorrelationId, CancellationToken.None);
+
+                if (httpResponse.StatusCode != HttpStatusCode.NoContent)
+                {
+                    _logger.LogError(EventIds.ErrorInDeadLetterCallbackToD365HttpClient.ToEventId(),
+                    "Callback to D365 failed for dead letter processing as status is inactive with Status:{StatusCode} and RequestUri:{RequestUri} and SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", httpResponse.StatusCode, httpResponse.RequestMessage.RequestUri, subscriptionMessage.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+                    return httpResponse;
+                }
+                _logger.LogInformation(EventIds.CallbackToD365ForDeadLetterProcessingSucceeded.ToEventId(),
+                    "Callback to D365 succeeded for dead letter processing to mark subscription as inactive with Status:{StatusCode} and RequestUri:{RequestUri} and SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", httpResponse.StatusCode, httpResponse.RequestMessage.RequestUri, subscriptionMessage.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
                 return httpResponse;
             }
             _logger.LogError(EventIds.ErrorInCallbackToD365HttpClient.ToEventId(),
