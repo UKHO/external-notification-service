@@ -17,6 +17,12 @@ data "azurerm_subnet" "agent_subnet" {
   resource_group_name  = var.agent_rg
 }
 
+data "azurerm_private_dns_zone" "eventgrid_private_endpoint" {
+  provider            = azurerm.coreservices
+  name                = "privatelink.eventgrid.azure.net"
+  resource_group_name = var.core_services_rg
+}
+
 module "app_insights" {
   source              = "./Modules/AppInsights"
   name                = "${local.service_name}-${local.env_name}-insights"

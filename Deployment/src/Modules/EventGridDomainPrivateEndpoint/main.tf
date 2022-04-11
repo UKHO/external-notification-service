@@ -1,9 +1,3 @@
-data "azurerm_private_dns_zone" "main" {
-  provider            = azurerm.coreservices
-  name                = "privatelink.eventgrid.azure.net"
-  resource_group_name = var.core_services_rg
-}
-
 resource "azurerm_private_endpoint" "eventgriddomain_endpoint" {
   name                    = "EventGridDomain-${var.env_name}-endpoint"
   resource_group_name     = var.resource_group_name
@@ -19,6 +13,6 @@ resource "azurerm_private_endpoint" "eventgriddomain_endpoint" {
 
   private_dns_zone_group {
     name                 = "private-dns-zone-group-${var.env_name}"
-    private_dns_zone_ids = [data.azurerm_private_dns_zone.main.id]
+    private_dns_zone_ids = [data.azurerm_private_dns_zone.eventgrid_private_endpoint.id]
   }
 }
