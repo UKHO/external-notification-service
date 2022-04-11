@@ -1,3 +1,14 @@
+data "azurerm_resource_group" "core_services" {
+  provider = azurerm.coreservices
+  name     = var.core_services_rg
+}
+
+data "azurerm_private_dns_zone" "main" {
+  provider            = azurerm.coreservices
+  name                = "privatelink.eventgrid.azure.net"
+  resource_group_name = var.core_services_rg
+}
+
 resource "azurerm_private_endpoint" "eventgriddomain_endpoint" {
   name                    = "EventGridDomain-${var.env_name}-endpoint"
   resource_group_name     = var.resource_group_name
@@ -11,10 +22,8 @@ resource "azurerm_private_endpoint" "eventgriddomain_endpoint" {
     subresource_names                 = ["domain"]
   }
 
-  lifecycle {
-    ignore_changes = [
-      private_dns_zone_configs,
-      private_dns_zone_group
-    ]
+  private_dns_zone_group {
+    name                 = "private-dns-zone-group-${var.env_name}"
+    private_dns_zone_ids = [data.azurerm_private_dns_zone.main.id]
   }
 }

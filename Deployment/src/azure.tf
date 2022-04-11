@@ -22,3 +22,9 @@ provider "azurerm" {
   alias = "build_agent"
   subscription_id = var.agent_subscription_id
 }
+
+provider "azurerm" {
+  features {}
+  alias           = "coreservices"
+  subscription_id = var.core_services_subscription_id
+}

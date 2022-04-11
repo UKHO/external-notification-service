@@ -74,6 +74,14 @@ variable "agent_subscription_id" {
   type = string
 }
 
+variable "core_services_subscription_id" {
+  type = string
+}
+
+variable "core_services_rg" {
+  type = string
+}
+
 variable "allowed_ips" {
   type = list
 }
