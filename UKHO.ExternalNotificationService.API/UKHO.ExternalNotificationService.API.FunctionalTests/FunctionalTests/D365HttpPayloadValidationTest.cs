@@ -28,6 +28,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             D365FssPayload = JsonConvert.DeserializeObject<D365Payload>(await File.ReadAllTextAsync(filePathFss));
             D365ScsPayload = JsonConvert.DeserializeObject<D365Payload>(await File.ReadAllTextAsync(filePathScs));
+            D365FssPayload.InputParameters[0].Value.Attributes[9].Value = string.Concat(TestConfig.StubBaseUri, TestConfig.WebhookUrlExtension);
+            D365ScsPayload.InputParameters[0].Value.Attributes[9].Value = string.Concat(TestConfig.StubBaseUri, TestConfig.WebhookUrlExtension);
 
             ADAuthTokenProvider adAuthTokenProvider = new();
             EnsToken = await adAuthTokenProvider.GetEnsAuthToken();
@@ -76,7 +78,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(null, EnsToken);
             Assert.AreEqual(400, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 400.");
 
-            ErrorDescriptionModel errorMessage =await apiResponse.ReadAsTypeAsync<ErrorDescriptionModel>();
+            ErrorDescriptionModel errorMessage = await apiResponse.ReadAsTypeAsync<ErrorDescriptionModel>();
 
             Assert.IsTrue(errorMessage.Errors.Any(e => e.Source == "requestBody"));
             Assert.IsTrue(errorMessage.Errors.Any(e => e.Description == "Either body is null or malformed."));

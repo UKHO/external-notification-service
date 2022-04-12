@@ -25,6 +25,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         public int FailedStatusCode { get; set; }
         public string StubBaseUri { get; set; }
         public string ScsSource { get; set; }
+        public string WebhookUrlExtension { get; set; }
 
         public TestConfiguration()
         {
@@ -52,6 +53,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             FailedStatusCode= int.Parse(ConfigurationRoot.GetSection("D365CallbackConfiguration:FailedStatusCode").Value);
             StubBaseUri = ConfigurationRoot.GetSection("StubConfiguration:BaseUri").Value;
             ScsSource = ConfigurationRoot.GetSection("ScsDataMappingConfiguration:Source").Value;
+            WebhookUrlExtension = ConfigurationRoot.GetSection("WebhookUrlExtension").Value;
         }
     }
 }

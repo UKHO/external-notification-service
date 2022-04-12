@@ -21,9 +21,9 @@ output "webapp_scm_credentials"{
 }
 
 output "webapp_name" {
-  value = var.env_name == "dev" ? azurerm_app_service.stub_webapp_service[0].name : null
+  value = var.env_name == "live" ? null : azurerm_app_service.stub_webapp_service[0].name
 }
 
 output "default_site_hostname_ens_stub" {
-  value = var.env_name == "dev" ? azurerm_app_service.stub_webapp_service[0].default_site_hostname : null
+  value = var.env_name == "live" ?  null : azurerm_app_service.stub_webapp_service[0].default_site_hostname
 }

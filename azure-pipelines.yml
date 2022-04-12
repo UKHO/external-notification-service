@@ -349,7 +349,7 @@ stages:
             displayName: "Publish Stub WebAPI Artifact"
             inputs:
               PathtoPublish: '$(Build.ArtifactStagingDirectory)\StubWebAPI'
-              ArtifactName: StubWebAPI              
+              ArtifactName: StubWebAPI
 
   - stage: Devdeploy
     displayName: "Devdeploy (inc terraform, webapp deploy)"
@@ -433,7 +433,7 @@ stages:
                     scriptType: 'pscore'
                     scriptLocation: 'scriptPath'
                     scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
-                    arguments: '-sandboxUri $(D365ApiSandboxUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
+                    arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
 
   - stage: QAdeploy
     displayName: QAdeploy (inc terraform, webapp deploy)
@@ -477,7 +477,7 @@ stages:
                     APIMServiceInstance: $(APIM_SERVICE_NAME)
                     tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
                     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
-                    
+
                 - task: DownloadBuildArtifacts@0
                   displayName: "Download Functional test Artifact"
                   inputs:
@@ -510,15 +510,36 @@ stages:
                     testRunTitle: "QA-AutomationTests"
                     workingDirectory: '$(Build.SourcesDirectory)/functionaltests'
 
-                - task: AzureCLI@2
-                  displayName: "Swap QA Stub URL"
-                  condition: always()
-                  inputs:
-                    azureSubscription: "External Notification Service QA - A.008.02"
-                    scriptType: 'pscore'
-                    scriptLocation: 'scriptPath'
-                    scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_qa_stub_url.ps1'
-                    arguments: '-d365qauri $(D365ApiQaUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
+      - job: Run_ADDS_E2E_tests
+        displayName: Run ADDS E2E tests
+        dependsOn: QADeployApp
+        pool: $(DeploymentPool)
+        variables:
+          - group: "ADDS-E2E"
+          - group: "ENS-QA-Variables"
+          - name : ResourceGroup
+            value : $[ dependencies.QADeployApp.outputs['QADeployApp.setVariable.ResourceGroupName'] ]
+          - name : WEB_APP_NAME
+            value : $[ dependencies.QADeployApp.outputs['QADeployApp.setVariable.WEB_APP'] ]
+        container: ${{variables.Container}}
+        steps:
+        - task: PowerShell@2          
+          displayName: "Run ADDS E2E pipeline tests"
+          inputs:
+              pwsh: true
+              targetType: filePath
+              filePath: '$(System.DefaultWorkingDirectory)/Deployment/ADDS-e2e-tests.ps1'
+              arguments: '-queueSecret $(QueueSecret) -pollSecret $(PollSecret) -pollTimeInSecs $(PollTimeInSecs) -functionEndPoint $(FunctionEndPoint)'
+
+        - task: AzureCLI@2
+          displayName: "Swap Stub URL"
+          condition: always()
+          inputs:
+            azureSubscription: "External Notification Service QA - A.008.02"
+            scriptType: 'pscore'
+            scriptLocation: 'scriptPath'
+            scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
+            arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
 
   - stage: Livedeploy
     displayName: Livedeploy (inc terraform, webapp deploy)

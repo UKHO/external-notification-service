@@ -53,6 +53,7 @@ $terraformOutput = terraform output -json | ConvertFrom-Json
 
 write-output "Set JSON output into pipeline variables"
 Write-Host "##vso[task.setvariable variable=WEB_APP_NAME]$($terraformOutput.web_app_name.value)"
+Write-Host "##vso[task.setvariable variable=WEB_APP;isOutput=true]$($terraformOutput.web_app_name.value)"
 Write-Host "##vso[task.setvariable variable=EnsApiUrl]$env:SERVICE_DNS_URL"
 Write-Host "##vso[task.setvariable variable=SubscriptionStorageConfiguration.QueueName]$($terraformOutput.event_storage_queue.value)"
 Write-Host "##vso[task.setvariable variable=EventHubLoggingConfiguration.Environment]$($terraformOutput.env_name.value)"
@@ -62,6 +63,7 @@ Write-Host "##vso[task.setvariable variable=SubscriptionStorageConfiguration.Sto
 Write-Host "##vso[task.setvariable variable=stubWebAppName]$($terraformOutput.stub_webappname.value)"
 Write-Host "##vso[task.setvariable variable=D365ApiStubUri]$($terraformOutput.ens_stub_web_app_url.value)"
 Write-Host "##vso[task.setvariable variable=ResourceGroup]$($terraformOutput.webapp_rg.value)"
+Write-Host "##vso[task.setvariable variable=ResourceGroupName;isOutput=true]$($terraformOutput.webapp_rg.value)"
 Write-Host "##vso[task.setvariable variable=EventGridDomainConfiguration.EventGridDomainEndpoint;issecret=true]$($terraformOutput.event_grid_domain_endpoint_url.value)"
 Write-Host "##vso[task.setvariable variable=SubscriptionStorageConfiguration.DeadLetterDestinationContainerName]$($terraformOutput.dead_letter_storage_destination_container.value)"
 

@@ -98,7 +98,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             const string subject = "83d08093-7a67-4b3a-b431-92ba42feaea0";
             const string addHttps = "https://";
             JObject ensWebhookJson = FssEventBody;
-
+           
             FssEventData publishDataFromFss = FssEventData;
             await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, null);
 
@@ -109,8 +109,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             {
                 await Task.Delay(10000);
             }
-
+           
             Assert.AreEqual(200, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 200.");
+           
             HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
             string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
             IEnumerable<DistributorRequest> deserialized = JsonConvert.DeserializeObject<IEnumerable<DistributorRequest>>(custome‌​rJsonString);
@@ -155,8 +156,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         public async Task WhenICallTheEnsWebhookApiWithAValidFssJObjectBody_ThenNonOkStatusIsReturned(string subject, HttpStatusCode statusCode)
         {
             JObject ensWebhookJson = FssEventBody;
-            await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, statusCode);
-
+            await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, statusCode);            
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
             DateTime startTime = DateTime.UtcNow;
 
@@ -164,11 +164,11 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             {
                 await Task.Delay(10000);
             }
-
+            
             Assert.AreEqual(200, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 200.");
             HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
             // Get the response
-            string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
+            string customerJsonString = await stubResponse.Content.ReadAsStringAsync();            
             IEnumerable<DistributorRequest> deserialized = JsonConvert.DeserializeObject<IEnumerable<DistributorRequest>>(custome‌​rJsonString);
             IEnumerable<DistributorRequest> getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.statusCode.HasValue && x.statusCode.Value == statusCode)
                 .OrderByDescending(a => a.TimeStamp);
@@ -180,22 +180,20 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         public async Task WhenICallTheEnsWebhookApiWithAValidScsJObjectBody_ThenOkStatusIsReturned()
         {
             const string subject = "NO4F1617";
-            JObject ensWebhookJson = ScsEventBody;
-
-            await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, null);
-
+            JObject ensWebhookJson = ScsEventBody;            
+            await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, null);            
             DateTime startTime = DateTime.UtcNow;
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
             
             while (DateTime.UtcNow - startTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
             {
                 await Task.Delay(10000);
-            }
-
+            }           
             Assert.AreEqual(200, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 200.");
             HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
             string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
             IEnumerable<DistributorRequest> deserialized = JsonConvert.DeserializeObject<IEnumerable<DistributorRequest>>(custome‌​rJsonString);
+            
             DistributorRequest getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.statusCode.HasValue && x.statusCode.Value == HttpStatusCode.OK).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
             Assert.NotNull(getMatchingData);
             Assert.AreEqual(HttpStatusCode.OK, getMatchingData.statusCode);
