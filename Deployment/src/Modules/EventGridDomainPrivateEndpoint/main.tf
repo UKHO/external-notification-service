@@ -11,10 +11,8 @@ resource "azurerm_private_endpoint" "eventgriddomain_endpoint" {
     subresource_names                 = ["domain"]
   }
 
-  lifecycle {
-    ignore_changes = [
-      private_dns_zone_configs,
-      private_dns_zone_group
-    ]
+  private_dns_zone_group {
+    name                 = "private-dns-zone-group-${var.env_name}"
+    private_dns_zone_ids = [var.private_dns_zone_id]
   }
 }
