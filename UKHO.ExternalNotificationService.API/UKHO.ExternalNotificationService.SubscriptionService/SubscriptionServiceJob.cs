@@ -57,7 +57,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
 
                     externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, subscriptionMessage.IsActive, _d365CallbackConfiguration.Value.SucceededStatusCode);
 
-                    _logger.LogError(EventIds.CreateSubscriptionRequestSuccess.ToEventId(),
+                    _logger.LogInformation(EventIds.CreateSubscriptionRequestSuccess.ToEventId(),
                  "Subscription provisioning request Succeeded for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
                 }
                 catch (Exception e)
@@ -96,7 +96,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
 
                     externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, subscriptionMessage.IsActive, _d365CallbackConfiguration.Value.SucceededStatusCode);
 
-                    _logger.LogError(EventIds.DeleteSubscriptionRequestSuccess.ToEventId(),
+                    _logger.LogInformation(EventIds.DeleteSubscriptionRequestSuccess.ToEventId(),
                  "Delete Event Grid Domain Subscription request Succeeded for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
                 }
                 catch (Exception ex)
