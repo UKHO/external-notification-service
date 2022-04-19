@@ -13,8 +13,8 @@ namespace UKHO.ExternalNotificationService.API.Validation
 
     public class ScsEventDataValidator : AbstractValidator<ScsEventData>, IScsEventDataValidator
     {
-        private const int LatitudeLimitDegrees = 180;
-        private const int LongitudeLimitDegrees = 90;
+        private const double LatitudeLimitDegrees = 90;
+        private const double LongitudeLimitDegrees = 180;
 
         public ScsEventDataValidator()
         {
@@ -49,32 +49,32 @@ namespace UKHO.ExternalNotificationService.API.Validation
                 .WithMessage("BoundingBox cannot be blank or null.");
 
             RuleFor(v => v.BoundingBox.NorthLimit)
-                .InclusiveBetween(-LongitudeLimitDegrees, LongitudeLimitDegrees)
+                .InclusiveBetween(-LatitudeLimitDegrees, LatitudeLimitDegrees)
                 .OverridePropertyName("NorthLimit")
                 .When(x => x.BoundingBox != null)
                 .WithErrorCode(HttpStatusCode.OK.ToString())
-                .WithMessage($"NorthLimit should be in the range -{LongitudeLimitDegrees}.0 to +{LongitudeLimitDegrees}.0.");
+                .WithMessage($"NorthLimit should be in the range -{LatitudeLimitDegrees}.0 to +{LatitudeLimitDegrees}.0.");
 
             RuleFor(v => v.BoundingBox.SouthLimit)
-                .InclusiveBetween(-LongitudeLimitDegrees, LongitudeLimitDegrees)
+                .InclusiveBetween(-LatitudeLimitDegrees, LatitudeLimitDegrees)
                 .OverridePropertyName("SouthLimit")
                 .When(x => x.BoundingBox != null)
                 .WithErrorCode(HttpStatusCode.OK.ToString())
-                .WithMessage($"SouthLimit should be in the range -{LongitudeLimitDegrees}.0 to +{LongitudeLimitDegrees}.0.");
+                .WithMessage($"SouthLimit should be in the range -{LatitudeLimitDegrees}.0 to +{LatitudeLimitDegrees}.0.");
 
             RuleFor(v => v.BoundingBox.EastLimit)
-                .InclusiveBetween(-LatitudeLimitDegrees, LatitudeLimitDegrees)
+                .InclusiveBetween(-LongitudeLimitDegrees, LongitudeLimitDegrees)
                 .OverridePropertyName("EastLimit")
                 .When(x => x.BoundingBox != null)
                 .WithErrorCode(HttpStatusCode.OK.ToString())
-                .WithMessage($"EastLimit should be in the range -{LatitudeLimitDegrees}.0 to +{LatitudeLimitDegrees}.0.");
+                .WithMessage($"EastLimit should be in the range -{LongitudeLimitDegrees}.0 to +{LongitudeLimitDegrees}.0.");
 
             RuleFor(v => v.BoundingBox.WestLimit)
-                .InclusiveBetween(-LatitudeLimitDegrees, LatitudeLimitDegrees)
+                .InclusiveBetween(-LongitudeLimitDegrees, LongitudeLimitDegrees)
                 .OverridePropertyName("WestLimit")
                 .When(x => x.BoundingBox != null)
                 .WithErrorCode(HttpStatusCode.OK.ToString())
-                .WithMessage($"WestLimit should be in the range -{LatitudeLimitDegrees}.0 to +{LatitudeLimitDegrees}.0.");
+                .WithMessage($"WestLimit should be in the range -{LongitudeLimitDegrees}.0 to +{LongitudeLimitDegrees}.0.");
 
             RuleFor(v => v.Status).NotNull().NotEmpty()
                 .WithErrorCode(HttpStatusCode.OK.ToString())

@@ -104,7 +104,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
 
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
 
-            CheckLatLongResult(nameof(ProductBoundingBox.NorthLimit), "90", result, shouldBeValid);
+            CheckLatLongResult(nameof(ProductBoundingBox.NorthLimit), 90, result, shouldBeValid);
         }
 
         [TestCase(-90.1, false)]
@@ -118,7 +118,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
 
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
 
-            CheckLatLongResult(nameof(ProductBoundingBox.SouthLimit), "90", result, shouldBeValid);
+            CheckLatLongResult(nameof(ProductBoundingBox.SouthLimit), 90, result, shouldBeValid);
         }
 
         [TestCase(-180.1, false)]
@@ -132,7 +132,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
 
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
 
-            CheckLatLongResult(nameof(ProductBoundingBox.EastLimit), "180", result, shouldBeValid);
+            CheckLatLongResult(nameof(ProductBoundingBox.EastLimit), 180, result, shouldBeValid);
         }
 
         [TestCase(-180.1, false)]
@@ -146,7 +146,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
 
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
 
-            CheckLatLongResult(nameof(ProductBoundingBox.WestLimit), "180", result, shouldBeValid);
+            CheckLatLongResult(nameof(ProductBoundingBox.WestLimit), 180, result, shouldBeValid);
         }
 
         [Test]
@@ -193,7 +193,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             Assert.AreEqual(0, result.Errors.Count);
         }
 
-        private static void CheckLatLongResult(string property, string limit, TestValidationResult<ScsEventData> result, bool shouldBeValid)
+        private static void CheckLatLongResult(string property, int limit, TestValidationResult<ScsEventData> result, bool shouldBeValid)
         {
             if (shouldBeValid)
             {
