@@ -146,7 +146,6 @@ This CVE applies to python and this is a false positive cve for our application 
    False positive because this CVE applies to a Javascript module named Async (https://github.com/caolan/async) which has nothing to do with Serilog.Sinks.Async apart from the word Async.
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:generic/Serilog\.Sinks\.Async@.*$</packageUrl>
     <cve>CVE-2021-43138</cve>
   </suppress>
 </suppressions>
