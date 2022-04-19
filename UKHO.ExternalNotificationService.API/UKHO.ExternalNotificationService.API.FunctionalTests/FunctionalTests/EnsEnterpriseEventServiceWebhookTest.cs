@@ -179,7 +179,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [Test]
         public async Task WhenICallTheEnsWebhookApiWithAValidScsJObjectBody_ThenOkStatusIsReturned()
         {
-            const string subject = "NO4F1617";
+            const string subject = "GB53496A";
             JObject ensWebhookJson = ScsEventBody;            
             await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, null);            
             DateTime startTime = DateTime.UtcNow;
