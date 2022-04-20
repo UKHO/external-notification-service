@@ -21,7 +21,6 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             _scsEventDataValidator = new ScsEventDataValidator();
         }
 
-        #region ProductType
         [Test]
         public void WhenNullProductTypeInRequest_ThenReceiveSuccessfulResponse()
         {
@@ -33,9 +32,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "ProductType cannot be blank or null."));
             Assert.IsTrue(result.Errors.Any(x => x.ErrorCode == "OK"));
         }
-        #endregion
 
-        #region productName
         [Test]
         public void WhenNullProductNameInRequest_ThenReceiveSuccessfulResponse()
         {
@@ -47,9 +44,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "ProductName cannot be blank or null."));
             Assert.IsTrue(result.Errors.Any(x => x.ErrorCode == "OK"));
         }
-        #endregion
 
-        #region EditionNumber
         [Test]
         public void WhenEditionNumberLessThanZeroInRequest_ThenReceiveSuccessfulResponse()
         {
@@ -61,9 +56,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "EditionNumber cannot be less than zero or blank."));
             Assert.IsTrue(result.Errors.Any(x => x.ErrorCode == "OK"));
         }
-        #endregion
 
-        #region UpdateNumber
         [Test]
         public void WhenUpdateNumberLessThanZeroInRequest_ThenReceiveSuccessfulResponse()
         {
@@ -75,9 +68,19 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "UpdateNumber cannot be less than zero or blank."));
             Assert.IsTrue(result.Errors.Any(x => x.ErrorCode == "OK"));
         }
-        #endregion
 
-        #region BoundingBox
+        [Test]
+        public void WhenFileSizeLessThanZeroInRequest_ThenReceiveSuccessfulResponse()
+        {
+            _fakeScsEventData.FileSize = -1;
+
+            TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
+            result.ShouldHaveValidationErrorFor("FileSize");
+
+            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "FileSize cannot be less than zero or blank."));
+            Assert.IsTrue(result.Errors.Any(x => x.ErrorCode == "OK"));
+        }
+
         [Test]
         public void WhenNullBoundingBoxInRequest_ThenReceiveSuccessfulResponse()
         {
@@ -89,65 +92,63 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "BoundingBox cannot be blank or null."));
             Assert.IsTrue(result.Errors.Any(x => x.ErrorCode == "OK"));
         }
-        #endregion
 
-        #region NorthLimit
-        [Test]
-        public void WhenNorthLimitLessThanZeroInRequest_ThenReceiveSuccessfulResponse()
+        [TestCase(-90.1, false)]
+        [TestCase(-90.0, true)]
+        [TestCase(0, true)]
+        [TestCase(90, true)]
+        [TestCase(90.1, false)]
+        public void WhenNorthLimitHasValue_ReceiveCorrectResponse(double value, bool shouldBeValid)
         {
-            _fakeScsEventData.BoundingBox.NorthLimit = -1;
+            _fakeScsEventData.BoundingBox.NorthLimit = value;
 
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
-            result.ShouldHaveValidationErrorFor("NorthLimit");
 
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "NorthLimit cannot be less than zero or blank."));
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorCode == "OK"));
+            CheckLatLongResult(nameof(ProductBoundingBox.NorthLimit), 90, result, shouldBeValid);
         }
-        #endregion
 
-        #region SouthLimit
-        [Test]
-        public void WhenSouthLimitLessThanZeroInRequest_ThenReceiveSuccessfulResponse()
+        [TestCase(-90.1, false)]
+        [TestCase(-90.0, true)]
+        [TestCase(0, true)]
+        [TestCase(90, true)]
+        [TestCase(90.1, false)]
+        public void WhenSouthLimitHasValue_ReceiveCorrectResponse(double value, bool shouldBeValid)
         {
-            _fakeScsEventData.BoundingBox.SouthLimit = -1;
+            _fakeScsEventData.BoundingBox.SouthLimit = value;
 
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
-            result.ShouldHaveValidationErrorFor("SouthLimit");
 
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "SouthLimit cannot be less than zero or blank."));
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorCode == "OK"));
+            CheckLatLongResult(nameof(ProductBoundingBox.SouthLimit), 90, result, shouldBeValid);
         }
-        #endregion
 
-        #region EastLimit
-        [Test]
-        public void WhenEastLimitLessThanZeroInRequest_ThenReceiveSuccessfulResponse()
+        [TestCase(-180.1, false)]
+        [TestCase(-180.0, true)]
+        [TestCase(0, true)]
+        [TestCase(180, true)]
+        [TestCase(180.1, false)]
+        public void WhenEastLimitHasValue_ReceiveCorrectResponse(double value, bool shouldBeValid)
         {
-            _fakeScsEventData.BoundingBox.EastLimit = -1;
+            _fakeScsEventData.BoundingBox.EastLimit = value;
 
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
-            result.ShouldHaveValidationErrorFor("EastLimit");
 
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "EastLimit cannot be less than zero or blank."));
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorCode == "OK"));
+            CheckLatLongResult(nameof(ProductBoundingBox.EastLimit), 180, result, shouldBeValid);
         }
-        #endregion
 
-        #region WestLimit
-        [Test]
-        public void WhenWestLimitLessThanZeroInRequest_ThenReceiveSuccessfulResponse()
+        [TestCase(-180.1, false)]
+        [TestCase(-180.0, true)]
+        [TestCase(0, true)]
+        [TestCase(180, true)]
+        [TestCase(180.1, false)]
+        public void WhenWestLimitHasValue_ReceiveCorrectResponse(double value, bool shouldBeValid)
         {
-            _fakeScsEventData.BoundingBox.WestLimit = -1;
+            _fakeScsEventData.BoundingBox.WestLimit = value;
 
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
-            result.ShouldHaveValidationErrorFor("WestLimit");
 
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "WestLimit cannot be less than zero or blank."));
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorCode == "OK"));
+            CheckLatLongResult(nameof(ProductBoundingBox.WestLimit), 180, result, shouldBeValid);
         }
-        #endregion
 
-        #region Status
         [Test]
         public void WhenNullStatusInRequest_ThenReceiveSuccessfulResponse()
         {
@@ -159,9 +160,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "Status cannot be blank or null."));
             Assert.IsTrue(result.Errors.Any(x => x.ErrorCode == "OK"));
         }
-        #endregion
 
-        #region StatusDate
         [Test]
         public void WhenNullStatusDateInRequest_ThenReceiveSuccessfulResponse()
         {
@@ -173,9 +172,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "StatusDate cannot be blank or null."));
             Assert.IsTrue(result.Errors.Any(x => x.ErrorCode == "OK"));
         }
-        #endregion
 
-        #region StatusName
         [Test]
         public void WhenNullStatusNameInRequest_ThenReceiveSuccessfulResponse()
         {
@@ -187,9 +184,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "StatusName cannot be blank or null."));
             Assert.IsTrue(result.Errors.Any(x => x.ErrorCode == "OK"));
         }
-        #endregion
 
-        #region ScsEventData
         [Test]
         public void WhenValidRequest_ThenReceiveSuccessfulResponse()
         {
@@ -197,6 +192,21 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
 
             Assert.AreEqual(0, result.Errors.Count);
         }
-        #endregion
+
+        private static void CheckLatLongResult(string property, int limit, TestValidationResult<ScsEventData> result, bool shouldBeValid)
+        {
+            if (shouldBeValid)
+            {
+                Assert.AreEqual(true, result.IsValid);
+                Assert.AreEqual(0, result.Errors.Count);
+            }
+            else
+            {
+                Assert.AreEqual(1, result.Errors.Count);
+                result.ShouldHaveValidationErrorFor(property);
+                Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == $"{property} should be in the range -{limit}.0 to +{limit}.0."));
+                Assert.IsTrue(result.Errors.Any(x => x.ErrorCode == "OK"));
+            }
+        }
     }
 }

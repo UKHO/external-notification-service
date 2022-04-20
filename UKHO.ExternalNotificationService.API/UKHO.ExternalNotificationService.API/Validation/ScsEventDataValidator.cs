@@ -13,69 +13,83 @@ namespace UKHO.ExternalNotificationService.API.Validation
 
     public class ScsEventDataValidator : AbstractValidator<ScsEventData>, IScsEventDataValidator
     {
+        private const double LatitudeLimitDegrees = 90;
+        private const double LongitudeLimitDegrees = 180;
+
         public ScsEventDataValidator()
         {
-            RuleFor(v => v.ProductType).NotNull().NotEmpty()
+            RuleFor(v => v.ProductType)
+                .NotNull().NotEmpty()
                 .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("ProductType cannot be blank or null.");
 
-            RuleFor(v => v.ProductName).NotNull().NotEmpty()
+            RuleFor(v => v.ProductName)
+                .NotNull().NotEmpty()
                 .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("ProductName cannot be blank or null.");
 
-            RuleFor(v => v.EditionNumber).NotEmpty().NotNull().GreaterThanOrEqualTo(0)
-                .Must(ru => ru >= 0)
+            RuleFor(v => v.EditionNumber)
+                .GreaterThanOrEqualTo(0)
                 .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("EditionNumber cannot be less than zero or blank.");
 
-            RuleFor(v => v.UpdateNumber).NotEmpty().NotNull().GreaterThanOrEqualTo(0)
-                .Must(ru => ru >= 0)
+            RuleFor(v => v.UpdateNumber)
+                .GreaterThanOrEqualTo(0)
                 .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("UpdateNumber cannot be less than zero or blank.");
 
-            RuleFor(v => v.FileSize).NotEmpty().NotNull().GreaterThanOrEqualTo(0)
-                .Must(ru => ru >= 0)
+            RuleFor(v => v.FileSize)
+                .GreaterThanOrEqualTo(0)
                 .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("FileSize cannot be less than zero or blank.");
 
-            RuleFor(v => v.BoundingBox).NotNull().NotEmpty()
+            RuleFor(v => v.BoundingBox)
+                .NotNull().NotEmpty()
                 .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("BoundingBox cannot be blank or null.");
 
-            RuleFor(v => v.BoundingBox.NorthLimit).NotEmpty().NotNull().GreaterThanOrEqualTo(0).OverridePropertyName("NorthLimit")
-                .Must(ru => ru >= 0)
+            RuleFor(v => v.BoundingBox.NorthLimit)
+                .InclusiveBetween(-LatitudeLimitDegrees, LatitudeLimitDegrees)
+                .OverridePropertyName("NorthLimit")
                 .When(x => x.BoundingBox != null)
                 .WithErrorCode(HttpStatusCode.OK.ToString())
-                .WithMessage("NorthLimit cannot be less than zero or blank.");
+                .WithMessage($"NorthLimit should be in the range -{LatitudeLimitDegrees}.0 to +{LatitudeLimitDegrees}.0.");
 
-            RuleFor(v => v.BoundingBox.SouthLimit).NotEmpty().NotNull().GreaterThanOrEqualTo(0).OverridePropertyName("SouthLimit")
-                .Must(ru => ru >= 0)
+            RuleFor(v => v.BoundingBox.SouthLimit)
+                .InclusiveBetween(-LatitudeLimitDegrees, LatitudeLimitDegrees)
+                .OverridePropertyName("SouthLimit")
                 .When(x => x.BoundingBox != null)
                 .WithErrorCode(HttpStatusCode.OK.ToString())
-                .WithMessage("SouthLimit cannot be less than zero or blank.");
+                .WithMessage($"SouthLimit should be in the range -{LatitudeLimitDegrees}.0 to +{LatitudeLimitDegrees}.0.");
 
-            RuleFor(v => v.BoundingBox.EastLimit).NotEmpty().NotNull().GreaterThanOrEqualTo(0).OverridePropertyName("EastLimit")
-                .Must(ru => ru >= 0)
+            RuleFor(v => v.BoundingBox.EastLimit)
+                .InclusiveBetween(-LongitudeLimitDegrees, LongitudeLimitDegrees)
+                .OverridePropertyName("EastLimit")
                 .When(x => x.BoundingBox != null)
                 .WithErrorCode(HttpStatusCode.OK.ToString())
-                .WithMessage("EastLimit cannot be less than zero or blank.");
+                .WithMessage($"EastLimit should be in the range -{LongitudeLimitDegrees}.0 to +{LongitudeLimitDegrees}.0.");
 
-            RuleFor(v => v.BoundingBox.WestLimit).NotEmpty().NotNull().GreaterThanOrEqualTo(0).OverridePropertyName("WestLimit")
-                .Must(ru => ru >= 0)
+            RuleFor(v => v.BoundingBox.WestLimit)
+                .InclusiveBetween(-LongitudeLimitDegrees, LongitudeLimitDegrees)
+                .OverridePropertyName("WestLimit")
                 .When(x => x.BoundingBox != null)
                 .WithErrorCode(HttpStatusCode.OK.ToString())
-                .WithMessage("WestLimit cannot be less than zero or blank.");
+                .WithMessage($"WestLimit should be in the range -{LongitudeLimitDegrees}.0 to +{LongitudeLimitDegrees}.0.");
 
             RuleFor(v => v.Status).NotNull().NotEmpty()
                 .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("Status cannot be blank or null.");
 
-            RuleFor(v => v.Status.StatusDate).NotNull().NotEmpty().OverridePropertyName("StatusDate")
+            RuleFor(v => v.Status.StatusDate)
+                .NotNull().NotEmpty()
+                .OverridePropertyName("StatusDate")
                 .When(x => x.Status != null)
                 .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("StatusDate cannot be blank or null.");
 
-            RuleFor(v => v.Status.StatusName).NotNull().NotEmpty().OverridePropertyName("StatusName")
+            RuleFor(v => v.Status.StatusName)
+                .NotNull().NotEmpty()
+                .OverridePropertyName("StatusName")
                 .When(x => x.Status != null)
                 .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("StatusName cannot be blank or null.");

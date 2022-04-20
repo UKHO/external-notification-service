@@ -137,4 +137,15 @@ This CVE applies to python and this is a false positive cve for our application 
     </notes>
     <cve>CVE-2021-33880</cve>
   </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Serilog.Sinks.Async.dll
+   https://nvd.nist.gov/vuln/detail/CVE-2021-43138
+   A vulnerability exists in Async through 3.2.1 (fixed in 3.2.2) , which could let a malicious user obtain privileges via the mapValues() method.
+   False positive because this CVE applies to a Javascript module named Async (https://github.com/caolan/async) which has nothing to do with Serilog.Sinks.Async apart from the word Async.
+   ]]>
+    </notes>
+    <cve>CVE-2021-43138</cve>
+  </suppress>
 </suppressions>
