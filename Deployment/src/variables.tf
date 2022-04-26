@@ -16,7 +16,7 @@ locals {
   tags = {
     SERVICE          = "External Notification Service"
     ENVIRONMENT      = local.env_name
-    SERVICE_OWNER    = "UKHO"
+    SERVICE_OWNER    = "Paul Tooze"
     RESPONSIBLE_TEAM = "Abzu"
     CALLOUT_TEAM     = "On-Call_N/A"
     COST_CENTRE      = "A.008.02"
