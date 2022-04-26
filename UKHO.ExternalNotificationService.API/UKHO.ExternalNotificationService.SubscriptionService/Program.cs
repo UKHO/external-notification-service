@@ -1,5 +1,6 @@
 ﻿using Azure.Identity;
 using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -137,6 +138,13 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                   b.AddAzureStorageCoreServices();
                   b.AddAzureStorageQueues();
                   b.AddAzureStorageBlobs();
+
+                  //Use fixed host id
+                  string hostId = s_configurationBuilder.GetValue<string>("WebjobHostId");
+                  if (!string.IsNullOrWhiteSpace(hostId))
+                  {
+                      b.UseHostId(hostId);
+                  }
               });
 
             return hostBuilder;
