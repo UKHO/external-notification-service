@@ -148,4 +148,30 @@ This CVE applies to python and this is a false positive cve for our application 
     </notes>
     <cve>CVE-2021-43138</cve>
   </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+    file name: Microsoft.AspNetCore.Hosting.Abstractions.dll
+    See https://github.com/dotnet/announcements/issues/111 for MS details on this CVE.
+        Package name: System.Text.RegularExpressions.dll (included as part of the .Net Core runtime)
+      	Vulnerable versions: 4.3.0 and below
+        Secure versions: 4.3.1+
+    This CVE applies to .Net Core versions below 2.2.107 (runtime 2.2.5). ENS is pinned to .Net core SDK > 6.0.101 which is not vulnerable, and deployed to Azure App Service which will have the security patch applied.
+    ]]>
+    </notes>
+    <cve>CVE-2019-0820</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+    file name: System.Net.Http:4.3.3
+    See https://github.com/dotnet/announcements/issues/111 for MS details on this CVE.
+        Package name: System.Net.Http:4.3.3 (included as part of the .Net Core runtime)
+      	Vulnerable versions: 4.3.3 and below
+        Secure versions: 4.3.4+
+    This CVE applies to .NET Core 2.1, .NET Core 1.0, .NET Core 1.1, PowerShell Core 6.0. ENS is pinned to .Net core SDK > 6.0.101 which is not vulnerable, and deployed to Azure App Service which will have the security patch applied.
+    ]]>
+    </notes>
+    <cve>CVE-2018-8292</cve>
+  </suppress>
 </suppressions>
