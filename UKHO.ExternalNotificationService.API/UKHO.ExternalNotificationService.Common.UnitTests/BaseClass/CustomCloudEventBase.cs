@@ -48,7 +48,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.BaseClass
             return new FssEventData()
             {
                 Links = links,
-                BusinessUnit = "AVCSData",
+                BusinessUnit = Random.Shared.NextDouble() >= 0.5 ? "AVCSData" : "MaritimeSafetyInformation",    // randomise selection of valid business unit
                 Attributes = new List<Attribute> { },
                 BatchId = "83d08093-7a67-4b3a-b431-92ba42feaea0",
                 BatchPublishedDate = DateTime.UtcNow,
