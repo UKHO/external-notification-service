@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 
 namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
@@ -20,7 +19,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         public string D365Secret { get; set; }
         public string ClientId { get; set; }
         public string StubApiUri { get; set; }
-        public ICollection<SourceConfiguration> FssSources { get; set; }
+        public List<SourceConfiguration> FssSources { get; set; } = new();
         public string FssEventHostName { get; set; }
         public string FssPublishHostName { get; set; }
         public int SucceededStatusCode { get; set; }
@@ -48,7 +47,6 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             D365Secret = ConfigurationRoot.GetSection("D365AuthConfiguration:ClientSecret").Value;
             ClientId = ConfigurationRoot.GetSection("EnsAuthConfiguration:ClientId").Value;
             StubApiUri = ConfigurationRoot.GetSection("StubConfiguration:BaseUri").Value;
-            FssSources = JsonSerializer.Deserialize<ICollection<SourceConfiguration>>(ConfigurationRoot.GetSection("FssDataMappingConfiguration:Sources").Value);
             FssEventHostName = ConfigurationRoot.GetSection("FssDataMappingConfiguration:EventHostName").Value;
             FssPublishHostName = ConfigurationRoot.GetSection("FssDataMappingConfiguration:PublishHostName").Value;
             SucceededStatusCode=int.Parse(ConfigurationRoot.GetSection("D365CallbackConfiguration:SucceededStatusCode").Value);
@@ -56,6 +54,16 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             StubBaseUri = ConfigurationRoot.GetSection("StubConfiguration:BaseUri").Value;
             ScsSource = ConfigurationRoot.GetSection("ScsDataMappingConfiguration:Source").Value;
             WebhookUrlExtension = ConfigurationRoot.GetSection("WebhookUrlExtension").Value;
+
+            IConfigurationSection sourcesSection = ConfigurationRoot.GetSection("FssDataMappingConfiguration:Sources");
+            foreach (IConfigurationSection sourceConfig in sourcesSection.GetChildren())
+            {
+                FssSources.Add(new SourceConfiguration
+                {
+                    BusinessUnit = sourceConfig.GetValue<string>("BusinessUnit"),
+                    Source = sourceConfig.GetValue<string>("Source")
+                });
+            }
         }
 
         public class SourceConfiguration

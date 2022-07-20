@@ -53,13 +53,15 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.BaseClass
                 Attributes = new List<Attribute>(),
                 BatchId = "83d08093-7a67-4b3a-b431-92ba42feaea0",
                 BatchPublishedDate = DateTime.UtcNow,
-                Files = new File[] {
-                    new() {
-                        MIMEType= "application/zip",
-                        FileName= "AVCS_S631-1_Update_Wk45_21_Only.zip",
-                        FileSize=99073923,
-                        Hash="yNpJTWFKhD3iasV8B/ePKw==",
-                        Attributes=new List<Attribute>(),
+                Files = new File[]
+                {
+                    new()
+                    {
+                        MIMEType = "application/zip",
+                        FileName = "AVCS_S631-1_Update_Wk45_21_Only.zip",
+                        FileSize = 99073923,
+                        Hash = "yNpJTWFKhD3iasV8B/ePKw==",
+                        Attributes = new List<Attribute>(),
                         Links = fileLinks
                     }
                 }
