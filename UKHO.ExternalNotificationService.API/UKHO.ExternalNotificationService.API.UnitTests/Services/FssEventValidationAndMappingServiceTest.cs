@@ -33,7 +33,12 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             _fakeCustomCloudEvent = CustomCloudEventBase.GetCustomCloudEvent();
             _fakeFssEventDataValidator = A.Fake<IFssEventDataValidator>();
             _fakeFssDataMappingConfiguration = A.Fake<IOptions<FssDataMappingConfiguration>>();
-            _fakeFssDataMappingConfiguration.Value.Source = "fss-Test";
+            _fakeFssDataMappingConfiguration.Value.Sources =
+                new List<FssDataMappingConfiguration.SourceConfiguration>
+                {
+                    new() {BusinessUnit = "AVCSData", Source = "fss-AVCSData"},
+                    new() {BusinessUnit = "MaritimeSafetyInformation", Source = "fss-MaritimeSafetyInformation"},
+                };
             _fakeFssDataMappingConfiguration.Value.EventHostName = "files.admiralty.co.uk";
             _fakeFssDataMappingConfiguration.Value.PublishHostName = "test/fss";
 
@@ -77,7 +82,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             FssEventData cloudEventData = JsonConvert.DeserializeObject<FssEventData>(data);
 
             Assert.AreEqual(FssDataMappingValueConstant.Type, result.Type);
-            Assert.AreEqual(_fakeFssDataMappingConfiguration.Value.Source, result.Source);
+            Assert.AreEqual(_fakeFssDataMappingConfiguration.Value.Sources.First().Source, result.Source);
             Assert.AreEqual(batchDetailsUri, cloudEventData.Links.BatchDetails.Href);
             Assert.AreEqual(batchDetailsUri + "/status", cloudEventData.Links.BatchStatus.Href);
             Assert.AreEqual(batchDetailsUri + "/files/AVCS_S631-1_Update_Wk45_21_Only.zip", cloudEventData.Files.FirstOrDefault().Links.Get.Href);
