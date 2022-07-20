@@ -7,6 +7,10 @@
                 "TopicName": "fss-filesPublished-AvcsData"
             },
             {
+                "Name": "File Share Service - Maritime Safety Information",
+                "TopicName": "fss-filesPublished-MaritimeSafetyInformation"
+            },
+            {
                 "Name": "ADDS Data Pipeline",
                 "TopicName": "avcs-contentPublished"
             }

@@ -259,9 +259,13 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900064 - Process to copy dead letter container blob to destination container blob completed.
         /// </summary>
-        ENSCopyDeadLetterContainerBlobCompleted = 900064
+        ENSCopyDeadLetterContainerBlobCompleted = 900064,
+        /// <summary>
+        /// 900065 -  File share service event data mapping configuration error.
+        /// </summary>
+        FSSEventDataMappingConfigurationError = 900065,
     }
-    
+
     public static class EventIdExtensions
     {
         public static EventId ToEventId(this EventIds eventId)

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Validation;
 using UKHO.ExternalNotificationService.Common.Configuration;
+using UKHO.ExternalNotificationService.Common.Exceptions;
 using UKHO.ExternalNotificationService.Common.Extensions;
 using UKHO.ExternalNotificationService.Common.Models.EventModel;
 using UKHO.ExternalNotificationService.Common.Models.Request;
@@ -38,9 +39,15 @@ namespace UKHO.ExternalNotificationService.API.Services
             fssEventData.Links.BatchDetails.Href = ReplaceHostValueMethod(fssEventData.Links.BatchDetails.Href);
             fssEventData.Files.FirstOrDefault().Links.Get.Href = ReplaceHostValueMethod(fssEventData.Files.FirstOrDefault().Links.Get.Href);
 
-            CloudEvent cloudEvent = new(_fssDataMappingConfiguration.Value.Source,
-                                        FssDataMappingValueConstant.Type,
-                                        fssEventData)
+            FssDataMappingConfiguration.SourceConfiguration sourceConfiguration = _fssDataMappingConfiguration.Value.Sources
+                .FirstOrDefault(x => x.BusinessUnit.Equals(fssEventData.BusinessUnit, StringComparison.OrdinalIgnoreCase));
+
+            if (sourceConfiguration == null)
+            {
+                throw new ConfigurationMissingException($"Missing FssDataMappingConfiguration configuration for {fssEventData.BusinessUnit} business unit");
+            }
+
+            CloudEvent cloudEvent = new(sourceConfiguration.Source, FssDataMappingValueConstant.Type, fssEventData)
             {
                 Time = DateTimeOffset.Parse(DateTime.UtcNow.ToRfc3339String()),
                 Id = Guid.NewGuid().ToString(),
