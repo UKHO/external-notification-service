@@ -8,6 +8,9 @@ namespace UKHO.ExternalNotificationService.Common.Exceptions
     [ExcludeFromCodeCoverage]
     public class ConfigurationMissingException : ConfigurationErrorsException
     {
+        public ConfigurationMissingException()
+        { }
+
         public ConfigurationMissingException(string message)
             : base(message)
         { }

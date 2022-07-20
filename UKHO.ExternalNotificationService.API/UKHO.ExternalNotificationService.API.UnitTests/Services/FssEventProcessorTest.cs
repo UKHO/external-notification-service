@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.API.UnitTests.BaseClass;
+using UKHO.ExternalNotificationService.Common.Exceptions;
 using UKHO.ExternalNotificationService.Common.Helpers;
 using UKHO.ExternalNotificationService.Common.Models.EventModel;
 using UKHO.ExternalNotificationService.Common.Models.Request;
@@ -88,6 +89,28 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(A<CloudEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();
         }
 
+        [Test]
+        public async Task WhenUnconfiguredBusinessUnitInRequest_ThenReceiveSuccessfulResponse()
+        {
+            CancellationToken cancellationToken = CancellationToken.None;
+            CloudEvent cloudEvent = new("test", "test", new object());
+
+            A.CallTo(() => _fakeAzureEventGridDomainService.JsonDeserialize<FssEventData>(_fakeCustomCloudEvent.Data)).Returns(_fakeFssEventData);
+            A.CallTo(() => _fakeFssEventValidationAndMappingService.ValidateFssEventData(_fakeFssEventData)).Returns(new ValidationResult());
+            A.CallTo(() => _fakeFssEventValidationAndMappingService.FssEventDataMapping(_fakeCustomCloudEvent, CorrelationId)).Throws<ConfigurationMissingException>();
+
+            ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
+
+            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
+            Assert.IsNull(result.Errors);
+            A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(A<CloudEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();
+            A.CallTo(_fakeLogger).Where(call =>
+                call.Method.Name == "Log"
+                && call.GetArgument<LogLevel>(0) == LogLevel.Error
+                && call.GetArgument<IEnumerable<KeyValuePair<string, object>>>(2).ToDictionary(c => c.Key, c => c.Value)["{OriginalFormat}"].ToString()
+                == "File share service event data mapping failed for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId} with error:{Message}."
+            ).MustHaveHappened(1, Times.Exactly);
+        }
 
         [Test]
         public async Task WhenValidPayloadInRequest_ThenReceiveSuccessfulResponse()
