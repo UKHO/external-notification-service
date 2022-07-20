@@ -68,28 +68,10 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             Assert.IsTrue(result.IsValid);
         }
 
-        [Test]
-        public void WhenValidFssEventDataMappingRequest_ThenReturnCloudEvent()
+        [TestCase("AVCSData")]
+        [TestCase("MaritimeSafetyInformation")]
+        public void WhenValidFssEventDataMappingRequest_ThenReturnCloudEvent(string businessUnit)
         {
-            const string correlationId = "7b838400-7d73-4a64-982b-f426bddc1296";
-            const string batchDetailsUri = "https://test/fss/batch/83d08093-7a67-4b3a-b431-92ba42feaea0";
-
-            CloudEvent result =  _fssEventValidationAndMappingService.FssEventDataMapping(_fakeCustomCloudEvent, correlationId);
-
-            string data = Encoding.ASCII.GetString(result.Data);
-            FssEventData cloudEventData = JsonConvert.DeserializeObject<FssEventData>(data);
-
-            Assert.AreEqual(FssDataMappingValueConstant.Type, result.Type);
-            Assert.AreEqual(_fakeFssDataMappingConfiguration.Value.Sources.Single(x => x.BusinessUnit == "AVCSData").Source, result.Source);
-            Assert.AreEqual(batchDetailsUri, cloudEventData.Links.BatchDetails.Href);
-            Assert.AreEqual(batchDetailsUri + "/status", cloudEventData.Links.BatchStatus.Href);
-            Assert.AreEqual(batchDetailsUri + "/files/AVCS_S631-1_Update_Wk45_21_Only.zip", cloudEventData.Files.FirstOrDefault().Links.Get.Href);
-        }
-
-        [Test]
-        public void WhenValidFssEventDataMappingRequestForMaritimeSafetyInformation_ThenReturnCloudEvent()
-        {
-            const string businessUnit = "MaritimeSafetyInformation";
             const string correlationId = "7b838400-7d73-4a64-982b-f426bddc1296";
             const string batchDetailsUri = "https://test/fss/batch/83d08093-7a67-4b3a-b431-92ba42feaea0";
 

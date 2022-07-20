@@ -9,20 +9,6 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.BaseClass
 {
     public static class CustomCloudEventBase
     {
-        public static CustomCloudEvent GetCustomCloudEvent(string businessUnit = "AVCSData")
-        {
-            return new CustomCloudEvent()
-            {
-                Type = "uk.gov.UKHO.FileShareService.NewFilesPublished.v1",
-                Source = "https://files.admiralty.co.uk",
-                Id = "49c67cca-9cca-4655-a38e-583693af55ea",
-                Subject = "83d08093-7a67-4b3a-b431-92ba42feaea0",
-                DataContentType = "application/json",
-                Data = GetFssEventData(businessUnit),
-                Time = "2021-11-09T14:52:28+00:00"
-            };
-        }
-
         public static FssEventData GetFssEventData(string businessUnit = "AVCSData")
         {
             Link linkBatchDetails = new()
