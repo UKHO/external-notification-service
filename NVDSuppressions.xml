@@ -174,4 +174,17 @@ This CVE applies to python and this is a false positive cve for our application 
     </notes>
     <cve>CVE-2018-8292</cve>
   </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+    Azure.Storage.Blobs:12.10.0
+    Azure.Storage.Queues:12.8.0
+    https://nvd.nist.gov/vuln/detail/CVE-2022-30187
+    Azure Storage Library Information Disclosure Vulnerability.
+    This is a temporary suppression pending a fix being available.
+    Bug to track the fix - https://dev.azure.com/ukhydro/Abzu/_workitems/edit/52787
+    ]]>
+    </notes>
+    <cve>CVE-2022-30187</cve>
+  </suppress>
 </suppressions>
