@@ -90,9 +90,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
         }
 
-        [TestCase("AVCSData", TestName = "Valid AVCSData Business Unit event")]
-        [TestCase("MaritimeSafetyInformation", TestName = "Valid MaritimeSafetyInformation Business Unit event")]
-        public async Task WhenICallTheEnsWebhookApiWithAValidFssJObjectBody_ThenOkStatusIsReturned(string businessUnit)
+        [TestCase("AVCSData", "fss-filesPublished-AvcsData", TestName = "Valid AVCSData Business Unit event")]
+        [TestCase("MaritimeSafetyInformation", "fss-filesPublished-MaritimeSafetyInformation", TestName = "Valid MaritimeSafetyInformation Business Unit event")]
+        public async Task WhenICallTheEnsWebhookApiWithAValidFssJObjectBody_ThenOkStatusIsReturned(string businessUnit, string source)
         {
             const string subject = "83d08093-7a67-4b3a-b431-92ba42feaea0";
             const string addHttps = "https://";
@@ -115,7 +115,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
             string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
             IEnumerable<DistributorRequest> deserialized = JsonConvert.DeserializeObject<IEnumerable<DistributorRequest>>(custome‌​rJsonString);
-            DistributorRequest getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.statusCode.HasValue && x.statusCode.Value == HttpStatusCode.OK).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
+            DistributorRequest getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.statusCode is HttpStatusCode.OK && x.CloudEvent.Source == source)
+                .OrderByDescending(a => a.TimeStamp)
+                .FirstOrDefault();
             Assert.NotNull(getMatchingData);
             Assert.AreEqual(HttpStatusCode.OK, getMatchingData.statusCode);
 
@@ -207,7 +209,6 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             // Validating Event Type
             Assert.AreEqual("uk.co.admiralty.avcsData.contentPublished.v1", getMatchingData.CloudEvent.Type);
-
         }
     }
 }

@@ -24,6 +24,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             {
                 Href = $"https://{testConfigure.FssEventHostName}/batch/83d08093-7a67-4b3a-b431-92ba42feaea0"
             };
+
             Link linkBatchStatus = new()
             {
                 Href = $"https://{testConfigure.FssEventHostName}/batch/83d08093-7a67-4b3a-b431-92ba42feaea0/status"
@@ -31,7 +32,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
 
             FileLinks fileLinks = new()
             {
-                Get = new Link() { Href = $"https://{testConfigure.FssEventHostName}/batch/83d08093-7a67-4b3a-b431-92ba42feaea0/files/AVCS_S631-1_Update_Wk45_21_Only.zip" },
+                Get = new Link { Href = $"https://{testConfigure.FssEventHostName}/batch/83d08093-7a67-4b3a-b431-92ba42feaea0/files/AVCS_S631-1_Update_Wk45_21_Only.zip" },
             };
 
             BatchLinks links = new()
@@ -40,19 +41,25 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
                 BatchStatus = linkBatchStatus
             };
 
-            return new FssEventData()
+            return new FssEventData
             {
                 Links = links,
                 BusinessUnit = businessUnit,
-                Attributes = new List<Attribute> { },
+                Attributes = new List<Attribute>(),
                 BatchId = "83d08093-7a67-4b3a-b431-92ba42feaea0",
                 BatchPublishedDate = DateTime.UtcNow,
-                Files = new BatchFile[] {new() { MIMEType= "application/zip",
-                                                                    FileName= "AVCS_S631-1_Update_Wk45_21_Only.zip",
-                                                                    FileSize=99073923,
-                                                                    Hash="yNpJTWFKhD3iasV8B/ePKw==",
-                                                                    Attributes=new List<Attribute> {},
-                                                                    Links = fileLinks   }}
+                Files = new BatchFile[]
+                {
+                    new()
+                    {
+                        MIMEType = "application/zip",
+                        FileName = "AVCS_S631-1_Update_Wk45_21_Only.zip",
+                        FileSize = 99073923,
+                        Hash = "yNpJTWFKhD3iasV8B/ePKw==",
+                        Attributes = new List<Attribute>(),
+                        Links = fileLinks
+                    }
+                }
             };
         }
     }
