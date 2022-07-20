@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Collections.Generic;
+using System.Text.Json;
+using Microsoft.Extensions.Configuration;
 
 namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
 {
@@ -18,7 +20,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         public string D365Secret { get; set; }
         public string ClientId { get; set; }
         public string StubApiUri { get; set; }
-        public string FssSource { get; set; }
+        public ICollection<SourceConfiguration> FssSources { get; set; }
         public string FssEventHostName { get; set; }
         public string FssPublishHostName { get; set; }
         public int SucceededStatusCode { get; set; }
@@ -46,7 +48,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             D365Secret = ConfigurationRoot.GetSection("D365AuthConfiguration:ClientSecret").Value;
             ClientId = ConfigurationRoot.GetSection("EnsAuthConfiguration:ClientId").Value;
             StubApiUri = ConfigurationRoot.GetSection("StubConfiguration:BaseUri").Value;
-            FssSource = ConfigurationRoot.GetSection("FssDataMappingConfiguration:Source").Value;
+            FssSources = JsonSerializer.Deserialize<ICollection<SourceConfiguration>>(ConfigurationRoot.GetSection("FssDataMappingConfiguration:Sources").Value);
             FssEventHostName = ConfigurationRoot.GetSection("FssDataMappingConfiguration:EventHostName").Value;
             FssPublishHostName = ConfigurationRoot.GetSection("FssDataMappingConfiguration:PublishHostName").Value;
             SucceededStatusCode=int.Parse(ConfigurationRoot.GetSection("D365CallbackConfiguration:SucceededStatusCode").Value);
@@ -54,6 +56,12 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             StubBaseUri = ConfigurationRoot.GetSection("StubConfiguration:BaseUri").Value;
             ScsSource = ConfigurationRoot.GetSection("ScsDataMappingConfiguration:Source").Value;
             WebhookUrlExtension = ConfigurationRoot.GetSection("WebhookUrlExtension").Value;
+        }
+
+        public class SourceConfiguration
+        {
+            public string BusinessUnit { get; set; }
+            public string Source { get; set; }
         }
     }
 }
