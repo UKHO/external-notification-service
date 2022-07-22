@@ -434,9 +434,9 @@ stages:
                     workingDirectory: '$(Build.SourcesDirectory)/functionaltests'
 
                 - task: AzureCLI@2
-                 displayName: "Swap Stub URL"
-                 condition: always()
-                   inputs:
+                  displayName: "Swap Stub URL"
+                  condition: always()
+                  inputs:
                     azureSubscription: "External Notification Service Dev - A.008.02"
                     scriptType: 'pscore'
                     scriptLocation: 'scriptPath'
