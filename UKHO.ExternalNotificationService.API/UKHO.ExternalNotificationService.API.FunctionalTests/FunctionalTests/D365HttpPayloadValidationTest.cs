@@ -15,6 +15,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         private TestConfiguration TestConfig { get; set; }
         private D365Payload D365FssPayload { get; set; }
         private D365Payload D365ScsPayload { get; set; }
+        private D365Payload D365FssMSIPayload { get; set; }
         private string EnsToken { get; set; }
 
         [SetUp]
@@ -25,11 +26,14 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             string filePathFss = Path.Combine(Directory.GetCurrentDirectory(), TestConfig.PayloadFolder, TestConfig.FssPayloadFileName);
             string filePathScs = Path.Combine(Directory.GetCurrentDirectory(), TestConfig.PayloadFolder, TestConfig.ScsPayloadFileName);
+            string fssMSIPayloadFileName = Path.Combine(Directory.GetCurrentDirectory(), TestConfig.PayloadFolder, TestConfig.FssMSIPayloadFileName);
 
             D365FssPayload = JsonConvert.DeserializeObject<D365Payload>(await File.ReadAllTextAsync(filePathFss));
             D365ScsPayload = JsonConvert.DeserializeObject<D365Payload>(await File.ReadAllTextAsync(filePathScs));
+            D365FssMSIPayload = JsonConvert.DeserializeObject<D365Payload>(await File.ReadAllTextAsync(fssMSIPayloadFileName));
             D365FssPayload.InputParameters[0].Value.Attributes[9].Value = string.Concat(TestConfig.StubBaseUri, TestConfig.WebhookUrlExtension);
             D365ScsPayload.InputParameters[0].Value.Attributes[9].Value = string.Concat(TestConfig.StubBaseUri, TestConfig.WebhookUrlExtension);
+            D365FssMSIPayload.InputParameters[0].Value.Attributes[9].Value = string.Concat(TestConfig.StubBaseUri, TestConfig.WebhookUrlExtension);
 
             ADAuthTokenProvider adAuthTokenProvider = new();
             EnsToken = await adAuthTokenProvider.GetEnsAuthToken();
@@ -68,6 +72,15 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         {
 
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365ScsPayload, EnsToken);
+            Assert.AreEqual(202, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
+
+        }
+
+        [Test]
+        public async Task WhenICallTheEnsSubscriptionApiWithAValidD365FssMSIPayload_ThenAcceptedStatusIsReturned()
+        {
+
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365FssMSIPayload, EnsToken);
             Assert.AreEqual(202, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
 
         }
