@@ -8,8 +8,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         protected IConfigurationRoot ConfigurationRoot;
         public string EnsApiBaseUrl { get; set; }
         public string PayloadFolder { get; set; }
-        public string FssPayloadFileName { get; set; }
-        public string FssMSIPayloadFileName { get; set; }
+        public string FssAvcsPayloadFileName { get; set; }
+        public string FssMsiPayloadFileName { get; set; }
         public string ScsPayloadFileName { get; set; }
         public string EnsStorageConnectionString { get; set; }
         public string EnsStorageQueueName { get; set; }
@@ -37,9 +37,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
 
             EnsApiBaseUrl = ConfigurationRoot.GetSection("EnsApiUrl").Value;
             PayloadFolder = ConfigurationRoot.GetSection("PayloadFolder").Value;
-            FssPayloadFileName = ConfigurationRoot.GetSection("FssPayloadFileName").Value;
+            FssAvcsPayloadFileName = ConfigurationRoot.GetSection("FssAvcsPayloadFileName").Value;
+            FssMsiPayloadFileName = ConfigurationRoot.GetSection("FssMsiPayloadFileName").Value;
             ScsPayloadFileName = ConfigurationRoot.GetSection("ScsPayloadFileName").Value;
-            FssMSIPayloadFileName = ConfigurationRoot.GetSection("FssMSIPayloadFileName").Value;
             EnsStorageConnectionString = ConfigurationRoot.GetSection("EnsStorageConnectionString").Value;
             EnsStorageQueueName = ConfigurationRoot.GetSection("EnsStorageQueueName").Value;
             WaitingTimeForQueueInSeconds = int.Parse(ConfigurationRoot.GetSection("WaitingTimeForQueueInSeconds").Value);
