@@ -433,15 +433,15 @@ stages:
                     testRunTitle: "Dev-AutomationTests"
                     workingDirectory: '$(Build.SourcesDirectory)/functionaltests'
 
- #               - task: AzureCLI@2
- #                displayName: "Swap Stub URL"
- #                condition: always()
- #                  inputs:
- #                   azureSubscription: "External Notification Service Dev - A.008.02"
- #                   scriptType: 'pscore'
- #                   scriptLocation: 'scriptPath'
- #                   scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
- #                   arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
+                - task: AzureCLI@2
+                 displayName: "Swap Stub URL"
+                 condition: always()
+                   inputs:
+                    azureSubscription: "External Notification Service Dev - A.008.02"
+                    scriptType: 'pscore'
+                    scriptLocation: 'scriptPath'
+                    scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
+                    arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
 
   - stage: QAdeploy
     displayName: QAdeploy (inc terraform, webapp deploy)
