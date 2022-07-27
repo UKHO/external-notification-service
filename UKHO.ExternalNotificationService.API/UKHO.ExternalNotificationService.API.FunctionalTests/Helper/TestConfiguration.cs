@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 
 namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
 {
@@ -7,7 +8,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         protected IConfigurationRoot ConfigurationRoot;
         public string EnsApiBaseUrl { get; set; }
         public string PayloadFolder { get; set; }
-        public string FssPayloadFileName { get; set; }
+        public string FssAvcsPayloadFileName { get; set; }
+        public string FssMsiPayloadFileName { get; set; }
         public string ScsPayloadFileName { get; set; }
         public string EnsStorageConnectionString { get; set; }
         public string EnsStorageQueueName { get; set; }
@@ -18,7 +20,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         public string D365Secret { get; set; }
         public string ClientId { get; set; }
         public string StubApiUri { get; set; }
-        public string FssSource { get; set; }
+        public List<SourceConfiguration> FssSources { get; set; } = new();
         public string FssEventHostName { get; set; }
         public string FssPublishHostName { get; set; }
         public int SucceededStatusCode { get; set; }
@@ -35,7 +37,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
 
             EnsApiBaseUrl = ConfigurationRoot.GetSection("EnsApiUrl").Value;
             PayloadFolder = ConfigurationRoot.GetSection("PayloadFolder").Value;
-            FssPayloadFileName = ConfigurationRoot.GetSection("FssPayloadFileName").Value;
+            FssAvcsPayloadFileName = ConfigurationRoot.GetSection("FssAvcsPayloadFileName").Value;
+            FssMsiPayloadFileName = ConfigurationRoot.GetSection("FssMsiPayloadFileName").Value;
             ScsPayloadFileName = ConfigurationRoot.GetSection("ScsPayloadFileName").Value;
             EnsStorageConnectionString = ConfigurationRoot.GetSection("EnsStorageConnectionString").Value;
             EnsStorageQueueName = ConfigurationRoot.GetSection("EnsStorageQueueName").Value;
@@ -46,7 +49,6 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             D365Secret = ConfigurationRoot.GetSection("D365AuthConfiguration:ClientSecret").Value;
             ClientId = ConfigurationRoot.GetSection("EnsAuthConfiguration:ClientId").Value;
             StubApiUri = ConfigurationRoot.GetSection("StubConfiguration:BaseUri").Value;
-            FssSource = ConfigurationRoot.GetSection("FssDataMappingConfiguration:Source").Value;
             FssEventHostName = ConfigurationRoot.GetSection("FssDataMappingConfiguration:EventHostName").Value;
             FssPublishHostName = ConfigurationRoot.GetSection("FssDataMappingConfiguration:PublishHostName").Value;
             SucceededStatusCode=int.Parse(ConfigurationRoot.GetSection("D365CallbackConfiguration:SucceededStatusCode").Value);
@@ -54,6 +56,22 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             StubBaseUri = ConfigurationRoot.GetSection("StubConfiguration:BaseUri").Value;
             ScsSource = ConfigurationRoot.GetSection("ScsDataMappingConfiguration:Source").Value;
             WebhookUrlExtension = ConfigurationRoot.GetSection("WebhookUrlExtension").Value;
+
+            IConfigurationSection sourcesSection = ConfigurationRoot.GetSection("FssDataMappingConfiguration:Sources");
+            foreach (IConfigurationSection sourceConfig in sourcesSection.GetChildren())
+            {
+                FssSources.Add(new SourceConfiguration
+                {
+                    BusinessUnit = sourceConfig.GetValue<string>("BusinessUnit"),
+                    Source = sourceConfig.GetValue<string>("Source")
+                });
+            }
+        }
+
+        public class SourceConfiguration
+        {
+            public string BusinessUnit { get; set; }
+            public string Source { get; set; }
         }
     }
 }

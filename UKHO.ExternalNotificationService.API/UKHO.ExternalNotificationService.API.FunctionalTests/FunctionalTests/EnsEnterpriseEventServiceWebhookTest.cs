@@ -19,7 +19,6 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         private TestConfiguration TestConfig { get; set; }
         private string EnsToken { get; set; }
         private JObject FssEventBody { get; set; }
-        private FssEventData FssEventData { get; set; }
         private JObject ScsEventBody { get; set; }
 
         [SetUp]
@@ -28,7 +27,6 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             TestConfig = new TestConfiguration();
             StubApiClient = new(TestConfig.StubApiUri);
             FssEventBody = FssEventDataBase.GetFssEventBodyData(TestConfig);
-            FssEventData = FssEventDataBase.GetFssEventData(TestConfig);
             ScsEventBody = ScsEventDataBase.GetScsEventBodyData(TestConfig);
             EnsApiClient = new EnsApiClient(TestConfig.EnsApiBaseUrl);
             ADAuthTokenProvider adAuthTokenProvider = new();
@@ -92,14 +90,16 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
         }
 
-        [Test]
-        public async Task WhenICallTheEnsWebhookApiWithAValidFssJObjectBody_ThenOkStatusIsReturned()
+        [TestCase("AVCSData", "fss-filesPublished-AvcsData", TestName = "Valid AVCSData Business Unit event")]
+        [TestCase("MaritimeSafetyInformation", "fss-filesPublished-MaritimeSafetyInformation", TestName = "Valid MaritimeSafetyInformation Business Unit event")]
+        public async Task WhenICallTheEnsWebhookApiWithAValidFssJObjectBody_ThenOkStatusIsReturned(string businessUnit, string source)
         {
             const string subject = "83d08093-7a67-4b3a-b431-92ba42feaea0";
             const string addHttps = "https://";
-            JObject ensWebhookJson = FssEventBody;
+
+            JObject ensWebhookJson = FssEventDataBase.GetFssEventBodyData(TestConfig, businessUnit);
            
-            FssEventData publishDataFromFss = FssEventData;
+            FssEventData publishDataFromFss = FssEventDataBase.GetFssEventData(TestConfig, businessUnit);
             await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, null);
 
             DateTime startTime = DateTime.UtcNow;
@@ -115,7 +115,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
             string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
             IEnumerable<DistributorRequest> deserialized = JsonConvert.DeserializeObject<IEnumerable<DistributorRequest>>(custome‌​rJsonString);
-            DistributorRequest getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.statusCode.HasValue && x.statusCode.Value == HttpStatusCode.OK).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
+            DistributorRequest getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.statusCode is HttpStatusCode.OK && x.CloudEvent.Source == source)
+                .OrderByDescending(a => a.TimeStamp)
+                .FirstOrDefault();
             Assert.NotNull(getMatchingData);
             Assert.AreEqual(HttpStatusCode.OK, getMatchingData.statusCode);
 
@@ -124,7 +126,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             Assert.IsInstanceOf<CustomCloudEvent>(getMatchingData.CloudEvent);
 
             // Validating Event Source
-            Assert.AreEqual(TestConfig.FssSource, getMatchingData.CloudEvent.Source);
+            Assert.AreEqual(TestConfig.FssSources.Single(x => x.BusinessUnit == businessUnit).Source, getMatchingData.CloudEvent.Source);
 
             // Validating Event Type
             Assert.AreEqual("uk.co.admiralty.fss.filesPublished.v1", getMatchingData.CloudEvent.Type);
@@ -207,7 +209,6 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             // Validating Event Type
             Assert.AreEqual("uk.co.admiralty.avcsData.contentPublished.v1", getMatchingData.CloudEvent.Type);
-
         }
     }
 }

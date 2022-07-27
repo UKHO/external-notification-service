@@ -12,6 +12,7 @@ using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.API.UnitTests.BaseClass;
 using UKHO.ExternalNotificationService.API.Validation;
 using UKHO.ExternalNotificationService.Common.Configuration;
+using UKHO.ExternalNotificationService.Common.Exceptions;
 using UKHO.ExternalNotificationService.Common.Models.EventModel;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 
@@ -33,14 +34,18 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             _fakeCustomCloudEvent = CustomCloudEventBase.GetCustomCloudEvent();
             _fakeFssEventDataValidator = A.Fake<IFssEventDataValidator>();
             _fakeFssDataMappingConfiguration = A.Fake<IOptions<FssDataMappingConfiguration>>();
-            _fakeFssDataMappingConfiguration.Value.Source = "fss-Test";
+            _fakeFssDataMappingConfiguration.Value.Sources =
+                new List<FssDataMappingConfiguration.SourceConfiguration>
+                {
+                    new() {BusinessUnit = "AVCSData", Source = "fss-AVCSData"},
+                    new() {BusinessUnit = "MaritimeSafetyInformation", Source = "fss-MaritimeSafetyInformation"},
+                };
             _fakeFssDataMappingConfiguration.Value.EventHostName = "files.admiralty.co.uk";
             _fakeFssDataMappingConfiguration.Value.PublishHostName = "test/fss";
 
             _fssEventValidationAndMappingService = new FssEventValidationAndMappingService(_fakeFssEventDataValidator, _fakeFssDataMappingConfiguration);
         }
 
-        #region ValidateFssEventData
         [Test]
         public async Task WhenNullBatchIdInRequest_ThenReceiveSuccessfulResponse()
         {
@@ -62,26 +67,39 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             Assert.IsTrue(result.IsValid);
         }
-        #endregion
 
-        #region FssEventDataMapping
-        [Test]
-        public void WhenValidFssEventDataMappingRequest_ThenReturnCloudEvent()
+        [TestCase("AVCSData")]
+        [TestCase("MaritimeSafetyInformation")]
+        public void WhenValidFssEventDataMappingRequest_ThenReturnCloudEvent(string businessUnit)
         {
             const string correlationId = "7b838400-7d73-4a64-982b-f426bddc1296";
             const string batchDetailsUri = "https://test/fss/batch/83d08093-7a67-4b3a-b431-92ba42feaea0";
 
-            CloudEvent result =  _fssEventValidationAndMappingService.FssEventDataMapping(_fakeCustomCloudEvent, correlationId);
+            CustomCloudEvent customCloudEvent = CustomCloudEventBase.GetCustomCloudEvent(businessUnit);
+            CloudEvent result = _fssEventValidationAndMappingService.FssEventDataMapping(customCloudEvent, correlationId);
 
             string data = Encoding.ASCII.GetString(result.Data);
             FssEventData cloudEventData = JsonConvert.DeserializeObject<FssEventData>(data);
 
             Assert.AreEqual(FssDataMappingValueConstant.Type, result.Type);
-            Assert.AreEqual(_fakeFssDataMappingConfiguration.Value.Source, result.Source);
+            Assert.AreEqual(_fakeFssDataMappingConfiguration.Value.Sources.Single(x => x.BusinessUnit == businessUnit).Source, result.Source);
             Assert.AreEqual(batchDetailsUri, cloudEventData.Links.BatchDetails.Href);
             Assert.AreEqual(batchDetailsUri + "/status", cloudEventData.Links.BatchStatus.Href);
             Assert.AreEqual(batchDetailsUri + "/files/AVCS_S631-1_Update_Wk45_21_Only.zip", cloudEventData.Files.FirstOrDefault().Links.Get.Href);
         }
-        #endregion
+
+        [Test]
+        public void WhenFssEventDataMappingRequestForUnconfiguredBusinessUnit_ThenThrowConfigurationMissingException()
+        {
+            const string businessUnit = "UnconfiguredBusinessUnit";
+            const string correlationId = "7b838400-7d73-4a64-982b-f426bddc1296";
+            CustomCloudEvent customCloudEvent = CustomCloudEventBase.GetCustomCloudEvent(businessUnit);
+
+            Assert.Throws(Is.TypeOf<ConfigurationMissingException>().And.Message.EqualTo($"Missing FssDataMappingConfiguration configuration for {businessUnit} business unit"),
+                delegate
+                {
+                    _fssEventValidationAndMappingService.FssEventDataMapping(customCloudEvent, correlationId);
+                });
+        }
     }
 }

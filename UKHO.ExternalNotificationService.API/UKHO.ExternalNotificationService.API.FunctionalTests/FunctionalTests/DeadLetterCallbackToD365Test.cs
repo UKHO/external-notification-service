@@ -29,7 +29,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             TestConfig = new TestConfiguration();
             EnsApiClient = new EnsApiClient(TestConfig.EnsApiBaseUrl);
             StubApiClient = new(TestConfig.StubApiUri);
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), TestConfig.PayloadFolder, TestConfig.FssPayloadFileName);
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), TestConfig.PayloadFolder, TestConfig.FssAvcsPayloadFileName);
             D365Payload = JsonConvert.DeserializeObject<D365Payload>(await File.ReadAllTextAsync(filePath));
 
             ADAuthTokenProvider adAuthTokenProvider = new();
