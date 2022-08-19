@@ -531,6 +531,14 @@ stages:
             value : $[ dependencies.QADeployApp.outputs['QADeployApp.setVariable.WEB_APP'] ]
         container: ${{variables.Container}}
         steps:
+        - task: DownloadBuildArtifacts@0
+          displayName: "Download Integration test Artifact"
+          inputs:
+            buildType: 'current'
+            downloadType: 'single'
+            artifactName: 'terraformartifact'
+            downloadPath: '$(Pipeline.Workspace)'
+
         - task: PowerShell@2          
           displayName: "Run ADDS E2E pipeline tests"
           inputs:
