@@ -6,12 +6,12 @@ parameters:
     type: string
 
 steps:
-  - task: FileTransform@1
+  - task: FileTransform@2
     displayName: "File Transform: Ens Config" #Replace ens instance value from pipeline 
     inputs:
       folderPath: '$(Pipeline.Workspace)/terraformartifact/src'
-      fileType: 'json'
-      targetFiles: 'appsettings.json'
+      xmlTransformationRules:
+      jsonTargetFiles: 'appsettings.json'
 
   - task: PowerShell@2
     displayName: "terraform $(Environment)deploy"
@@ -41,12 +41,12 @@ steps:
     name: SetStubURL
     condition: and(succeeded(), ne(variables['Environment.Name'], 'Ens-Live'))
 
-  - task: FileTransform@1
+  - task: FileTransform@2
     displayName: "File Transform: WebAppSettings"
     inputs:
       folderPath: '$(Pipeline.Workspace)/ExternalNotificationService/*.zip'
-      fileType: 'json'
-      targetFiles: '**/appsettings.json'
+      xmlTransformationRules:
+      jsonTargetFiles: '**/appsettings.json'
 
   - task: AzureWebApp@1
     displayName: "Azure App Deploy: ens-$(Environment)-webapp"
@@ -63,13 +63,13 @@ steps:
       filePath: "$(Pipeline.Workspace)/terraformartifact/check_service_status.ps1"
       arguments: "-healthEndPointUrl $(EnsApiUrl)/health -waitTimeInMinute $(waitTimeInMinute)"
 
-  - task: FileTransform@1
+  - task: FileTransform@2
     displayName: "File Transform: StubWebAppSettings"
     condition: and(succeeded(), ne(variables['Environment.Name'], 'Ens-Live'))
     inputs:
       folderPath: '$(Pipeline.Workspace)/StubWebAPI/*.zip'
-      fileType: 'json'
-      targetFiles: '**/appsettings.json'           
+      xmlTransformationRules:
+      jsonTargetFiles: '**/appsettings.json'           
 
   - task: AzureWebApp@1
     displayName: "Azure App Deploy: ens-$(Environment)-stub-webapp"
