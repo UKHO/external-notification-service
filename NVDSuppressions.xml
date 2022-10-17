@@ -187,4 +187,14 @@ This CVE applies to python and this is a false positive cve for our application 
     </notes>
     <cve>CVE-2022-30187</cve>
   </suppress>
+   <suppress>
+	<notes><![CDATA[
+	file name: Microsoft.AspNetCore.Hosting.Abstractions.dll
+	See https://nvd.nist.gov/vuln/detail/CVE-2018-8409 for details on this CVE.
+	Note: This was reanalysed by NIST on 4th October, and is now a breaking issue.
+	This is a temporary suppression pending a fix being available.
+	Bug to track the fix - https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=58430
+	]]></notes>
+	<cve>CVE-2018-8409</cve>
+  </suppress>
 </suppressions>
