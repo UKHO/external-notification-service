@@ -1,16 +1,26 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using UKHO.D365CallbackDistributorStub.API.Models.Request;
+using UKHO.D365CallbackDistributorStub.API.Services.Data;
 
 namespace UKHO.D365CallbackDistributorStub.API.Services
 {
     [ExcludeFromCodeCoverage]
     public class DistributionService
     {
-        private static readonly Queue<DistributorRequest> s_recordDistributorRequestQueue = new();
-        private static readonly List<CommandDistributionRequest> s_CommandDistributionList = new();
+        private static readonly TimeSpan s_queueExpiryInterval = TimeSpan.FromDays(1);
+
+        private static readonly ExpirationList<DistributorRequest> s_recordDistributorRequestQueue;
+        private static readonly ExpirationList<CommandDistributionRequest> s_commandDistributionList;
+
         private const HttpStatusCode Ok = HttpStatusCode.OK;
         private readonly ILogger<DistributionService> _logger;
+
+        static DistributionService()
+        {
+            s_recordDistributorRequestQueue = new ExpirationList<DistributorRequest>(s_queueExpiryInterval);
+            s_commandDistributionList = new ExpirationList<CommandDistributionRequest>(s_queueExpiryInterval);
+        }
 
         public DistributionService(ILogger<DistributionService> logger)
         {
@@ -21,19 +31,15 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
         {
             try
             {
-                s_recordDistributorRequestQueue.Enqueue(new DistributorRequest
+                s_recordDistributorRequestQueue.Add(new DistributorRequest
                 {
                     CloudEvent = cloudEvent,
                     Subject = cloudEvent.Subject,
                     Guid = Guid.NewGuid(),
-                    TimeStamp =DateTime.UtcNow,
+                    TimeStamp = DateTime.UtcNow,
                     StatusCode = httpStatusCode ?? Ok
                 });
 
-                if (s_recordDistributorRequestQueue.Count >= 50)
-                {
-                    s_recordDistributorRequestQueue.Dequeue();
-                }
                 return true;
             }
             catch (Exception)
@@ -58,12 +64,12 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
         {
             try
             {
-                CommandDistributionRequest? commandDistributorRequest = s_CommandDistributionList.LastOrDefault(a => a.Subject == subject);
+                CommandDistributionRequest? commandDistributorRequest = s_commandDistributionList.LastOrDefault(a => a.Subject == subject);
                 if (commandDistributorRequest != null)
                 {
                     if (httpStatusCode == null)
                     {
-                        s_CommandDistributionList.Remove(commandDistributorRequest);
+                        s_commandDistributionList.Remove(commandDistributorRequest);
                     }
                     else
                     {
@@ -74,7 +80,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                 {
                     if (httpStatusCode != null)
                     {
-                        s_CommandDistributionList.Add(new CommandDistributionRequest
+                        s_commandDistributionList.Add(new CommandDistributionRequest
                         {
                             Subject = subject,
                             HttpStatusCode = (HttpStatusCode)httpStatusCode
@@ -87,10 +93,6 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                     }
                 }
 
-                if (s_CommandDistributionList.Count >= 50)
-                {
-                    s_CommandDistributionList.RemoveAt(0);
-                }
                 return true;
             }
             catch (Exception)
@@ -101,7 +103,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
 
         public CommandDistributionRequest? SubjectInCommandDistributionList(string? subject)
         {
-            return s_CommandDistributionList.LastOrDefault(a => a.Subject == subject);
+            return s_commandDistributionList.LastOrDefault(a => a.Subject == subject);
         }
     }
 }
