@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 
 namespace UKHO.D365CallbackDistributorStub.API.Services.Data
 {
 
+    [ExcludeFromCodeCoverage]
     internal class ExpirationList<T> : IEnumerable<T> where T : class
     {
         private readonly TimeSpan _expirationInterval;

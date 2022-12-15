@@ -1,5 +1,8 @@
-﻿namespace UKHO.D365CallbackDistributorStub.API.Services.Data
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace UKHO.D365CallbackDistributorStub.API.Services.Data
 {
+    [ExcludeFromCodeCoverage]
     internal class ExpirationListEntry<T> where T : class
     {
         private readonly T _item;
