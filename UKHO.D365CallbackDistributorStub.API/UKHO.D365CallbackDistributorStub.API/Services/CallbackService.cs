@@ -1,16 +1,25 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using UKHO.D365CallbackDistributorStub.API.Models.Request;
+using UKHO.D365CallbackDistributorStub.API.Services.Data;
 
 namespace UKHO.D365CallbackDistributorStub.API.Services
 {
     [ExcludeFromCodeCoverage]
-    public class CallbackService 
+    public class CallbackService
     {
-        private static readonly Queue<RecordCallbackRequest> s_recordCallbackRequestQueue = new();
-        private static readonly List<CommandCallbackRequest> s_commandCallbackRequestList = new();
+        private static readonly TimeSpan s_queueExpiryInterval = TimeSpan.FromDays(1);
+
+        private static readonly ExpirationList<RecordCallbackRequest> s_recordCallbackRequestQueue;
+        private static readonly ExpirationList<CommandCallbackRequest> s_commandCallbackRequestList;
         private const HttpStatusCode NoContent = HttpStatusCode.NoContent;
         private readonly ILogger<CallbackService> _logger;
+
+        static CallbackService()
+        {
+            s_recordCallbackRequestQueue = new ExpirationList<RecordCallbackRequest>(s_queueExpiryInterval);
+            s_commandCallbackRequestList = new ExpirationList<CommandCallbackRequest>(s_queueExpiryInterval);
+        }
 
         public CallbackService(ILogger<CallbackService> logger)
         {
@@ -21,7 +30,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
         {
             try
             {
-                s_recordCallbackRequestQueue.Enqueue(new RecordCallbackRequest
+                s_recordCallbackRequestQueue.Add(new RecordCallbackRequest
                 {
                     CallBackRequest = callbackRequest,
                     Guid = Guid.NewGuid(),
@@ -30,10 +39,6 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                     HttpStatusCode = httpStatusCode ?? NoContent
                 });
 
-                if (s_recordCallbackRequestQueue.Count >= 50)
-                {
-                    s_recordCallbackRequestQueue.Dequeue();
-                }
                 return true;
             }
             catch
@@ -42,9 +47,9 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
             }
         }
 
-        public  List<RecordCallbackRequest>? GetCallbackRequest(string? subscriptionId)
+        public List<RecordCallbackRequest>? GetCallbackRequest(string? subscriptionId)
         {
-            if(!string.IsNullOrEmpty(subscriptionId))
+            if (!string.IsNullOrEmpty(subscriptionId))
             {
                 return s_recordCallbackRequestQueue.Where(a => a != null && a.SubscriptionId == subscriptionId).ToList();
             }
@@ -69,7 +74,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                     }
                     else
                     {
-                        commandCallbackRequest.HttpStatusCode = (HttpStatusCode)httpStatusCode ;
+                        commandCallbackRequest.HttpStatusCode = (HttpStatusCode)httpStatusCode;
                     }
                 }
                 else
@@ -89,10 +94,6 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                     }
                 }
 
-                if (s_commandCallbackRequestList.Count >= 50)
-                {
-                    s_commandCallbackRequestList.RemoveAt(0);
-                }
                 return true;
             }
             catch
@@ -103,7 +104,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
 
         public CommandCallbackRequest? SubscriptionInCommandCallbackList(string subscriptionId)
         {
-           return s_commandCallbackRequestList.LastOrDefault(a => a.SubscriptionId == subscriptionId);
+            return s_commandCallbackRequestList.LastOrDefault(a => a.SubscriptionId == subscriptionId);
         }
     }
 }
