@@ -207,6 +207,7 @@ This CVE applies to python and this is a false positive cve for our application 
 		<cve>CVE-2014-3479</cve>
 		<cve>CVE-2014-3480</cve>
 		<cve>CVE-2014-3487</cve>
+    <cve>CVE-2007-1536</cve>
   </suppress>
   <suppress>
 		<notes><![CDATA[
