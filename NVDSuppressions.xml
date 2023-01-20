@@ -207,6 +207,7 @@ This CVE applies to python and this is a false positive cve for our application 
 		<cve>CVE-2014-3479</cve>
 		<cve>CVE-2014-3480</cve>
 		<cve>CVE-2014-3487</cve>
+    <cve>CVE-2007-1536</cve>
   </suppress>
   <suppress>
 		<notes><![CDATA[
@@ -218,5 +219,15 @@ This CVE applies to python and this is a false positive cve for our application 
 	<cve>CVE-2014-3479</cve>
 	<cve>CVE-2014-3480</cve>
 	<cve>CVE-2014-3487</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: System.Private.DataContractSerialization:4.3.0
+   This CVE appiles to .net version >= 6.0.0 and < 6.0.12. Version 6.0.13 is not vulnerable
+   See https://github.com/dotnet/announcements/issues/244
+   ]]>
+    </notes>
+    <cve>CVE-2023-21538</cve>
   </suppress>
 </suppressions>
