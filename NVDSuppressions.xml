@@ -332,27 +332,7 @@ This CVE applies to python and this is a false positive cve for our application 
     <notes>
       <![CDATA[
    file name: System.Text.Json:4.6.0
-   This is a temporary suppression pending a fix being available.
-   Bug to track the fix - https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=77821
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:nuget/System\.Text\.Json@.*$</packageUrl>
-    <cve>CVE-2022-45688</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
    file name: System.Text.Json:4.7.2
-   This is a temporary suppression pending a fix being available.
-   Bug to track the fix - https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=77821
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:nuget/System\.Text\.Json@.*$</packageUrl>
-    <cve>CVE-2022-45688</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
    file name: System.Text.Json:6.0.0
    This is a temporary suppression pending a fix being available.
    Bug to track the fix - https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=77821
