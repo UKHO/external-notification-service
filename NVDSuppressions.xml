@@ -301,15 +301,6 @@ This CVE applies to python and this is a false positive cve for our application 
     <notes>
       <![CDATA[
    file name: System.Security.Cryptography.X509Certificates:4.1.0
-   Applies to .NET Core 1.0, 1.1, and 2.0 only.
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:nuget/System\.Security\.Cryptography\.X509Certificates@.*$</packageUrl>
-    <vulnerabilityName>CVE-2017-11770</vulnerabilityName>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
    file name: System.Security.Cryptography.X509Certificates:4.3.0
    Applies to .NET Core 1.0, 1.1, and 2.0 only.
    ]]>
