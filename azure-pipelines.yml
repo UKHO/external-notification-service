@@ -44,6 +44,8 @@ variables:
   - name: coverityPool
     value: NautilusBuild
   - group: Covscan-vars
+  - name: WindowPool
+    value: "NautilusBuild"
 
 resources:
  repositories:
