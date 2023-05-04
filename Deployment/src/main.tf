@@ -60,6 +60,7 @@ module "webapp_service" {
     "WEBSITE_ENABLE_SYNC_UPDATE_SITE"                          = "true"
     "EventGridDomainConfiguration:ResourceGroup"               = azurerm_resource_group.rg.name
     "EventGridDomainConfiguration:EventGridDomainName"         = module.eventgriddomain.event_grid_domain_name
+    "WEBSITE_ADD_SITENAME_BINDINGS_IN_APPHOST_CONFIG"          = "1"
   }
   app_settings_stub = {
     "ASPNETCORE_ENVIRONMENT"                               = local.env_name
@@ -83,6 +84,7 @@ module "key_vault" {
   location            = azurerm_resource_group.rg.location
   read_access_objects = {
      "webapp_service" = module.webapp_service.web_app_object_id
+     "webapp_slot"    = module.webapp_service.slot_principal_id
   }
   secrets = merge(
         module.webapp_service.webapp_scm_credentials,
@@ -120,6 +122,7 @@ module "storage" {
   webapp_principal_id = module.webapp_service.web_app_object_id
   env_name            = local.env_name
   service_name        = local.service_name
+  slot_principal_id   = module.webapp_service.slot_principal_id
 }
 
 module "azure-dashboard" {
