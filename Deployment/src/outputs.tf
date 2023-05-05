@@ -44,3 +44,11 @@ output "event_grid_domain_endpoint_url" {
   value     = module.eventgriddomain.event_grid_domain_endpoint
   sensitive = true
 }
+
+output "web_app_slot_name" {
+  value = module.webapp_service.slot_name
+}
+
+output "web_app_slot_default_site_hostname" {
+  value = module.webapp_service.slot_default_site_hostname
+}

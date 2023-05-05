@@ -36,3 +36,9 @@ resource "azurerm_role_assignment" "storage_account_role" {
   role_definition_name      = "Storage Account Contributor"
   principal_id              = var.webapp_principal_id
 }
+
+resource "azurerm_role_assignment" "storage_account_role_slot" {
+  scope                = azurerm_storage_account.ens_storage.id
+  role_definition_name = "Storage Account Contributor"
+  principal_id         = var.slot_principal_id
+}

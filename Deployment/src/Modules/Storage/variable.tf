@@ -31,3 +31,7 @@ variable "m_spoke_subnet" {
 variable "agent_subnet" {
   type = string
 }
+
+variable "slot_principal_id" {
+  type  = string
+}

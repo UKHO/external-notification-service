@@ -27,3 +27,15 @@ output "webapp_name" {
 output "default_site_hostname_ens_stub" {
   value = var.env_name == "live" ?  null : azurerm_app_service.stub_webapp_service[0].default_site_hostname
 }
+
+output "slot_principal_id" {
+  value = azurerm_app_service_slot.staging.identity.0.principal_id
+}
+
+output "slot_name" {
+  value = azurerm_app_service_slot.staging.name
+}
+
+output "slot_default_site_hostname" {
+  value = azurerm_app_service_slot.staging.default_site_hostname
+}
