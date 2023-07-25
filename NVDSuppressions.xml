@@ -332,4 +332,13 @@ This CVE applies to python and this is a false positive cve for our application 
     <packageUrl regex="true">^pkg:nuget/System\.Text\.Json@.*$</packageUrl>
     <cve>CVE-2022-45688</cve>
   </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.NETCore.Platforms:3.1.0
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Microsoft\.NETCore\.Platforms@.*$</packageUrl>
+    <cve>CVE-2023-29326</cve>
+  </suppress>
 </suppressions>
