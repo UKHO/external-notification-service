@@ -458,6 +458,7 @@ stages:
     jobs:
     - deployment: IATvNextDeployApp
       displayName: IATvNext - deploy terraform and dotnet App
+      environment: "Ens-IATvNext"
       strategy:
         runOnce:
           deploy:
@@ -471,6 +472,7 @@ stages:
     jobs:
     - deployment: E2EvNextDeployApp
       displayName: E2EvNext - deploy terraform and dotnet App
+      environment: "Ens-E2EvNext"
       strategy:
         runOnce:
           deploy:
@@ -485,6 +487,7 @@ stages:
     jobs:
     - deployment: QADeployApp
       displayName: QA - deploy terraform and dotnet App
+      environment: "Ens-Qa"
       strategy:
         runOnce:
           deploy:
