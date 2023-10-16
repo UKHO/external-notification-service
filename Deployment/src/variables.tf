@@ -39,6 +39,10 @@ variable "app_service_sku" {
 	    tier = "PremiumV3"
 	    size = "P1v3"
         }
+    "vnexte2e" = {
+	    tier = "PremiumV3"
+	    size = "P1v3"
+        }
   }
 }
 
