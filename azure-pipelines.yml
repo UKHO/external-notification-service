@@ -457,7 +457,7 @@ stages:
     condition: and(succeeded(), eq('${{ parameters.VNextPath }}'))
     jobs:
       steps:
-        - script: echo 'IAT vNext Deploy'
+        - bash: echo 'IAT vNext Deploy'
       
 
   - stage: E2EvNextDeploy
@@ -465,7 +465,7 @@ stages:
     condition: and(succeeded(), eq('${{ parameters.VNextPath }}'))
     jobs:
       steps:
-        - script: echo 'E2E vNext Deploy'
+        - bash: echo 'E2E vNext Deploy'
       
 
 
@@ -474,7 +474,7 @@ stages:
     condition: and(succeeded(),not('${{ parameters.VNextPath }}'))
     jobs:
       steps:
-        - script: echo 'QA Deploy'
+        - bash: echo 'QA Deploy'
       
     
   - stage: Livedeploy
