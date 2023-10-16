@@ -455,23 +455,29 @@ stages:
   - stage: IATvNextDeploy
     displayName: "IATDeploy (inc terraform, webapp deploy)"
     condition: and(succeeded(), eq('${{ parameters.VNextPath }}'))
-    steps:
-    - bash: echo 'IAT vNext Deploy'
+    jobs:
+    - job: Echo_IAT
+      steps:
+      - bash: echo 'IAT vNext Deploy'
       
 
   - stage: E2EvNextDeploy
     displayName: "E2EvNextDeploy (inc terraform, webapp deploy)"
     condition: and(succeeded(), eq('${{ parameters.VNextPath }}'))
-    steps:
-    - bash: echo 'E2E vNext Deploy'
+    jobs:
+    - job: Echo_E2E
+      steps:
+      - bash: echo 'E2E vNext Deploy'
       
 
 
   - stage: QADeploy
     displayName: "E2EvNextDeploy (inc terraform, webapp deploy)"
     condition: and(succeeded(),not('${{ parameters.VNextPath }}'))
-    steps:
-    - bash: echo 'QA Deploy'
+    jobs:
+    - job: Echo_QA
+      steps:
+      - bash: echo 'QA Deploy'
       
     
   - stage: Livedeploy
