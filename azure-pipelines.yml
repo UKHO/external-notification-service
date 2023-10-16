@@ -453,7 +453,7 @@ stages:
                     arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
 
   - stage: IATvNextDeploy
-    displayName: IATDeploy (inc terraform, webapp deploy)
+    displayName: "IATDeploy (inc terraform, webapp deploy)"
     condition: and(succeeded(), eq('${{ parameters.VNextPath }}'))
     jobs:
       steps:
@@ -461,7 +461,7 @@ stages:
       
 
   - stage: E2EvNextDeploy
-    displayName: E2EvNextDeploy (inc terraform, webapp deploy)
+    displayName: "E2EvNextDeploy (inc terraform, webapp deploy)"
     condition: and(succeeded(), eq('${{ parameters.VNextPath }}'))
     jobs:
       steps:
@@ -470,7 +470,7 @@ stages:
 
 
   - stage: QADeploy
-    displayName: E2EvNextDeploy (inc terraform, webapp deploy)
+    displayName: "E2EvNextDeploy (inc terraform, webapp deploy)"
     condition: and(succeeded(),not('${{ parameters.VNextPath }}'))
     jobs:
       steps:
