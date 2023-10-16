@@ -453,31 +453,34 @@ stages:
                     arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
 
   - stage: IATvNextDeploy
-    displayName: "IATDeploy (inc terraform, webapp deploy)"
+    displayName: "IATvNextDeploy (inc terraform, webapp deploy)"
     condition: and(succeeded(), eq('${{ parameters.VNextPath }}',true))
     jobs:
-    - job: Echo_IAT
+    - deployment: IATvNextDeployApp
+      displayName: IATvNext - deploy terraform and dotnet App
       steps:
-      - bash: echo 'IAT vNext Deploy'
+      - bash: echo 'This is an IAT vNext Deploy'
       
 
   - stage: E2EvNextDeploy
     displayName: "E2EvNextDeploy (inc terraform, webapp deploy)"
     condition: and(succeeded(), eq('${{ parameters.VNextPath }}',true))
     jobs:
-    - job: Echo_E2E
+    - deployment: E2EvNextDeployApp
+      displayName: E2EvNext - deploy terraform and dotnet App
       steps:
-      - bash: echo 'E2E vNext Deploy'
+      - bash: echo 'This is an E2E vNext Deploy'
       
 
 
   - stage: QADeploy
-    displayName: "E2EvNextDeploy (inc terraform, webapp deploy)"
-    condition: and(succeeded(),not('${{ parameters.VNextPath }}'))
+    displayName: "QaDeploy (inc terraform, webapp deploy)"
+    condition: and(succeeded(),eq('${{ parameters.VNextPath }}',false),or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
-    - job: Echo_QA
+    - deployment: QADeployApp
+      displayName: QA - deploy terraform and dotnet App
       steps:
-      - bash: echo 'QA Deploy'
+      - bash: echo 'This is QA Deploy'
       
     
   - stage: Livedeploy
