@@ -453,16 +453,16 @@ stages:
                     arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
 
   - stage: IATvNextDeploy
-      script: echo 'IAT vNext Deploy'
+      - script: echo 'IAT vNext Deploy'
       condition: and(succeeded(), eq('${{ parameters.VNextPath }}'))
 
   - stage: E2EvNextDeploy
-      script: echo 'E2E vNext Deploy'
+      - script: echo 'E2E vNext Deploy'
       condition: and(succeeded(), eq('${{ parameters.VNextPath }}'))
 
 
   - stage: QADeploy
-      script: echo 'QA Deploy'
+      - script: echo 'QA Deploy'
       condition: and(succeeded(),not('${{ parameters.VNextPath }}'))
     
   - stage: Livedeploy
