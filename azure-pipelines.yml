@@ -458,8 +458,11 @@ stages:
     jobs:
     - deployment: IATvNextDeployApp
       displayName: IATvNext - deploy terraform and dotnet App
-      steps:
-      - bash: echo 'This is an IAT vNext Deploy'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - bash: echo 'This is an IAT vNext Deploy'
       
 
   - stage: E2EvNextDeploy
@@ -468,8 +471,11 @@ stages:
     jobs:
     - deployment: E2EvNextDeployApp
       displayName: E2EvNext - deploy terraform and dotnet App
-      steps:
-      - bash: echo 'This is an E2E vNext Deploy'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - bash: echo 'This is an E2E vNext Deploy'
       
 
 
@@ -479,8 +485,11 @@ stages:
     jobs:
     - deployment: QADeployApp
       displayName: QA - deploy terraform and dotnet App
-      steps:
-      - bash: echo 'This is QA Deploy'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - bash: echo 'This is QA Deploy'
       
     
   - stage: Livedeploy
