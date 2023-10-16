@@ -11,6 +11,11 @@ parameters:
     type: boolean
     default: false
 
+  - name: DisableDependencyCheck
+    displayName: "Disable OWASP dependency checking"
+    type: boolean
+    default: false
+
 trigger:
   - main
   - release/*
@@ -94,6 +99,7 @@ stages:
     dependsOn: []
     jobs:
       - job: Dependencychecker
+        condition: eq(variables['DisableDependencyCheck'], false)
         workspace:
           clean: all
         displayName: "Dependencychecker"
@@ -454,7 +460,8 @@ stages:
 
   - stage: IATvNextDeploy
     displayName: "IATvNextDeploy (inc terraform, webapp deploy)"
-    condition: and(succeeded(), eq('${{ parameters.VNextPath }}',true))
+    #condition: and(succeeded(), eq('${{ parameters.VNextPath }}',true))
+    condition: and(succeeded(), eq(variables['VNextPath'],true ))
     jobs:
     - deployment: IATvNextDeployApp
       displayName: IATvNext - deploy terraform and dotnet App
@@ -468,7 +475,7 @@ stages:
 
   - stage: E2EvNextDeploy
     displayName: "E2EvNextDeploy (inc terraform, webapp deploy)"
-    condition: and(succeeded(), eq('${{ parameters.VNextPath }}',true))
+    condition: and(succeeded(), eq(variables['VNextPath'],true ),true))
     jobs:
     - deployment: E2EvNextDeployApp
       displayName: E2EvNext - deploy terraform and dotnet App
@@ -483,7 +490,7 @@ stages:
 
   - stage: QADeploy
     displayName: "QaDeploy (inc terraform, webapp deploy)"
-    condition: and(succeeded(),eq('${{ parameters.VNextPath }}',false),or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
+    condition: and(succeeded(),eq(variables['VNextPath'],false),or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
     - deployment: QADeployApp
       displayName: QA - deploy terraform and dotnet App
