@@ -475,7 +475,7 @@ stages:
 
   - stage: E2EvNextDeploy
     displayName: "E2EvNextDeploy (inc terraform, webapp deploy)"
-    condition: and(succeeded(), eq(variables['VNextPath'],true ),true))
+    condition: and(succeeded(), eq(variables['VNextPath'],true))
     jobs:
     - deployment: E2EvNextDeployApp
       displayName: E2EvNext - deploy terraform and dotnet App
