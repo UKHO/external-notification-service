@@ -376,10 +376,11 @@ stages:
 
   - stage: Devdeploy
     displayName: "Devdeploy (inc terraform, webapp deploy)"
-    condition: eq(variables['DisableDependencyCheck'], false)
+    #condition: eq(variables['DisableDependencyCheck'], false)
     jobs:
       - deployment: DevDeployApp
         displayName: "Dev - deploy terraform and dotnet App"
+        condition: eq(variables['DisableDependencyCheck'], false)
         environment: "Ens-Dev"
         pool: $(DeploymentPool)
         container: ${{variables.Container}}
@@ -469,6 +470,7 @@ stages:
     jobs:
       - deployment: E2EvNextDeployApp
         displayName: E2EvNext - deploy terraform and dotnet App
+        condition: eq(variables['VNextPath'],true)
         environment: "Ens-E2EvNext"
         pool: $(DeploymentPool)
         container: ${{variables.Container}}
