@@ -462,7 +462,7 @@ stages:
   - stage: IATvNextDeploy
     displayName: "IATvNextDeploy (inc terraform, webapp deploy)"
     #condition: and(succeeded(), eq('${{ parameters.VNextPath }}',true))
-    condition: eq(variables['VNextPath'],true )
+    #condition: eq(variables['VNextPath'],true )
     jobs:
     - deployment: IATvNextDeployApp
       displayName: IATvNext - deploy terraform and dotnet App
@@ -477,7 +477,7 @@ stages:
   - stage: E2EvNextDeploy
     displayName: E2EvNextDeploy (inc terraform, webapp deploy)
     #condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
-    condition: eq(variables['VNextPath'],true)
+    #condition: eq(variables['VNextPath'],true)
     jobs:
       - deployment: E2EvNextDeployApp
         displayName: E2EvNext - deploy terraform and dotnet App
