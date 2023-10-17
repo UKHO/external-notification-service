@@ -459,19 +459,7 @@ stages:
                     scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
                     arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
 
-  - stage: IATvNextDeploy
-    displayName: "IATvNextDeploy (inc terraform, webapp deploy)"
-    #condition: and(succeeded(), eq('${{ parameters.VNextPath }}',true))
-    condition: eq(variables['VNextPath'],true )
-    jobs:
-    - deployment: IATvNextDeployApp
-      displayName: IATvNext - deploy terraform and dotnet App
-      environment: "Ens-E2EvNext"  #Where does this get set
-      strategy:
-        runOnce:
-          deploy:
-            steps:
-            - bash: echo 'This is an IAT vNext Deploy'
+  
       
 
   - stage: E2EvNextDeploy
