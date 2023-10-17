@@ -376,7 +376,7 @@ stages:
 
   - stage: Devdeploy
     displayName: "Devdeploy (inc terraform, webapp deploy)"
-    condition: eq(variables['DisableDependencyCheck'], false)
+    #condition: eq(variables['DisableDependencyCheck'], false)
     jobs:
       - deployment: DevDeployApp
         displayName: "Dev - deploy terraform and dotnet App"
@@ -462,7 +462,7 @@ stages:
   - stage: IATvNextDeploy
     displayName: "IATvNextDeploy (inc terraform, webapp deploy)"
     #condition: and(succeeded(), eq('${{ parameters.VNextPath }}',true))
-    #condition: eq(variables['VNextPath'],true )
+    condition: eq(variables['VNextPath'],true )
     jobs:
     - deployment: IATvNextDeployApp
       displayName: IATvNext - deploy terraform and dotnet App
