@@ -463,9 +463,11 @@ stages:
       
 
   - stage: E2EvNextDeploy
+    dependsOn:
+      - DevDeploy
     displayName: E2EvNextDeploy (inc terraform, webapp deploy)
     #condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
-    condition: and(eq(variables['DisableDependencyCheck'], true),eq(variables['VNextPath'], true))
+    condition: eq(variables['VNextPath'], true)
     jobs:
       - deployment: E2EvNextDeployApp
         displayName: E2EvNext - deploy terraform and dotnet App
@@ -581,8 +583,10 @@ stages:
 
 
   - stage: QADeploy
+    dependsOn:
+      - DevDeploy
     displayName: "QaDeploy (inc terraform, webapp deploy)"
-    condition: and(succeeded(),eq(variables['VNextPath'],false),or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
+    #condition: and(succeeded(),eq(variables['VNextPath'],false),or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
     - deployment: QADeployApp
       displayName: QA - deploy terraform and dotnet App
