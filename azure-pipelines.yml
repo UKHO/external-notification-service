@@ -465,10 +465,10 @@ stages:
   - stage: E2EvNextDeploy
     displayName: E2EvNextDeploy (inc terraform, webapp deploy)
     #condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
-    condition: eq(variables['DisableDependencyCheck'], true)
     jobs:
       - deployment: E2EvNextDeployApp
         displayName: E2EvNext - deploy terraform and dotnet App
+        condition: eq(variables['VNextPath'], true)
         environment: "Ens-E2EvNext"
         pool: $(DeploymentPool)
         container: ${{variables.Container}}
