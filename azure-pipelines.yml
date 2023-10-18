@@ -460,14 +460,28 @@ stages:
                     arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
 
   
-      
+  - stage: IATvNextDeploy
+    dependsOn:
+      - DevDeploy
+    displayName: "IATvNextDeploy (inc terraform, webapp deploy)"
+    #condition: and(succeeded(), eq('${{ parameters.VNextPath }}',true))
+    #condition: eq(variables['VNextPath'],true )
+    jobs:
+      - deployment: IATvNextDeployApp
+        displayName: IATvNext - deploy terraform and dotnet App
+        environment: "Ens-E2EvNext"  #Where does this get set
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: echo 'This is an IAT vNext Deploy'    
 
   - stage: E2EvNextDeploy
     dependsOn:
-      - DevDeploy
+      - IATvNextDeploy
     displayName: E2EvNextDeploy (inc terraform, webapp deploy)
     #condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
-    condition: eq(variables['VNextPath'], true)
+    #condition: eq(variables['VNextPath'], true)
     jobs:
       - deployment: E2EvNextDeployApp
         displayName: E2EvNext - deploy terraform and dotnet App
