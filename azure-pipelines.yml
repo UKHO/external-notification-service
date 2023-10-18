@@ -600,7 +600,8 @@ stages:
     dependsOn:
       - DevDeploy
     displayName: "QaDeploy (inc terraform, webapp deploy)"
-    condition: and(succeeded(),eq('${{ parameters.VNextPath }}', false),or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
+    condition: and(succeeded(), eq('${{ parameters.VNextPath }}', false))
+    #condition: and(succeeded(),eq('${{ parameters.VNextPath }}', false),or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
     - deployment: QADeployApp
       displayName: QA - deploy terraform and dotnet App
