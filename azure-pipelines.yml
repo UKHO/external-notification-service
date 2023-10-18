@@ -609,10 +609,13 @@ stages:
         runOnce:
           deploy:
             steps:
-            - bash: echo 'This is QA Deploy'
+            - script: echo 'This is QA Deploy'
       
     
   - stage: Livedeploy
+    dependsOn:
+      - QADeploy
+      - E2EvNextDeploy
     displayName: Livedeploy (inc terraform, webapp deploy)
     condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
