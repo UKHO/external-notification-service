@@ -470,7 +470,6 @@ stages:
     jobs:
       - deployment: E2EvNextDeployApp
         displayName: E2EvNext - deploy terraform and dotnet App
-        condition: eq(variables['VNextPath'],true)
         environment: "Ens-E2EvNext"
         pool: $(DeploymentPool)
         container: ${{variables.Container}}
