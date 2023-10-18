@@ -464,8 +464,7 @@ stages:
     dependsOn:
       - DevDeploy
     displayName: "IATvNextDeploy (inc terraform, webapp deploy)"
-    #condition: and(succeeded(), eq('${{ parameters.VNextPath }}',true))
-    #condition: eq(variables['VNextPath'],true )
+    condition: and(succeeded(), eq('${{ parameters.VNextPath }}', true))
     jobs:
       - deployment: IATvNextDeployApp
         displayName: IATvNext - deploy terraform and dotnet App
@@ -482,6 +481,7 @@ stages:
     displayName: E2EvNextDeploy (inc terraform, webapp deploy)
     #condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     #condition: eq(variables['VNextPath'], true)
+    condition: and(succeeded(), eq('${{ parameters.VNextPath }}', true))
     jobs:
       - deployment: E2EvNextDeployApp
         displayName: E2EvNext - deploy terraform and dotnet App
@@ -600,7 +600,7 @@ stages:
     dependsOn:
       - DevDeploy
     displayName: "QaDeploy (inc terraform, webapp deploy)"
-    #condition: and(succeeded(),eq(variables['VNextPath'],false),or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
+    condition: and(succeeded(),eq('${{ parameters.VNextPath }}', false),or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
     - deployment: QADeployApp
       displayName: QA - deploy terraform and dotnet App
@@ -617,6 +617,7 @@ stages:
       - QADeploy
       - E2EvNextDeploy
     displayName: Livedeploy (inc terraform, webapp deploy)
+    #condition: or(succeeded('QADeploy'), and(eq('${{ parameters.vNext }}', true), succeeded('E2EDeploy')))
     condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
       - deployment: LiveDeployApp
