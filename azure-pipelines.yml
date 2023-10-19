@@ -589,9 +589,7 @@ stages:
       - QADeploy
       - E2EvNextDeploy
     displayName: Livedeploy (inc terraform, webapp deploy)
-    condition: and(or(succeeded('QADeploy'),and(eq('${{ parameters.VNext }}', true), succeeded('E2EvNextDeploy')))
-	   ,or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'))	
-  )
+    condition: and(or(succeeded('QADeploy'),and(eq('${{ parameters.VNext }}', true), succeeded('E2EvNextDeploy'))), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))	
     jobs:
       - deployment: LiveDeployApp
         displayName: Live - deploy terraform and dotnet App
