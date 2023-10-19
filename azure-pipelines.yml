@@ -6,7 +6,7 @@ parameters:
     type: boolean
     default: false
 
-  - name: VNextPath
+  - name: VNext
     displayName: "Process vNext"
     type: boolean
     default: false
@@ -99,7 +99,7 @@ stages:
     dependsOn: []
     jobs:
       - job: Dependencychecker
-        condition: eq(variables['DisableDependencyCheck'], false)
+        condition: eq('${{ parameters.DisableDependencyCheck }}', false)
         workspace:
           clean: all
         displayName: "Dependencychecker"
@@ -379,7 +379,7 @@ stages:
     jobs:
       - deployment: DevDeployApp
         displayName: "Dev - deploy terraform and dotnet App"
-        condition: eq(variables['DisableDependencyCheck'], false)
+        condition: eq('${{ parameters.DisableDependencyCheck }}', false)
         environment: "Ens-Dev"
         pool: $(DeploymentPool)
         container: ${{variables.Container}}
@@ -464,7 +464,7 @@ stages:
     dependsOn:
       - DevDeploy
     displayName: "IATvNextDeploy (inc terraform, webapp deploy)"
-    condition: and(succeeded(), eq('${{ parameters.VNextPath }}', true))
+    condition: and(succeeded(), eq('${{ parameters.VNext }}', true))
     jobs:
       - deployment: IATvNextDeployApp
         displayName: IATvNext - deploy terraform and dotnet App
@@ -480,7 +480,7 @@ stages:
       - IATvNextDeploy
     displayName: E2EvNextDeploy (inc terraform, webapp deploy)
     #condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
-    condition: and(succeeded(), eq('${{ parameters.VNextPath }}', true))
+    condition: and(succeeded(), eq('${{ parameters.VNext }}', true))
     jobs:
       - deployment: E2EvNextDeployApp
         displayName: E2EvNext - deploy terraform and dotnet App
@@ -599,8 +599,8 @@ stages:
     dependsOn:
       - DevDeploy
     displayName: "QaDeploy (inc terraform, webapp deploy)"
-    condition: and(succeeded(), eq('${{ parameters.VNextPath }}', false))
-    #condition: and(succeeded(),eq('${{ parameters.VNextPath }}', false),or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
+    condition: and(succeeded(), eq('${{ parameters.VNext }}', false))
+    #condition: and(succeeded(),eq('${{ parameters.VNext }}', false),or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
     - deployment: QADeployApp
       displayName: QA - deploy terraform and dotnet App
@@ -617,7 +617,7 @@ stages:
       - QADeploy
       - E2EvNextDeploy
     displayName: Livedeploy (inc terraform, webapp deploy)
-    #condition: or(succeeded('QADeploy'), and(eq('${{ parameters.vNext }}', true), succeeded('E2EDeploy')))
+    #condition: or(succeeded('QADeploy'), and(eq('${{ parameters.VNext }}', true), succeeded('E2EDeploy')))
     condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
       - deployment: LiveDeployApp
