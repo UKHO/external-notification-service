@@ -417,37 +417,9 @@ stages:
                     tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
                     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
                   
-                - task: DownloadBuildArtifacts@0
-                  displayName: "Download Functional test Artifact"
-                  inputs:
-                    buildType: 'current'
-                    downloadType: 'single'
-                    artifactName: 'functionaltests'
-                    downloadPath: '$(Build.SourcesDirectory)'
-
-                - task: FileTransform@2
-                  displayName: "File Transform: functionaltests"
-                  inputs:
-                    folderPath: '$(Build.SourcesDirectory)/functionaltests/'
-                    xmlTransformationRules:
-                    jsonTargetFiles: '**/appsettings.json'
-
-                - task: UseDotNet@2
-                  displayName: 'Use .NET 6.0.x sdk'
-                  inputs:
-                    packageType: sdk
-                    version: 6.0.x
-
-                - task: DotNetCoreCLI@2
-                  displayName: "Run Functional tests"
-                  inputs:
-                    command: "test"
-                    projects: |
-                      **/*FunctionalTest*.dll
-                      !**/*TestAdapter.dll
-                      !**/obj/**
-                    testRunTitle: "Dev-AutomationTests"
-                    workingDirectory: '$(Build.SourcesDirectory)/functionaltests'
+                - template: Deployment/templates/functional-test-process.yml
+                  parameters:
+                    TestTitle: "Dev-AutomationTests"
 
                 - task: AzureCLI@2
                   displayName: "Swap Stub URL"
@@ -468,7 +440,7 @@ stages:
     jobs:
       - deployment: IATvNextDeployApp
         displayName: IATvNext - deploy terraform and dotnet App
-        environment: "Ens-E2EvNext"  #Where does this get set
+        environment: "Ens-E2EvNext"  
         strategy:
           runOnce:
             deploy:
@@ -617,8 +589,9 @@ stages:
       - QADeploy
       - E2EvNextDeploy
     displayName: Livedeploy (inc terraform, webapp deploy)
-    #condition: or(succeeded('QADeploy'), and(eq('${{ parameters.VNext }}', true), succeeded('E2EDeploy')))
-    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
+    condition: and(or(succeeded('QADeploy'),and(eq('${{ parameters.VNext }}', true), succeeded('E2EvNextDeploy')))
+	   ,or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'))	
+  )
     jobs:
       - deployment: LiveDeployApp
         displayName: Live - deploy terraform and dotnet App
