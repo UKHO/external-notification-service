@@ -43,6 +43,7 @@ variable "env_suffix_text" {
     "distdev" = "Dist Dev"
     "live"    = " "
     "vne"     = "VNE"
+    "vni"     = "VNI"
   }
 }
 
