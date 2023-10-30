@@ -436,6 +436,7 @@ stages:
     dependsOn:
       - DevDeploy
     displayName: "IATvNextDeploy (inc terraform, webapp deploy)"
+    #condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     condition: and(succeeded(), eq('${{ parameters.VNext }}', true))
     jobs:
       - deployment: IATvNextDeployApp
