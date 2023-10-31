@@ -444,7 +444,7 @@ stages:
         runOnce:
           deploy:
             steps:
-            - bash: echo 'This is an IAT vNext Deploy'
+            - script: echo 'This is an IAT vNext Deploy'
   
   - stage: E2EvNextDeploy
     dependsOn:
