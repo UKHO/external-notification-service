@@ -11,6 +11,11 @@ parameters:
     type: boolean
     default: false
 
+  - name: DisableVNextIAT
+    displayName: "Disable IAT"
+    type: boolean
+    default: false
+
   - name: DisableDependencyCheck
     displayName: "Disable OWASP dependency checking"
     type: boolean
@@ -440,6 +445,7 @@ stages:
     jobs:
       - deployment: IATvNextDeployApp
         displayName: IATvNext - deploy terraform and dotnet App
+        condition: eq('${{ parameters.DisableVNextIAT }}', false)
         environment: "Ens-IATvNext"
         pool: $(DeploymentPool)
         container: ${{variables.Container}}
@@ -486,8 +492,8 @@ stages:
       - IATvNextDeploy
     displayName: E2EvNextDeploy (inc terraform, webapp deploy)
     #condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
-    #condition: and(succeeded(), eq('${{ parameters.VNext }}', true))
-    condition: eq('${{ parameters.VNext }}', true)
+    condition: and(succeeded(), eq('${{ parameters.VNext }}', true))
+    #condition: eq('${{ parameters.VNext }}', true)
     jobs:
       - deployment: E2EvNextDeployApp
         displayName: E2EvNext - deploy terraform and dotnet App
