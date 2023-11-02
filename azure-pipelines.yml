@@ -486,7 +486,8 @@ stages:
       - IATvNextDeploy
     displayName: E2EvNextDeploy (inc terraform, webapp deploy)
     #condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
-    condition: and(succeeded(), eq('${{ parameters.VNext }}', true))
+    #condition: and(succeeded(), eq('${{ parameters.VNext }}', true))
+    condition: eq('${{ parameters.VNext }}', true)
     jobs:
       - deployment: E2EvNextDeployApp
         displayName: E2EvNext - deploy terraform and dotnet App
