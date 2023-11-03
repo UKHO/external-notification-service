@@ -16,6 +16,11 @@ parameters:
     type: boolean
     default: false
 
+  - name:  DisableDevDeploy
+    displayName: "Disable DevDeploy"
+    type: boolean
+    default: false
+
   - name: DisableDependencyCheck
     displayName: "Disable OWASP dependency checking"
     type: boolean
@@ -384,7 +389,7 @@ stages:
     jobs:
       - deployment: DevDeployApp
         displayName: "Dev - deploy terraform and dotnet App"
-        condition: eq('${{ parameters.DisableDependencyCheck }}', false)
+        condition: eq('${{ parameters.DisableDevDeploy }}', false)
         environment: "Ens-Dev"
         pool: $(DeploymentPool)
         container: ${{variables.Container}}
