@@ -359,4 +359,13 @@ This CVE applies to python and this is a false positive cve for our application 
     <packageUrl regex="true">^pkg:nuget/Azure\.Identity@.*$</packageUrl>
     <vulnerabilityName>CVE-2023-36415</vulnerabilityName>
   </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Identity.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Azure\.Identity@.*$</packageUrl>
+    <cve>CVE-2023-36415</cve>
+  </suppress>
 </suppressions>
