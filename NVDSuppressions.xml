@@ -1,33 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
-	<suppress>
-		<notes>
-			<![CDATA[
-   file name: System.Threading.Tasks.Extensions.dll
-   Suppressing this CVE Because it relates to a mobile "Tasks" application (Astrid Tasks) version before 9.7.3. ENS is not a mobile application.
-   ]]>
-		</notes>
-		<cve>CVE-2020-22475</cve>
-	</suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: GetDocument.Insider.dll
-  CVE References ASP.Net versions 1.0-1.1. ENS is built on ASP.Net Core SDK > 6.0.101, not classic ASP.Net.
-  See https://nvd.nist.gov/vuln/detail/CVE-2005-2224 and https://www.securityfocus.com/bid/14217 for more details.
-   ]]>
-    </notes>
-    <cve>CVE-2005-2224</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: GetDocument.Insider.dll
-   Vunerability applies to AfterLogic MailBee WebMail Pro 4.1 for ASP.NET which is not used by the ESS
-   ]]>
-    </notes>
-    <cve>CVE-2008-0333</cve>
-  </suppress>
   <suppress>
     <notes>
       <![CDATA[
@@ -97,49 +69,6 @@
   <suppress>
     <notes>
       <![CDATA[
-    file name: Serilog.Sinks.File:4.1.0
-      8117-softmagic.c in file before 5.21 does not properly limit recursion, which allows remote attackers to cause a denial of service (CPU consumption or crash) via unspecified vectors.
-      9652-The mconvert function in softmagic.c in file before 5.21, as used in the Fileinfo component in PHP before 5.4.37, 5.5.x before 5.5.21, and 5.6.x before 5.6.5, does not properly handle a certain string-length field during a copy of a truncated version of a Pascal string, which might allow remote attackers to cause a denial of service (out-of-bounds memory access and application crash) via a crafted file.
-    This is a false positive. These two CVEs references a C library softmagic.c which is not used by ESS
-    ]]>
-    </notes>
-    <cve>CVE-2014-8117</cve>
-    <cve>CVE-2014-9652</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-     file name: Serilog.Sinks.File:4.1.0
-      readelf.c in file before 5.22, as used in the Fileinfo component in PHP before 5.4.37, 5.5.x before 5.5.21, and 5.6.x before 5.6.5, does not consider that pread calls sometimes read only a subset of the available data, which allows remote attackers to cause a denial of service (uninitialized memory access) or possibly have unspecified other impact via a crafted ELF file.
-     This is a false positive in readelf.c as ENS is not using this, or PHP.
-    ]]>
-    </notes>
-    <cve>CVE-2014-9653</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-    file name: Serilog.Extensions.Logging.File:2.0.0
-      cdf_read_property_info in cdf.c in file through 5.37 does not restrict the number of CDF_VECTOR elements, which allows a heap-based buffer overflow (4-byte out-of-bounds write)
-    This is a false positive in cdf.c which is not used by ESS
-    ]]>
-    </notes>
-    <cve>CVE-2019-18218</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-file name: System.Net.WebSockets.Client.dll
-See https://nvd.nist.gov/vuln/detail/CVE-2021-33880 for full Details on CVE.
-The aaugustin websockets library before 9.1 for Python has an Observable Timing Discrepancy on servers when HTTP Basic Authentication is enabled with basic_auth_protocol_factory(credentials=...). An attacker may be able to guess a password via a timing attack.
-This CVE applies to python and this is a false positive cve for our application which is C# based.
-]]>
-    </notes>
-    <cve>CVE-2021-33880</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
    file name: Serilog.Sinks.Async.dll
    https://nvd.nist.gov/vuln/detail/CVE-2021-43138
    A vulnerability exists in Async through 3.2.1 (fixed in 3.2.2) , which could let a malicious user obtain privileges via the mapValues() method.
@@ -197,7 +126,7 @@ This CVE applies to python and this is a false positive cve for our application 
 	]]></notes>
 	<cve>CVE-2018-8409</cve>
   </suppress>
-  <suppress>
+  <!--<suppress>
 		<notes><![CDATA[
 		file name: Serilog.Extensions.Logging.File:2.0.0
 		This is a temporary suppression pending a fix being available.
@@ -219,7 +148,7 @@ This CVE applies to python and this is a false positive cve for our application 
 	<cve>CVE-2014-3479</cve>
 	<cve>CVE-2014-3480</cve>
 	<cve>CVE-2014-3487</cve>
-  </suppress>
+  </suppress>-->
   <suppress>
     <notes>
       <![CDATA[
@@ -230,7 +159,7 @@ This CVE applies to python and this is a false positive cve for our application 
     </notes>
     <cve>CVE-2023-21538</cve>
   </suppress>
-  <suppress>
+  <!--<suppress>
     <notes>
       <![CDATA[
    file name: Microsoft.Azure.EventGrid:3.2.1, Microsoft.Azure.KeyVault.dll, Microsoft.Azure.Services.AppAuthentication.dll
@@ -238,7 +167,7 @@ This CVE applies to python and this is a false positive cve for our application 
    ]]>
     </notes>
     <cve>CVE-2021-42306</cve>
-  </suppress>
+  </suppress>-->
   <suppress>
     <notes>
       <![CDATA[
@@ -260,7 +189,7 @@ This CVE applies to python and this is a false positive cve for our application 
     <cve>CVE-2022-41064</cve>
     <cve>CVE-2022-30184</cve>
   </suppress>
-  <suppress>
+  <!--<suppress>
     <notes>
       <![CDATA[
    file name: Microsoft.Extensions.Configuration.FileExtensions.dll
@@ -268,8 +197,8 @@ This CVE applies to python and this is a false positive cve for our application 
    ]]>
     </notes>
     <cve>CVE-2018-1000413</cve>
-  </suppress>
-  <suppress>
+  </suppress>-->
+  <!--<suppress>
     <notes>
       <![CDATA[
    file name: Microsoft.IdentityModel.Clients.ActiveDirectory.dll, Microsoft.IdentityModel.Clients.ActiveDirectory:3.19.1
@@ -277,8 +206,8 @@ This CVE applies to python and this is a false positive cve for our application 
    ]]>
     </notes>
     <cve>CVE-2021-42306</cve>
-  </suppress>
-  <suppress>
+  </suppress>-->
+  <!--<suppress>
     <notes>
       <![CDATA[
    file name: Microsoft.OpenApi.dll
@@ -287,8 +216,8 @@ This CVE applies to python and this is a false positive cve for our application 
     </notes>
     <cve>CVE-2022-3064</cve>
     <cve>CVE-2021-4235</cve>
-  </suppress>
-  <suppress>
+  </suppress>-->
+  <!--<suppress>
     <notes>
       <![CDATA[
    file name: NETStandard.Library:1.6.0, NETStandard.Library:1.6.1
@@ -296,7 +225,7 @@ This CVE applies to python and this is a false positive cve for our application 
    ]]>
     </notes>
     <cve>CVE-2001-0152</cve>
-  </suppress>
+  </suppress>-->
   <suppress>
     <notes>
       <![CDATA[
@@ -308,7 +237,7 @@ This CVE applies to python and this is a false positive cve for our application 
     <packageUrl regex="true">^pkg:nuget/System\.Security\.Cryptography\.X509Certificates@.*$</packageUrl>
     <vulnerabilityName>CVE-2017-11770</vulnerabilityName>
   </suppress>
-  <suppress>
+  <!--<suppress>
     <notes>
       <![CDATA[
    file name: System.Runtime.Serialization.Json:4.3.0
@@ -331,8 +260,8 @@ This CVE applies to python and this is a false positive cve for our application 
     </notes>
     <packageUrl regex="true">^pkg:nuget/System\.Text\.Json@.*$</packageUrl>
     <cve>CVE-2022-45688</cve>
-  </suppress>
-  <suppress>
+  </suppress>-->
+  <!--<suppress>
     <notes>
       <![CDATA[
    file name: Microsoft.NETCore.Platforms:3.1.0
@@ -340,5 +269,25 @@ This CVE applies to python and this is a false positive cve for our application 
     </notes>
     <packageUrl regex="true">^pkg:nuget/Microsoft\.NETCore\.Platforms@.*$</packageUrl>
     <cve>CVE-2023-29326</cve>
+  </suppress>-->
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Identity.dll
+   False positive - fixed >= 1.10.2
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Azure\.Identity@.*$</packageUrl>
+    <cve>CVE-2023-36415</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Identity:1.10.3
+   False positive - fixed >= 1.10.2
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Identity@.*$</packageUrl>
+    <cve>CVE-2023-36415</cve>
   </suppress>
 </suppressions>
