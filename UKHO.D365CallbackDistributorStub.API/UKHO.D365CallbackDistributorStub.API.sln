@@ -5,10 +5,9 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UKHO.D365CallbackDistributorStub.API", "UKHO.D365CallbackDistributorStub.API\UKHO.D365CallbackDistributorStub.API.csproj", "{A0E6EDB0-A7B2-4173-9B3E-8127C971143D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "@Tests", "@Tests", "{1FC14E94-4D29-4A20-AD51-0953A3BA2ECD}"
-	ProjectSection(SolutionItems) = preProject
-		UKHO.D365CallbackDistributorStub.API.Tests\UKHO.D365CallbackDistributorStub.API.Tests.csproj = UKHO.D365CallbackDistributorStub.API.Tests\UKHO.D365CallbackDistributorStub.API.Tests.csproj
-	EndProjectSection
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "@Tests", "@Tests", "{229E0D3A-A4C6-4BFE-A3A5-D574000C73A3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UKHO.D365CallbackDistributorStub.API.Tests", "UKHO.D365CallbackDistributorStub.API.Tests\UKHO.D365CallbackDistributorStub.API.Tests.csproj", "{C535A8DB-834A-42A1-8DE5-106A26DA7864}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,9 +19,16 @@ Global
 		{A0E6EDB0-A7B2-4173-9B3E-8127C971143D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0E6EDB0-A7B2-4173-9B3E-8127C971143D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0E6EDB0-A7B2-4173-9B3E-8127C971143D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C535A8DB-834A-42A1-8DE5-106A26DA7864}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C535A8DB-834A-42A1-8DE5-106A26DA7864}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C535A8DB-834A-42A1-8DE5-106A26DA7864}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C535A8DB-834A-42A1-8DE5-106A26DA7864}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C535A8DB-834A-42A1-8DE5-106A26DA7864} = {229E0D3A-A4C6-4BFE-A3A5-D574000C73A3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D26D1FC1-9C04-40D3-A7AA-3C9268FEEA9C}
