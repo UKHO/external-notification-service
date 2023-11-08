@@ -240,4 +240,24 @@
     <packageUrl regex="true">^pkg:nuget/Microsoft\.IdentityModel\.Clients\.ActiveDirectory@.*$</packageUrl>
     <cve>CVE-2021-42306</cve>
   </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: GetDocument.Insider.dll
+   https://dev.azure.com/ukhydro/Abzu/_workitems/edit/100935
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/GetDocument\.Insider@.*$</packageUrl>
+    <cve>CVE-2023-44487</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: dotnet-getdocument.dll
+   https://dev.azure.com/ukhydro/Abzu/_workitems/edit/100935
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/dotnet\-getdocument@.*$</packageUrl>
+    <cve>CVE-2023-44487</cve>
+  </suppress>
 </suppressions>
