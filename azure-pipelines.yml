@@ -98,7 +98,7 @@ stages:
             inputs:
               packageType: sdk
               useGlobalJson: true
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
+              workingDirectory: '$(Build.SourcesDirectory)'
 
           - task: DotNetCoreCLI@2
             displayName: ".Net Core - NuGet restore non test projects only"
@@ -144,7 +144,7 @@ stages:
             inputs:
               packageType: sdk
               useGlobalJson: true
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
+              workingDirectory: '$(Build.SourcesDirectory)'
 
           - task: DotNetCoreCLI@2
             displayName: ".Net Core - NuGet restore test projects only"
@@ -196,7 +196,7 @@ stages:
             inputs:
               packageType: sdk
               useGlobalJson: true
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
+              workingDirectory: '$(Build.SourcesDirectory)'
 
           - task: DotNetCoreCLI@2
             displayName: ".Net Core - NuGet restore"
@@ -261,7 +261,7 @@ stages:
             inputs:
               packageType: sdk
               useGlobalJson: true
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
+              workingDirectory: '$(Build.SourcesDirectory)'
 
           - task: DotNetCoreCLI@2
             displayName: ".Net Core - NuGet restore"
@@ -326,7 +326,7 @@ stages:
             inputs:
               packageType: sdk
               useGlobalJson: true
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.D365CallbackDistributorStub.API'
+              workingDirectory: '$(Build.SourcesDirectory)'
 
           - task: DotNetCoreCLI@2
             displayName: ".Net Core - NuGet restore"
