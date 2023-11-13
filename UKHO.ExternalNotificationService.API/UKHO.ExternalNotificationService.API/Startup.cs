@@ -25,6 +25,7 @@ using UKHO.ExternalNotificationService.Common.Helpers;
 using UKHO.ExternalNotificationService.Common.Repository;
 using UKHO.ExternalNotificationService.Common.Storage;
 using UKHO.Logging.EventHubLogProvider;
+using Elastic.Apm.AspNetCore;
 
 namespace UKHO.ExternalNotificationService.API
 {
@@ -135,6 +136,8 @@ namespace UKHO.ExternalNotificationService.API
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/health");
             });
+
+            app.UseElasticApm(_configuration);
         }
 
         protected IConfigurationRoot BuildConfiguration(IWebHostEnvironment hostingEnvironment)
