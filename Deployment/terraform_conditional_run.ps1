@@ -3,7 +3,9 @@ param (
     [Parameter(Mandatory = $true)] [string] $deploymentStorageAccountName,
     [Parameter(Mandatory = $true)] [string] $workSpace,
     [Parameter(Mandatory = $true)] [boolean] $continueEvenIfResourcesAreGettingDestroyed,
-    [Parameter(Mandatory = $true)] [string] $terraformJsonOutputFile
+    [Parameter(Mandatory = $true)] [string] $terraformJsonOutputFile,
+    [Parameter(Mandatory = $true)] [string] $elasticApmServerUrl,
+    [Parameter(Mandatory = $true)] [string] $elasticApmApiKey
 )
 
 cd $env:AGENT_BUILDDIRECTORY/terraformartifact/src
