@@ -48,10 +48,12 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
             DateTime startTime = DateTime.UtcNow;
 
-            while (DateTime.UtcNow - startTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
-            {
-                await Task.Delay(10000);
-            }
+            //while (DateTime.UtcNow - startTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
+            //{
+            //    await Task.Delay(10000);
+            //}
+
+            await Task.Delay(TestConfig.WaitingTimeForQueueInSeconds * 1000);
 
             Assert.AreEqual(200, (int)apiResponse.StatusCode, $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 200.");
             HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
@@ -65,7 +67,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             Assert.Greater(getMatchingData.Count(), 1);
 
             DateTime requestTime = DateTime.UtcNow;
-            await Task.Delay(420000);
+            //await Task.Delay(420000);
+            await Task.Delay(TestConfig.WaitingTimeForQueueInSeconds * 1000);
 
             HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, subscriptionId.ToUpper());
 
