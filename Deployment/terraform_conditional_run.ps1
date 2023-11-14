@@ -6,7 +6,8 @@ param (
     [Parameter(Mandatory = $true)] [string] $terraformJsonOutputFile,
     [Parameter(Mandatory = $true)] [string] $elasticApmServerUrl,
     [Parameter(Mandatory = $true)] [string] $elasticApmApiKey,
-    [Parameter(Mandatory = $true)] [string] $elasticApmEnvironment
+    [Parameter(Mandatory = $true)] [string] $elasticApmEnvironment,
+    [Parameter(Mandatory = $true)] [string] $elasticApmWebJobServiceName
 )
 
 cd $env:AGENT_BUILDDIRECTORY/terraformartifact/src
