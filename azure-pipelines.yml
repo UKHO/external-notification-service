@@ -408,6 +408,14 @@ stages:
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
           - name: "EnsAuthConfiguration.TenantId"
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
+          - name: "ElasticAPM.ApiKey"
+            value: $(elasticAPM-ApiKey)
+          - name: "ElasticAPM.Environment"
+            value: $(elasticAPM-Environment)
+          - name: "ElasticAPM.ServerURL"
+            value: $(elasticAPM-ServerURL)
+          - name: "ElasticAPM.ServiceName"
+            value: $(elasticAPM-ServiceName)
         strategy:
           runOnce:
             deploy:
@@ -469,6 +477,14 @@ stages:
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
           - name: "EnsAuthConfiguration.TenantId"
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
+          - name: "ElasticAPM.ApiKey"
+            value: $(elasticAPM-ApiKey)
+          - name: "ElasticAPM.Environment"
+            value: $(elasticAPM-Environment)
+          - name: "ElasticAPM.ServerURL"
+            value: $(elasticAPM-ServerURL)
+          - name: "ElasticAPM.ServiceName"
+            value: $(elasticAPM-ServiceName)
         strategy:
           runOnce:
             deploy:
@@ -520,6 +536,14 @@ stages:
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
           - name: "EnsAuthConfiguration.TenantId"
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
+          - name: "ElasticAPM.ApiKey"
+            value: $(elasticAPM-ApiKey)
+          - name: "ElasticAPM.Environment"
+            value: $(elasticAPM-Environment)
+          - name: "ElasticAPM.ServerURL"
+            value: $(elasticAPM-ServerURL)
+          - name: "ElasticAPM.ServiceName"
+            value: $(elasticAPM-ServiceName)
         strategy:
           runOnce:
             deploy:
@@ -571,6 +595,14 @@ stages:
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
           - name: "EnsAuthConfiguration.TenantId"
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
+          - name: "ElasticAPM.ApiKey"
+            value: $(elasticAPM-ApiKey)
+          - name: "ElasticAPM.Environment"
+            value: $(elasticAPM-Environment)
+          - name: "ElasticAPM.ServerURL"
+            value: $(elasticAPM-ServerURL)
+          - name: "ElasticAPM.ServiceName"
+            value: $(elasticAPM-ServiceName)
         strategy:
           runOnce:
             deploy:
@@ -689,6 +721,14 @@ stages:
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
           - name: "EnsAuthConfiguration.TenantId"
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
+          - name: "ElasticAPM.ApiKey"
+            value: $(elasticAPM-ApiKey)
+          - name: "ElasticAPM.Environment"
+            value: $(elasticAPM-Environment)
+          - name: "ElasticAPM.ServerURL"
+            value: $(elasticAPM-ServerURL)
+          - name: "ElasticAPM.ServiceName"
+            value: $(elasticAPM-ServiceName)
         strategy:
           runOnce:
             deploy:
