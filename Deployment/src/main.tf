@@ -61,6 +61,10 @@ module "webapp_service" {
     "EventGridDomainConfiguration:ResourceGroup"               = azurerm_resource_group.rg.name
     "EventGridDomainConfiguration:EventGridDomainName"         = module.eventgriddomain.event_grid_domain_name
     "WEBSITE_ADD_SITENAME_BINDINGS_IN_APPHOST_CONFIG"          = "1"
+    "ELASTIC_APM_SERVER_URL"                                   = var.elastic_apm_server_url
+    "ELASTIC_APM_API_KEY"                                      = var.elastic_apm_api_key
+    "ELASTIC_APM_ENVIRONMENT"                                  = var.elastic_apm_environment
+    "ELASTIC_APM_SERVICE_NAME"                                 = var.elastic_apm_webjob_service_name
   }
   app_settings_stub = {
     "ASPNETCORE_ENVIRONMENT"                               = local.env_name
