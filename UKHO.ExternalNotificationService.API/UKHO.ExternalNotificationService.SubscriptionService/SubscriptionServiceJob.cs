@@ -1,4 +1,6 @@
 ﻿using Azure.Storage.Queues.Models;
+using Elastic.Apm;
+using Elastic.Apm.Api;
 using Microsoft.Azure.Management.EventGrid.Models;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
@@ -48,77 +50,160 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
 
             SubscriptionRequestResult subscriptionRequestResult = new(subscriptionMessage);
             ExternalNotificationEntity externalNotificationEntity;
-            if (subscriptionMessage.IsActive)
+
+            await Agent.Tracer.CaptureTransaction("Subscription-Transaction", ApiConstants.TypeRequest, async () =>
             {
+                var transaction = Agent.Tracer.CurrentTransaction;
+
                 try
                 {
-                    eventSubscription = await _subscriptionServiceData.CreateOrUpdateSubscription(subscriptionMessage, CancellationToken.None);
-                    subscriptionRequestResult.ProvisioningState = "Succeeded";
+                    if (subscriptionMessage.IsActive)
+                    {
 
-                    externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, subscriptionMessage.IsActive, _d365CallbackConfiguration.Value.SucceededStatusCode);
+                        ISpan span = transaction.StartSpan("CreateSubscription", ApiConstants.TypeApp,
+                            ApiConstants.SubTypeInternal);
 
-                    _logger.LogInformation(EventIds.CreateSubscriptionRequestSuccess.ToEventId(),
-                 "Subscription provisioning request Succeeded for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+                        bool created = false;
+                        try
+                        {
+                            eventSubscription =
+                                await _subscriptionServiceData.CreateOrUpdateSubscription(subscriptionMessage,
+                                    CancellationToken.None);
+                            subscriptionRequestResult.ProvisioningState = "Succeeded";
+
+                            externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(
+                                subscriptionRequestResult, subscriptionMessage.IsActive,
+                                _d365CallbackConfiguration.Value.SucceededStatusCode);
+
+                            _logger.LogInformation(EventIds.CreateSubscriptionRequestSuccess.ToEventId(),
+                                "Subscription provisioning request Succeeded for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}",
+                                subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId,
+                                subscriptionMessage.CorrelationId);
+
+                            created = true;
+
+                        }
+                        catch (Exception e)
+                        {
+                            subscriptionRequestResult.ProvisioningState = "Failed";
+
+                            //Webhook validation handshake failure error
+                            if (e.Message.Contains("Webhook validation handshake failed"))
+                            {
+                                int startIndex = e.Message.IndexOf("Webhook validation handshake failed");
+                                subscriptionRequestResult.ErrorMessage =
+                                    e.Message.Substring(startIndex, e.Message.Length - startIndex);
+
+                                externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(
+                                    subscriptionRequestResult, subscriptionMessage.IsActive,
+                                    _d365CallbackConfiguration.Value.FailedStatusCode);
+
+                                _logger.LogError(EventIds.CreateSubscriptionRequestHandshakeFailureError.ToEventId(),
+                                    "Subscription provisioning request failed with Webhook handshake failure error with Exception:{e} for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}",
+                                    e.Message, subscriptionRequestResult.SubscriptionId,
+                                    subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+                            }
+                            //other potential errors
+                            else
+                            {
+                                subscriptionRequestResult.ErrorMessage = e.Message;
+                                externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(
+                                    subscriptionRequestResult, subscriptionMessage.IsActive,
+                                    _d365CallbackConfiguration.Value.FailedStatusCode);
+
+                                _logger.LogError(EventIds.CreateSubscriptionRequestOtherError.ToEventId(),
+                                    "Subscription provisioning request failed with other error with Exception:{e} for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}",
+                                    e.Message, subscriptionRequestResult.SubscriptionId,
+                                    subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+                            }
+
+                            span?.CaptureException(e);
+
+                        }
+                        finally
+                        {
+                            transaction?.SetLabel("SubscriptionCreated", created);
+                            span?.End();
+                        }
+                    }
+                    //delete the subscription if status is Inactive
+                    else
+                    {
+                        ISpan span = transaction.StartSpan("DeleteSubscription", ApiConstants.TypeApp,
+                            ApiConstants.SubTypeInternal);
+
+                        bool deleted = false;
+
+                        try
+                        {
+                            await _subscriptionServiceData.DeleteSubscription(subscriptionMessage,
+                                CancellationToken.None);
+                            subscriptionRequestResult.ProvisioningState = "Succeeded";
+
+                            externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(
+                                subscriptionRequestResult, subscriptionMessage.IsActive,
+                                _d365CallbackConfiguration.Value.SucceededStatusCode);
+
+                            _logger.LogInformation(EventIds.DeleteSubscriptionRequestSuccess.ToEventId(),
+                                "Delete Event Grid Domain Subscription request Succeeded for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}",
+                                subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId,
+                                subscriptionMessage.CorrelationId);
+
+                            deleted = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            subscriptionRequestResult.ProvisioningState = "Failed";
+                            subscriptionRequestResult.ErrorMessage = ex.Message;
+
+                            externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(
+                                subscriptionRequestResult, subscriptionMessage.IsActive,
+                                _d365CallbackConfiguration.Value.FailedStatusCode);
+
+                            _logger.LogError(EventIds.DeleteSubscriptionRequestError.ToEventId(),
+                                "Delete Event Grid Domain Subscription request failed with error with Exception:{ex} for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}",
+                                ex.Message, subscriptionRequestResult.SubscriptionId,
+                                subscriptionMessage.D365CorrelationId,
+                                subscriptionMessage.CorrelationId);
+
+                            span?.CaptureException(ex);
+                        }
+                        finally
+                        {
+                            transaction?.SetLabel("SubscriptionDeleted", deleted);
+                            span?.End();
+                        }
+                    }
+
+                    //Callback to D365
+                    _logger.LogInformation(EventIds.CallbackToD365Started.ToEventId(),
+                        "Callback to D365 using Dataverse start with ResponseStatusCode:{ResponseStatusCode} and ResponseDetails:{externalNotificationEntity} for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}",
+                        externalNotificationEntity.ResponseStatusCode, externalNotificationEntity.ResponseDetails,
+                        subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId,
+                        subscriptionMessage.CorrelationId);
+
+                    string entityPath = $"ukho_externalnotifications({subscriptionMessage.SubscriptionId})";
+                    await _callbackService.CallbackToD365UsingDataverse(entityPath, externalNotificationEntity,
+                        subscriptionMessage);
+
+                    _logger.LogInformation(EventIds.CreateSubscriptionRequestCompleted.ToEventId(),
+                        "Subscription provisioning request Completed for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}",
+                        subscriptionMessage.SubscriptionId, subscriptionMessage.D365CorrelationId,
+                        subscriptionMessage.CorrelationId);
                 }
                 catch (Exception e)
                 {
-                    subscriptionRequestResult.ProvisioningState = "Failed";
-
-                    //Webhook validation handshake failure error
-                    if (e.Message.Contains("Webhook validation handshake failed"))
-                    {
-                        int startIndex = e.Message.IndexOf("Webhook validation handshake failed");
-                        subscriptionRequestResult.ErrorMessage = e.Message.Substring(startIndex, e.Message.Length - startIndex);
-
-                        externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, subscriptionMessage.IsActive, _d365CallbackConfiguration.Value.FailedStatusCode);
-
-                        _logger.LogError(EventIds.CreateSubscriptionRequestHandshakeFailureError.ToEventId(),
-                  "Subscription provisioning request failed with Webhook handshake failure error with Exception:{e} for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", e.Message, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
-                    }
-                    //other potential errors
-                    else
-                    {
-                        subscriptionRequestResult.ErrorMessage = e.Message;
-                        externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, subscriptionMessage.IsActive, _d365CallbackConfiguration.Value.FailedStatusCode);
-
-                        _logger.LogError(EventIds.CreateSubscriptionRequestOtherError.ToEventId(),
-                  "Subscription provisioning request failed with other error with Exception:{e} for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", e.Message, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
-                    }
+                    transaction?.CaptureException(e);
+                    throw;
                 }
-            }
-            //delete the subscription if status is Inactive
-            else
-            {
-                try
+                finally
                 {
-                    await _subscriptionServiceData.DeleteSubscription(subscriptionMessage, CancellationToken.None);
-                    subscriptionRequestResult.ProvisioningState = "Succeeded";
-
-                    externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, subscriptionMessage.IsActive, _d365CallbackConfiguration.Value.SucceededStatusCode);
-
-                    _logger.LogInformation(EventIds.DeleteSubscriptionRequestSuccess.ToEventId(),
-                 "Delete Event Grid Domain Subscription request Succeeded for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+                    transaction?.End();
                 }
-                catch (Exception ex)
-                {
-                    subscriptionRequestResult.ProvisioningState = "Failed";
-                    subscriptionRequestResult.ErrorMessage = ex.Message;
 
-                    externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, subscriptionMessage.IsActive, _d365CallbackConfiguration.Value.FailedStatusCode);
+               
 
-                    _logger.LogError(EventIds.DeleteSubscriptionRequestError.ToEventId(),
-                  "Delete Event Grid Domain Subscription request failed with error with Exception:{ex} for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", ex.Message, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
-                }
-            }
-            //Callback to D365
-            _logger.LogInformation(EventIds.CallbackToD365Started.ToEventId(),
-              "Callback to D365 using Dataverse start with ResponseStatusCode:{ResponseStatusCode} and ResponseDetails:{externalNotificationEntity} for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", externalNotificationEntity.ResponseStatusCode, externalNotificationEntity.ResponseDetails, subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
-
-                string entityPath = $"ukho_externalnotifications({subscriptionMessage.SubscriptionId})";
-                await _callbackService.CallbackToD365UsingDataverse(entityPath, externalNotificationEntity, subscriptionMessage);            
-            
-            _logger.LogInformation(EventIds.CreateSubscriptionRequestCompleted.ToEventId(),
-                    "Subscription provisioning request Completed for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionMessage.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
+            });
         }
 
         public async Task ProcessDeadLetterMessage([BlobTrigger("%SubscriptionStorageConfiguration:StorageContainerName%/{filePath}")] Stream myBlob, string filePath)

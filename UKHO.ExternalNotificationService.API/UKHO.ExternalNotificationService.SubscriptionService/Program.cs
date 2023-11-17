@@ -1,4 +1,7 @@
 ﻿using Azure.Identity;
+using Elastic.Apm;
+using Elastic.Apm.Azure.Storage;
+using Elastic.Apm.DiagnosticSource;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Configuration;
@@ -11,6 +14,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Helpers;
 using UKHO.ExternalNotificationService.SubscriptionService.Configuration;
@@ -25,15 +29,18 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
     {
         private static IConfiguration s_configurationBuilder;
         private static readonly string s_assemblyVersion = Assembly.GetExecutingAssembly().GetCustomAttributes<AssemblyFileVersionAttribute>().Single().Version;
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            HostBuilder hostBuilder = BuildHostConfiguration();
+            //Elastic APM
+            Agent.Subscribe(new HttpDiagnosticsSubscriber());
+            Agent.Subscribe(new AzureBlobStorageDiagnosticsSubscriber());
 
+            HostBuilder hostBuilder = BuildHostConfiguration();
             IHost host = hostBuilder.Build();
 
             using (host)
             {
-                host.Run();
+                await host.RunAsync();
             }
         }
 

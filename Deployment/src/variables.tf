@@ -85,3 +85,19 @@ variable "core_services_rg" {
 variable "allowed_ips" {
   type = list
 }
+
+variable "elastic_apm_server_url" {
+  type = string
+}
+
+variable "elastic_apm_api_key" {
+  type = string
+}
+
+variable "elastic_apm_environment" {
+  type = string
+}
+
+variable "elastic_apm_service_name" {
+  type = string
+}
