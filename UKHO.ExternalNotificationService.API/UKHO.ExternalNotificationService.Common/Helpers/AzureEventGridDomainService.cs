@@ -74,7 +74,6 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
                                                   new AzureKeyCredential(_eventGridDomainConfig.EventGridDomainAccessKey));
             List<CloudEvent> listCloudEvent = new() { cloudEvent };
 
-            _logger.LogInformation(EventIds.ENSEventPublishStart.ToEventId(), "Debug values: {debugvalue},{endpoint} and _X-Correlation-ID:{correlationId}.", _eventGridDomainConfig.EventGridDomainAccessKey, _eventGridDomainConfig.EventGridDomainEndpoint, correlationId);
 
             try
             {
