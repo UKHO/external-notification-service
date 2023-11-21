@@ -337,4 +337,13 @@
     <packageUrl regex="true">^pkg:generic/Elastic\.Apm@.*$</packageUrl>
     <cpe>cpe:/a:elastic:elastic_agent</cpe>
   </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Various Azure.
+   Refers to Azure CLI.
+   ]]>
+    </notes>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
 </suppressions>
