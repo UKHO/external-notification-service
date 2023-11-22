@@ -51,19 +51,10 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
             SubscriptionRequestResult subscriptionRequestResult = new(subscriptionMessage);
             ExternalNotificationEntity externalNotificationEntity;
 
-            await Agent.Tracer.CaptureTransaction("Subscription-Transaction", ApiConstants.TypeRequest, async () =>
-            {
-                var transaction = Agent.Tracer.CurrentTransaction;
-
                 try
                 {
                     if (subscriptionMessage.IsActive)
                     {
-
-                        ISpan span = transaction.StartSpan("CreateSubscription", ApiConstants.TypeApp,
-                            ApiConstants.SubTypeInternal);
-
-                        bool created = false;
                         try
                         {
                             eventSubscription =
@@ -79,8 +70,6 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                                 "Subscription provisioning request Succeeded for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}",
                                 subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId,
                                 subscriptionMessage.CorrelationId);
-
-                            created = true;
 
                         }
                         catch (Exception e)
@@ -117,22 +106,15 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                                     subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
                             }
 
-                            span?.CaptureException(e);
-
                         }
                         finally
                         {
-                            transaction?.SetLabel("SubscriptionCreated", created);
-                            span?.End();
+
                         }
                     }
                     //delete the subscription if status is Inactive
                     else
                     {
-                        ISpan span = transaction.StartSpan("DeleteSubscription", ApiConstants.TypeApp,
-                            ApiConstants.SubTypeInternal);
-
-                        bool deleted = false;
 
                         try
                         {
@@ -149,7 +131,6 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                                 subscriptionRequestResult.SubscriptionId, subscriptionMessage.D365CorrelationId,
                                 subscriptionMessage.CorrelationId);
 
-                            deleted = true;
                         }
                         catch (Exception ex)
                         {
@@ -166,12 +147,10 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                                 subscriptionMessage.D365CorrelationId,
                                 subscriptionMessage.CorrelationId);
 
-                            span?.CaptureException(ex);
                         }
                         finally
                         {
-                            transaction?.SetLabel("SubscriptionDeleted", deleted);
-                            span?.End();
+
                         }
                     }
 
@@ -193,17 +172,12 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                 }
                 catch (Exception e)
                 {
-                    transaction?.CaptureException(e);
                     throw;
                 }
                 finally
                 {
-                    transaction?.End();
+
                 }
-
-               
-
-            });
         }
 
         public async Task ProcessDeadLetterMessage([BlobTrigger("%SubscriptionStorageConfiguration:StorageContainerName%/{filePath}")] Stream myBlob, string filePath)
