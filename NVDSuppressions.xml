@@ -385,7 +385,7 @@
     <notes>
       <![CDATA[
    file name: Elastic.Apm.dll
-   False positive - impacts Java or Python
+   False positive - impacts Java or Python.
    ]]>
     </notes>
     <packageUrl regex="true">^pkg:generic/Elastic\.Apm@.*$</packageUrl>
