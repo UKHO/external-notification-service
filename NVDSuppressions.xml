@@ -395,127 +395,271 @@
   <suppress>
     <notes>
       <![CDATA[
-   file name: Microsoft.Extensions.Azure.dll
+   file name: Azure.Core.dll
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:generic/Microsoft\.Extensions\.Azure@.*$</packageUrl>
+    <packageUrl regex="true">^pkg:generic/Azure\.Core@.*$</packageUrl>
     <cpe>cpe:/a:microsoft:azure_cli</cpe>
   </suppress>
   <suppress>
     <notes>
       <![CDATA[
-   file name: Microsoft.Extensions.Azure.dll
+   file name: Azure.Core.dll
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:generic/Microsoft\.Extensions\.Azure@.*$</packageUrl>
+    <packageUrl regex="true">^pkg:generic/Azure\.Core@.*$</packageUrl>
     <cpe>cpe:/a:microsoft:azure_sdk_for_.net</cpe>
   </suppress>
   <suppress>
     <notes>
       <![CDATA[
-   file name: Microsoft.Extensions.Azure.dll
+   file name: Azure.Core.dll
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:generic/Microsoft\.Extensions\.Azure@.*$</packageUrl>
+    <packageUrl regex="true">^pkg:generic/Azure\.Core@.*$</packageUrl>
     <cve>CVE-2023-36052</cve>
   </suppress>
   <suppress>
     <notes>
       <![CDATA[
-   file name: Microsoft.Extensions.Azure.dll
+   file name: Azure.Core.dll
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:generic/Microsoft\.Extensions\.Azure@.*$</packageUrl>
+    <packageUrl regex="true">^pkg:generic/Azure\.Core@.*$</packageUrl>
     <cpe>cpe:/a:microsoft:azure_cli</cpe>
   </suppress>
   <suppress>
     <notes>
       <![CDATA[
-   file name: Microsoft.Extensions.Azure.dll
+   file name: Azure.Core.dll
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:generic/Microsoft\.Extensions\.Azure@.*$</packageUrl>
+    <packageUrl regex="true">^pkg:generic/Azure\.Core@.*$</packageUrl>
     <cpe>cpe:/a:microsoft:azure_sdk_for_.net</cpe>
   </suppress>
   <suppress>
     <notes>
       <![CDATA[
-   file name: Microsoft.Extensions.Azure.dll
+   file name: Azure.Core.dll
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:generic/Microsoft\.Extensions\.Azure@.*$</packageUrl>
+    <packageUrl regex="true">^pkg:generic/Azure\.Core@.*$</packageUrl>
     <cve>CVE-2023-36052</cve>
   </suppress>
   <suppress>
     <notes>
       <![CDATA[
-   file name: Microsoft.Extensions.Azure:1.1.1
+   file name: Azure.Core.dll
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:nuget/Microsoft\.Extensions\.Azure@.*$</packageUrl>
+    <packageUrl regex="true">^pkg:generic/Azure\.Core@.*$</packageUrl>
     <cpe>cpe:/a:microsoft:azure_cli</cpe>
   </suppress>
   <suppress>
     <notes>
       <![CDATA[
-   file name: Microsoft.Extensions.Azure:1.1.1
+   file name: Azure.Core.dll
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:nuget/Microsoft\.Extensions\.Azure@.*$</packageUrl>
+    <packageUrl regex="true">^pkg:generic/Azure\.Core@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_sdk_for_.net</cpe>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Core.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Azure\.Core@.*$</packageUrl>
     <cve>CVE-2023-36052</cve>
   </suppress>
   <suppress>
     <notes>
       <![CDATA[
-   file name: Microsoft.Extensions.Azure:1.6.3
+   file name: Azure.Core.dll
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:nuget/Microsoft\.Extensions\.Azure@.*$</packageUrl>
+    <packageUrl regex="true">^pkg:generic/Azure\.Core@.*$</packageUrl>
     <cpe>cpe:/a:microsoft:azure_cli</cpe>
   </suppress>
   <suppress>
     <notes>
       <![CDATA[
-   file name: Microsoft.Extensions.Azure:1.6.3
+   file name: Azure.Core.dll
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:nuget/Microsoft\.Extensions\.Azure@.*$</packageUrl>
+    <packageUrl regex="true">^pkg:generic/Azure\.Core@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_sdk_for_.net</cpe>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Core.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Azure\.Core@.*$</packageUrl>
     <cve>CVE-2023-36052</cve>
   </suppress>
   <suppress>
     <notes>
       <![CDATA[
-   file name: dotnet-getdocument.dll
+   file name: Azure.Core:1.30.0
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:generic/dotnet\-getdocument@.*$</packageUrl>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Core@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Core:1.30.0
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Core@.*$</packageUrl>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Core:1.31.0
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Core@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Core:1.31.0
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Core@.*$</packageUrl>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Core:1.35.0
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Core@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Core:1.35.0
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Core@.*$</packageUrl>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Core:1.36.0
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Core@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Core:1.36.0
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Core@.*$</packageUrl>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Identity:1.10.3
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Identity@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Identity:1.10.3
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Identity@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_identity_sdk</cpe>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Identity:1.10.3
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Identity@.*$</packageUrl>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: GetDocument.Insider.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/GetDocument\.Insider@.*$</packageUrl>
     <cpe>cpe:/a:microsoft:.net_core</cpe>
   </suppress>
   <suppress>
     <notes>
       <![CDATA[
-   file name: dotnet-getdocument.dll
+   file name: GetDocument.Insider.dll
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:generic/dotnet\-getdocument@.*$</packageUrl>
+    <packageUrl regex="true">^pkg:generic/GetDocument\.Insider@.*$</packageUrl>
     <cpe>cpe:/a:microsoft:asp.net</cpe>
   </suppress>
   <suppress>
     <notes>
       <![CDATA[
-   file name: dotnet-getdocument.dll
+   file name: GetDocument.Insider.dll
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:generic/dotnet\-getdocument@.*$</packageUrl>
+    <packageUrl regex="true">^pkg:generic/GetDocument\.Insider@.*$</packageUrl>
     <cpe>cpe:/a:microsoft:asp.net_core</cpe>
   </suppress>
   <suppress>
     <notes>
       <![CDATA[
-   file name: dotnet-getdocument.dll
+   file name: GetDocument.Insider.dll
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:generic/dotnet\-getdocument@.*$</packageUrl>
+    <packageUrl regex="true">^pkg:generic/GetDocument\.Insider@.*$</packageUrl>
     <cve>CVE-2023-36558</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Azure.Services.AppAuthentication.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Azure\.Services\.AppAuthentication@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_active_directory</cpe>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Azure.Services.AppAuthentication.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Azure\.Services\.AppAuthentication@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Azure.Services.AppAuthentication.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Azure\.Services\.AppAuthentication@.*$</packageUrl>
+    <cve>CVE-2023-36052</cve>
   </suppress>
 </suppressions>
