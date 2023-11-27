@@ -12,7 +12,7 @@
     <PackageReference Include="Elastic.Apm" Version="1.25.1" />
     <PackageReference Include="Elastic.Apm.Azure.Storage" Version="1.25.1" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage" Version="5.2.1" />
-    <PackageReference Include="Microsoft.Azure.WebJobs.Host.Storage" Version="4.1.0" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Host.Storage" Version="5.0.0" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Logging.ApplicationInsights" Version="3.0.35" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
