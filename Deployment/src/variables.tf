@@ -97,7 +97,3 @@ variable "elastic_apm_api_key" {
 variable "elastic_apm_environment" {
   type = string
 }
-
-variable "elastic_apm_service_name" {
-  type = string
-}

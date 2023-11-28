@@ -7,7 +7,6 @@ param (
     [Parameter(Mandatory = $true)] [string] $elasticApmServerUrl,
     [Parameter(Mandatory = $true)] [string] $elasticApmApiKey,
     [Parameter(Mandatory = $true)] [string] $elasticApmEnvironment,
-    [Parameter(Mandatory = $true)] [string] $elasticApmWebJobServiceName
 )
 
 cd $env:AGENT_BUILDDIRECTORY/terraformartifact/src
@@ -32,7 +31,7 @@ terraform validate
 if ( !$? ) { echo "Something went wrong during terraform validation" ; throw "Error" }
 
 Write-output "Execute Terraform plan"
-terraform plan -out "terraform.deployment.tfplan" -var elastic_apm_server_url=$elasticApmServerUrl -var elastic_apm_api_key=$elasticApmApiKey -var elastic_apm_environment=$elasticApmEnvironment -var elastic_apm_service_name=$elasticApmWebJobServiceName | tee terraform_output.txt
+terraform plan -out "terraform.deployment.tfplan" -var elastic_apm_server_url=$elasticApmServerUrl -var elastic_apm_api_key=$elasticApmApiKey -var elastic_apm_environment=$elasticApmEnvironment | tee terraform_output.txt
 if ( !$? ) { echo "Something went wrong during terraform plan" ; throw "Error" }
 
 $totalDestroyLines=(Get-Content -Path terraform_output.txt | Select-String -Pattern "destroy" -CaseSensitive |  where {$_ -ne ""}).length

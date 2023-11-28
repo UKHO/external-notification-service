@@ -64,7 +64,7 @@ module "webapp_service" {
     "ELASTIC_APM_SERVER_URL"                                   = var.elastic_apm_server_url
     "ELASTIC_APM_API_KEY"                                      = var.elastic_apm_api_key
     "ELASTIC_APM_ENVIRONMENT"                                  = var.elastic_apm_environment
-    "ELASTIC_APM_SERVICE_NAME"                                 = var.elastic_apm_service_name
+    "ELASTIC_APM_SERVICE_NAME"                                 = "ENS Subscription Service"
   }
   app_settings_stub = {
     "ASPNETCORE_ENVIRONMENT"                               = local.env_name
