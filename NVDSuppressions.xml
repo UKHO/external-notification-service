@@ -264,6 +264,7 @@
     <notes>
       <![CDATA[
    file name: Azure.Core.dll
+   False positive - imapcts the Azure CLI
    ]]>
     </notes>
     <packageUrl regex="true">^pkg:generic/Azure\.Core@.*$</packageUrl>
@@ -276,6 +277,7 @@
     <notes>
       <![CDATA[
    file name: Azure.Core:1.36.0
+   False positive - imapcts the Azure CLI
    ]]>
     </notes>
     <packageUrl regex="true">^pkg:nuget/Azure\.Core@.*$</packageUrl>
@@ -286,6 +288,7 @@
     <notes>
       <![CDATA[
    file name: Azure.Identity:1.10.3
+   False positive - imapcts the Azure CLI
    ]]>
     </notes>
     <packageUrl regex="true">^pkg:nuget/Azure\.Identity@.*$</packageUrl>
@@ -296,19 +299,8 @@
   <suppress>
     <notes>
       <![CDATA[
-   file name: GetDocument.Insider.dll
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/GetDocument\.Insider@.*$</packageUrl>
-    <cpe>cpe:/a:microsoft:.net_core</cpe>
-    <cpe>cpe:/a:microsoft:asp.net</cpe>
-    <cpe>cpe:/a:microsoft:asp.net_core</cpe>
-    <cve>CVE-2023-36558</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
    file name: Microsoft.Azure.Services.AppAuthentication.dll
+   False positive - imapcts the Azure CLI
    ]]>
     </notes>
     <packageUrl regex="true">^pkg:generic/Microsoft\.Azure\.Services\.AppAuthentication@.*$</packageUrl>
@@ -320,6 +312,7 @@
     <notes>
       <![CDATA[
    file name: Microsoft.Extensions.Azure.dll
+   False positive - imapcts the Azure CLI
    ]]>
     </notes>
     <packageUrl regex="true">^pkg:generic/Microsoft\.Extensions\.Azure@.*$</packageUrl>
@@ -331,6 +324,7 @@
     <notes>
       <![CDATA[
    file name: Microsoft.Extensions.Azure:1.6.3
+   False positive - imapcts the Azure CLI
    ]]>
     </notes>
     <packageUrl regex="true">^pkg:nuget/Microsoft\.Extensions\.Azure@.*$</packageUrl>
@@ -340,7 +334,21 @@
   <suppress>
     <notes>
       <![CDATA[
+   file name: GetDocument.Insider.dll
+   False positive - this vulnerabilty impacts Blazor Server Forms
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/GetDocument\.Insider@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cpe>cpe:/a:microsoft:asp.net</cpe>
+    <cpe>cpe:/a:microsoft:asp.net_core</cpe>
+    <cve>CVE-2023-36558</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
    file name: dotnet-getdocument.dll
+   False positive - this vulnerabilty impacts Blazor Server Forms
    ]]>
     </notes>
     <packageUrl regex="true">^pkg:generic/dotnet\-getdocument@.*$</packageUrl>
