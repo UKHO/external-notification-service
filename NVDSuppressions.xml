@@ -190,16 +190,6 @@
   <suppress>
     <notes>
       <![CDATA[
-   file name: Microsoft.Azure.Services.AppAuthentication.dll
-   https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=68857
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Microsoft\.Azure\.Services\.AppAuthentication@.*$</packageUrl>
-    <cve>CVE-2021-42306</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
    file name: Microsoft.IdentityModel.Clients.ActiveDirectory.dll
    https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=68857
    ]]>
@@ -617,23 +607,7 @@
     </notes>
     <packageUrl regex="true">^pkg:generic/Microsoft\.Azure\.Services\.AppAuthentication@.*$</packageUrl>
     <cpe>cpe:/a:microsoft:azure_active_directory</cpe>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Microsoft.Azure.Services.AppAuthentication.dll
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Microsoft\.Azure\.Services\.AppAuthentication@.*$</packageUrl>
     <cpe>cpe:/a:microsoft:azure_cli</cpe>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Microsoft.Azure.Services.AppAuthentication.dll
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Microsoft\.Azure\.Services\.AppAuthentication@.*$</packageUrl>
     <cve>CVE-2023-36052</cve>
   </suppress>
   <suppress>
