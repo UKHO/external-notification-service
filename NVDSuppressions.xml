@@ -200,26 +200,6 @@
   <suppress>
     <notes>
       <![CDATA[
-   file name: GetDocument.Insider.dll
-   https://dev.azure.com/ukhydro/Abzu/_workitems/edit/100935
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/GetDocument\.Insider@.*$</packageUrl>
-    <cve>CVE-2023-44487</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: dotnet-getdocument.dll
-   https://dev.azure.com/ukhydro/Abzu/_workitems/edit/100935
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/dotnet\-getdocument@.*$</packageUrl>
-    <cve>CVE-2023-44487</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
    file name: Serilog.Extensions.Logging.File.dll
    False positive - applies to LINE app for Android and iOS
    ]]>
@@ -571,32 +551,8 @@
     </notes>
     <packageUrl regex="true">^pkg:generic/GetDocument\.Insider@.*$</packageUrl>
     <cpe>cpe:/a:microsoft:.net_core</cpe>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: GetDocument.Insider.dll
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/GetDocument\.Insider@.*$</packageUrl>
     <cpe>cpe:/a:microsoft:asp.net</cpe>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: GetDocument.Insider.dll
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/GetDocument\.Insider@.*$</packageUrl>
     <cpe>cpe:/a:microsoft:asp.net_core</cpe>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: GetDocument.Insider.dll
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/GetDocument\.Insider@.*$</packageUrl>
     <cve>CVE-2023-36558</cve>
   </suppress>
   <suppress>
@@ -663,32 +619,8 @@
     </notes>
     <packageUrl regex="true">^pkg:generic/dotnet\-getdocument@.*$</packageUrl>
     <cpe>cpe:/a:microsoft:.net_core</cpe>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: dotnet-getdocument.dll
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/dotnet\-getdocument@.*$</packageUrl>
     <cpe>cpe:/a:microsoft:asp.net</cpe>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: dotnet-getdocument.dll
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/dotnet\-getdocument@.*$</packageUrl>
     <cpe>cpe:/a:microsoft:asp.net_core</cpe>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: dotnet-getdocument.dll
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/dotnet\-getdocument@.*$</packageUrl>
     <cve>CVE-2023-36558</cve>
   </suppress>
 </suppressions>
