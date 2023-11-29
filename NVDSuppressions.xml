@@ -170,16 +170,6 @@
   <suppress>
     <notes>
       <![CDATA[
-   file name: Azure.Identity:1.10.3
-   False positive - fixed >= 1.10.2
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:nuget/Azure\.Identity@.*$</packageUrl>
-    <cve>CVE-2023-36415</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
    file name: Microsoft.Azure.EventGrid:3.2.1
    https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=68857
    ]]>
@@ -580,23 +570,7 @@
     </notes>
     <packageUrl regex="true">^pkg:nuget/Azure\.Identity@.*$</packageUrl>
     <cpe>cpe:/a:microsoft:azure_cli</cpe>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Azure.Identity:1.10.3
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:nuget/Azure\.Identity@.*$</packageUrl>
     <cpe>cpe:/a:microsoft:azure_identity_sdk</cpe>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Azure.Identity:1.10.3
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:nuget/Azure\.Identity@.*$</packageUrl>
     <cve>CVE-2023-36052</cve>
   </suppress>
   <suppress>
