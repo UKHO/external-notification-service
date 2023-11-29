@@ -170,16 +170,6 @@
   <suppress>
     <notes>
       <![CDATA[
-   file name: Azure.Identity:1.10.3
-   False positive - fixed >= 1.10.2
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:nuget/Azure\.Identity@.*$</packageUrl>
-    <cve>CVE-2023-36415</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
    file name: Microsoft.Azure.EventGrid:3.2.1
    https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=68857
    ]]>
@@ -200,42 +190,12 @@
   <suppress>
     <notes>
       <![CDATA[
-   file name: Microsoft.Azure.Services.AppAuthentication.dll
-   https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=68857
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Microsoft\.Azure\.Services\.AppAuthentication@.*$</packageUrl>
-    <cve>CVE-2021-42306</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
    file name: Microsoft.IdentityModel.Clients.ActiveDirectory.dll
    https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=68857
    ]]>
     </notes>
     <packageUrl regex="true">^pkg:generic/Microsoft\.IdentityModel\.Clients\.ActiveDirectory@.*$</packageUrl>
     <cve>CVE-2021-42306</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: GetDocument.Insider.dll
-   https://dev.azure.com/ukhydro/Abzu/_workitems/edit/100935
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/GetDocument\.Insider@.*$</packageUrl>
-    <cve>CVE-2023-44487</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: dotnet-getdocument.dll
-   https://dev.azure.com/ukhydro/Abzu/_workitems/edit/100935
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/dotnet\-getdocument@.*$</packageUrl>
-    <cve>CVE-2023-44487</cve>
   </suppress>
   <suppress>
     <notes>
@@ -256,46 +216,8 @@
     </notes>
     <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.AspNetCore@.*$</packageUrl>
     <cpe>cpe:/a:asp-project:asp-project</cpe>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Elastic.Apm.AspNetCore.dll
-   False positive - impacts Java or Python
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.AspNetCore@.*$</packageUrl>
     <cpe>cpe:/a:elastic:apm_agent</cpe>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Elastic.Apm.AspNetCore.dll
-   False positive - impacts Java or Python
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.AspNetCore@.*$</packageUrl>
     <cpe>cpe:/a:elastic:elastic_agent</cpe>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Elastic.Apm.AspNetCore.dll
-   False positive - impacts Java or Python
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.AspNetCore@.*$</packageUrl>
-    <cve>CVE-2021-37941</cve>
-    <cve>CVE-2019-7617</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Elastic.Apm.Extensions.Hosting.dll
-   False positive - impacts Java or Python
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.Extensions\.Hosting@.*$</packageUrl>
     <cve>CVE-2021-37941</cve>
     <cve>CVE-2019-7617</cve>
   </suppress>
@@ -308,25 +230,7 @@
     </notes>
     <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.Extensions\.Hosting@.*$</packageUrl>
     <cpe>cpe:/a:elastic:apm_agent</cpe>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Elastic.Apm.Extensions.Hosting.dll
-   False positive - impacts Java or Python
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.Extensions\.Hosting@.*$</packageUrl>
     <cpe>cpe:/a:elastic:elastic_agent</cpe>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Elastic.Apm.Extensions.Hosting.dll
-   False positive - impacts Java or Python
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.Extensions\.Hosting@.*$</packageUrl>
     <cve>CVE-2021-37941</cve>
     <cve>CVE-2019-7617</cve>
   </suppress>
@@ -339,25 +243,7 @@
     </notes>
     <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.Extensions\.Logging@.*$</packageUrl>
     <cpe>cpe:/a:elastic:apm_agent</cpe>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Elastic.Apm.Extensions.Logging.dll
-   False positive - impacts Java or Python
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.Extensions\.Logging@.*$</packageUrl>
     <cpe>cpe:/a:elastic:elastic_agent</cpe>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Elastic.Apm.Extensions.Logging.dll
-   False positive - impacts Java or Python
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.Extensions\.Logging@.*$</packageUrl>
     <cve>CVE-2021-37941</cve>
     <cve>CVE-2019-7617</cve>
   </suppress>
@@ -370,26 +256,105 @@
     </notes>
     <packageUrl regex="true">^pkg:generic/Elastic\.Apm@.*$</packageUrl>
     <cpe>cpe:/a:elastic:apm_agent</cpe>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Elastic.Apm.dll
-   False positive - impacts Java or Python
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Elastic\.Apm@.*$</packageUrl>
     <cpe>cpe:/a:elastic:elastic_agent</cpe>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Elastic.Apm.dll
-   False positive - impacts Java or Python
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Elastic\.Apm@.*$</packageUrl>
     <cve>CVE-2021-37941</cve>
     <cve>CVE-2019-7617</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Core.dll
+   False positive - imapcts the Azure CLI
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Azure\.Core@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+    <cpe>cpe:/a:microsoft:azure_sdk_for_.net</cpe>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Core:1.36.0
+   False positive - imapcts the Azure CLI
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Core@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Identity:1.10.3
+   False positive - imapcts the Azure CLI
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Identity@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+    <cpe>cpe:/a:microsoft:azure_identity_sdk</cpe>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Azure.Services.AppAuthentication.dll
+   False positive - imapcts the Azure CLI
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Azure\.Services\.AppAuthentication@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_active_directory</cpe>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Extensions.Azure.dll
+   False positive - imapcts the Azure CLI
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Extensions\.Azure@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+    <cpe>cpe:/a:microsoft:azure_sdk_for_.net</cpe>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Extensions.Azure:1.6.3
+   False positive - imapcts the Azure CLI
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Microsoft\.Extensions\.Azure@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: GetDocument.Insider.dll
+   False positive - this vulnerabilty impacts Blazor Server Forms
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/GetDocument\.Insider@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cpe>cpe:/a:microsoft:asp.net</cpe>
+    <cpe>cpe:/a:microsoft:asp.net_core</cpe>
+    <cve>CVE-2023-36558</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: dotnet-getdocument.dll
+   False positive - this vulnerabilty impacts Blazor Server Forms
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/dotnet\-getdocument@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cpe>cpe:/a:microsoft:asp.net</cpe>
+    <cpe>cpe:/a:microsoft:asp.net_core</cpe>
+    <cve>CVE-2023-36558</cve>
   </suppress>
 </suppressions>
