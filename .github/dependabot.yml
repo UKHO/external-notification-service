@@ -16,6 +16,7 @@ updates:
     schedule:
       interval: "weekly"
     ignore:
+      - dependency-name: "Azure*"
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
     groups:
