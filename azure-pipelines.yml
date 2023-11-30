@@ -516,6 +516,7 @@ stages:
     condition: and(succeeded(), eq('${{ parameters.VNext }}', true))
     jobs:
       - job: DeployE2EApplication
+        steps:
         - deployment: E2EvNextDeployApp
           displayName: E2EvNext - deploy terraform and dotnet App
           environment: "Ens-E2EvNext"
@@ -562,7 +563,10 @@ stages:
                       APIMServiceInstance: $(APIM_SERVICE_NAME)
                       tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
                       tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
+
       - job: RunE2ETests
+        dependsOn: DeployE2EApplication
+        steps:
         - template: Deployment/templates/functional-test-process.yml
           parameters:
             TestTitle: "E2E-AutomationTests"
