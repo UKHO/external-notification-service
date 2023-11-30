@@ -565,6 +565,9 @@ stages:
 
       - job: RunE2ETests
         dependsOn: E2EvNextDeployApp
+        environment: "Ens-E2EvNext"
+        pool: $(DeploymentPool)
+        container: ${{variables.Container}}
         variables:
           - group: "ENS-IAT-VNext-TF-Variables"
           - group: "ENS-IAT-VNext-Variables"
