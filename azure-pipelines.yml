@@ -514,8 +514,8 @@ stages:
     displayName: E2EvNextDeploy (inc terraform, webapp deploy)
     #condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     condition: and(succeeded(), eq('${{ parameters.VNext }}', true))
-    #condition: eq('${{ parameters.VNext }}', true)
     jobs:
+      job:
       - deployment: E2EvNextDeployApp
         displayName: E2EvNext - deploy terraform and dotnet App
         environment: "Ens-E2EvNext"
@@ -562,10 +562,10 @@ stages:
                     APIMServiceInstance: $(APIM_SERVICE_NAME)
                     tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
                     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
-
-                - template: Deployment/templates/functional-test-process.yml
-                  parameters:
-                    TestTitle: "E2E-AutomationTests"
+      job:
+      - template: Deployment/templates/functional-test-process.yml
+        parameters:
+          TestTitle: "E2E-AutomationTests"
                 
 
   - stage: QAdeploy
@@ -697,7 +697,6 @@ stages:
   - stage: Livedeploy
     dependsOn:
       - QADeploy
-      - E2EvNextDeploy
     displayName: Livedeploy (inc terraform, webapp deploy)
     condition: and(or(succeeded('QADeploy'),and(eq('${{ parameters.VNext }}', true), succeeded('E2EvNextDeploy'))), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))	
     jobs:
