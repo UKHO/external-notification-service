@@ -516,9 +516,10 @@ stages:
     condition: and(succeeded(), eq('${{ parameters.VNext }}', true))
     jobs:
       - job: E2EvNextDeployApp
+        displayName: E2EvNext - deploy terraform and dotnet App
         steps:
-        - displayName: E2EvNext - deploy terraform and dotnet App
-          environment: "Ens-E2EvNext"
+        # - displayName: E2EvNext - deploy terraform and dotnet App
+        - environment: "Ens-E2EvNext"
           pool: $(DeploymentPool)
           container: ${{variables.Container}}
           workspace:
