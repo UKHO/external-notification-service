@@ -565,7 +565,7 @@ stages:
                       tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
 
 
-      - job: RunE2ETestsJob
+      - jib: RunE2ETestsJob
         dependsOn: DeployE2EApplication
         steps:
         - template: Deployment/templates/functional-test-process.yml
