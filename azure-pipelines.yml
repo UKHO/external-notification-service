@@ -515,57 +515,57 @@ stages:
     #condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     condition: and(succeeded(), eq('${{ parameters.VNext }}', true))
     jobs:
-      job: DeployE2EApplication
-      - deployment: E2EvNextDeployApp
-        displayName: E2EvNext - deploy terraform and dotnet App
-        environment: "Ens-E2EvNext"
-        pool: $(DeploymentPool)
-        container: ${{variables.Container}}
-        workspace:
-          clean: all
-        variables:
-          - group: "ENS-E2E-VNext-TF-Variables"
-          - group: "ENS-E2E-VNext-Variables"
-          - name: "D365AuthConfiguration.TenantId"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
-          - name: "D365AuthConfiguration.ClientId"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
-          - name: "D365AuthConfiguration.ClientSecret"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
-          - name: "EnsAuthConfiguration.ClientId"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
-          - name: "EnsAuthConfiguration.TenantId"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
-          - name: "ElasticAPM.ApiKey"
-            value: $(elasticAPM-ApiKey)
-          - name: "ElasticAPM.Environment"
-            value: $(elasticAPM-Environment)
-          - name: "ElasticAPM.ServerURL"
-            value: $(elasticAPM-ServerURL)
-          - name: "ElasticAPM.ServiceName"
-            value: $(elasticAPM-ServiceName)
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - template: Deployment/templates/continuous-deployment.yml
-                  parameters:
-                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "External Notification Service vNext E2E - A.011.08"
+      - job: DeployE2EApplication
+        - deployment: E2EvNextDeployApp
+          displayName: E2EvNext - deploy terraform and dotnet App
+          environment: "Ens-E2EvNext"
+          pool: $(DeploymentPool)
+          container: ${{variables.Container}}
+          workspace:
+            clean: all
+          variables:
+            - group: "ENS-E2E-VNext-TF-Variables"
+            - group: "ENS-E2E-VNext-Variables"
+            - name: "D365AuthConfiguration.TenantId"
+              value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
+            - name: "D365AuthConfiguration.ClientId"
+              value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
+            - name: "D365AuthConfiguration.ClientSecret"
+              value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
+            - name: "EnsAuthConfiguration.ClientId"
+              value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
+            - name: "EnsAuthConfiguration.TenantId"
+              value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
+            - name: "ElasticAPM.ApiKey"
+              value: $(elasticAPM-ApiKey)
+            - name: "ElasticAPM.Environment"
+              value: $(elasticAPM-Environment)
+            - name: "ElasticAPM.ServerURL"
+              value: $(elasticAPM-ServerURL)
+            - name: "ElasticAPM.ServiceName"
+              value: $(elasticAPM-ServiceName)
+          strategy:
+            runOnce:
+              deploy:
+                steps:
+                  - template: Deployment/templates/continuous-deployment.yml
+                    parameters:
+                      ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+                      AzureSubscription: "External Notification Service vNext E2E - A.011.08"
 
-                - template: Deployment/templates/continuous-deployment-apim.yml
-                  parameters:
-                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "UKHO-APIM-Dev"
-                    TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
-                    APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
-                    APIMServiceInstance: $(APIM_SERVICE_NAME)
-                    tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
-                    tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
-      job: RunE2ETests
-      - template: Deployment/templates/functional-test-process.yml
-        parameters:
-          TestTitle: "E2E-AutomationTests"
+                  - template: Deployment/templates/continuous-deployment-apim.yml
+                    parameters:
+                      ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+                      AzureSubscription: "UKHO-APIM-Dev"
+                      TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
+                      APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
+                      APIMServiceInstance: $(APIM_SERVICE_NAME)
+                      tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
+                      tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
+      - job: RunE2ETests
+        - template: Deployment/templates/functional-test-process.yml
+          parameters:
+            TestTitle: "E2E-AutomationTests"
                 
 
   - stage: QAdeploy
