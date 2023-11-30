@@ -515,9 +515,9 @@ stages:
     #condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     condition: and(succeeded(), eq('${{ parameters.VNext }}', true))
     jobs:
-      - job: DeployE2EApplicationJob
+      - job: E2EvNextDeployApp
         steps:
-        - deployment: E2EvNextDeployApp
+        # - deployment: E2EvNextDeployApp
           displayName: E2EvNext - deploy terraform and dotnet App
           environment: "Ens-E2EvNext"
           pool: $(DeploymentPool)
@@ -565,8 +565,8 @@ stages:
                       tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
 
 
-      - jib: RunE2ETestsJob
-        dependsOn: DeployE2EApplication
+      - job: RunE2ETests
+        dependsOn: E2EvNextDeployApp
         steps:
         - template: Deployment/templates/functional-test-process.yml
           parameters:
