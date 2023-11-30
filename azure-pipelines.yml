@@ -517,8 +517,7 @@ stages:
     jobs:
       - job: E2EvNextDeployApp
         steps:
-        # - deployment: E2EvNextDeployApp
-          displayName: E2EvNext - deploy terraform and dotnet App
+        - displayName: E2EvNext - deploy terraform and dotnet App
           environment: "Ens-E2EvNext"
           pool: $(DeploymentPool)
           container: ${{variables.Container}}
