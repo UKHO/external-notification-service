@@ -487,6 +487,8 @@ stages:
             value: $(elasticAPM-ServerURL)
           - name: "ElasticAPM.ServiceName"
             value: $(elasticAPM-ServiceName)
+          - name: "ElasticAPM.WebJobServiceName"
+            value: $(elasticAPM-WebJobServiceName)
         strategy:
           runOnce:
             deploy:
@@ -545,6 +547,8 @@ stages:
             value: $(elasticAPM-ServerURL)
           - name: "ElasticAPM.ServiceName"
             value: $(elasticAPM-ServiceName)
+          - name: "ElasticAPM.WebJobServiceName"
+            value: $(elasticAPM-WebJobServiceName)
         strategy:
           runOnce:
             deploy:
