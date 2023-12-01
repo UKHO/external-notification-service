@@ -1,33 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
-	<suppress>
-		<notes>
-			<![CDATA[
-   file name: System.Threading.Tasks.Extensions.dll
-   Suppressing this CVE Because it relates to a mobile "Tasks" application (Astrid Tasks) version before 9.7.3. ENS is not a mobile application.
-   ]]>
-		</notes>
-		<cve>CVE-2020-22475</cve>
-	</suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: GetDocument.Insider.dll
-  CVE References ASP.Net versions 1.0-1.1. ENS is built on ASP.Net Core SDK > 6.0.101, not classic ASP.Net.
-  See https://nvd.nist.gov/vuln/detail/CVE-2005-2224 and https://www.securityfocus.com/bid/14217 for more details.
-   ]]>
-    </notes>
-    <cve>CVE-2005-2224</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: GetDocument.Insider.dll
-   Vunerability applies to AfterLogic MailBee WebMail Pro 4.1 for ASP.NET which is not used by the ESS
-   ]]>
-    </notes>
-    <cve>CVE-2008-0333</cve>
-  </suppress>
   <suppress>
     <notes>
       <![CDATA[
@@ -97,49 +69,6 @@
   <suppress>
     <notes>
       <![CDATA[
-    file name: Serilog.Sinks.File:4.1.0
-      8117-softmagic.c in file before 5.21 does not properly limit recursion, which allows remote attackers to cause a denial of service (CPU consumption or crash) via unspecified vectors.
-      9652-The mconvert function in softmagic.c in file before 5.21, as used in the Fileinfo component in PHP before 5.4.37, 5.5.x before 5.5.21, and 5.6.x before 5.6.5, does not properly handle a certain string-length field during a copy of a truncated version of a Pascal string, which might allow remote attackers to cause a denial of service (out-of-bounds memory access and application crash) via a crafted file.
-    This is a false positive. These two CVEs references a C library softmagic.c which is not used by ESS
-    ]]>
-    </notes>
-    <cve>CVE-2014-8117</cve>
-    <cve>CVE-2014-9652</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-     file name: Serilog.Sinks.File:4.1.0
-      readelf.c in file before 5.22, as used in the Fileinfo component in PHP before 5.4.37, 5.5.x before 5.5.21, and 5.6.x before 5.6.5, does not consider that pread calls sometimes read only a subset of the available data, which allows remote attackers to cause a denial of service (uninitialized memory access) or possibly have unspecified other impact via a crafted ELF file.
-     This is a false positive in readelf.c as ENS is not using this, or PHP.
-    ]]>
-    </notes>
-    <cve>CVE-2014-9653</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-    file name: Serilog.Extensions.Logging.File:2.0.0
-      cdf_read_property_info in cdf.c in file through 5.37 does not restrict the number of CDF_VECTOR elements, which allows a heap-based buffer overflow (4-byte out-of-bounds write)
-    This is a false positive in cdf.c which is not used by ESS
-    ]]>
-    </notes>
-    <cve>CVE-2019-18218</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-file name: System.Net.WebSockets.Client.dll
-See https://nvd.nist.gov/vuln/detail/CVE-2021-33880 for full Details on CVE.
-The aaugustin websockets library before 9.1 for Python has an Observable Timing Discrepancy on servers when HTTP Basic Authentication is enabled with basic_auth_protocol_factory(credentials=...). An attacker may be able to guess a password via a timing attack.
-This CVE applies to python and this is a false positive cve for our application which is C# based.
-]]>
-    </notes>
-    <cve>CVE-2021-33880</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
    file name: Serilog.Sinks.Async.dll
    https://nvd.nist.gov/vuln/detail/CVE-2021-43138
    A vulnerability exists in Async through 3.2.1 (fixed in 3.2.2) , which could let a malicious user obtain privileges via the mapValues() method.
@@ -164,19 +93,6 @@ This CVE applies to python and this is a false positive cve for our application 
   <suppress>
     <notes>
       <![CDATA[
-    file name: System.Net.Http:4.3.3
-    See https://github.com/dotnet/announcements/issues/111 for MS details on this CVE.
-        Package name: System.Net.Http:4.3.3 (included as part of the .Net Core runtime)
-      	Vulnerable versions: 4.3.3 and below
-        Secure versions: 4.3.4+
-    This CVE applies to .NET Core 2.1, .NET Core 1.0, .NET Core 1.1, PowerShell Core 6.0. ENS is pinned to .Net core SDK > 6.0.101 which is not vulnerable, and deployed to Azure App Service which will have the security patch applied.
-    ]]>
-    </notes>
-    <cve>CVE-2018-8292</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
     Azure.Storage.Blobs:12.10.0
     Azure.Storage.Queues:12.8.0
     https://nvd.nist.gov/vuln/detail/CVE-2022-30187
@@ -187,38 +103,17 @@ This CVE applies to python and this is a false positive cve for our application 
     </notes>
     <cve>CVE-2022-30187</cve>
   </suppress>
-   <suppress>
-	<notes><![CDATA[
+  <suppress>
+    <notes>
+      <![CDATA[
 	file name: Microsoft.AspNetCore.Hosting.Abstractions.dll
 	See https://nvd.nist.gov/vuln/detail/CVE-2018-8409 for details on this CVE.
 	Note: This was reanalysed by NIST on 4th October, and is now a breaking issue.
 	This is a temporary suppression pending a fix being available.
 	Bug to track the fix - https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=58430
-	]]></notes>
-	<cve>CVE-2018-8409</cve>
-  </suppress>
-  <suppress>
-		<notes><![CDATA[
-		file name: Serilog.Extensions.Logging.File:2.0.0
-		This is a temporary suppression pending a fix being available.
-		Bug to track the fix - https://dev.azure.com/ukhydro/Abzu/_workitems/edit/63100
-		]]></notes>
-		<cve>CVE-2014-2270</cve>
-		<cve>CVE-2014-3479</cve>
-		<cve>CVE-2014-3480</cve>
-		<cve>CVE-2014-3487</cve>
-    <cve>CVE-2007-1536</cve>
-  </suppress>
-  <suppress>
-		<notes><![CDATA[
-		file name: Serilog.Sinks.File:5.0.0
-		This is a temporary suppression pending a fix being available.
-		Bug to track the fix - https://dev.azure.com/ukhydro/Abzu/_workitems/edit/63101
-		]]></notes>
-	<cve>CVE-2014-2270</cve>
-	<cve>CVE-2014-3479</cve>
-	<cve>CVE-2014-3480</cve>
-	<cve>CVE-2014-3487</cve>
+	]]>
+    </notes>
+    <cve>CVE-2018-8409</cve>
   </suppress>
   <suppress>
     <notes>
@@ -229,15 +124,6 @@ This CVE applies to python and this is a false positive cve for our application 
    ]]>
     </notes>
     <cve>CVE-2023-21538</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Microsoft.Azure.EventGrid:3.2.1, Microsoft.Azure.KeyVault.dll, Microsoft.Azure.Services.AppAuthentication.dll
-   https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=68857
-   ]]>
-    </notes>
-    <cve>CVE-2021-42306</cve>
   </suppress>
   <suppress>
     <notes>
@@ -263,43 +149,6 @@ This CVE applies to python and this is a false positive cve for our application 
   <suppress>
     <notes>
       <![CDATA[
-   file name: Microsoft.Extensions.Configuration.FileExtensions.dll
-   https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=68857
-   ]]>
-    </notes>
-    <cve>CVE-2018-1000413</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Microsoft.IdentityModel.Clients.ActiveDirectory.dll, Microsoft.IdentityModel.Clients.ActiveDirectory:3.19.1
-   https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=68857
-   ]]>
-    </notes>
-    <cve>CVE-2021-42306</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Microsoft.OpenApi.dll
-   https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=68857
-   ]]>
-    </notes>
-    <cve>CVE-2022-3064</cve>
-    <cve>CVE-2021-4235</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: NETStandard.Library:1.6.0, NETStandard.Library:1.6.1
-   https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=68857
-   ]]>
-    </notes>
-    <cve>CVE-2001-0152</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
    file name: System.Security.Cryptography.X509Certificates:4.1.0
    file name: System.Security.Cryptography.X509Certificates:4.3.0
    Applies to .NET Core 1.0, 1.1, and 2.0 only.
@@ -311,35 +160,202 @@ This CVE applies to python and this is a false positive cve for our application 
   <suppress>
     <notes>
       <![CDATA[
-   file name: System.Runtime.Serialization.Json:4.3.0
-   This is a temporary suppression pending a fix being available.
-   Bug to track the fix - https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=77818
+   file name: Azure.Identity.dll
+   False positive - fixed >= 1.10.2
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:nuget/System\.Runtime\.Serialization\.Json@.*$</packageUrl>
-    <cve>CVE-2022-45688</cve>
+    <packageUrl regex="true">^pkg:generic/Azure\.Identity@.*$</packageUrl>
+    <cve>CVE-2023-36415</cve>
   </suppress>
   <suppress>
     <notes>
       <![CDATA[
-   file name: System.Text.Json:4.6.0
-   file name: System.Text.Json:4.7.2
-   file name: System.Text.Json:6.0.0
-   This is a temporary suppression pending a fix being available.
-   Bug to track the fix - https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=77821
+   file name: Microsoft.Azure.EventGrid:3.2.1
+   https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=68857
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:nuget/System\.Text\.Json@.*$</packageUrl>
-    <cve>CVE-2022-45688</cve>
+    <packageUrl regex="true">^pkg:nuget/Microsoft\.Azure\.EventGrid@.*$</packageUrl>
+    <cve>CVE-2021-42306</cve>
   </suppress>
   <suppress>
     <notes>
       <![CDATA[
-   file name: Microsoft.NETCore.Platforms:3.1.0
+   file name: Microsoft.Azure.KeyVault.dll
+   https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=68857
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:nuget/Microsoft\.NETCore\.Platforms@.*$</packageUrl>
-    <cve>CVE-2023-29326</cve>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Azure\.KeyVault@.*$</packageUrl>
+    <cve>CVE-2021-42306</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.IdentityModel.Clients.ActiveDirectory.dll
+   https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=68857
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.IdentityModel\.Clients\.ActiveDirectory@.*$</packageUrl>
+    <cve>CVE-2021-42306</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Serilog.Extensions.Logging.File.dll
+   False positive - applies to LINE app for Android and iOS
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Serilog\.Extensions\.Logging\.File@.*$</packageUrl>
+    <cve>CVE-2015-0897</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Elastic.Apm.AspNetCore.dll
+   False positive - impacts Java or Python
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.AspNetCore@.*$</packageUrl>
+    <cpe>cpe:/a:asp-project:asp-project</cpe>
+    <cpe>cpe:/a:elastic:apm_agent</cpe>
+    <cpe>cpe:/a:elastic:elastic_agent</cpe>
+    <cve>CVE-2021-37941</cve>
+    <cve>CVE-2019-7617</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Elastic.Apm.Extensions.Hosting.dll
+   False positive - impacts Java or Python
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.Extensions\.Hosting@.*$</packageUrl>
+    <cpe>cpe:/a:elastic:apm_agent</cpe>
+    <cpe>cpe:/a:elastic:elastic_agent</cpe>
+    <cve>CVE-2021-37941</cve>
+    <cve>CVE-2019-7617</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Elastic.Apm.Extensions.Logging.dll
+   False positive - impacts Java or Python
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.Extensions\.Logging@.*$</packageUrl>
+    <cpe>cpe:/a:elastic:apm_agent</cpe>
+    <cpe>cpe:/a:elastic:elastic_agent</cpe>
+    <cve>CVE-2021-37941</cve>
+    <cve>CVE-2019-7617</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Elastic.Apm.dll
+   False positive - impacts Java or Python
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Elastic\.Apm@.*$</packageUrl>
+    <cpe>cpe:/a:elastic:apm_agent</cpe>
+    <cpe>cpe:/a:elastic:elastic_agent</cpe>
+    <cve>CVE-2021-37941</cve>
+    <cve>CVE-2019-7617</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Core.dll
+   False positive - imapcts the Azure CLI
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Azure\.Core@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+    <cpe>cpe:/a:microsoft:azure_sdk_for_.net</cpe>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Core:1.36.0
+   False positive - imapcts the Azure CLI
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Core@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Identity:1.10.3
+   False positive - imapcts the Azure CLI
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Identity@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+    <cpe>cpe:/a:microsoft:azure_identity_sdk</cpe>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Azure.Services.AppAuthentication.dll
+   False positive - imapcts the Azure CLI
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Azure\.Services\.AppAuthentication@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_active_directory</cpe>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Extensions.Azure.dll
+   False positive - imapcts the Azure CLI
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Extensions\.Azure@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+    <cpe>cpe:/a:microsoft:azure_sdk_for_.net</cpe>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Extensions.Azure:1.6.3
+   False positive - imapcts the Azure CLI
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Microsoft\.Extensions\.Azure@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: GetDocument.Insider.dll
+   False positive - this vulnerabilty impacts Blazor Server Forms
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/GetDocument\.Insider@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cpe>cpe:/a:microsoft:asp.net</cpe>
+    <cpe>cpe:/a:microsoft:asp.net_core</cpe>
+    <cve>CVE-2023-36558</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: dotnet-getdocument.dll
+   False positive - this vulnerabilty impacts Blazor Server Forms
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/dotnet\-getdocument@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cpe>cpe:/a:microsoft:asp.net</cpe>
+    <cpe>cpe:/a:microsoft:asp.net_core</cpe>
+    <cve>CVE-2023-36558</cve>
   </suppress>
   <suppress>
     <notes>
