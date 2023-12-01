@@ -562,19 +562,9 @@ stages:
                     tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
                     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
 
-
-      - job: RunE2ETests
-        dependsOn: E2EvNextDeployApp
-        environment: "Ens-E2EvNext"
-        pool: $(DeploymentPool)
-        container: ${{variables.Container}}
-        variables:
-          - group: "ENS-IAT-VNext-TF-Variables"
-          - group: "ENS-IAT-VNext-Variables"
-        steps:
-        - template: Deployment/templates/functional-test-process.yml
-          parameters:
-            TestTitle: "E2E-AutomationTests"
+                - template: Deployment/templates/functional-test-process.yml
+                  parameters:
+                    TestTitle: "E2E-AutomationTests"
                 
 
   - stage: QAdeploy
