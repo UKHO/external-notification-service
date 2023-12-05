@@ -11,7 +11,7 @@
     <PackageReference Include="Elastic.Apm" Version="1.25.1" />
     <PackageReference Include="Elastic.Apm.AspNetCore" Version="1.25.1" />
     <PackageReference Include="FluentValidation" Version="11.8.1" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.25" />
     <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="6.0.25" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.25" />
