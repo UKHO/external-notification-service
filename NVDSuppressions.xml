@@ -360,16 +360,6 @@
   <suppress>
     <notes>
       <![CDATA[
-   file name: Scrutor:3.3.0
-   These vunerabilities are in reference to Drupal, which we do not use.
-   ]]>
-    </notes>
-    <cve>CVE-2014-9152</cve>
-    <cve>CVE-2015-4394</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
    file name: System.Threading.Tasks.Dataflow.dll
    Vunerability due to permissions on VoiceCommandActivity application component, no applicable.
    ]]>
