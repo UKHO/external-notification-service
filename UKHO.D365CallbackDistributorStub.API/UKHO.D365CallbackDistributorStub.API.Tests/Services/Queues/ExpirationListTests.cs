@@ -1,5 +1,6 @@
 ﻿
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using UKHO.D365CallbackDistributorStub.API.Services.Data;
 
 namespace UKHO.D365CallbackDistributorStub.API.Tests.Services.Queues
