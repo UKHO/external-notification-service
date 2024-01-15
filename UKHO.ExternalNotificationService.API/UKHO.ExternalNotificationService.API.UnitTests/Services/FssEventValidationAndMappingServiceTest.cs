@@ -1,13 +1,13 @@
-﻿using Azure.Messaging;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Azure.Messaging;
 using FakeItEasy;
 using FluentValidation.Results;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.API.UnitTests.BaseClass;
 using UKHO.ExternalNotificationService.API.Validation;
@@ -54,8 +54,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             ValidationResult result = await _fssEventValidationAndMappingService.ValidateFssEventData(new FssEventData());
 
-            Assert.IsFalse(result.IsValid);
-            Assert.AreEqual("BatchId cannot be blank or null.", result.Errors.Single().ErrorMessage);
+            Assert.That(result.IsValid, Is.False);
+            Assert.That("BatchId cannot be blank or null.", Is.EqualTo(result.Errors.Single().ErrorMessage));
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             ValidationResult result = await _fssEventValidationAndMappingService.ValidateFssEventData(_fakeFssEventData);
 
-            Assert.IsTrue(result.IsValid);
+            Assert.That(result.IsValid, Is.True);
         }
 
         [TestCase("AVCSData")]
@@ -81,11 +81,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             string data = Encoding.ASCII.GetString(result.Data);
             FssEventData cloudEventData = JsonConvert.DeserializeObject<FssEventData>(data);
 
-            Assert.AreEqual(FssDataMappingValueConstant.Type, result.Type);
-            Assert.AreEqual(_fakeFssDataMappingConfiguration.Value.Sources.Single(x => x.BusinessUnit == businessUnit).Source, result.Source);
-            Assert.AreEqual(batchDetailsUri, cloudEventData.Links.BatchDetails.Href);
-            Assert.AreEqual(batchDetailsUri + "/status", cloudEventData.Links.BatchStatus.Href);
-            Assert.AreEqual(batchDetailsUri + "/files/AVCS_S631-1_Update_Wk45_21_Only.zip", cloudEventData.Files.FirstOrDefault().Links.Get.Href);
+            Assert.That(FssDataMappingValueConstant.Type, Is.EqualTo(result.Type));
+            Assert.That(_fakeFssDataMappingConfiguration.Value.Sources.Single(x => x.BusinessUnit == businessUnit).Source, Is.EqualTo(result.Source));
+            Assert.That(batchDetailsUri, Is.EqualTo(cloudEventData.Links.BatchDetails.Href));
+            Assert.That(batchDetailsUri + "/status", Is.EqualTo(cloudEventData.Links.BatchStatus.Href));
+            Assert.That(batchDetailsUri + "/files/AVCS_S631-1_Update_Wk45_21_Only.zip", Is.EqualTo(cloudEventData.Files.FirstOrDefault().Links.Get.Href));
         }
 
         [Test]

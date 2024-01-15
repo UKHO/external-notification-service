@@ -1,13 +1,13 @@
-﻿using Azure.Messaging;
-using FakeItEasy;
-using FluentValidation.Results;
-using Microsoft.Extensions.Logging;
-using NUnit.Framework;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Azure.Messaging;
+using FakeItEasy;
+using FluentValidation.Results;
+using Microsoft.Extensions.Logging;
+using NUnit.Framework;
 using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.API.UnitTests.BaseClass;
 using UKHO.ExternalNotificationService.Common.Exceptions;
@@ -43,11 +43,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         }
 
         [Test]
-        public void  WhenValidInRequest_ThenReceiveEventType()
+        public void WhenValidInRequest_ThenReceiveEventType()
         {
             string result = _fssEventProcessor.EventType;
 
-            Assert.AreEqual(_fakeCustomCloudEvent.Type, result);
+            Assert.That(_fakeCustomCloudEvent.Type, Is.EqualTo(result));
         }
 
         [Test]
@@ -63,8 +63,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId);
 
-            Assert.AreEqual("BatchId cannot be blank or null.", result.Errors.Single().Description);
-            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
+            Assert.That("BatchId cannot be blank or null.", Is.EqualTo(result.Errors.Single().Description));
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
         }
 
         [Test]
@@ -84,8 +84,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
 
-            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
-            Assert.IsNull(result.Errors);
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+            Assert.That(result.Errors, Is.Null);
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(A<CloudEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();
         }
 
@@ -100,8 +100,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
 
-            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
-            Assert.IsNull(result.Errors);
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+            Assert.That(result.Errors, Is.Null);
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(A<CloudEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();
             A.CallTo(_fakeLogger).Where(call =>
                 call.Method.Name == "Log"
@@ -130,8 +130,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(customCloudEvent, CorrelationId, cancellationToken);
 
-            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
-            Assert.IsNull(result.Errors);
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+            Assert.That(result.Errors, Is.Null);
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(A<CloudEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored)).MustHaveHappenedOnceExactly();
         }
     }

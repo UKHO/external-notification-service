@@ -1,9 +1,9 @@
+using System.Threading;
+using System.Threading.Tasks;
 using FakeItEasy;
 using Microsoft.Azure.Management.EventGrid.Models;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
-using System.Threading;
-using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Helpers;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 using UKHO.ExternalNotificationService.SubscriptionService.Services;
@@ -35,7 +35,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
             EventSubscription response = await _subscriptionServiceData.CreateOrUpdateSubscription(subscriptionRequestMessage, cancellationToken);
 
             A.CallTo(() => _fakeAzureEventGridDomainService.CreateOrUpdateSubscription(subscriptionRequestMessage, cancellationToken)).MustHaveHappenedOnceExactly();
-            Assert.IsInstanceOf<EventSubscription>(response);
+            Assert.That(response, Is.InstanceOf<EventSubscription>());
         }
 
         [Test]

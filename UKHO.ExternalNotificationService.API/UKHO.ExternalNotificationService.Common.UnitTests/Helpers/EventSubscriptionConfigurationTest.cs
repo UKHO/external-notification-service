@@ -1,8 +1,8 @@
-﻿using FakeItEasy;
+﻿using System;
+using FakeItEasy;
 using Microsoft.Azure.Management.EventGrid.Models;
 using Microsoft.Extensions.Options;
 using NUnit.Framework;
-using System;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Helpers;
 using UKHO.ExternalNotificationService.Common.Models.Request;
@@ -21,6 +21,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.Helpers
         private const string StorageContainerName = "StorageContainerName";
         private const string WebhookUrl = "https://abc.com/";
         private const string ExpectedDeadLetterDestinationResourceId = $"/subscriptions/{SubscriptionId}/resourceGroups/{ResourceGroup}/providers/Microsoft.Storage/storageAccounts/{StorageAccountName}";
+
         [SetUp]
         public void Setup()
         {
@@ -34,6 +35,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.Helpers
             _fakeSubscriptionStorageConfiguration.Value.StorageContainerName = StorageContainerName;
             _eventSubscriptionConfiguration = new EventSubscriptionConfiguration(_fakeEventGridDomainConfig, _fakeSubscriptionStorageConfiguration);
         }
+
         [Test]
         public void WhenCallSetEventSubscription_ThenReturnEventSubscription()
         {
@@ -48,17 +50,17 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.Helpers
                 WebhookUrl = WebhookUrl
             };
             EventSubscription result = _eventSubscriptionConfiguration.SetEventSubscription(subscriptionRequestMessage);
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOf<EventSubscription>(result);
-            Assert.IsInstanceOf<EventSubscriptionDestination>(result.Destination);
-            Assert.AreEqual(WebhookUrl, ((WebHookEventSubscriptionDestination)result.Destination).EndpointUrl);
-            Assert.AreEqual(EventDeliverySchema.CloudEventSchemaV10, result.EventDeliverySchema);
-            Assert.IsInstanceOf<RetryPolicy>(result.RetryPolicy);
-            Assert.AreEqual(_fakeEventGridDomainConfig.Value.MaxDeliveryAttempts, result.RetryPolicy.MaxDeliveryAttempts);
-            Assert.AreEqual(_fakeEventGridDomainConfig.Value.EventTimeToLiveInMinutes, result.RetryPolicy.EventTimeToLiveInMinutes);
-            Assert.IsInstanceOf<DeadLetterDestination>(result.DeadLetterDestination);
-            Assert.AreEqual(ExpectedDeadLetterDestinationResourceId, ((StorageBlobDeadLetterDestination)result.DeadLetterDestination).ResourceId);
-            Assert.AreEqual(StorageContainerName, ((StorageBlobDeadLetterDestination)result.DeadLetterDestination).BlobContainerName);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.InstanceOf<EventSubscription>());
+            Assert.That(result.Destination, Is.InstanceOf<EventSubscriptionDestination>());
+            Assert.That(WebhookUrl, Is.EqualTo(((WebHookEventSubscriptionDestination)result.Destination).EndpointUrl));
+            Assert.That(EventDeliverySchema.CloudEventSchemaV10, Is.EqualTo(result.EventDeliverySchema));
+            Assert.That(result.RetryPolicy, Is.InstanceOf<RetryPolicy>());
+            Assert.That(_fakeEventGridDomainConfig.Value.MaxDeliveryAttempts, Is.EqualTo(result.RetryPolicy.MaxDeliveryAttempts));
+            Assert.That(_fakeEventGridDomainConfig.Value.EventTimeToLiveInMinutes, Is.EqualTo(result.RetryPolicy.EventTimeToLiveInMinutes));
+            Assert.That(result.DeadLetterDestination, Is.InstanceOf<DeadLetterDestination>());
+            Assert.That(ExpectedDeadLetterDestinationResourceId, Is.EqualTo(((StorageBlobDeadLetterDestination)result.DeadLetterDestination).ResourceId));
+            Assert.That(StorageContainerName, Is.EqualTo(((StorageBlobDeadLetterDestination)result.DeadLetterDestination).BlobContainerName));
         }
     }
 }

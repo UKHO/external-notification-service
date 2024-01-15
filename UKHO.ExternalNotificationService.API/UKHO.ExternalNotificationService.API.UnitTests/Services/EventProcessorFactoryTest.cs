@@ -1,6 +1,6 @@
-﻿using FakeItEasy;
+﻿using System.Collections.Generic;
+using FakeItEasy;
 using NUnit.Framework;
-using System.Collections.Generic;
 using UKHO.ExternalNotificationService.API.Services;
 
 namespace UKHO.ExternalNotificationService.API.UnitTests.Services
@@ -29,7 +29,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         {
             IEventProcessor result = _eventProcessorFactory.GetProcessor("uk.gov.UKHO.NewFilesPublished.v1");
 
-            Assert.IsNull(result);
+            Assert.That(result, Is.Null);
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         {
             IEventProcessor result = _eventProcessorFactory.GetProcessor("uk.gov.UKHO.FileShareService.NewFilesPublished.v1");
 
-            Assert.IsNotNull(result);
+            Assert.That(result, Is.Not.Null);
         }
     }
 }
