@@ -1,14 +1,14 @@
-﻿using FakeItEasy;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using FakeItEasy;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Controllers;
 using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.Common.Configuration;
@@ -54,8 +54,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             var result = (BadRequestObjectResult)await _controller.Post(null);
             var errors = (ErrorDescription)result.Value;
 
-            Assert.AreEqual(400, result.StatusCode);
-            Assert.AreEqual("Either body is null or malformed.", errors.Errors.Single().Description);
+            Assert.That(400, Is.EqualTo(result.StatusCode));
+            Assert.That("Either body is null or malformed.", Is.EqualTo(errors.Errors.Single().Description));
         }
 
         [Test]
@@ -70,8 +70,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 
             var result = (BadRequestObjectResult)await _controller.Post(_fakeD365PayloadDetails);
             var errors = (ErrorDescription)result.Value;
-            Assert.AreEqual(400, result.StatusCode);
-            Assert.AreEqual("D365Payload InputParameters cannot be blank or null.", errors.Errors.Single().Description);
+            Assert.That(400, Is.EqualTo(result.StatusCode));
+            Assert.That("D365Payload InputParameters cannot be blank or null.", Is.EqualTo(errors.Errors.Single().Description));
         }
 
         [Test]
@@ -87,7 +87,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             var result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
 
             A.CallTo(_fakeLogger).Where(call => call.GetArgument<LogLevel>(0) == LogLevel.Error).MustHaveHappened();
-            Assert.AreEqual(StatusCodes.Status202Accepted, result.StatusCode);
+            Assert.That(StatusCodes.Status202Accepted, Is.EqualTo(result.StatusCode));
         }
 
         [Test]
@@ -102,8 +102,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             var result = (BadRequestObjectResult)await _controller.Post(_fakeD365PayloadDetails);
             var errors = (ErrorDescription)result.Value;
 
-            Assert.AreEqual(400, result.StatusCode);
-            Assert.AreEqual("Invalid Notification Type 'Data test'", errors.Errors.Single().Description);
+            Assert.That(400, Is.EqualTo(result.StatusCode));
+            Assert.That("Invalid Notification Type 'Data test'", Is.EqualTo(errors.Errors.Single().Description));
         }
 
         [Test]
@@ -117,7 +117,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 
             A.CallTo(_fakeLogger).Where(call => call.GetArgument<LogLevel>(0) == LogLevel.Error).MustNotHaveHappened();
             A.CallTo(() => _fakeSubscriptionService.AddSubscriptionRequest(_fakeSubscriptionRequest, _fakeNotificationType.FirstOrDefault(), A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            Assert.AreEqual(StatusCodes.Status202Accepted, result.StatusCode);
+            Assert.That(StatusCodes.Status202Accepted, Is.EqualTo(result.StatusCode));
         }
 
         private static D365Payload GetD365Payload()

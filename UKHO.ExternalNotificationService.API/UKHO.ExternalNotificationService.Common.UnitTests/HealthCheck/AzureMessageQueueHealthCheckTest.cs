@@ -1,11 +1,10 @@
-﻿
+﻿using System;
+using System.Threading.Tasks;
 using FakeItEasy;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NUnit.Framework;
-using System;
-using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.HealthCheck;
 using UKHO.ExternalNotificationService.Common.Helpers;
@@ -21,7 +20,6 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         private IAzureMessageQueueHelper _fakeAzureMessageQueueHelper;
         private AzureMessageQueueHealthCheck _azureMessageQueueHealthCheck;
 
-
         [SetUp]
         public void Setup()
         {
@@ -30,7 +28,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
             _fakeStorageService = A.Fake<IStorageService>();
             _fakeAzureMessageQueueHelper = A.Fake<IAzureMessageQueueHelper>();
 
-            _azureMessageQueueHealthCheck = new AzureMessageQueueHealthCheck(_fakeSubscriptionStorageConfiguration, _fakeLogger,_fakeStorageService,_fakeAzureMessageQueueHelper);
+            _azureMessageQueueHealthCheck = new AzureMessageQueueHealthCheck(_fakeSubscriptionStorageConfiguration, _fakeLogger, _fakeStorageService, _fakeAzureMessageQueueHelper);
         }
 
         [Test]
@@ -40,7 +38,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
 
             HealthCheckResult response = await _azureMessageQueueHealthCheck.CheckHealthAsync(new HealthCheckContext());
 
-            Assert.AreEqual(HealthStatus.Healthy, response.Status);
+            Assert.That(HealthStatus.Healthy, Is.EqualTo(response.Status));
         }
 
         [Test]
@@ -50,7 +48,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
 
             HealthCheckResult response = await _azureMessageQueueHealthCheck.CheckHealthAsync(new HealthCheckContext());
 
-            Assert.AreEqual(HealthStatus.Unhealthy, response.Status);
+            Assert.That(HealthStatus.Unhealthy, Is.EqualTo(response.Status));
         }
 
         [Test]
@@ -60,7 +58,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
 
             HealthCheckResult response = await _azureMessageQueueHealthCheck.CheckHealthAsync(new HealthCheckContext());
 
-            Assert.AreEqual(HealthStatus.Unhealthy, response.Status);
+            Assert.That(HealthStatus.Unhealthy, Is.EqualTo(response.Status));
         }
     }
 }

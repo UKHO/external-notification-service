@@ -1,13 +1,13 @@
-﻿using Azure.Messaging;
-using FakeItEasy;
-using FluentValidation.Results;
-using Microsoft.Extensions.Logging;
-using NUnit.Framework;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Azure.Messaging;
+using FakeItEasy;
+using FluentValidation.Results;
+using Microsoft.Extensions.Logging;
+using NUnit.Framework;
 using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.API.UnitTests.BaseClass;
 using UKHO.ExternalNotificationService.Common.Helpers;
@@ -49,7 +49,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         {
             string result = _scsEventProcessor.EventType;
 
-            Assert.AreEqual(_fakeCustomCloudEvent.Type, result);
+            Assert.That(_fakeCustomCloudEvent.Type, Is.EqualTo(result));
         }
 
         [Test]
@@ -65,8 +65,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             ExternalNotificationServiceProcessResponse result = await _scsEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId);
 
-            Assert.AreEqual("ProductType cannot be blank or null.", result.Errors.Single().Description);
-            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
+            Assert.That("ProductType cannot be blank or null.", Is.EqualTo(result.Errors.Single().Description));
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
         }
 
         [Test]
@@ -85,8 +85,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             ExternalNotificationServiceProcessResponse result = await _scsEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
 
-            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
-            Assert.IsNull(result.Errors);
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+            Assert.That(result.Errors, Is.Null);
         }
     }
 }

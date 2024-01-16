@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using UKHO.ExternalNotificationService.Common.Configuration;
@@ -41,8 +40,8 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.Storage
             _fakeSubscriptionStorageConfiguration.Value.StorageAccountKey = "Test";
             string response = _storageService.GetStorageAccountConnectionString();
 
-            Assert.NotNull(response);
-            Assert.AreEqual("DefaultEndpointsProtocol=https;AccountName=test;AccountKey=Test;EndpointSuffix=core.windows.net", response);
+            Assert.That(response, Is.Not.Null);
+            Assert.That("DefaultEndpointsProtocol=https;AccountName=test;AccountKey=Test;EndpointSuffix=core.windows.net", Is.EqualTo(response));
         }
     }
 }

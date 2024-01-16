@@ -1,8 +1,8 @@
-﻿using Azure.Messaging;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Azure.Messaging;
 using FakeItEasy;
 using NUnit.Framework;
-using System.Threading;
-using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.BaseClass;
 using UKHO.ExternalNotificationService.Common.Helpers;
 using UKHO.ExternalNotificationService.Common.Models.EventModel;
@@ -34,8 +34,8 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.BaseClass
 
             FssEventData response =  _eventProcessorBase.GetEventData<FssEventData>(data);
 
-            Assert.AreEqual(_fssEventData.BatchId, response.BatchId);
-            Assert.AreEqual(_fssEventData.Links.BatchDetails, response.Links.BatchDetails);
+            Assert.That(_fssEventData.BatchId, Is.EqualTo(response.BatchId));
+            Assert.That(_fssEventData.Links.BatchDetails, Is.EqualTo(response.Links.BatchDetails));
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.BaseClass
 
             Task response = _eventProcessorBase.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken);
 
-            Assert.IsTrue(response.IsCompleted);
+            Assert.That(response.IsCompleted);
         }
     }
 }
