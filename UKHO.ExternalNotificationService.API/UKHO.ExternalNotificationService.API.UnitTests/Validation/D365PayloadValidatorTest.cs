@@ -30,7 +30,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("CorrelationId");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "D365Payload CorrelationId cannot be blank or null."), Is.True);
+            Assert.That(result.Errors.Any(x => x.ErrorMessage == "D365Payload CorrelationId cannot be blank or null."));
         }
 
         [Test]
@@ -41,7 +41,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("CorrelationId");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "D365Payload CorrelationId cannot be blank or null."), Is.True);
+            Assert.That(result.Errors.Any(x => x.ErrorMessage == "D365Payload CorrelationId cannot be blank or null."));
         }
         #endregion
 
@@ -54,7 +54,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("InputParameters");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "D365Payload InputParameters cannot be blank or null."), Is.True);
+            Assert.That(result.Errors.Any(x => x.ErrorMessage == "D365Payload InputParameters cannot be blank or null."));
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("PostEntityImages");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "D365Payload PostEntityImages cannot be blank or null."), Is.True);
+            Assert.That(result.Errors.Any(x => x.ErrorMessage == "D365Payload PostEntityImages cannot be blank or null."));
         }
         #endregion
 
@@ -81,7 +81,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("SubscriptionId");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "SubscriptionId cannot be blank or null."), Is.True);
+            Assert.That(result.Errors.Any(x => x.ErrorMessage == "SubscriptionId cannot be blank or null."));
         }
 
         [Test]
@@ -92,7 +92,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("SubscriptionId");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "SubscriptionId cannot be blank or null."), Is.True);
+            Assert.That(result.Errors.Any(x => x.ErrorMessage == "SubscriptionId cannot be blank or null."));
         }
 
         #endregion
@@ -109,7 +109,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("NotificationType");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "NotificationType cannot be blank or null."), Is.True);
+            Assert.That(result.Errors.Any(x => x.ErrorMessage == "NotificationType cannot be blank or null."));
         }
 
         [Test]
@@ -120,7 +120,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("NotificationType");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "NotificationType cannot be blank or null."), Is.True);
+            Assert.That(result.Errors.Any(x => x.ErrorMessage == "NotificationType cannot be blank or null."));
         }
         #endregion
 
@@ -136,7 +136,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("WebhookUrl");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "WebhookUrl cannot be blank or null."), Is.True);
+            Assert.That(result.Errors.Any(x => x.ErrorMessage == "WebhookUrl cannot be blank or null."));
         }
 
         [Test]
@@ -147,7 +147,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("WebhookUrl");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "WebhookUrl cannot be blank or null."), Is.True);
+            Assert.That(result.Errors.Any(x => x.ErrorMessage == "WebhookUrl cannot be blank or null."));
         }
         #endregion
 
@@ -163,7 +163,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("StateCode");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "StateCode cannot be blank or null."), Is.True);
+            Assert.That(result.Errors.Any(x => x.ErrorMessage == "StateCode cannot be blank or null."));
         }
 
         [Test]
@@ -174,7 +174,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("StateCode");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "StateCode cannot be blank or null."), Is.True);
+            Assert.That(result.Errors.Any(x => x.ErrorMessage == "StateCode cannot be blank or null."));
         }
         #endregion
 

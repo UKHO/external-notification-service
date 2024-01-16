@@ -65,7 +65,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             ValidationResult result = await _fssEventValidationAndMappingService.ValidateFssEventData(_fakeFssEventData);
 
-            Assert.That(result.IsValid, Is.True);
+            Assert.That(result.IsValid);
         }
 
         [TestCase("AVCSData")]

@@ -64,7 +64,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             ValidationResult result = await _subscriptionService.ValidateD365PayloadRequest(_d365PayloadDetails);
 
-            Assert.That(result.IsValid, Is.True);
+            Assert.That(result.IsValid);
         }
         #endregion
 
@@ -128,7 +128,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             Task result = _subscriptionService.AddSubscriptionRequest(_subscriptionRequest, _notificationType, correlationId);
 
             A.CallTo(() => _fakeAzureMessageQueueHelper.AddQueueMessage(_fakeEnsStorageConfiguration.Value, A<SubscriptionRequestMessage>.Ignored)).MustHaveHappenedOnceExactly();
-            Assert.That(result.IsCompleted, Is.True);
+            Assert.That(result.IsCompleted);
         }
 
         private static D365Payload GetD365PayloadDetails()
