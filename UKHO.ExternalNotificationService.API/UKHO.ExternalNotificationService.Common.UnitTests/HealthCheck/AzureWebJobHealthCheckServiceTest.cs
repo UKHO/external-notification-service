@@ -1,9 +1,8 @@
-﻿
+﻿using System.Threading.Tasks;
 using FakeItEasy;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using NUnit.Framework;
-using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.HealthCheck;
 
 namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
@@ -33,7 +32,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
 
             HealthCheckResult response = await _azureWebJobHealthCheckService.CheckHealthAsync();
 
-            Assert.AreEqual(HealthStatus.Unhealthy, response.Status);
+            Assert.That(HealthStatus.Unhealthy, Is.EqualTo(response.Status));
         }
 
         [Test]
@@ -44,7 +43,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
 
             HealthCheckResult response = await _azureWebJobHealthCheckService.CheckHealthAsync();
 
-            Assert.AreEqual(HealthStatus.Healthy, response.Status);
+            Assert.That(HealthStatus.Healthy, Is.EqualTo(response.Status));
         }
     }
 }

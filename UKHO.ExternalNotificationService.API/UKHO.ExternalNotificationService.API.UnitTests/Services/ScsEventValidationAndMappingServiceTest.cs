@@ -1,13 +1,13 @@
-﻿using Azure.Messaging;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Azure.Messaging;
 using FakeItEasy;
 using FluentValidation.Results;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.API.UnitTests.BaseClass;
 using UKHO.ExternalNotificationService.API.Validation;
@@ -49,8 +49,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             ValidationResult result = await _scsEventValidationAndMappingService.ValidateScsEventData(new ScsEventData());
 
-            Assert.IsFalse(result.IsValid);
-            Assert.AreEqual("ProductType cannot be blank or null.", result.Errors.Single().ErrorMessage);
+            Assert.That(result.IsValid, Is.False);
+            Assert.That("ProductType cannot be blank or null.", Is.EqualTo(result.Errors.Single().ErrorMessage));
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             ValidationResult result = await _scsEventValidationAndMappingService.ValidateScsEventData(_fakeScsEventData);
 
-            Assert.IsTrue(result.IsValid);
+            Assert.That(result.IsValid);
         }
         #endregion
 
@@ -75,9 +75,9 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             string data = Encoding.ASCII.GetString(result.Data);
             ScsEventData cloudEventData = JsonConvert.DeserializeObject<ScsEventData>(data);
 
-            Assert.AreEqual(ScsDataMappingValueConstant.Type, result.Type);
-            Assert.AreEqual(_fakeScsDataMappingConfiguration.Value.Source, result.Source);
-            Assert.AreEqual(_fakeScsEventData.ProductType, cloudEventData.ProductType);
+            Assert.That(ScsDataMappingValueConstant.Type, Is.EqualTo(result.Type));
+            Assert.That(_fakeScsDataMappingConfiguration.Value.Source, Is.EqualTo(result.Source));
+            Assert.That(_fakeScsEventData.ProductType, Is.EqualTo(cloudEventData.ProductType));
         }
         #endregion
     }

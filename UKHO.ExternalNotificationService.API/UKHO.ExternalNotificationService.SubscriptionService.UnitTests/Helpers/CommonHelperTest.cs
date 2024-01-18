@@ -1,10 +1,10 @@
-﻿using FakeItEasy;
+﻿using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using FakeItEasy;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Models.AzureEventGridDomain;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 using UKHO.ExternalNotificationService.SubscriptionService.D365Callback;
@@ -42,8 +42,8 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
 
             HttpResponseMessage result = await configuredClient.GetAsync("https://testretry.com");
 
-            Assert.False(_isRetryCalled);
-            Assert.AreEqual(HttpStatusCode.ServiceUnavailable, result.StatusCode);
+            Assert.That(_isRetryCalled, Is.False);
+            Assert.That(HttpStatusCode.ServiceUnavailable, Is.EqualTo(result.StatusCode));
         }
 
         [Test]
@@ -61,8 +61,8 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
 
             HttpResponseMessage result = await configuredClient.GetAsync("https://testretry.com");
 
-            Assert.False(_isRetryCalled);
-            Assert.AreEqual(HttpStatusCode.InternalServerError, result.StatusCode);
+            Assert.That(_isRetryCalled, Is.False);
+            Assert.That(HttpStatusCode.InternalServerError, Is.EqualTo(result.StatusCode));
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
             const bool isActive = true;
             const int successStatusCode = 1000001;
             ExternalNotificationEntity response = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, isActive, successStatusCode);
-            Assert.IsNotNull(response);
+            Assert.That(response, Is.Not.Null);
         }
 
         [Test]
@@ -82,7 +82,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
             const bool isActive = false;
             const int failureStatusCode = 1000002;
             ExternalNotificationEntity response = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, isActive, failureStatusCode);
-            Assert.IsNotNull(response);
+            Assert.That(response, Is.Not.Null);
         }
 
         private static HttpClient CreateClient(IServiceCollection services)

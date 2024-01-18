@@ -1,7 +1,6 @@
-﻿
+﻿using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
-using System.Collections.Generic;
 using UKHO.ExternalNotificationService.Common.HealthCheck;
 
 namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
@@ -31,14 +30,14 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         {
             string webJobsAccessKey = _webJobsAccessKeyProvider.GetWebJobsAccessKey("webjob1key");
             string expectedAccessKey = _configuration.GetValue<string>("webjob1key");
-            Assert.AreEqual(expectedAccessKey, webJobsAccessKey);
+            Assert.That(expectedAccessKey, Is.EqualTo(webJobsAccessKey));
         }
 
         [Test]
         public void GetWebJobAccessKey_ReturnsNullWhenNotExists()
         {
             string actualAccessKey = _webJobsAccessKeyProvider.GetWebJobsAccessKey("nonexistingkey");
-            Assert.AreEqual(null, actualAccessKey);
+            Assert.That(actualAccessKey, Is.Null);
         }
     }
 }
