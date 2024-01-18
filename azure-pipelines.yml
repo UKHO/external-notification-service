@@ -16,6 +16,11 @@ parameters:
     type: boolean
     default: false
 
+  - name: DisableVNextE2E
+    displayName: "Disable E2E"
+    type: boolean
+    default: false
+
   - name:  DisableDevDeploy
     displayName: "Disable DevDeploy"
     type: boolean
@@ -521,6 +526,7 @@ stages:
     jobs:
       - deployment: E2EvNextDeployApp
         displayName: E2EvNext - deploy terraform and dotnet App
+        condition: eq('${{ parameters.DisableVNextE2E }}', false)
         environment: "Ens-E2EvNext"
         pool: $(DeploymentPool)
         container: ${{variables.Container}}
