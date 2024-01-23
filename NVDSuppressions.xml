@@ -394,4 +394,14 @@
     <packageUrl regex="true">^pkg:nuget/System\.Security\.Cryptography\.X509Certificates@.*$</packageUrl>
     <vulnerabilityName>CVE-2024-0057</vulnerabilityName>
   </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Newtonsoft.Json.Bson.dll
+   False positive - Newtonsoft.Json > 13.0.1 included in project
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Newtonsoft\.Json\.Bson@.*$</packageUrl>
+    <cve>CVE-2024-21907</cve>
+  </suppress>
 </suppressions>
