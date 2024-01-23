@@ -41,49 +41,10 @@ variables:
     value: "ukhydrographicoffice/terraform-azure-powershell-unzip:1.3.7"
   - name: DeploymentPool
     value: "UKHO Ubuntu 1804"
-  - name: coverityPool
-    value: NautilusBuild
-  - group: Covscan-vars
   - name: WindowPool
     value: "NautilusBuild"
 
-resources:
- repositories:
-  - repository: covscan
-    type: github
-    name: UKHO/coverityscan-buildtemplates
-    endpoint: UKHO
-    ref: refs/heads/master
-
 stages:
-  - stage: CoverityScan
-    displayName: "Coverity Scan"
-    pool:
-      name: $(coverityPool)
-    jobs:
-    - job: Coverity
-      workspace:
-        clean: all
-      steps:
-        - checkout: self
-          submodules: recursive
-        - task: UseDotNet@2
-          displayName: 'Use .NET 6.0.x sdk'
-          inputs:
-            packageType: sdk
-            version: 6.0.x
-            installationPath: $(Agent.ToolsDirectory)/dotnet
-        - checkout: covscan
-        - template: dotnet-cov.yml@covScan
-          parameters:
-            CovHostUrl: "$(CovHostUrl)"
-            CovUser: "$(CovUser)"
-            CovPwd: "$(CovPwd)"
-            StreamName: "external-notification-service"
-            BuildCommand: "$(Build.Repository.LocalPath)/external-notification-service/UKHO.ExternalNotificationService.API/UKHO.ExternalNotificationService.API/UKHO.ExternalNotificationService.API.csproj"
-            StripPath: $(Build.Repository.LocalPath)/external-notification-service
-            CoverityScanPath: $(Build.Repository.LocalPath)/coverityscan-buildtemplates
-
   - stage: PERFORM_DEPENDENCYCHECK_DOTNETBUILD_DOTNETTEST_AND_PUBLISH
     displayName: "Build (inc DependencyChecker, Dotnet Build , dotnet test and publish artifact )"
     dependsOn: []
