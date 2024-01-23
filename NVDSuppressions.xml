@@ -404,4 +404,34 @@
     <packageUrl regex="true">^pkg:generic/Newtonsoft\.Json\.Bson@.*$</packageUrl>
     <cve>CVE-2024-21907</cve>
   </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.IdentityModel.Abstractions.dll
+   Fixed in SDK >= 6.0.418
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.IdentityModel\.Abstractions@.*$</packageUrl>
+    <cve>CVE-2024-21319</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.IdentityModel.Abstractions:6.22.0
+   Fixed in SDK >= 6.0.418
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Microsoft\.IdentityModel\.Abstractions@.*$</packageUrl>
+    <cve>CVE-2024-21319</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.IdentityModel.Clients.ActiveDirectory.dll
+   Fixed in SDK >= 6.0.418
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.IdentityModel\.Clients\.ActiveDirectory@.*$</packageUrl>
+    <cve>CVE-2024-21319</cve>
+  </suppress>
 </suppressions>
