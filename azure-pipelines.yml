@@ -421,8 +421,8 @@ stages:
     dependsOn:
       - DevDeploy
     displayName: "IATvNextDeploy (inc terraform, webapp deploy)"
-    #condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
-    condition: and(succeeded(), eq('${{ parameters.VNext }}', true))
+    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/develop'),startsWith(variables['Build.SourceBranch'], 'refs/heads/develop/*')))
+    #condition: and(succeeded(), eq('${{ parameters.VNext }}', true))
     jobs:
       - deployment: IATvNextDeployApp
         displayName: IATvNext - deploy terraform and dotnet App
@@ -482,8 +482,8 @@ stages:
     dependsOn:
       - IATvNextDeploy
     displayName: E2EvNextDeploy (inc terraform, webapp deploy)
-    #condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
-    condition: and(succeeded(), eq('${{ parameters.VNext }}', true))
+    #condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/develop'),startsWith(variables['Build.SourceBranch'], 'refs/heads/dev/')))
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
     jobs:
       - deployment: E2EvNextDeployApp
         displayName: E2EvNext - deploy terraform and dotnet App
@@ -544,8 +544,8 @@ stages:
     dependsOn:
       - DevDeploy
     displayName: QAdeploy (inc terraform, webapp deploy)
-    #condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
-    condition: and(succeeded(),eq('${{ parameters.VNext }}', false),or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
+    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
+    #condition: and(succeeded(),eq('${{ parameters.VNext }}', false),or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
       - deployment: QADeployApp
         displayName: QA - deploy terraform and dotnet App
