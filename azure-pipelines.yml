@@ -6,11 +6,6 @@ parameters:
     type: boolean
     default: false
 
-  - name: VNext
-    displayName: "Process vNext"
-    type: boolean
-    default: false
-
   - name: DisableVNextIAT
     displayName: "Disable IAT"
     type: boolean
