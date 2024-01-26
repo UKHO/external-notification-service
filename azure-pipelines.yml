@@ -29,7 +29,7 @@ parameters:
 trigger:
   - main
   - release/*
-  - dev/*
+  
 
 schedules:
 - cron: "0 4 * * 1"
