@@ -6,21 +6,6 @@ parameters:
     type: boolean
     default: false
 
-  - name: DisableVNextIAT
-    displayName: "Disable IAT"
-    type: boolean
-    default: false
-
-  - name: DisableVNextE2E
-    displayName: "Disable E2E"
-    type: boolean
-    default: false
-
-  - name:  DisableDevDeploy
-    displayName: "Disable DevDeploy"
-    type: boolean
-    default: false
-
   - name: DisableDependencyCheck
     displayName: "Disable OWASP dependency checking"
     type: boolean
@@ -29,7 +14,7 @@ parameters:
 trigger:
   - main
   - release/*
-  
+  - deploy
 
 schedules:
 - cron: "0 4 * * 1"
@@ -351,7 +336,6 @@ stages:
     jobs:
       - deployment: DevDeployApp
         displayName: "Dev - deploy terraform and dotnet App"
-        condition: eq('${{ parameters.DisableDevDeploy }}', false)
         environment: "Ens-Dev"
         pool: $(DeploymentPool)
         container: ${{variables.Container}}
@@ -421,7 +405,6 @@ stages:
     jobs:
       - deployment: IATvNextDeployApp
         displayName: IATvNext - deploy terraform and dotnet App
-        condition: eq('${{ parameters.DisableVNextIAT }}', false)
         environment: "Ens-IATvNext"
         pool: $(DeploymentPool)
         container: ${{variables.Container}}
@@ -481,7 +464,6 @@ stages:
     jobs:
       - deployment: E2EvNextDeployApp
         displayName: E2EvNext - deploy terraform and dotnet App
-        condition: eq('${{ parameters.DisableVNextE2E }}', false)
         environment: "Ens-E2EvNext"
         pool: $(DeploymentPool)
         container: ${{variables.Container}}
