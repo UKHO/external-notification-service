@@ -387,16 +387,6 @@
   <suppress>
     <notes>
       <![CDATA[
-   file name: System.Security.Cryptography.X509Certificates:4.3.0
-   Fixed in SDK >= 6.0.418
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:nuget/System\.Security\.Cryptography\.X509Certificates@.*$</packageUrl>
-    <vulnerabilityName>CVE-2024-0057</vulnerabilityName>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
    file name: Newtonsoft.Json.Bson.dll
    False positive - Newtonsoft.Json > 13.0.1 included in project
    ]]>
