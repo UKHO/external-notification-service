@@ -424,4 +424,14 @@
     <packageUrl regex="true">^pkg:generic/Microsoft\.IdentityModel\.Clients\.ActiveDirectory@.*$</packageUrl>
     <cve>CVE-2024-21319</cve>
   </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: System.ClientModel.dll
+   Applies to Azure CLI
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/System\.ClientModel@.*$</packageUrl>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
 </suppressions>
