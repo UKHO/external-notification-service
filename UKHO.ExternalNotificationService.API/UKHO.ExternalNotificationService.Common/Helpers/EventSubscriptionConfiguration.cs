@@ -1,4 +1,6 @@
-﻿using Microsoft.Azure.Management.EventGrid.Models;
+﻿using Azure.Core;
+using Azure.ResourceManager.EventGrid;
+using Azure.ResourceManager.EventGrid.Models;
 using Microsoft.Extensions.Options;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Models.Request;
@@ -17,7 +19,7 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             _subscriptionStorageConfiguration = subscriptionStorageConfiguration.Value;
         }
 
-        public EventSubscription SetEventSubscription(SubscriptionRequestMessage subscriptionRequestMessage)
+        public EventGridSubscriptionData SetEventSubscription(SubscriptionRequestMessage subscriptionRequestMessage)
         {
             return new()
             {
@@ -30,10 +32,10 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
 
         private static WebHookEventSubscriptionDestination SetWebHookEventSubscriptionDestination(string webhookUrl) => new()
         {
-            EndpointUrl = webhookUrl
+            Endpoint = new(webhookUrl)
         };
 
-        private static string SetEventDeliverySchema => EventDeliverySchema.CloudEventSchemaV10;
+        private static string SetEventDeliverySchema => EventDeliverySchema.CloudEventSchemaV1_0.ToString();
 
         /* Retry policy decides when an event can be marked as expired. 
            The default retry policy keeps the event alive for 24 hrs (=1440 mins or 30 retries with exponential backoffs)
@@ -41,7 +43,7 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
            Note: The below configuration for the retry policy will cause events to expire after one delivery attempt. 
            This is only to make it easier to help test/verify dead letter destinations quickly.
         */
-        private RetryPolicy SetRetryPolicy() => new()
+        private EventSubscriptionRetryPolicy SetRetryPolicy() => new()
         {
             MaxDeliveryAttempts = _eventGridDomainConfig.MaxDeliveryAttempts,
             EventTimeToLiveInMinutes = _eventGridDomainConfig.EventTimeToLiveInMinutes,
@@ -54,7 +56,8 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             string deadLetterDestinationResourceId = $"/subscriptions/{_eventGridDomainConfig.SubscriptionId}/resourceGroups/{_eventGridDomainConfig.ResourceGroup}/providers/Microsoft.Storage/storageAccounts/{_subscriptionStorageConfiguration.StorageAccountName}";
             return new StorageBlobDeadLetterDestination()
             {
-                ResourceId = deadLetterDestinationResourceId,
+                
+                ResourceId = new(deadLetterDestinationResourceId),
                 BlobContainerName = _subscriptionStorageConfiguration.StorageContainerName,
             };
         }
