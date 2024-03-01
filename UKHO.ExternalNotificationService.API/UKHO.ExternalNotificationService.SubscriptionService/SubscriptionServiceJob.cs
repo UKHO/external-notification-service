@@ -43,7 +43,6 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
         public async Task ProcessQueueMessage([QueueTrigger("%SubscriptionStorageConfiguration:QueueName%")] QueueMessage message)
         {            
             SubscriptionRequestMessage subscriptionMessage = message.Body.ToObjectFromJson<SubscriptionRequestMessage>();
-            //EventSubscription eventSubscription;
             _logger.LogInformation(EventIds.CreateSubscriptionRequestStart.ToEventId(),
                     "Subscription provisioning request started for SubscriptionId:{SubscriptionId} and _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId}", subscriptionMessage.SubscriptionId, subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
 
@@ -65,8 +64,6 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                         bool created = false;
                         try
                         {
-                            //rhz may not need this variable use "_"
-                            //var eventSubscription =
                             _ = await _subscriptionServiceData.CreateOrUpdateSubscription(subscriptionMessage);
                                     
                             subscriptionRequestResult.ProvisioningState = "Succeeded";
