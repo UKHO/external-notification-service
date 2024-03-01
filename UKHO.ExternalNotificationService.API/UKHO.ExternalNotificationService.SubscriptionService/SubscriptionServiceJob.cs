@@ -66,9 +66,9 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                         try
                         {
                             //rhz may not need this variable use "_"
-                            var eventSubscription =
-                                await _subscriptionServiceData.CreateOrUpdateSubscription(subscriptionMessage,
-                                    CancellationToken.None);
+                            //var eventSubscription =
+                            _ = await _subscriptionServiceData.CreateOrUpdateSubscription(subscriptionMessage);
+                                    
                             subscriptionRequestResult.ProvisioningState = "Succeeded";
 
                             externalNotificationEntity = CommonHelper.GetExternalNotificationEntity(

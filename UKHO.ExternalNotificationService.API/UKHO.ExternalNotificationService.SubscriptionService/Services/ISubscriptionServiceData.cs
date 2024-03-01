@@ -7,7 +7,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
 {
     public interface ISubscriptionServiceData
     {
-        Task<DomainTopicEventSubscriptionResource> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionMessage, CancellationToken cancellationToken);
+        Task<DomainTopicEventSubscriptionResource> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionMessage, CancellationToken cancellationToken = default);
         
         Task DeleteSubscription(SubscriptionRequestMessage subscriptionMessage, CancellationToken cancellationToken);
     }

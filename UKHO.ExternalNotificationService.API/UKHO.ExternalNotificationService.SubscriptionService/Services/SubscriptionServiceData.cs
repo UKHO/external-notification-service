@@ -19,7 +19,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
             _logger = logger;
         }
 
-        public async Task<DomainTopicEventSubscriptionResource> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionMessage, CancellationToken cancellationToken)
+        public async Task<DomainTopicEventSubscriptionResource> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionMessage, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation(EventIds.CreateSubscriptionServiceStart.ToEventId(),
                     "Create Subscription service started for _D365-Correlation-ID:{CorrelationId} and _X-Correlation-ID:{CorrelationId}", subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);

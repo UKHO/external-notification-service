@@ -34,37 +34,40 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             _logger = logger;            
         }
         
-        public async Task<DomainTopicEventSubscriptionResource> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionRequestMessage, CancellationToken cancellationToken)
+        public async Task<DomainTopicEventSubscriptionResource> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionRequestMessage, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation(EventIds.CreateOrUpdateAzureEventDomainTopicStart.ToEventId(),
                     "Create or update azure event domain topic started for SubscriptionId:{SubscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId} with Event domain topic {NotificationTypeTopicName}", subscriptionRequestMessage.SubscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId, subscriptionRequestMessage.NotificationTypeTopicName);
 
-            ArmClient client = await GetEventGridClient(_eventGridDomainConfig.SubscriptionId, cancellationToken);
+            //ArmClient client = await GetEventGridClient(_eventGridDomainConfig.SubscriptionId);
            
-            DomainTopicResource topic = await GetDomainTopic(client, subscriptionRequestMessage.NotificationTypeTopicName, cancellationToken);
-            //string eventSubscriptionScope = topic.Id;
+            DomainTopicResource topic = await GetDomainTopic(subscriptionRequestMessage.NotificationTypeTopicName, cancellationToken);
 
-            EventGridSubscriptionData eventSubscriptionData = _eventSubscriptionConfiguration.SetEventSubscription(subscriptionRequestMessage);
+            //EventGridSubscriptionData eventSubscriptionData = _eventSubscriptionConfiguration.SetEventSubscription(subscriptionRequestMessage);
 
-            ArmOperation<DomainTopicEventSubscriptionResource> eventSubscriptionResult = await topic.GetDomainTopicEventSubscriptions().CreateOrUpdateAsync(
-                          WaitUntil.Completed,
-                          subscriptionRequestMessage.SubscriptionId,
-                          eventSubscriptionData, cancellationToken);
+            //ArmOperation<DomainTopicEventSubscriptionResource> eventSubscriptionResult = await topic.GetDomainTopicEventSubscriptions().CreateOrUpdateAsync(
+            //              WaitUntil.Completed,
+            //              subscriptionRequestMessage.SubscriptionId,
+            //              eventSubscriptionData, cancellationToken);
+
+            DomainTopicEventSubscriptionResource eventSubscriptionResult = await EditDomainTopicEventSubscription(
+                            topic,
+                            subscriptionRequestMessage,
+                            cancellationToken);
 
             _logger.LogInformation(EventIds.CreateOrUpdateAzureEventDomainTopicCompleted.ToEventId(),
                     "Create or update azure event domain topic and subscription completed for SubscriptionId:{SubscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId} for Event domain topic {topic}",
                     subscriptionRequestMessage.SubscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId, topic.Id.Name);
-            return eventSubscriptionResult.Value;
+            return eventSubscriptionResult;
         }
 
         public async Task DeleteSubscription(SubscriptionRequestMessage subscriptionRequestMessage, CancellationToken cancellationToken)
         {
             _logger.LogInformation(EventIds.DeleteAzureEventDomainSubscriptionStart.ToEventId(),
                     "Delete azure event grid domain subscription started for SubscriptionId:{SubscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId} with Event domain topic {NotificationTypeTopicName}", subscriptionRequestMessage.SubscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId, subscriptionRequestMessage.NotificationTypeTopicName);
-            ArmClient client = await GetEventGridClient(_eventGridDomainConfig.SubscriptionId, cancellationToken);
+            //ArmClient client = await GetEventGridClient(_eventGridDomainConfig.SubscriptionId);
 
-            DomainTopicResource topic = await GetDomainTopic(client, subscriptionRequestMessage.NotificationTypeTopicName, cancellationToken);
-            //string eventSubscriptionScope = topic.Id;
+            DomainTopicResource topic = await GetDomainTopic(subscriptionRequestMessage.NotificationTypeTopicName, cancellationToken);
 
             DomainTopicEventSubscriptionResource topicEventSubscription = await topic.GetDomainTopicEventSubscriptionAsync(subscriptionRequestMessage.SubscriptionId, cancellationToken);
             await topicEventSubscription.DeleteAsync(WaitUntil.Completed, cancellationToken);
@@ -100,26 +103,27 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             return obj;
         }
 
-        private static async Task<ArmClient> GetEventGridClient(string subscriptionId, CancellationToken cancellationToken)
+        //private static async Task<ArmClient> GetEventGridClient(string subscriptionId)
+        //{
+        //    DefaultAzureCredential azureCredential = new();
+
+        //    var result = new ArmClient(azureCredential,subscriptionId);
+
+        //    return await Task.FromResult(result);
+        //}
+
+        private ArmClient GetArmClient()
         {
             DefaultAzureCredential azureCredential = new();
-            //TokenRequestContext tokenRequestContext = new(new string[] { "https://management.azure.com/.default" });
 
-            //AccessToken tokenResult = await azureCredential.GetTokenAsync(tokenRequestContext,  cancellationToken);
-            //TokenCredential credential = new(tokenResult.Token);
-            //
-            //return new(credential)
-            //{
-            //    SubscriptionId = subscriptionId
-            //};
+            var result = new ArmClient(azureCredential, _eventGridDomainConfig.SubscriptionId);
 
-            var result = new ArmClient(azureCredential, subscriptionId);
-
-            return await Task.FromResult(result);
+            return result;
         }
 
-        protected virtual async Task<DomainTopicResource> GetDomainTopic(ArmClient client, string notificationTypeTopicName, CancellationToken cancellationToken)
+        protected virtual async Task<DomainTopicResource> GetDomainTopic(string notificationTypeTopicName, CancellationToken cancellationToken=default)
         {
+            ArmClient client = GetArmClient();
             ResourceIdentifier ri = EventGridDomainResource.CreateResourceIdentifier(
                     _eventGridDomainConfig.SubscriptionId,
                     _eventGridDomainConfig.ResourceGroup,
@@ -130,6 +134,17 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             DomainTopicCollection collection = eventGridDomain.GetDomainTopics();
             ArmOperation<DomainTopicResource> topic = await collection.CreateOrUpdateAsync(WaitUntil.Completed, notificationTypeTopicName, cancellationToken);
             return topic.Value;
+        }
+
+        protected async Task<DomainTopicEventSubscriptionResource> EditDomainTopicEventSubscription(DomainTopicResource topic, SubscriptionRequestMessage message, CancellationToken cancellationToken = default)
+        {
+            EventGridSubscriptionData eventSubscriptionData = _eventSubscriptionConfiguration.SetEventSubscription(message);
+
+            ArmOperation<DomainTopicEventSubscriptionResource> eventSubscriptionResult = await topic.GetDomainTopicEventSubscriptions().CreateOrUpdateAsync(
+                          WaitUntil.Completed,
+                          message.SubscriptionId,
+                          eventSubscriptionData, cancellationToken);
+            return eventSubscriptionResult.Value;
         }
     }
 }
