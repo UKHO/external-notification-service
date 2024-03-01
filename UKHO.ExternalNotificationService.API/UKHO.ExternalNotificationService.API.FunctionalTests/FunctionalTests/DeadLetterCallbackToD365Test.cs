@@ -67,8 +67,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             Assert.That(getMatchingData.Count() > 1);
 
             DateTime requestTime = DateTime.UtcNow;
-            //rhz await Task.Delay(420000);
-            await Task.Delay(TestConfig.WaitingTimeForQueueInSeconds * 3000);
+            await Task.Delay(420000);
+            //await Task.Delay(TestConfig.WaitingTimeForQueueInSeconds * 3000);
 
             HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, subscriptionId.ToUpper());
 
