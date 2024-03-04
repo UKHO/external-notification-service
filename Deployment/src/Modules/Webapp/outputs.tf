@@ -7,12 +7,12 @@ output "web_app_tenant_id" {
 }
 
 output "default_site_hostname" {
-  value = azurerm_windows_web_app.webapp_service.default_site_hostname
+  value = azurerm_windows_web_app.webapp_service.default_hostname
 }
 
 output "webapp_scm_credentials"{
   value = merge({
-    "${var.name}-scm-username" =  azurerm_windows_web_app.webapp_service.site_credential[0].username 
+    "${var.name}-scm-username" =  azurerm_windows_web_app.webapp_service.site_credential[0].name 
     },
     {
     "${var.name}-scm-password" =  azurerm_windows_web_app.webapp_service.site_credential[0].password 
@@ -25,7 +25,7 @@ output "webapp_name" {
 }
 
 output "default_site_hostname_ens_stub" {
-  value = var.env_name == "live" ?  null : azurerm_windows_web_app.stub_webapp_service[0].default_site_hostname
+  value = var.env_name == "live" ?  null : azurerm_windows_web_app.stub_webapp_service[0].default_hostname
 }
 
 output "slot_principal_id" {
@@ -37,5 +37,5 @@ output "slot_name" {
 }
 
 output "slot_default_site_hostname" {
-  value = azurerm_windows_web_app_slot.staging.default_site_hostname
+  value = azurerm_windows_web_app_slot.staging.default_hostname
 }
