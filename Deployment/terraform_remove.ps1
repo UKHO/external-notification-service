@@ -4,6 +4,8 @@ param (
     [Parameter(Mandatory = $true)] [string] $workSpace,
     [Parameter(Mandatory = $true)] [string] $elasticApmServerUrl,
     [Parameter(Mandatory = $true)] [string] $elasticApmApiKey,
+    [Parameter(Mandatory = $true)] [string] $elasticApmEnvironment,
+    [Parameter(Mandatory = $true)] [string] $elasticApmWebJobServiceName,
     [Parameter(Mandatory = $true)] [string] $newId1,
     [Parameter(Mandatory = $true)] [string] $newId2,
     [Parameter(Mandatory = $true)] [string] $newId3
@@ -45,7 +47,7 @@ if (![string]::IsNullOrWhiteSpace($webApp1))
     terraform state rm "module.webapp_service.azurerm_app_service.webapp_service"
     Write-Output "$webApp1 removal from state file done..."
     Write-Output "$newWebApp1 importing to state file..."
-    terraform import -var elastic_apm_server_url=$elasticApmServerUrl -var elastic_apm_api_key=$elasticApmApiKey "$newWebApp1" "$newId1"
+    terraform import -var elastic_apm_server_url=$elasticApmServerUrl -var elastic_apm_api_key=$elasticApmApiKey -var elastic_apm_environment=$elasticApmEnvironment -var elastic_apm_service_name=$elasticApmWebJobServiceName "$newWebApp1" "$newId1"
     if ( !$? ) { echo "Something went wrong during terraform import"; throw "Error" }
     Write-Output "$newWebApp1 import done..."
 }
