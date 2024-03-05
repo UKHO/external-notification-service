@@ -15,7 +15,7 @@ steps:
 
   - task: PowerShell@2
     displayName: "terraform $(Environment)update"
-    name: setVariable1
+    name: TfUpdate
     inputs:
       targetType: filePath
       filePath: '$(Pipeline.Workspace)/terraformartifact/terraform_remove.ps1'
@@ -39,8 +39,7 @@ steps:
 
   - task: PowerShell@2
     displayName: "terraform $(Environment)deploy"
-    name: setVariable2
-    dependsOn: setVariable1
+    name: TfCreate
     inputs:
       targetType: filePath
       filePath: '$(Pipeline.Workspace)/terraformartifact/terraform_conditional_run.ps1'
