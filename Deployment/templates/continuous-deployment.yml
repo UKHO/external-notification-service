@@ -25,7 +25,7 @@ steps:
     inputs:
       targetType: filePath
       filePath: '$(Pipeline.Workspace)/terraformartifact/terraform_remove.ps1'
-      arguments: '-deploymentResourceGroupName $(DeploymentResourceGroupName) -deploymentStorageAccountName $(DeploymentStorageAccountName) -workSpace $(Environment) -elasticApmServerUrl $(ElasticAPM.ServerURL) -elasticApmApiKey $(ElasticAPM.ApiKey) -elasticApmEnvironment "$(ElasticAPM.Environment)" -elasticApmWebJobServiceName "$(ElasticAPM.WebJobServiceName)" -newId1 "$${{ parameters.NewId1 }}" -newId2 "$${{ parameters.NewId2 }}" -newId3 "$${{ parameters.NewId3 }}"'
+      arguments: '-deploymentResourceGroupName $(DeploymentResourceGroupName) -deploymentStorageAccountName $(DeploymentStorageAccountName) -workSpace $(Environment) -elasticApmServerUrl $(ElasticAPM.ServerURL) -elasticApmApiKey $(ElasticAPM.ApiKey) -elasticApmEnvironment "$(ElasticAPM.Environment)" -elasticApmWebJobServiceName "$(ElasticAPM.WebJobServiceName)" -newId1 "${{ parameters.NewId1 }}" -newId2 "${{ parameters.NewId2 }}" -newId3 "${{ parameters.NewId3 }}"'
     env:
       ARM_CLIENT_ID: $(TERRAFORM-CLIENT-ID)
       ARM_CLIENT_SECRET: $(TERRAFORM-CLIENT-SECRET)
