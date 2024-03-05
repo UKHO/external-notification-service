@@ -6,6 +6,11 @@ parameters:
     type: boolean
     default: true
 
+trigger:
+  - main
+  - release/*
+  - develop
+
 pool: 
     name: NautilusBuild
     demands: vs_16 -equals 1 #exclude agents 13 and 14 as code coverage report fails
