@@ -37,6 +37,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", 
 		..\Deployment\set_stub_url.ps1 = ..\Deployment\set_stub_url.ps1
 		..\Deployment\terraform_conditional_run.ps1 = ..\Deployment\terraform_conditional_run.ps1
 		..\Deployment\terraform_conditional_run_apim.ps1 = ..\Deployment\terraform_conditional_run_apim.ps1
+		..\Deployment\terraform_remove.ps1 = ..\Deployment\terraform_remove.ps1
 		..\Deployment\terraform_run.ps1 = ..\Deployment\terraform_run.ps1
 	EndProjectSection
 EndProject
