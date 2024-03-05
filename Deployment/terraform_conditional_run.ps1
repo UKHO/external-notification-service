@@ -48,29 +48,29 @@ if($totalDestroyLines -ge 2)
     write-host("Continue executing terraform apply - as continueEvenIfResourcesAreGettingDestroyed param is set to true in pipeline")
 }
 
-Write-output "Executing terraform apply"
-terraform apply  "terraform.deployment.tfplan"
-if ( !$? ) { echo "Something went wrong during terraform apply" ; throw "Error" }
+#Write-output "Executing terraform apply"
+#terraform apply  "terraform.deployment.tfplan"
+#if ( !$? ) { echo "Something went wrong during terraform apply" ; throw "Error" }
 
-Write-output "Terraform output as json"
-$terraformOutput = terraform output -json | ConvertFrom-Json
+#Write-output "Terraform output as json"
+#$terraformOutput = terraform output -json | ConvertFrom-Json
 
-write-output "Set JSON output into pipeline variables"
-Write-Host "##vso[task.setvariable variable=WEB_APP_NAME]$($terraformOutput.web_app_name.value)"
-Write-Host "##vso[task.setvariable variable=WEB_APP;isOutput=true]$($terraformOutput.web_app_name.value)"
-Write-Host "##vso[task.setvariable variable=EnsApiUrl]$env:SERVICE_DNS_URL"
-Write-Host "##vso[task.setvariable variable=SubscriptionStorageConfiguration.QueueName]$($terraformOutput.event_storage_queue.value)"
-Write-Host "##vso[task.setvariable variable=EventHubLoggingConfiguration.Environment]$($terraformOutput.env_name.value)"
-Write-Host "##vso[task.setvariable variable=EnsStorageConnectionString;issecret=true]$($terraformOutput.ens_storage_connection_string.value)"
-Write-Host "##vso[task.setvariable variable=EnsStorageQueueName]$($terraformOutput.event_storage_queue.value)"
-Write-Host "##vso[task.setvariable variable=SubscriptionStorageConfiguration.StorageContainerName]$($terraformOutput.dead_letter_storage_container.value)"
-Write-Host "##vso[task.setvariable variable=stubWebAppName]$($terraformOutput.stub_webappname.value)"
-Write-Host "##vso[task.setvariable variable=D365ApiStubUri]$($terraformOutput.ens_stub_web_app_url.value)"
-Write-Host "##vso[task.setvariable variable=ResourceGroup]$($terraformOutput.webapp_rg.value)"
-Write-Host "##vso[task.setvariable variable=ResourceGroupName;isOutput=true]$($terraformOutput.webapp_rg.value)"
-Write-Host "##vso[task.setvariable variable=EventGridDomainConfiguration.EventGridDomainEndpoint;issecret=true]$($terraformOutput.event_grid_domain_endpoint_url.value)"
-Write-Host "##vso[task.setvariable variable=SubscriptionStorageConfiguration.DeadLetterDestinationContainerName]$($terraformOutput.dead_letter_storage_destination_container.value)"
-Write-Host "##vso[task.setvariable variable=WEB_APP_SLOT_NAME]$($terraformOutput.web_app_slot_name.value)"
-Write-Host "##vso[task.setvariable variable=WEB_APP_SLOT_HOST_NAME]$($terraformOutput.web_app_slot_default_site_hostname.value)"
+#write-output "Set JSON output into pipeline variables"
+#Write-Host "##vso[task.setvariable variable=WEB_APP_NAME]$($terraformOutput.web_app_name.value)"
+#Write-Host "##vso[task.setvariable variable=WEB_APP;isOutput=true]$($terraformOutput.web_app_name.value)"
+#Write-Host "##vso[task.setvariable variable=EnsApiUrl]$env:SERVICE_DNS_URL"
+#Write-Host "##vso[task.setvariable variable=SubscriptionStorageConfiguration.QueueName]$($terraformOutput.event_storage_queue.value)"
+#Write-Host "##vso[task.setvariable variable=EventHubLoggingConfiguration.Environment]$($terraformOutput.env_name.value)"
+#Write-Host "##vso[task.setvariable variable=EnsStorageConnectionString;issecret=true]$($terraformOutput.ens_storage_connection_string.value)"
+#Write-Host "##vso[task.setvariable variable=EnsStorageQueueName]$($terraformOutput.event_storage_queue.value)"
+#Write-Host "##vso[task.setvariable variable=SubscriptionStorageConfiguration.StorageContainerName]$($terraformOutput.dead_letter_storage_container.value)"
+#Write-Host "##vso[task.setvariable variable=stubWebAppName]$($terraformOutput.stub_webappname.value)"
+#Write-Host "##vso[task.setvariable variable=D365ApiStubUri]$($terraformOutput.ens_stub_web_app_url.value)"
+#Write-Host "##vso[task.setvariable variable=ResourceGroup]$($terraformOutput.webapp_rg.value)"
+#Write-Host "##vso[task.setvariable variable=ResourceGroupName;isOutput=true]$($terraformOutput.webapp_rg.value)"
+#Write-Host "##vso[task.setvariable variable=EventGridDomainConfiguration.EventGridDomainEndpoint;issecret=true]$($terraformOutput.event_grid_domain_endpoint_url.value)"
+#Write-Host "##vso[task.setvariable variable=SubscriptionStorageConfiguration.DeadLetterDestinationContainerName]$($terraformOutput.dead_letter_storage_destination_container.value)"
+#Write-Host "##vso[task.setvariable variable=WEB_APP_SLOT_NAME]$($terraformOutput.web_app_slot_name.value)"
+#Write-Host "##vso[task.setvariable variable=WEB_APP_SLOT_HOST_NAME]$($terraformOutput.web_app_slot_default_site_hostname.value)"
 
-$terraformOutput | ConvertTo-Json -Depth 5 > $terraformJsonOutputFile
+#$terraformOutput | ConvertTo-Json -Depth 5 > $terraformJsonOutputFile
