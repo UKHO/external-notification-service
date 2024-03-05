@@ -94,6 +94,9 @@ stages:
                   parameters:
                     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
                     AzureSubscription: "External Notification Service Dev - A.008.02"
+                    NewId1: "/subscriptions/db328b32-0563-44a5-8f51-689c5cae8a7e/resourceGroups/ens-dev-rg/providers/Microsoft.Web/sites/ens-dev-webapp"
+                    NewId2: "/subscriptions/db328b32-0563-44a5-8f51-689c5cae8a7e/resourceGroups/ens-dev-rg/providers/Microsoft.Web/sites/ens-dev-webapp/slots/staging"
+                    NewId3: "/subscriptions/db328b32-0563-44a5-8f51-689c5cae8a7e/resourceGroups/ens-dev-rg/providers/Microsoft.Web/sites/ens-dev-webapp-stub"
 
   - stage: IATvNextDeploy
     dependsOn:
@@ -139,6 +142,9 @@ stages:
                   parameters:
                     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
                     AzureSubscription: "External Notification Service vNext IAT - A.011.08"
+                    NewId1: ""
+                    NewId2: ""
+                    NewId3: ""
   
   - stage: E2EvNextDeploy
     dependsOn:
@@ -184,6 +190,9 @@ stages:
                   parameters:
                     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
                     AzureSubscription: "External Notification Service vNext E2E - A.011.08"
+                    NewId1: ""
+                    NewId2: ""
+                    NewId3: ""
 
   - stage: QAdeploy
     dependsOn:
@@ -229,6 +238,9 @@ stages:
                   parameters:
                     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
                     AzureSubscription: "External Notification Service QA - A.008.02"
+                    NewId1: ""
+                    NewId2: ""
+                    NewId3: ""
 
   - stage: Livedeploy
     dependsOn:
@@ -274,3 +286,6 @@ stages:
                   parameters:
                     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
                     AzureSubscription: "External Notification Service Live - A.008.02"
+                    NewId1: ""
+                    NewId2: ""
+                    NewId3: ""

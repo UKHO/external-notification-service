@@ -2,12 +2,11 @@ param (
     [Parameter(Mandatory = $true)] [string] $deploymentResourceGroupName,
     [Parameter(Mandatory = $true)] [string] $deploymentStorageAccountName,
     [Parameter(Mandatory = $true)] [string] $workSpace,
-    [Parameter(Mandatory = $true)] [boolean] $continueEvenIfResourcesAreGettingDestroyed,
-    [Parameter(Mandatory = $true)] [string] $terraformJsonOutputFile,
     [Parameter(Mandatory = $true)] [string] $elasticApmServerUrl,
     [Parameter(Mandatory = $true)] [string] $elasticApmApiKey,
-    [Parameter(Mandatory = $true)] [string] $elasticApmEnvironment,
-    [Parameter(Mandatory = $true)] [string] $elasticApmWebJobServiceName
+    [Parameter(Mandatory = $true)] [string] $newId1,
+    [Parameter(Mandatory = $true)] [string] $newId2,
+    [Parameter(Mandatory = $true)] [string] $newId3
 )
 
 cd $env:AGENT_BUILDDIRECTORY/terraformartifact/src
@@ -46,7 +45,7 @@ if (![string]::IsNullOrWhiteSpace($webApp1))
     terraform state rm "module.webapp_service.azurerm_app_service.webapp_service"
     Write-Output "$webApp1 removal from state file done..."
     Write-Output "$newWebApp1 importing to state file..."
-    terraform import -var elastic_apm_server_url=$elasticApmServerUrl -var elastic_apm_api_key=$elasticApmApiKey "$newWebApp1" "/subscriptions/db328b32-0563-44a5-8f51-689c5cae8a7e/resourceGroups/ens-dev-rg/providers/Microsoft.Web/serverfarms/ens-dev-webapp-asp"
+    terraform import -var elastic_apm_server_url=$elasticApmServerUrl -var elastic_apm_api_key=$elasticApmApiKey "$newWebApp1" "$newId1"
     if ( !$? ) { echo "Something went wrong during terraform import"; throw "Error" }
     Write-Output "$newWebApp1 import done..."
 }
@@ -61,7 +60,7 @@ if (![string]::IsNullOrWhiteSpace($webApp2))
     terraform state rm "module.webapp_service.azurerm_app_service_slot.staging"
     Write-Output "$webApp2 removal from state file done..."
     Write-Output "$newWebApp2 importing to state file..."
-    terraform import -var elastic_apm_server_url=$elasticApmServerUrl -var elastic_apm_api_key=$elasticApmApiKey "$newWebApp2" "/subscriptions/db328b32-0563-44a5-8f51-689c5cae8a7e/resourceGroups/ens-dev-rg/providers/Microsoft.Web/serverfarms/ens-dev-webapp-asp"
+    terraform import -var elastic_apm_server_url=$elasticApmServerUrl -var elastic_apm_api_key=$elasticApmApiKey "$newWebApp2" "$newId2"
     if ( !$? ) { echo "Something went wrong during terraform import"; throw "Error" }
     Write-Output "$newWebApp2 import done..."
 }
@@ -76,7 +75,7 @@ if (![string]::IsNullOrWhiteSpace($webApp3))
     terraform state rm "module.webapp_service.azurerm_app_service.stub_webapp_service"
     Write-Output "$webApp3 removal from state file done..."
     Write-Output "$newWebApp3 importing to state file..."
-    terraform import -var elastic_apm_server_url=$elasticApmServerUrl -var elastic_apm_api_key=$elasticApmApiKey "$newWebApp3" "/subscriptions/db328b32-0563-44a5-8f51-689c5cae8a7e/resourceGroups/ens-dev-rg/providers/Microsoft.Web/serverfarms/ens-dev-webapp-asp"
+    terraform import -var elastic_apm_server_url=$elasticApmServerUrl -var elastic_apm_api_key=$elasticApmApiKey "$newWebApp3" "$newId3"
     if ( !$? ) { echo "Something went wrong during terraform import"; throw "Error" }
     Write-Output "$newWebApp3 import done..."
 }
