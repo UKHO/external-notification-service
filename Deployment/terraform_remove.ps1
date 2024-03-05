@@ -62,7 +62,7 @@ if (![string]::IsNullOrWhiteSpace($webApp2))
     terraform state rm "module.webapp_service.azurerm_app_service_slot.staging"
     Write-Output "$webApp2 removal from state file done..."
     Write-Output "$newWebApp2 importing to state file..."
-    terraform import -var elastic_apm_server_url=$elasticApmServerUrl -var elastic_apm_api_key=$elasticApmApiKey "$newWebApp2" "$newId2"
+    terraform import -var elastic_apm_server_url=$elasticApmServerUrl -var elastic_apm_api_key=$elasticApmApiKey -var elastic_apm_environment=$elasticApmEnvironment -var elastic_apm_service_name=$elasticApmWebJobServiceName "$newWebApp2" "$newId2"
     if ( !$? ) { echo "Something went wrong during terraform import"; throw "Error" }
     Write-Output "$newWebApp2 import done..."
 }
@@ -77,7 +77,7 @@ if (![string]::IsNullOrWhiteSpace($webApp3))
     terraform state rm "module.webapp_service.azurerm_app_service.stub_webapp_service"
     Write-Output "$webApp3 removal from state file done..."
     Write-Output "$newWebApp3 importing to state file..."
-    terraform import -var elastic_apm_server_url=$elasticApmServerUrl -var elastic_apm_api_key=$elasticApmApiKey "$newWebApp3" "$newId3"
+    terraform import -var elastic_apm_server_url=$elasticApmServerUrl -var elastic_apm_api_key=$elasticApmApiKey -var elastic_apm_environment=$elasticApmEnvironment -var elastic_apm_service_name=$elasticApmWebJobServiceName "$newWebApp3" "$newId3"
     if ( !$? ) { echo "Something went wrong during terraform import"; throw "Error" }
     Write-Output "$newWebApp3 import done..."
 }
