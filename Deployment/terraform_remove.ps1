@@ -35,7 +35,7 @@ $newWebApp1='module.webapp_service.azurerm_windows_web_app.webapp_service'
 $webApp2=terraform state list | Select-String "module.webapp_service.azurerm_app_service_slot.staging"
 $newWebApp2='module.webapp_service.azurerm_windows_web_app_slot.staging'
 $webApp3=terraform state list | Select-String "module.webapp_service.azurerm_app_service.stub_webapp_service"
-$newWebApp3='module.webapp_service.azurerm_windows_web_app.stub_webapp_service'
+$newWebApp3='module.webapp_service.azurerm_windows_web_app.stub_webapp_service[0]'
 
 Write-Output "Output WebApp1: $webApp1"
 Write-Output "Output WebApp2: $webApp2"
