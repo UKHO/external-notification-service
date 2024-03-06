@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Azure.Messaging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -123,7 +124,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             // Validating Event Subject
             Assert.That(subject, Is.EqualTo(getMatchingData.Subject));
-            Assert.That(getMatchingData.CloudEvent, Is.InstanceOf<CustomCloudEvent>());
+            Assert.That(getMatchingData.CloudEvent, Is.InstanceOf<CloudEvent>());
 
             // Validating Event Source
             Assert.That(TestConfig.FssSources.Single(x => x.BusinessUnit == businessUnit).Source, Is.EqualTo(getMatchingData.CloudEvent.Source));
@@ -202,7 +203,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             // Validating Event Subject
             Assert.That(subject, Is.EqualTo(getMatchingData.Subject));
-            Assert.That(getMatchingData.CloudEvent, Is.InstanceOf<CustomCloudEvent>());
+            Assert.That(getMatchingData.CloudEvent, Is.InstanceOf<CloudEvent>());
 
             // Validating Event Source
             Assert.That(TestConfig.ScsSource, Is.EqualTo(getMatchingData.CloudEvent.Source));
