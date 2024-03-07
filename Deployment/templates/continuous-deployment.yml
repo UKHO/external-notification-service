@@ -12,20 +12,13 @@ parameters:
     type: string
 
 steps:
-  # - task: FileTransform@2
-  #   displayName: "File Transform: Ens Config" #Replace ens instance value from pipeline 
-  #   inputs:
-  #     folderPath: '$(Pipeline.Workspace)/terraformartifact/src'
-  #     xmlTransformationRules:
-  #     jsonTargetFiles: 'appsettings.json'
-
   - task: PowerShell@2
     displayName: "terraform $(Environment)update"
     name: TfUpdate
     inputs:
       targetType: filePath
       filePath: '$(Pipeline.Workspace)/terraformartifact/terraform_remove.ps1'
-      arguments: '-deploymentResourceGroupName $(DeploymentResourceGroupName) -deploymentStorageAccountName $(DeploymentStorageAccountName) -workSpace $(Environment) -elasticApmServerUrl $(ElasticAPM.ServerURL) -elasticApmApiKey $(ElasticAPM.ApiKey) -elasticApmEnvironment "$(ElasticAPM.Environment)" -elasticApmWebJobServiceName "$(ElasticAPM.WebJobServiceName)" -newId1 "${{ parameters.NewId1 }}" -newId2 "${{ parameters.NewId2 }}" -newId3 "${{ parameters.NewId3 }}"'
+      arguments: '-deploymentResourceGroupName $(DeploymentResourceGroupName) -deploymentStorageAccountName $(DeploymentStorageAccountName) -workSpace $(Environment) -terraformJsonOutputFile $(Pipeline.Workspace)/terraformartifact/terraform_output1.json -elasticApmServerUrl $(ElasticAPM.ServerURL) -elasticApmApiKey $(ElasticAPM.ApiKey) -elasticApmEnvironment "$(ElasticAPM.Environment)" -elasticApmWebJobServiceName "$(ElasticAPM.WebJobServiceName)" -newId1 "${{ parameters.NewId1 }}" -newId2 "${{ parameters.NewId2 }}" -newId3 "${{ parameters.NewId3 }}"'
     env:
       ARM_CLIENT_ID: $(TERRAFORM-CLIENT-ID)
       ARM_CLIENT_SECRET: $(TERRAFORM-CLIENT-SECRET)
@@ -42,6 +35,12 @@ steps:
       TF_VAR_private_endpoint_subnet_name: $(privateEndpointSubnet)
       TF_VAR_core_services_subscription_id: $(coreServicesSubscriptionId)
       TF_VAR_core_services_rg: $(coreServicesRG)
+
+  - task: PublishBuildArtifacts@1
+    displayName: "Publish Artifact: terraform_output1.json"
+    inputs:
+      PathtoPublish: '$(Pipeline.Workspace)/terraformartifact/terraform_output1.json'
+      ArtifactName: "$(Environment)terraform_output1"
 
   - task: PowerShell@2
     displayName: "terraform $(Environment)deploy"
@@ -49,7 +48,7 @@ steps:
     inputs:
       targetType: filePath
       filePath: '$(Pipeline.Workspace)/terraformartifact/terraform_conditional_run.ps1'
-      arguments: '-deploymentResourceGroupName $(DeploymentResourceGroupName) -deploymentStorageAccountName $(DeploymentStorageAccountName) -workSpace $(Environment) -continueEvenIfResourcesAreGettingDestroyed $${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }} -terraformJsonOutputFile $(Pipeline.Workspace)/terraformartifact/terraform_output.json -elasticApmServerUrl $(ElasticAPM.ServerURL) -elasticApmApiKey $(ElasticAPM.ApiKey) -elasticApmEnvironment "$(ElasticAPM.Environment)" -elasticApmWebJobServiceName "$(ElasticAPM.WebJobServiceName)"'
+      arguments: '-deploymentResourceGroupName $(DeploymentResourceGroupName) -deploymentStorageAccountName $(DeploymentStorageAccountName) -workSpace $(Environment) -continueEvenIfResourcesAreGettingDestroyed $${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }} -terraformJsonOutputFile $(Pipeline.Workspace)/terraformartifact/terraform_output2.json -elasticApmServerUrl $(ElasticAPM.ServerURL) -elasticApmApiKey $(ElasticAPM.ApiKey) -elasticApmEnvironment "$(ElasticAPM.Environment)" -elasticApmWebJobServiceName "$(ElasticAPM.WebJobServiceName)"'
     env:
       ARM_CLIENT_ID: $(TERRAFORM-CLIENT-ID)
       ARM_CLIENT_SECRET: $(TERRAFORM-CLIENT-SECRET)
@@ -66,3 +65,9 @@ steps:
       TF_VAR_private_endpoint_subnet_name: $(privateEndpointSubnet)
       TF_VAR_core_services_subscription_id: $(coreServicesSubscriptionId)
       TF_VAR_core_services_rg: $(coreServicesRG)
+
+  - task: PublishBuildArtifacts@1
+    displayName: "Publish Artifact: terraform_output2.json"
+    inputs:
+      PathtoPublish: '$(Pipeline.Workspace)/terraformartifact/terraform_output2.json'
+      ArtifactName: "$(Environment)terraform_output2"

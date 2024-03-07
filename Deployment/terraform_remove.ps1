@@ -2,6 +2,7 @@ param (
     [Parameter(Mandatory = $true)] [string] $deploymentResourceGroupName,
     [Parameter(Mandatory = $true)] [string] $deploymentStorageAccountName,
     [Parameter(Mandatory = $true)] [string] $workSpace,
+    [Parameter(Mandatory = $true)] [string] $terraformJsonOutputFile,
     [Parameter(Mandatory = $true)] [string] $elasticApmServerUrl,
     [Parameter(Mandatory = $true)] [string] $elasticApmApiKey,
     [Parameter(Mandatory = $true)] [string] $elasticApmEnvironment,
@@ -85,3 +86,7 @@ else
 {
     Write-Output "$webApp3 not present in state file..."
 }
+
+Write-Output "Terraform output as json"
+$terraformOutput = terraform output -json | ConvertFrom-Json
+$terraformOutput | ConvertTo-Json -Depth 5 > $terraformJsonOutputFile
