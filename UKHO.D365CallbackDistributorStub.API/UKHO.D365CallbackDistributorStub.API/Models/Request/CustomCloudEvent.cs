@@ -1,7 +1,8 @@
-﻿
+﻿using Microsoft.Azure.EventGrid.Models;
+
 namespace UKHO.D365CallbackDistributorStub.API.Models.Request
 {
-    public class XCustomCloudEvent
+    public class CustomCloudEvent : EventGridEvent
     {
         public string? Type { get; set; }
         public string? Time { get; set; }

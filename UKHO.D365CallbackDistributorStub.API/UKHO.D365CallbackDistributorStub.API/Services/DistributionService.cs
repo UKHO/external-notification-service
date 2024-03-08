@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Net;
-using Azure.Messaging;
+//using Azure.Messaging;
 using UKHO.D365CallbackDistributorStub.API.Models.Request;
 using UKHO.D365CallbackDistributorStub.API.Services.Data;
 
@@ -28,7 +28,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
             _logger = logger;
         }
 
-        public static bool SaveDistributorRequest(CloudEvent cloudEvent, HttpStatusCode? httpStatusCode)
+        public static bool SaveDistributorRequest(CustomCloudEvent cloudEvent, HttpStatusCode? httpStatusCode)
         {
             try
             {
