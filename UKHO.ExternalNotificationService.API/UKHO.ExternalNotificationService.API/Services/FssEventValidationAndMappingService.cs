@@ -1,9 +1,9 @@
 ﻿using Azure.Messaging;
 using FluentValidation.Results;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using System;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Validation;
 using UKHO.ExternalNotificationService.Common.Configuration;
@@ -32,8 +32,8 @@ namespace UKHO.ExternalNotificationService.API.Services
 
         public CloudEvent FssEventDataMapping(CustomCloudEvent customCloudEvent, string correlationId)
         {
-            string data = JsonConvert.SerializeObject(customCloudEvent.Data);
-            FssEventData fssEventData = JsonConvert.DeserializeObject<FssEventData>(data);
+            string data = JsonSerializer.Serialize(customCloudEvent.Data);
+            FssEventData fssEventData = JsonSerializer.Deserialize<FssEventData>(data);
 
             fssEventData.Links.BatchStatus.Href = ReplaceHostValueMethod(fssEventData.Links.BatchStatus.Href);
             fssEventData.Links.BatchDetails.Href = ReplaceHostValueMethod(fssEventData.Links.BatchDetails.Href);

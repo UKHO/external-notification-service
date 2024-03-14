@@ -3,11 +3,11 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using NUnit.Framework;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 using UKHO.ExternalNotificationService.SubscriptionService.D365Callback;
@@ -66,7 +66,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
             string fakeAccessToken = GetFakeToken();
 
             ExternalNotificationEntity getExternalNotificationEntry = GetExternalNotificationEntity();
-            string jsonString = JsonConvert.SerializeObject(getExternalNotificationEntry);
+            string jsonString = JsonSerializer.Serialize(getExternalNotificationEntry);
             var httpResponse = new HttpResponseMessage() { StatusCode = HttpStatusCode.NoContent, RequestMessage = new HttpRequestMessage() { Method = HttpMethod.Patch, RequestUri = new Uri("http://test.com") }, Content = new StreamContent(new MemoryStream(Encoding.UTF8.GetBytes(jsonString))) };
 
             A.CallTo(() => _fakeAuthTokenProvider.GetADAccessToken(A<SubscriptionRequestMessage>.Ignored)).Returns(fakeAccessToken);
@@ -109,7 +109,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
             string fakeAccessToken = GetFakeToken();
 
             ExternalNotificationEntity getExternalNotificationEntry = GetExternalNotificationEntity();
-            string jsonString = JsonConvert.SerializeObject(getExternalNotificationEntry);
+            string jsonString = JsonSerializer.Serialize(getExternalNotificationEntry);
             var httpResponse = new HttpResponseMessage() { StatusCode = HttpStatusCode.NoContent, RequestMessage = new HttpRequestMessage() { Method = HttpMethod.Patch, RequestUri = new Uri("http://test.com") }, Content = new StreamContent(new MemoryStream(Encoding.UTF8.GetBytes(jsonString))) };
 
             A.CallTo(() => _fakeAuthTokenProvider.GetADAccessToken(A<SubscriptionRequestMessage>.Ignored)).Returns(fakeAccessToken);

@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Azure.Messaging;
 using FakeItEasy;
 using FluentValidation.Results;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using NUnit.Framework;
 using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.API.UnitTests.BaseClass;
@@ -73,7 +73,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             CloudEvent result = _scsEventValidationAndMappingService.ScsEventDataMapping(_fakeCustomCloudEvent, correlationId);
 
             string data = Encoding.ASCII.GetString(result.Data);
-            ScsEventData cloudEventData = JsonConvert.DeserializeObject<ScsEventData>(data);
+            ScsEventData cloudEventData = JsonSerializer.Deserialize<ScsEventData>(data);
 
             Assert.That(ScsDataMappingValueConstant.Type, Is.EqualTo(result.Type));
             Assert.That(_fakeScsDataMappingConfiguration.Value.Source, Is.EqualTo(result.Source));

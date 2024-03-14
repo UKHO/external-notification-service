@@ -14,6 +14,7 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
 
         Task PublishEventAsync(CloudEvent cloudEvent, string correlationId, CancellationToken cancellationToken = default);
 
-        T JsonDeserialize<T>(object data);
+        //T JsonDeserialize<T>(object data);  rhz to be removed 
+        T ConvertObjectTo<T>(object data) where T : class;
     }
 }

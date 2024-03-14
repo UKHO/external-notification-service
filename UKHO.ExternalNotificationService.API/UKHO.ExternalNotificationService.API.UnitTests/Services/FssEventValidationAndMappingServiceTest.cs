@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Azure.Messaging;
 using FakeItEasy;
 using FluentValidation.Results;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using NUnit.Framework;
 using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.API.UnitTests.BaseClass;
@@ -79,7 +79,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             CloudEvent result = _fssEventValidationAndMappingService.FssEventDataMapping(customCloudEvent, correlationId);
 
             string data = Encoding.ASCII.GetString(result.Data);
-            FssEventData cloudEventData = JsonConvert.DeserializeObject<FssEventData>(data);
+            FssEventData cloudEventData = JsonSerializer.Deserialize<FssEventData>(data);
 
             Assert.That(FssDataMappingValueConstant.Type, Is.EqualTo(result.Type));
             Assert.That(_fakeFssDataMappingConfiguration.Value.Sources.Single(x => x.BusinessUnit == businessUnit).Source, Is.EqualTo(result.Source));

@@ -79,7 +79,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             A.CallTo(() => _fakeScsEventValidationAndMappingService.ScsEventDataMapping(A<CustomCloudEvent>.Ignored, A<string>.Ignored)).Returns(cloudEvent);
 
-            A.CallTo(() => _fakeAzureEventGridDomainService.JsonDeserialize<ScsEventData>(A<object>.Ignored)).Returns(_fakeScsEventData);
+            A.CallTo(() => _fakeAzureEventGridDomainService.ConvertObjectTo<ScsEventData>(A<object>.Ignored)).Returns(_fakeScsEventData);
 
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken));
 

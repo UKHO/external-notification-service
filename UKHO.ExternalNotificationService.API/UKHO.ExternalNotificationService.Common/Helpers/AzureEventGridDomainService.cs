@@ -7,7 +7,6 @@ using Azure.ResourceManager;
 using Azure.ResourceManager.EventGrid;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -20,6 +19,7 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace UKHO.ExternalNotificationService.Common.Helpers
 {
+#nullable enable  //rhz will try to make this global later
     [ExcludeFromCodeCoverage]
     public class AzureEventGridDomainService : IAzureEventGridDomainService
     {
@@ -87,12 +87,21 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             }
         }
 
-        public T JsonDeserialize<T>(object data)
-        {
-            string jsonString = JsonConvert.SerializeObject(data);
-            T obj = JsonConvert.DeserializeObject<T>(jsonString);
-            return obj;
-        }
+        //rhz to be removed
+        //public T JsonDeserialize<T>(object data)
+        //{
+        //    string jsonString = JsonConvert.SerializeObject(data);
+        //    T obj = JsonConvert.DeserializeObject<T>(jsonString);
+        //    return obj;
+        //}
+
+
+        public T? ConvertObjectTo<T>(object data) where T : class =>
+            data switch
+            {
+                T value => value,
+                _ => default
+            };
 
 
         private ArmClient GetArmClient()

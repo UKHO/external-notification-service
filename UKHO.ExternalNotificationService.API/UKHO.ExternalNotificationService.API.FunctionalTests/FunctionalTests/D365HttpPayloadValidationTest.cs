@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using NUnit.Framework;
 using UKHO.ExternalNotificationService.API.FunctionalTests.Helper;
 using UKHO.ExternalNotificationService.API.FunctionalTests.Model;
@@ -28,9 +28,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             string filePathFssMsi = Path.Combine(Directory.GetCurrentDirectory(), TestConfig.PayloadFolder, TestConfig.FssMsiPayloadFileName);
             string filePathScs = Path.Combine(Directory.GetCurrentDirectory(), TestConfig.PayloadFolder, TestConfig.ScsPayloadFileName);
 
-            D365FssAvcsPayload = JsonConvert.DeserializeObject<D365Payload>(await File.ReadAllTextAsync(filePathFssAvcs));
-            D365FssMsiPayload = JsonConvert.DeserializeObject<D365Payload>(await File.ReadAllTextAsync(filePathFssMsi));
-            D365ScsPayload = JsonConvert.DeserializeObject<D365Payload>(await File.ReadAllTextAsync(filePathScs));
+            D365FssAvcsPayload = JsonSerializer.Deserialize<D365Payload>(await File.ReadAllTextAsync(filePathFssAvcs));
+            D365FssMsiPayload = JsonSerializer.Deserialize<D365Payload>(await File.ReadAllTextAsync(filePathFssMsi));
+            D365ScsPayload = JsonSerializer.Deserialize<D365Payload>(await File.ReadAllTextAsync(filePathScs));
             D365FssAvcsPayload.InputParameters[0].Value.Attributes[9].Value = string.Concat(TestConfig.StubBaseUri, TestConfig.WebhookUrlExtension);
             D365FssMsiPayload.InputParameters[0].Value.Attributes[9].Value = string.Concat(TestConfig.StubBaseUri, TestConfig.WebhookUrlExtension);
             D365ScsPayload.InputParameters[0].Value.Attributes[9].Value = string.Concat(TestConfig.StubBaseUri, TestConfig.WebhookUrlExtension);

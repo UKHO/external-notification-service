@@ -2,7 +2,7 @@
 
 namespace UKHO.ExternalNotificationService.API.FunctionalTests.Model
 {
-    public class XCustomCloudEvent : EventGridEvent  //rhz
+    public class CustomCloudEvent : EventGridEvent 
     {
         public string Type { get; set; }
         public string Time { get; set; }
