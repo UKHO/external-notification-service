@@ -145,8 +145,6 @@ stages:
                     NewId1: ""
                     NewId2: ""
                     NewId3: ""
-                  parameters:
-                    TestTitle: "IAT-AutomationTests"
   
   - stage: E2EvNextDeploy
     dependsOn:
@@ -194,7 +192,7 @@ stages:
                     AzureSubscription: "External Notification Service vNext E2E - A.011.08"
                     NewId1: ""
                     NewId2: ""
-                
+                    NewId3: ""
 
   - stage: QAdeploy
     dependsOn:
