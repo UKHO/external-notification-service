@@ -35,42 +35,42 @@ Write-output "Execute Terraform plan"
 terraform plan -out "terraform.deployment.tfplan" -var elastic_apm_server_url=$elasticApmServerUrl -var elastic_apm_api_key=$elasticApmApiKey -var elastic_apm_environment=$elasticApmEnvironment -var elastic_apm_service_name=$elasticApmWebJobServiceName | tee terraform_output.txt
 if ( !$? ) { echo "Something went wrong during terraform plan" ; throw "Error" }
 
-$totalDestroyLines=(Get-Content -Path terraform_output.txt | Select-String -Pattern "destroy" -CaseSensitive |  where {$_ -ne ""}).length
-if($totalDestroyLines -ge 2) 
-{
-    write-Host("Terraform is destroying some resources, please verify...................")
-    if ( !$ContinueEvenIfResourcesAreGettingDestroyed) 
-    {
-        write-Host("exiting...................")
-        Write-Output $_
-        exit 1
-    }
-    write-host("Continue executing terraform apply - as continueEvenIfResourcesAreGettingDestroyed param is set to true in pipeline")
-}
+#$totalDestroyLines=(Get-Content -Path terraform_output.txt | Select-String -Pattern "destroy" -CaseSensitive |  where {$_ -ne ""}).length
+#if($totalDestroyLines -ge 2) 
+#{
+#    write-Host("Terraform is destroying some resources, please verify...................")
+#    if ( !$ContinueEvenIfResourcesAreGettingDestroyed) 
+#    {
+#        write-Host("exiting...................")
+#        Write-Output $_
+#        exit 1
+#    }
+#    write-host("Continue executing terraform apply - as continueEvenIfResourcesAreGettingDestroyed param is set to true in pipeline")
+#}
 
-Write-output "Executing terraform apply"
-terraform apply  "terraform.deployment.tfplan"
-if ( !$? ) { echo "Something went wrong during terraform apply" ; throw "Error" }
+#Write-output "Executing terraform apply"
+#terraform apply  "terraform.deployment.tfplan"
+#if ( !$? ) { echo "Something went wrong during terraform apply" ; throw "Error" }
 
 Write-output "Terraform output as json"
 $terraformOutput = terraform output -json | ConvertFrom-Json
 
-write-output "Set JSON output into pipeline variables"
-Write-Host "##vso[task.setvariable variable=WEB_APP_NAME]$($terraformOutput.web_app_name.value)"
-Write-Host "##vso[task.setvariable variable=WEB_APP;isOutput=true]$($terraformOutput.web_app_name.value)"
-Write-Host "##vso[task.setvariable variable=EnsApiUrl]$env:SERVICE_DNS_URL"
-Write-Host "##vso[task.setvariable variable=SubscriptionStorageConfiguration.QueueName]$($terraformOutput.event_storage_queue.value)"
-Write-Host "##vso[task.setvariable variable=EventHubLoggingConfiguration.Environment]$($terraformOutput.env_name.value)"
-Write-Host "##vso[task.setvariable variable=EnsStorageConnectionString;issecret=true]$($terraformOutput.ens_storage_connection_string.value)"
-Write-Host "##vso[task.setvariable variable=EnsStorageQueueName]$($terraformOutput.event_storage_queue.value)"
-Write-Host "##vso[task.setvariable variable=SubscriptionStorageConfiguration.StorageContainerName]$($terraformOutput.dead_letter_storage_container.value)"
-Write-Host "##vso[task.setvariable variable=stubWebAppName]$($terraformOutput.stub_webappname.value)"
-Write-Host "##vso[task.setvariable variable=D365ApiStubUri]$($terraformOutput.ens_stub_web_app_url.value)"
-Write-Host "##vso[task.setvariable variable=ResourceGroup]$($terraformOutput.webapp_rg.value)"
-Write-Host "##vso[task.setvariable variable=ResourceGroupName;isOutput=true]$($terraformOutput.webapp_rg.value)"
-Write-Host "##vso[task.setvariable variable=EventGridDomainConfiguration.EventGridDomainEndpoint;issecret=true]$($terraformOutput.event_grid_domain_endpoint_url.value)"
-Write-Host "##vso[task.setvariable variable=SubscriptionStorageConfiguration.DeadLetterDestinationContainerName]$($terraformOutput.dead_letter_storage_destination_container.value)"
-Write-Host "##vso[task.setvariable variable=WEB_APP_SLOT_NAME]$($terraformOutput.web_app_slot_name.value)"
-Write-Host "##vso[task.setvariable variable=WEB_APP_SLOT_HOST_NAME]$($terraformOutput.web_app_slot_default_site_hostname.value)"
+#write-output "Set JSON output into pipeline variables"
+#Write-Host "##vso[task.setvariable variable=WEB_APP_NAME]$($terraformOutput.web_app_name.value)"
+#Write-Host "##vso[task.setvariable variable=WEB_APP;isOutput=true]$($terraformOutput.web_app_name.value)"
+#Write-Host "##vso[task.setvariable variable=EnsApiUrl]$env:SERVICE_DNS_URL"
+#Write-Host "##vso[task.setvariable variable=SubscriptionStorageConfiguration.QueueName]$($terraformOutput.event_storage_queue.value)"
+#Write-Host "##vso[task.setvariable variable=EventHubLoggingConfiguration.Environment]$($terraformOutput.env_name.value)"
+#Write-Host "##vso[task.setvariable variable=EnsStorageConnectionString;issecret=true]$($terraformOutput.ens_storage_connection_string.value)"
+#Write-Host "##vso[task.setvariable variable=EnsStorageQueueName]$($terraformOutput.event_storage_queue.value)"
+#Write-Host "##vso[task.setvariable variable=SubscriptionStorageConfiguration.StorageContainerName]$($terraformOutput.dead_letter_storage_container.value)"
+#Write-Host "##vso[task.setvariable variable=stubWebAppName]$($terraformOutput.stub_webappname.value)"
+#Write-Host "##vso[task.setvariable variable=D365ApiStubUri]$($terraformOutput.ens_stub_web_app_url.value)"
+#Write-Host "##vso[task.setvariable variable=ResourceGroup]$($terraformOutput.webapp_rg.value)"
+#Write-Host "##vso[task.setvariable variable=ResourceGroupName;isOutput=true]$($terraformOutput.webapp_rg.value)"
+#Write-Host "##vso[task.setvariable variable=EventGridDomainConfiguration.EventGridDomainEndpoint;issecret=true]$($terraformOutput.event_grid_domain_endpoint_url.value)"
+#Write-Host "##vso[task.setvariable variable=SubscriptionStorageConfiguration.DeadLetterDestinationContainerName]$($terraformOutput.dead_letter_storage_destination_container.value)"
+#Write-Host "##vso[task.setvariable variable=WEB_APP_SLOT_NAME]$($terraformOutput.web_app_slot_name.value)"
+#Write-Host "##vso[task.setvariable variable=WEB_APP_SLOT_HOST_NAME]$($terraformOutput.web_app_slot_default_site_hostname.value)"
 
 $terraformOutput | ConvertTo-Json -Depth 5 > $terraformJsonOutputFile
