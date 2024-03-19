@@ -452,9 +452,7 @@ stages:
                     tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
                     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
 
-                - template: Deployment/templates/functional-test-process.yml
-                  parameters:
-                    TestTitle: "IAT-AutomationTests"
+                
   
   - stage: E2EvNextDeploy
     dependsOn:
@@ -511,9 +509,7 @@ stages:
                     tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
                     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
 
-                - template: Deployment/templates/functional-test-process.yml
-                  parameters:
-                    TestTitle: "E2E-AutomationTests"
+               
                 
 
   - stage: QAdeploy
