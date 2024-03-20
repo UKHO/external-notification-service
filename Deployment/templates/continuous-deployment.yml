@@ -4,22 +4,21 @@ parameters:
     default: false
   - name: AzureSubscription
     type: string
+  - name: NewId1
+    type: string
+  - name: NewId2
+    type: string
+  - name: NewId3
+    type: string
 
 steps:
-  - task: FileTransform@2
-    displayName: "File Transform: Ens Config" #Replace ens instance value from pipeline 
-    inputs:
-      folderPath: '$(Pipeline.Workspace)/terraformartifact/src'
-      xmlTransformationRules:
-      jsonTargetFiles: 'appsettings.json'
-
   - task: PowerShell@2
-    displayName: "terraform $(Environment)deploy"
-    name: setVariable
+    displayName: "terraform $(Environment)update"
+    name: TfUpdate
     inputs:
       targetType: filePath
-      filePath: '$(Pipeline.Workspace)/terraformartifact/terraform_conditional_run.ps1'
-      arguments: '-deploymentResourceGroupName $(DeploymentResourceGroupName) -deploymentStorageAccountName $(DeploymentStorageAccountName) -workSpace $(Environment) -continueEvenIfResourcesAreGettingDestroyed $${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }} -terraformJsonOutputFile $(Pipeline.Workspace)/terraformartifact/terraform_output.json -elasticApmServerUrl $(ElasticAPM.ServerURL) -elasticApmApiKey $(ElasticAPM.ApiKey) -elasticApmEnvironment "$(ElasticAPM.Environment)" -elasticApmWebJobServiceName "$(ElasticAPM.WebJobServiceName)"'
+      filePath: '$(Pipeline.Workspace)/terraformartifact/terraform_remove.ps1'
+      arguments: '-deploymentResourceGroupName $(DeploymentResourceGroupName) -deploymentStorageAccountName $(DeploymentStorageAccountName) -workSpace $(Environment) -terraformJsonOutputFile $(Pipeline.Workspace)/terraformartifact/terraform_output1.json -elasticApmServerUrl $(ElasticAPM.ServerURL) -elasticApmApiKey $(ElasticAPM.ApiKey) -elasticApmEnvironment "$(ElasticAPM.Environment)" -elasticApmWebJobServiceName "$(ElasticAPM.WebJobServiceName)" -newId1 "${{ parameters.NewId1 }}" -newId2 "${{ parameters.NewId2 }}" -newId3 "${{ parameters.NewId3 }}"'
     env:
       ARM_CLIENT_ID: $(TERRAFORM-CLIENT-ID)
       ARM_CLIENT_SECRET: $(TERRAFORM-CLIENT-SECRET)
@@ -37,73 +36,38 @@ steps:
       TF_VAR_core_services_subscription_id: $(coreServicesSubscriptionId)
       TF_VAR_core_services_rg: $(coreServicesRG)
 
-  - bash: echo "##vso[task.setvariable variable=D365CallbackConfiguration.D365ApiUri]$(D365ApiStubUri)"
-    name: SetStubURL
-    condition: and(succeeded(), ne(variables['Environment.Name'], 'Ens-Live'))
-
-  - task: FileTransform@2
-    displayName: "File Transform: WebAppSettings"
+  - task: PublishBuildArtifacts@1
+    displayName: "Publish Artifact: terraform_output1.json"
     inputs:
-      folderPath: '$(Pipeline.Workspace)/ExternalNotificationService/*.zip'
-      xmlTransformationRules:
-      jsonTargetFiles: '**/appsettings.json'
-
-  - task: AzureCLI@2
-    displayName: "Staging slot sticky appsettings"
-    inputs:
-      azureSubscription: "${{ parameters.AzureSubscription }}"
-      scriptType: pscore
-      scriptLocation: inlineScript
-      inlineScript: |
-        az webapp config appsettings set --resource-group $(ResourceGroup) --name $(WEB_APP_NAME) --slot $(WEB_APP_SLOT_NAME) --slot-settings WEBJOBS_STOPPED=1
-
-  - task: AzureWebApp@1
-    displayName: "Azure App Deploy: Staging slot"
-    inputs:
-      azureSubscription: "${{ parameters.AzureSubscription }}"
-      appType: webApp
-      appName: "$(WEB_APP_NAME)"
-      package: "$(Pipeline.Workspace)/ExternalNotificationService/UKHO.ExternalNotificationService.API.zip"
-      deployToSlotOrASE: true
-      slotName: $(WEB_APP_SLOT_NAME)
+      PathtoPublish: '$(Pipeline.Workspace)/terraformartifact/terraform_output1.json'
+      ArtifactName: "$(Environment)terraform_output1"
 
   - task: PowerShell@2
-    displayName: "Check the status of staging slot"
+    displayName: "terraform $(Environment)deploy"
+    name: TfCreate
     inputs:
       targetType: filePath
-      filePath: "$(Pipeline.Workspace)/terraformartifact/check_service_status.ps1"
-      arguments: "-healthEndPointUrl https://$(WEB_APP_SLOT_HOST_NAME)/health -waitTimeInMinute $(waitTimeInMinute)"
-     
-  - task: AzureAppServiceManage@0
-    displayName: "Swap with production slot"
-    inputs:
-      azureSubscription: "${{ parameters.AzureSubscription }}"
-      resourceGroupName: $(ResourceGroup)
-      webAppName: $(WEB_APP_NAME)
-      action: "Swap Slots"
-      swapWithProduction: true
-      sourceSlot: $(WEB_APP_SLOT_NAME)
+      filePath: '$(Pipeline.Workspace)/terraformartifact/terraform_conditional_run.ps1'
+      arguments: '-deploymentResourceGroupName $(DeploymentResourceGroupName) -deploymentStorageAccountName $(DeploymentStorageAccountName) -workSpace $(Environment) -continueEvenIfResourcesAreGettingDestroyed $${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }} -terraformJsonOutputFile $(Pipeline.Workspace)/terraformartifact/terraform_output2.json -elasticApmServerUrl $(ElasticAPM.ServerURL) -elasticApmApiKey $(ElasticAPM.ApiKey) -elasticApmEnvironment "$(ElasticAPM.Environment)" -elasticApmWebJobServiceName "$(ElasticAPM.WebJobServiceName)"'
+    env:
+      ARM_CLIENT_ID: $(TERRAFORM-CLIENT-ID)
+      ARM_CLIENT_SECRET: $(TERRAFORM-CLIENT-SECRET)
+      ARM_TENANT_ID: $(TERRAFORM-TENANT-ID)
+      ARM_SUBSCRIPTION_ID: $(TERRAFORM-SUBSCRIPTION-ID)
+      TF_VAR_allowed_ips: $(whiteListedIps)
+      TF_VAR_spoke_rg: $(spokeRG)
+      TF_VAR_spoke_vnet_name: $(spokeVnetName)
+      TF_VAR_spoke_subnet_name: $(spokeSubnetName)
+      TF_VAR_agent_rg: $(agentRG)
+      TF_VAR_agent_vnet_name: $(agentVnetName)
+      TF_VAR_agent_subnet_name: $(agentSubnetName)
+      TF_VAR_agent_subscription_id: $(agentSubscriptionId)
+      TF_VAR_private_endpoint_subnet_name: $(privateEndpointSubnet)
+      TF_VAR_core_services_subscription_id: $(coreServicesSubscriptionId)
+      TF_VAR_core_services_rg: $(coreServicesRG)
 
-  - task: PowerShell@2
-    displayName: "Check the status of Service"
+  - task: PublishBuildArtifacts@1
+    displayName: "Publish Artifact: terraform_output2.json"
     inputs:
-      targetType: filePath
-      filePath: "$(Pipeline.Workspace)/terraformartifact/check_service_status.ps1"
-      arguments: "-healthEndPointUrl $(EnsApiUrl)/health -waitTimeInMinute $(waitTimeInMinute)"
-
-  - task: FileTransform@2
-    displayName: "File Transform: StubWebAppSettings"
-    condition: and(succeeded(), ne(variables['Environment.Name'], 'Ens-Live'))
-    inputs:
-      folderPath: '$(Pipeline.Workspace)/StubWebAPI/*.zip'
-      xmlTransformationRules:
-      jsonTargetFiles: '**/appsettings.json'           
-
-  - task: AzureWebApp@1
-    displayName: "Azure App Deploy: ens-$(Environment)-stub-webapp"
-    condition: and(succeeded(), ne(variables['Environment.Name'], 'Ens-Live'))
-    inputs:
-      azureSubscription: "${{ parameters.AzureSubscription }}"
-      appType: webApp
-      appName: "$(stubWebAppName)"
-      package: "$(Pipeline.Workspace)/StubWebAPI/UKHO.D365CallbackDistributorStub.API.zip"
+      PathtoPublish: '$(Pipeline.Workspace)/terraformartifact/terraform_output2.json'
+      ArtifactName: "$(Environment)terraform_output2"
