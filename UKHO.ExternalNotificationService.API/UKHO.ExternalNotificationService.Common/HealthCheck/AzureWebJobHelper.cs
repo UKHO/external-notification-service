@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -41,8 +42,8 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
                     string data = await response.Content.ReadAsStringAsync();
                     data = data.ToLower();
                     //dynamic webJobDetails = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
-                    dynamic webJobDetails = JsonSerializer.Deserialize<dynamic>(data);
-                    string webJobStatus = webJobDetails["status"];
+                    JsonNode webJobDetails = JsonSerializer.Deserialize<JsonNode>(data);
+                    string webJobStatus = webJobDetails["status"].GetValue<string>();
                     if (webJobStatus != "Running")
                     {
                         string webJobDetail = $"Webjob ens-{_webHostEnvironment.EnvironmentName} status is {webJobStatus}";
