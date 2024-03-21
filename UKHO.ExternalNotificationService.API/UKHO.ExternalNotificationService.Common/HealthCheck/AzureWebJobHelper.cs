@@ -40,7 +40,6 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
                 {
                     //rhz
                     string data = await response.Content.ReadAsStringAsync();
-                    data = data.ToLower();
                     //dynamic webJobDetails = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
                     JsonNode webJobDetails = JsonSerializer.Deserialize<JsonNode>(data);
                     string webJobStatus = webJobDetails["status"].GetValue<string>();
