@@ -37,7 +37,11 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
 
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    dynamic webJobDetails = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
+                    //rhz
+                    string data = await response.Content.ReadAsStringAsync();
+                    data = data.ToLower();
+                    //dynamic webJobDetails = JsonSerializer.Deserialize<dynamic>(await response.Content.ReadAsStringAsync());
+                    dynamic webJobDetails = JsonSerializer.Deserialize<dynamic>(data);
                     string webJobStatus = webJobDetails["status"];
                     if (webJobStatus != "Running")
                     {
