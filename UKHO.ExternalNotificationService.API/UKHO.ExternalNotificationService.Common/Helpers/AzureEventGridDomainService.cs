@@ -95,13 +95,25 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
         //    return obj;
         //}
 
-
-        public T? ConvertObjectTo<T>(object data) where T : class =>
-            data switch
+        // We have to do this because the data object is most likely a JsonElement.
+        public T? ConvertObjectTo<T>(object data) where T : class
+        {
+            T obj = default!;
+            string jsonString = JsonSerializer.Serialize(data);
+            if (jsonString != null)
             {
-                T value => value,
-                _ => default
-            };
+                obj = JsonSerializer.Deserialize<T>(jsonString)!;
+            }
+            return obj;
+        }
+
+
+        //public T? ConvertObjectTo<T>(object data) where T : class =>
+        //    data switch
+        //    {
+        //        T value => value,
+        //        _ => default
+        //    };
 
 
         private ArmClient GetArmClient()
