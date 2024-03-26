@@ -1,6 +1,6 @@
-﻿using FluentValidation.TestHelper;
+﻿using System.Linq;
+using FluentValidation.TestHelper;
 using NUnit.Framework;
-using System.Linq;
 using UKHO.ExternalNotificationService.API.UnitTests.BaseClass;
 using UKHO.ExternalNotificationService.API.Validation;
 using UKHO.ExternalNotificationService.Common.Models.EventModel;
@@ -29,8 +29,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("ProductType");
 
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "ProductType cannot be blank or null."));
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.That(result.Errors.Any(x => x.ErrorMessage == "ProductType cannot be blank or null."));
+            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
         }
 
         [Test]
@@ -41,8 +41,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("ProductName");
 
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "ProductName cannot be blank or null."));
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.That(result.Errors.Any(x => x.ErrorMessage == "ProductName cannot be blank or null."));
+            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
         }
 
         [Test]
@@ -53,8 +53,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("EditionNumber");
 
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "EditionNumber cannot be less than zero or blank."));
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.That(result.Errors.Any(x => x.ErrorMessage == "EditionNumber cannot be less than zero or blank."));
+            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
         }
 
         [Test]
@@ -65,8 +65,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("UpdateNumber");
 
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "UpdateNumber cannot be less than zero or blank."));
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.That(result.Errors.Any(x => x.ErrorMessage == "UpdateNumber cannot be less than zero or blank."));
+            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
         }
 
         [Test]
@@ -77,8 +77,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("FileSize");
 
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "FileSize cannot be less than zero or blank."));
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.That(result.Errors.Any(x => x.ErrorMessage == "FileSize cannot be less than zero or blank."));
+            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
         }
 
         [Test]
@@ -89,8 +89,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("BoundingBox");
 
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "BoundingBox cannot be blank or null."));
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.That(result.Errors.Any(x => x.ErrorMessage == "BoundingBox cannot be blank or null."));
+            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
         }
 
         [TestCase(-90.1, false)]
@@ -157,8 +157,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("Status");
 
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "Status cannot be blank or null."));
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.That(result.Errors.Any(x => x.ErrorMessage == "Status cannot be blank or null."));
+            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
         }
 
         [Test]
@@ -169,8 +169,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("StatusDate");
 
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "StatusDate cannot be blank or null."));
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.That(result.Errors.Any(x => x.ErrorMessage == "StatusDate cannot be blank or null."));
+            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
         }
 
         [Test]
@@ -181,8 +181,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("StatusName");
 
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == "StatusName cannot be blank or null."));
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.That(result.Errors.Any(x => x.ErrorMessage == "StatusName cannot be blank or null."));
+            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
         }
 
         [Test]
@@ -190,22 +190,22 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
 
-            Assert.AreEqual(0, result.Errors.Count);
+            Assert.That(0, Is.EqualTo(result.Errors.Count));
         }
 
         private static void CheckLatLongResult(string property, int limit, TestValidationResult<ScsEventData> result, bool shouldBeValid)
         {
             if (shouldBeValid)
             {
-                Assert.AreEqual(true, result.IsValid);
-                Assert.AreEqual(0, result.Errors.Count);
+                Assert.That(result.IsValid);
+                Assert.That(0, Is.EqualTo(result.Errors.Count));
             }
             else
             {
-                Assert.AreEqual(1, result.Errors.Count);
+                Assert.That(1, Is.EqualTo(result.Errors.Count));
                 result.ShouldHaveValidationErrorFor(property);
-                Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == $"{property} should be in the range -{limit}.0 to +{limit}.0."));
-                Assert.IsTrue(result.Errors.Any(x => x.ErrorCode == "OK"));
+                Assert.That(result.Errors.Any(x => x.ErrorMessage == $"{property} should be in the range -{limit}.0 to +{limit}.0."));
+                Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
             }
         }
     }

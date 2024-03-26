@@ -357,4 +357,81 @@
     <cpe>cpe:/a:microsoft:asp.net_core</cpe>
     <cve>CVE-2023-36558</cve>
   </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: System.Threading.Tasks.Dataflow.dll
+   Vunerability due to permissions on VoiceCommandActivity application component, no applicable.
+   ]]>
+    </notes>
+    <cve>CVE-2020-22475</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: System.Threading.Tasks.Dataflow.dll
+   Andriod vunerability. Not applicable
+   ]]>
+    </notes>
+    <cve>CVE-2022-39349</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Various
+   False positive - relates to Drupal
+   ]]>
+    </notes>
+    <cve>CVE-2014-9152</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Newtonsoft.Json.Bson.dll
+   False positive - Newtonsoft.Json > 13.0.1 included in project
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Newtonsoft\.Json\.Bson@.*$</packageUrl>
+    <cve>CVE-2024-21907</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.IdentityModel.Abstractions.dll
+   Fixed in SDK >= 6.0.418
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.IdentityModel\.Abstractions@.*$</packageUrl>
+    <cve>CVE-2024-21319</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.IdentityModel.Abstractions:6.22.0
+   Fixed in SDK >= 6.0.418
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Microsoft\.IdentityModel\.Abstractions@.*$</packageUrl>
+    <cve>CVE-2024-21319</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.IdentityModel.Clients.ActiveDirectory.dll
+   Fixed in SDK >= 6.0.418
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.IdentityModel\.Clients\.ActiveDirectory@.*$</packageUrl>
+    <cve>CVE-2024-21319</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: System.ClientModel.dll
+   Applies to Azure CLI
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/System\.ClientModel@.*$</packageUrl>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
 </suppressions>

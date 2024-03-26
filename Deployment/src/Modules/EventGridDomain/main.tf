@@ -12,7 +12,7 @@ resource "azurerm_role_assignment" "eventgrid_domain_role" {
   role_definition_name = "EventGrid Contributor"
   principal_id         = var.webapp_principal_id
 }
-
+#deprecated Argument will be removed in v4 `log` has been superseded by `enabled_log`
 resource "azurerm_monitor_diagnostic_setting" "egdiagnosticsetting" {
   name                           = "${var.name}-diagnostic"
   target_resource_id             = azurerm_eventgrid_domain.eventgrid_domain.id 

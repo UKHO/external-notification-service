@@ -39,6 +39,14 @@ variable "app_service_sku" {
 	    tier = "PremiumV3"
 	    size = "P1v3"
         }
+    "vne" = {
+	    tier = "PremiumV3"
+	    size = "P1v3"
+        }
+    "vni" = {
+	    tier = "PremiumV3"
+	    size = "P1v3"
+        }
   }
 }
 

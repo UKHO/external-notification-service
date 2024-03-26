@@ -1,14 +1,14 @@
-﻿using FakeItEasy;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using FakeItEasy;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using NUnit.Framework;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 using UKHO.ExternalNotificationService.SubscriptionService.D365Callback;
 using UKHO.ExternalNotificationService.SubscriptionService.Helpers;
@@ -18,7 +18,6 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
 {
     public class CallbackServiceTest
     {
-
         private IAuthTokenProvider _fakeAuthTokenProvider;
         private ILogger<CallbackService> _fakeLogger;
         private ICallbackClient _fakeCallbackClient;
@@ -31,24 +30,24 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
         {
             _fakeAuthTokenProvider = A.Fake<IAuthTokenProvider>();
             _fakeLogger = A.Fake<ILogger<CallbackService>>();
-            _fakeCallbackClient = A.Fake<ICallbackClient>();            
+            _fakeCallbackClient = A.Fake<ICallbackClient>();
 
-            _callbackService = new CallbackService(_fakeAuthTokenProvider, _fakeLogger, _fakeCallbackClient);           
+            _callbackService = new CallbackService(_fakeAuthTokenProvider, _fakeLogger, _fakeCallbackClient);
         }
 
         [Test]
         public async Task WhenInvalidTokenPassedToCallbackToD365UsingDataverse_ThenReturnsUnauthorized()
-        {          
+        {
             A.CallTo(() => _fakeAuthTokenProvider.GetADAccessToken(A<SubscriptionRequestMessage>.Ignored)).Returns(string.Empty);
-            
+
             HttpResponseMessage response = await _callbackService.CallbackToD365UsingDataverse(FakeExternalEntityPath, GetExternalNotificationEntity(), GetSubscriptionRequestMessage());
-            Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-            Assert.IsFalse(response.IsSuccessStatusCode);
+            Assert.That(HttpStatusCode.Unauthorized, Is.EqualTo(response.StatusCode));
+            Assert.That(response.IsSuccessStatusCode, Is.False);
         }
 
         [Test]
         public async Task WhenInvalidCallbackToD365UsingDataverseRequest_ThenReturnsBadRequest()
-        {            
+        {
             string fakeAccessToken = GetFakeToken();
 
             var httpResponse = new HttpResponseMessage() { StatusCode = HttpStatusCode.BadRequest, RequestMessage = new HttpRequestMessage() { Method = HttpMethod.Patch, RequestUri = new Uri("http://test.com") }, Content = new StreamContent(new MemoryStream(Encoding.UTF8.GetBytes("Bad Request"))) };
@@ -57,13 +56,13 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
              .Returns(httpResponse);
 
             HttpResponseMessage response = await _callbackService.CallbackToD365UsingDataverse(FakeExternalEntityPath, GetExternalNotificationEntity(), GetSubscriptionRequestMessage());
-            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.IsFalse(response.IsSuccessStatusCode);
+            Assert.That(HttpStatusCode.BadRequest, Is.EqualTo(response.StatusCode));
+            Assert.That(response.IsSuccessStatusCode, Is.False);
         }
 
         [Test]
         public async Task WhenValidCallbackToD365UsingDataverseRequest_ThenReturnsNoContent()
-        {            
+        {
             string fakeAccessToken = GetFakeToken();
 
             ExternalNotificationEntity getExternalNotificationEntry = GetExternalNotificationEntity();
@@ -75,8 +74,8 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
              .Returns(httpResponse);
 
             HttpResponseMessage response = await _callbackService.CallbackToD365UsingDataverse(FakeExternalEntityPath, getExternalNotificationEntry, GetSubscriptionRequestMessage());
-            Assert.AreEqual(HttpStatusCode.NoContent, response.StatusCode);
-            Assert.IsTrue(response.IsSuccessStatusCode);
+            Assert.That(HttpStatusCode.NoContent, Is.EqualTo(response.StatusCode));
+            Assert.That(response.IsSuccessStatusCode);
         }
 
         [Test]
@@ -85,8 +84,8 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
             A.CallTo(() => _fakeAuthTokenProvider.GetADAccessToken(A<SubscriptionRequestMessage>.Ignored)).Returns(string.Empty);
 
             HttpResponseMessage response = await _callbackService.DeadLetterCallbackToD365UsingDataverse(FakeExternalEntityPath, GetExternalNotificationEntity(), GetSubscriptionRequestMessage());
-            Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-            Assert.IsFalse(response.IsSuccessStatusCode);
+            Assert.That(HttpStatusCode.Unauthorized, Is.EqualTo(response.StatusCode));
+            Assert.That(response.IsSuccessStatusCode, Is.False);
         }
 
         [Test]
@@ -100,8 +99,8 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
              .Returns(httpResponse);
 
             HttpResponseMessage response = await _callbackService.DeadLetterCallbackToD365UsingDataverse(FakeExternalEntityPath, GetExternalNotificationEntity(), GetSubscriptionRequestMessage());
-            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.IsFalse(response.IsSuccessStatusCode);
+            Assert.That(HttpStatusCode.BadRequest, Is.EqualTo(response.StatusCode));
+            Assert.That(response.IsSuccessStatusCode, Is.False);
         }
 
         [Test]
@@ -118,8 +117,8 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
              .Returns(httpResponse);
 
             HttpResponseMessage response = await _callbackService.DeadLetterCallbackToD365UsingDataverse(FakeExternalEntityPath, getExternalNotificationEntry, GetSubscriptionRequestMessage());
-            Assert.AreEqual(HttpStatusCode.NoContent, response.StatusCode);
-            Assert.IsTrue(response.IsSuccessStatusCode);
+            Assert.That(HttpStatusCode.NoContent, Is.EqualTo(response.StatusCode));
+            Assert.That(response.IsSuccessStatusCode);
         }
 
 

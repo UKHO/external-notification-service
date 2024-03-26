@@ -29,10 +29,9 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.Repository
         [Test]
         public void WhenPostValidNotificationTypes_ThenReturnsNotificationTypeInResponse()
         {
-            NotificationType notificationType =  _notificationRepository.GetAllNotificationTypes().FirstOrDefault(x => x.Name == "Data test");
+            NotificationType notificationType = _notificationRepository.GetAllNotificationTypes().FirstOrDefault(x => x.Name == "Data test");
 
-            Assert.AreEqual(_fakeNotificationType.FirstOrDefault(x => x.Name == "Data test").Name, notificationType.Name);
+            Assert.That(_fakeNotificationType.FirstOrDefault(x => x.Name == "Data test").Name, Is.EqualTo(notificationType.Name));
         }
-
     }
 }
