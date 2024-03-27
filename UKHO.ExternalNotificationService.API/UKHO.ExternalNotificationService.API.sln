@@ -19,7 +19,117 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UKHO.ExternalNotificationSe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebJobs", "WebJobs", "{99315EB4-D2FD-4ED9-83F6-3AC9F2BD5AC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UKHO.ExternalNotificationService.Webjob.UnitTests", "UKHO.ExternalNotificationService.SubscriptionService.UnitTests\UKHO.ExternalNotificationService.Webjob.UnitTests.csproj", "{301549E6-D923-4C2F-B7FE-38700602D52E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UKHO.ExternalNotificationService.Webjob.UnitTests", "UKHO.ExternalNotificationService.SubscriptionService.UnitTests\UKHO.ExternalNotificationService.Webjob.UnitTests.csproj", "{301549E6-D923-4C2F-B7FE-38700602D52E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pipeline", "Pipeline", "{E8593B78-051D-4F40-8F5B-6FE507868108}"
+	ProjectSection(SolutionItems) = preProject
+		..\azure-pipelines.yml = ..\azure-pipelines.yml
+		..\BuildNuget.config = ..\BuildNuget.config
+		..\global.json = ..\global.json
+		..\NVDSuppressions.xml = ..\NVDSuppressions.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", "{97C6916B-C219-4447-BFD1-C943E3DFCBDA}"
+	ProjectSection(SolutionItems) = preProject
+		..\Deployment\add-lease.ps1 = ..\Deployment\add-lease.ps1
+		..\Deployment\ADDS-e2e-tests.ps1 = ..\Deployment\ADDS-e2e-tests.ps1
+		..\Deployment\check_service_status.ps1 = ..\Deployment\check_service_status.ps1
+		..\Deployment\set_stub_url.ps1 = ..\Deployment\set_stub_url.ps1
+		..\Deployment\terraform_conditional_run.ps1 = ..\Deployment\terraform_conditional_run.ps1
+		..\Deployment\terraform_conditional_run_apim.ps1 = ..\Deployment\terraform_conditional_run_apim.ps1
+		..\Deployment\terraform_run.ps1 = ..\Deployment\terraform_run.ps1
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{54CC8841-B26F-4668-824D-6F0F631ABB10}"
+	ProjectSection(SolutionItems) = preProject
+		..\Deployment\src\azure.tf = ..\Deployment\src\azure.tf
+		..\Deployment\src\main.tf = ..\Deployment\src\main.tf
+		..\Deployment\src\outputs.tf = ..\Deployment\src\outputs.tf
+		..\Deployment\src\resource-group.tf = ..\Deployment\src\resource-group.tf
+		..\Deployment\src\variables.tf = ..\Deployment\src\variables.tf
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "APIM", "APIM", "{51B43DDA-9AC8-40B0-A0A2-8627545B6CAE}"
+	ProjectSection(SolutionItems) = preProject
+		..\Deployment\src\APIM\azure.tf = ..\Deployment\src\APIM\azure.tf
+		..\Deployment\src\APIM\main.tf = ..\Deployment\src\APIM\main.tf
+		..\Deployment\src\APIM\terraform_run.ps1 = ..\Deployment\src\APIM\terraform_run.ps1
+		..\Deployment\src\APIM\variables.tf = ..\Deployment\src\APIM\variables.tf
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{F8D8E7ED-20EC-4CA4-A59C-1E01A62D622C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExternalNotificationService", "ExternalNotificationService", "{6362A967-D50E-4403-B7B5-85E1052E2B19}"
+	ProjectSection(SolutionItems) = preProject
+		..\Deployment\src\APIM\Modules\ExternalNotificationService\main.tf = ..\Deployment\src\APIM\Modules\ExternalNotificationService\main.tf
+		..\Deployment\src\APIM\Modules\ExternalNotificationService\variables.tf = ..\Deployment\src\APIM\Modules\ExternalNotificationService\variables.tf
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{DD00F0A5-A699-4812-8BB7-FFD01FBEDD86}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AppInsights", "AppInsights", "{123278D3-85D6-4B49-B1D0-52608C200E55}"
+	ProjectSection(SolutionItems) = preProject
+		..\Deployment\src\Modules\AppInsights\main.tf = ..\Deployment\src\Modules\AppInsights\main.tf
+		..\Deployment\src\Modules\AppInsights\outputs.tf = ..\Deployment\src\Modules\AppInsights\outputs.tf
+		..\Deployment\src\Modules\AppInsights\variables.tf = ..\Deployment\src\Modules\AppInsights\variables.tf
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AzureDashboard", "AzureDashboard", "{1E8B2F6E-01A5-4BE2-B944-6EAF5C9BB217}"
+	ProjectSection(SolutionItems) = preProject
+		..\Deployment\src\Modules\AzureDashboard\dashboard.tpl = ..\Deployment\src\Modules\AzureDashboard\dashboard.tpl
+		..\Deployment\src\Modules\AzureDashboard\main.tf = ..\Deployment\src\Modules\AzureDashboard\main.tf
+		..\Deployment\src\Modules\AzureDashboard\variables.tf = ..\Deployment\src\Modules\AzureDashboard\variables.tf
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventGridDomain", "EventGridDomain", "{616B8564-DD3E-46D7-B26C-44D0ED207499}"
+	ProjectSection(SolutionItems) = preProject
+		..\Deployment\src\Modules\EventGridDomain\main.tf = ..\Deployment\src\Modules\EventGridDomain\main.tf
+		..\Deployment\src\Modules\EventGridDomain\outputs.tf = ..\Deployment\src\Modules\EventGridDomain\outputs.tf
+		..\Deployment\src\Modules\EventGridDomain\variable.tf = ..\Deployment\src\Modules\EventGridDomain\variable.tf
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventGridDomainPrivateEndpoint", "EventGridDomainPrivateEndpoint", "{B24AB146-B38F-4951-B7BA-72F980AB35DE}"
+	ProjectSection(SolutionItems) = preProject
+		..\Deployment\src\Modules\EventGridDomainPrivateEndpoint\main.tf = ..\Deployment\src\Modules\EventGridDomainPrivateEndpoint\main.tf
+		..\Deployment\src\Modules\EventGridDomainPrivateEndpoint\outputs.tf = ..\Deployment\src\Modules\EventGridDomainPrivateEndpoint\outputs.tf
+		..\Deployment\src\Modules\EventGridDomainPrivateEndpoint\variables.tf = ..\Deployment\src\Modules\EventGridDomainPrivateEndpoint\variables.tf
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventHub", "EventHub", "{59805866-CFCE-43C8-A8AD-0B3710E1921C}"
+	ProjectSection(SolutionItems) = preProject
+		..\Deployment\src\Modules\EventHub\main.tf = ..\Deployment\src\Modules\EventHub\main.tf
+		..\Deployment\src\Modules\EventHub\outputs.tf = ..\Deployment\src\Modules\EventHub\outputs.tf
+		..\Deployment\src\Modules\EventHub\variables.tf = ..\Deployment\src\Modules\EventHub\variables.tf
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "KeyVault", "KeyVault", "{8492563F-790B-47A8-B8CC-CA33FFA41A25}"
+	ProjectSection(SolutionItems) = preProject
+		..\Deployment\src\Modules\KeyVault\main.tf = ..\Deployment\src\Modules\KeyVault\main.tf
+		..\Deployment\src\Modules\KeyVault\outputs.tf = ..\Deployment\src\Modules\KeyVault\outputs.tf
+		..\Deployment\src\Modules\KeyVault\variables.tf = ..\Deployment\src\Modules\KeyVault\variables.tf
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Storage", "Storage", "{029A4F45-C4DE-4982-8230-6BA3A7B01844}"
+	ProjectSection(SolutionItems) = preProject
+		..\Deployment\src\Modules\Storage\main.tf = ..\Deployment\src\Modules\Storage\main.tf
+		..\Deployment\src\Modules\Storage\outputs.tf = ..\Deployment\src\Modules\Storage\outputs.tf
+		..\Deployment\src\Modules\Storage\variable.tf = ..\Deployment\src\Modules\Storage\variable.tf
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Webapp", "Webapp", "{FE4ABAA3-64F9-4F33-9132-A12285B72802}"
+	ProjectSection(SolutionItems) = preProject
+		..\Deployment\src\Modules\Webapp\main.tf = ..\Deployment\src\Modules\Webapp\main.tf
+		..\Deployment\src\Modules\Webapp\outputs.tf = ..\Deployment\src\Modules\Webapp\outputs.tf
+		..\Deployment\src\Modules\Webapp\variables.tf = ..\Deployment\src\Modules\Webapp\variables.tf
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "templates", "templates", "{1C8F1DCF-57BC-466E-8488-BFED90B76913}"
+	ProjectSection(SolutionItems) = preProject
+		..\Deployment\templates\continuous-deployment-apim.yml = ..\Deployment\templates\continuous-deployment-apim.yml
+		..\Deployment\templates\continuous-deployment.yml = ..\Deployment\templates\continuous-deployment.yml
+		..\Deployment\templates\functional-test-process.yml = ..\Deployment\templates\functional-test-process.yml
+		..\Deployment\templates\retain-pipeline.yml = ..\Deployment\templates\retain-pipeline.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +175,21 @@ Global
 		{0BDEA4E1-513C-4735-8F5E-A4D7E5062F7A} = {769A0B7A-C612-4B9C-ABF1-570440D9F2CD}
 		{9F21241E-CBEF-4AE6-9FA9-8AD6433E90C5} = {99315EB4-D2FD-4ED9-83F6-3AC9F2BD5AC2}
 		{301549E6-D923-4C2F-B7FE-38700602D52E} = {769A0B7A-C612-4B9C-ABF1-570440D9F2CD}
+		{97C6916B-C219-4447-BFD1-C943E3DFCBDA} = {E8593B78-051D-4F40-8F5B-6FE507868108}
+		{54CC8841-B26F-4668-824D-6F0F631ABB10} = {97C6916B-C219-4447-BFD1-C943E3DFCBDA}
+		{51B43DDA-9AC8-40B0-A0A2-8627545B6CAE} = {54CC8841-B26F-4668-824D-6F0F631ABB10}
+		{F8D8E7ED-20EC-4CA4-A59C-1E01A62D622C} = {51B43DDA-9AC8-40B0-A0A2-8627545B6CAE}
+		{6362A967-D50E-4403-B7B5-85E1052E2B19} = {F8D8E7ED-20EC-4CA4-A59C-1E01A62D622C}
+		{DD00F0A5-A699-4812-8BB7-FFD01FBEDD86} = {54CC8841-B26F-4668-824D-6F0F631ABB10}
+		{123278D3-85D6-4B49-B1D0-52608C200E55} = {DD00F0A5-A699-4812-8BB7-FFD01FBEDD86}
+		{1E8B2F6E-01A5-4BE2-B944-6EAF5C9BB217} = {DD00F0A5-A699-4812-8BB7-FFD01FBEDD86}
+		{616B8564-DD3E-46D7-B26C-44D0ED207499} = {DD00F0A5-A699-4812-8BB7-FFD01FBEDD86}
+		{B24AB146-B38F-4951-B7BA-72F980AB35DE} = {DD00F0A5-A699-4812-8BB7-FFD01FBEDD86}
+		{59805866-CFCE-43C8-A8AD-0B3710E1921C} = {DD00F0A5-A699-4812-8BB7-FFD01FBEDD86}
+		{8492563F-790B-47A8-B8CC-CA33FFA41A25} = {DD00F0A5-A699-4812-8BB7-FFD01FBEDD86}
+		{029A4F45-C4DE-4982-8230-6BA3A7B01844} = {DD00F0A5-A699-4812-8BB7-FFD01FBEDD86}
+		{FE4ABAA3-64F9-4F33-9132-A12285B72802} = {DD00F0A5-A699-4812-8BB7-FFD01FBEDD86}
+		{1C8F1DCF-57BC-466E-8488-BFED90B76913} = {97C6916B-C219-4447-BFD1-C943E3DFCBDA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {89FDA2AA-B8BC-4B29-B441-85F2C5F6CB91}
