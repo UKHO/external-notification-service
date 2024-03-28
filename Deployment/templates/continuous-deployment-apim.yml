@@ -24,7 +24,7 @@ steps:
   #     SecretsFilter: '*'
   #     RunAsPreJob: false
 
-  - task: AzureKeyVault@1
+  - task: AzureKeyVault@2
     displayName: 'Read APIM terraform Variables'
     inputs:
       azureSubscription: "UKHO-APIM-SOLAS-NonLive"
