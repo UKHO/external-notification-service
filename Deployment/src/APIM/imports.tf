@@ -1,5 +1,5 @@
 # This will import an existing APIM if Terraform is not already aware of it.
-# Thi8s was used to import following the migration of APIMs from TPE to UKHO tenants.
+# This was used to import following the migration of APIMs from TPE to UKHO tenants.
 
 data "azurerm_api_management" "apim_instance" {
   resource_group_name = var.resource_group_name
@@ -7,12 +7,12 @@ data "azurerm_api_management" "apim_instance" {
 }
 
 locals {
-  import_formatted_env   = lower(replace(trimspace(${local.env_name}), " ", "-"))
-  import_group_name      = ens-group-${local.import_formatted_env}
-  import_api_name        = ens-api-${local.import_formatted_env}
-  import_d365_product_id = ens-d365-${local.import_formatted_env}
-  import_ees_product_id  = ens-ees-${local.import_formatted_env}
-  import_named_value     = ens-token-secret-${local.import_formatted_env}
+  import_formatted_env   = lower(replace(trimspace("${local.env_name}"), " ", "-"))
+  import_group_name      = "ens-group-${local.import_formatted_env}"
+  import_api_name        = "ens-api-${local.import_formatted_env}"
+  import_d365_product_id = "ens-d365-${local.import_formatted_env}"
+  import_ees_product_id  = "ens-ees-${local.import_formatted_env}"
+  import_named_value     = "ens-token-secret-${local.import_formatted_env}"
 }
 
 import {
