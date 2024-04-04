@@ -85,7 +85,8 @@ stages:
           clean: all
         variables:
           - group: "ENS-Dev-TF-Variables"
-          - group: "ENS-Dev-Variables" 
+          - group: "ENS-Dev-Variables"
+          - group: "ENS-Dev-SOLAS-Variables"
           - name: "D365AuthConfiguration.TenantId"
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
           - name: "D365AuthConfiguration.ClientId"
@@ -110,12 +111,22 @@ stages:
           runOnce:
             deploy:
               steps:
+                # - template: Deployment/templates/continuous-deployment-apim.yml
+                #   parameters:
+                #     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+                #     AzureSubscription: "UKHO-APIM-Dev"
+                #     TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
+                #     APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
+                #     APIMServiceInstance: $(APIM_SERVICE_NAME)
+                #     tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
+                #     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
+
                 - template: Deployment/templates/continuous-deployment-apim.yml
                   parameters:
                     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "UKHO-APIM-Dev"
-                    TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
-                    APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
-                    APIMServiceInstance: $(APIM_SERVICE_NAME)
-                    tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
-                    tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
+                    AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
+                    TerraformKeyVault: $(APIM_SOLAS_TERRAFORM_KEYVAULT)
+                    APIMResourceGroup: $(APIM_SOLAS_RESOURCE_GROUP_NAME)
+                    APIMServiceInstance: $(APIM_SOLAS_SERVICE_NAME)
+                    tfstateStorageAccountRG: $(APIM_SOLAS_TFSTATE_STORAGE_ACCOUNT_RG)
+                    tfstateStorageAccountName: $(APIM_SOLAS_TFSTATE_STORAGE_ACCOUNT_NAME)
