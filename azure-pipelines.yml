@@ -86,7 +86,7 @@ stages:
         variables:
           - group: "ENS-Dev-TF-Variables"
           - group: "ENS-Dev-Variables"
-          - group: "ENS-Dev-SOLAS-Variables"
+          - group: "ENS-Dev-APIM-SOLAS-Variables"
           - name: "D365AuthConfiguration.TenantId"
             value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
           - name: "D365AuthConfiguration.ClientId"
