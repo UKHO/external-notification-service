@@ -111,16 +111,16 @@ stages:
           runOnce:
             deploy:
               steps:
-                - template: Deployment/templates/continuous-deployment-apim.yml
-                  parameters:
-                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "UKHO-APIM-Dev"
-                    TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
-                    APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
-                    APIMServiceInstance: $(APIM_SERVICE_NAME)
-                    tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
-                    tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
-                    NamePrefix: "Old"
+                # - template: Deployment/templates/continuous-deployment-apim.yml
+                #   parameters:
+                #     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+                #     AzureSubscription: "UKHO-APIM-Dev"
+                #     TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
+                #     APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
+                #     APIMServiceInstance: $(APIM_SERVICE_NAME)
+                #     tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
+                #     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
+                #     NamePrefix: "Old"
 
                 - template: Deployment/templates/continuous-deployment-apim.yml
                   parameters:
