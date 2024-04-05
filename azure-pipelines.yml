@@ -409,17 +409,6 @@ stages:
                     tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
                     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
                     NamePrefix: "Old"
-
-                - template: Deployment/templates/continuous-deployment-apim.yml
-                  parameters:
-                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
-                    TerraformKeyVault: $(APIM_SOLAS_TERRAFORM_KEYVAULT)
-                    APIMResourceGroup: $(APIM_SOLAS_RESOURCE_GROUP_NAME)
-                    APIMServiceInstance: $(APIM_SOLAS_SERVICE_NAME)
-                    tfstateStorageAccountRG: $(APIM_SOLAS_RESOURCE_GROUP_NAME)
-                    tfstateStorageAccountName: $(APIM_SOLAS_TFSTATE_STORAGE_ACCOUNT_NAME)
-                    NamePrefix: "New"
                   
                 - template: Deployment/templates/functional-test-process.yml
                   parameters:
