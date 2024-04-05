@@ -17,7 +17,7 @@ parameters:
 
 steps:
   - task: AzureKeyVault@2
-    displayName: Read APIM terraform Variables
+    displayName: 'Read APIM terraform Variables'
     inputs:
       azureSubscription: "${{ parameters.AzureSubscription }}"
       KeyVaultName: "${{ parameters.TerraformKeyVault }}"
@@ -26,7 +26,7 @@ steps:
 
   - task: PowerShell@2
     name: APIMDeployment
-    displayName: terraform APIM deployment
+    displayName: "terraform APIM deployment"
     inputs:
       targetType: filePath
       filePath: '$(Pipeline.Workspace)/terraformartifact/terraform_conditional_run_apim.ps1'
