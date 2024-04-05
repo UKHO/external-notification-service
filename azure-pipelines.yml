@@ -464,8 +464,7 @@ stages:
                     APIMServiceInstance: $(APIM_SERVICE_NAME)
                     tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
                     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
-
-                
+                    DisplayNamePrefix: "Old"
   
   - stage: E2EvNextDeploy
     dependsOn:
@@ -521,9 +520,7 @@ stages:
                     APIMServiceInstance: $(APIM_SERVICE_NAME)
                     tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
                     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
-
-               
-                
+                    DisplayNamePrefix: "Old"
 
   - stage: QAdeploy
     dependsOn:
@@ -579,6 +576,7 @@ stages:
                     APIMServiceInstance: $(APIM_SERVICE_NAME)
                     tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
                     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
+                    DisplayNamePrefix: "Old"
 
                 - task: DownloadBuildArtifacts@0
                   displayName: "Download Functional test Artifact"
@@ -706,6 +704,7 @@ stages:
                     APIMServiceInstance: $(APIM_SERVICE_NAME)
                     tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
                     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
+                    DisplayNamePrefix: "Old"
 
       - job: PostDeploymentActions
         dependsOn:
