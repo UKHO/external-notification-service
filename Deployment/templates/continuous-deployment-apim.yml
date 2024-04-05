@@ -14,12 +14,12 @@ parameters:
     type: string
   - name: tfstateStorageAccountName
     type: string
-  - name: DisplayNamePrefix
+  - name: NamePrefix
     type: string
 
 steps:
   - task: AzureKeyVault@2
-    displayName: ${{ parameters.DisplayNamePrefix }} - read APIM terraform Variables
+    displayName: ${{ parameters.NamePrefix }} - read APIM terraform Variables
     inputs:
       azureSubscription: "${{ parameters.AzureSubscription }}"
       KeyVaultName: "${{ parameters.TerraformKeyVault }}"
@@ -27,8 +27,8 @@ steps:
       RunAsPreJob: false
 
   - task: PowerShell@2
-    name: APIMDeployment
-    displayName: ${{ parameters.DisplayNamePrefix }} - terraform APIM deployment
+    name: ${{ parameters.NamePrefix }}APIMDeployment
+    displayName: ${{ parameters.NamePrefix }} - terraform APIM deployment
     inputs:
       targetType: filePath
       filePath: '$(Pipeline.Workspace)/terraformartifact/terraform_conditional_run_apim.ps1'
