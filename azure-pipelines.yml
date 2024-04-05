@@ -358,7 +358,6 @@ stages:
                     APIMServiceInstance: $(APIM_SOLAS_SERVICE_NAME)
                     tfstateStorageAccountRG: $(APIM_SOLAS_RESOURCE_GROUP_NAME)
                     tfstateStorageAccountName: $(APIM_SOLAS_TFSTATE_STORAGE_ACCOUNT_NAME)
-                    NamePrefix: "New"
 
       - deployment: DevDeployApp
         dependsOn: [DevDeployApimSolas]
@@ -409,7 +408,6 @@ stages:
                     APIMServiceInstance: $(APIM_SERVICE_NAME)
                     tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
                     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
-                    NamePrefix: "Old"
                   
                 - template: Deployment/templates/functional-test-process.yml
                   parameters:
@@ -479,7 +477,6 @@ stages:
                     APIMServiceInstance: $(APIM_SERVICE_NAME)
                     tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
                     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
-                    NamePrefix: "Old"
   
   - stage: E2EvNextDeploy
     dependsOn:
@@ -535,7 +532,6 @@ stages:
                     APIMServiceInstance: $(APIM_SERVICE_NAME)
                     tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
                     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
-                    NamePrefix: "Old"
 
   - stage: QAdeploy
     dependsOn:
@@ -591,7 +587,6 @@ stages:
                     APIMServiceInstance: $(APIM_SERVICE_NAME)
                     tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
                     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
-                    NamePrefix: "Old"
 
                 - task: DownloadBuildArtifacts@0
                   displayName: "Download Functional test Artifact"
@@ -719,7 +714,6 @@ stages:
                     APIMServiceInstance: $(APIM_SERVICE_NAME)
                     tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
                     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
-                    NamePrefix: "Old"
 
       - job: PostDeploymentActions
         dependsOn:
