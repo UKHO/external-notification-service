@@ -76,7 +76,7 @@ stages:
   - stage: Devdeploy
     displayName: "Devdeploy (inc terraform, webapp deploy)"
     jobs:
-      - deployment: DevDeployApp
+      - deployment: DevDeployApp1
         displayName: "Dev - deploy terraform and dotnet App"
         environment: "Ens-Dev"
         pool: $(DeploymentPool)
@@ -111,17 +111,52 @@ stages:
           runOnce:
             deploy:
               steps:
-                # - template: Deployment/templates/continuous-deployment-apim.yml
-                #   parameters:
-                #     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                #     AzureSubscription: "UKHO-APIM-Dev"
-                #     TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
-                #     APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
-                #     APIMServiceInstance: $(APIM_SERVICE_NAME)
-                #     tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
-                #     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
-                #     NamePrefix: "Old"
+                - template: Deployment/templates/continuous-deployment-apim.yml
+                  parameters:
+                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+                    AzureSubscription: "UKHO-APIM-Dev"
+                    TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
+                    APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
+                    APIMServiceInstance: $(APIM_SERVICE_NAME)
+                    tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
+                    tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
+                    NamePrefix: "Old"
 
+      - deployment: DevDeployApp2
+        displayName: "Dev - deploy terraform and dotnet App"
+        environment: "Ens-Dev"
+        pool: $(DeploymentPool)
+        container: ${{variables.Container}}
+        workspace:
+          clean: all
+        variables:
+          - group: "ENS-Dev-TF-Variables"
+          - group: "ENS-Dev-Variables"
+          - group: "ENS-Dev-APIM-SOLAS-Variables"
+          - name: "D365AuthConfiguration.TenantId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
+          - name: "D365AuthConfiguration.ClientId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
+          - name: "D365AuthConfiguration.ClientSecret"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
+          - name: "EnsAuthConfiguration.ClientId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
+          - name: "EnsAuthConfiguration.TenantId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
+          - name: "ElasticAPM.ApiKey"
+            value: $(elasticAPM-ApiKey)
+          - name: "ElasticAPM.Environment"
+            value: $(elasticAPM-Environment)
+          - name: "ElasticAPM.ServerURL"
+            value: $(elasticAPM-ServerURL)
+          - name: "ElasticAPM.ServiceName"
+            value: $(elasticAPM-ServiceName)
+          - name: "ElasticAPM.WebJobServiceName"
+            value: $(elasticAPM-WebJobServiceName)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
                 - template: Deployment/templates/continuous-deployment-apim.yml
                   parameters:
                     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
