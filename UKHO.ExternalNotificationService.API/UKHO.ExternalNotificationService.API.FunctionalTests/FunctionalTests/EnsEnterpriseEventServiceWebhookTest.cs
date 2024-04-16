@@ -21,6 +21,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         private string EnsToken { get; set; }
         private JsonObject FssEventBody { get; set; }
         private JsonObject ScsEventBody { get; set; }
+        private JsonSerializerOptions JOptions { get; set; }
 
         [SetUp]
         public async Task SetupAsync()
@@ -32,6 +33,10 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             EnsApiClient = new EnsApiClient(TestConfig.EnsApiBaseUrl);
             ADAuthTokenProvider adAuthTokenProvider = new();
             EnsToken = await adAuthTokenProvider.GetEnsAuthToken();
+            JOptions = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
         }
 
         [Test]
@@ -115,7 +120,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
             string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
-            IEnumerable<DistributorRequest> deserialized = JsonSerializer.Deserialize<IEnumerable<DistributorRequest>>(custome‌​rJsonString);
+            IEnumerable<DistributorRequest> deserialized = JsonSerializer.Deserialize<IEnumerable<DistributorRequest>>(custome‌​rJsonString,JOptions);
             DistributorRequest getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.statusCode is HttpStatusCode.OK && x.CloudEvent.Source == source)
                 .OrderByDescending(a => a.TimeStamp)
                 .FirstOrDefault();
@@ -172,7 +177,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
             // Get the response
             string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
-            IEnumerable<DistributorRequest> deserialized = JsonSerializer.Deserialize<IEnumerable<DistributorRequest>>(custome‌​rJsonString);
+            
+            IEnumerable<DistributorRequest> deserialized = JsonSerializer.Deserialize<IEnumerable<DistributorRequest>>(custome‌​rJsonString, JOptions);
             IEnumerable<DistributorRequest> getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.statusCode.HasValue && x.statusCode.Value == statusCode)
                 .OrderByDescending(a => a.TimeStamp);
             Assert.That(getMatchingData, Is.Not.Null);
@@ -195,7 +201,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             Assert.That(200, Is.EqualTo((int)apiResponse.StatusCode), $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 200.");
             HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
             string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
-            IEnumerable<DistributorRequest> deserialized = JsonSerializer.Deserialize<IEnumerable<DistributorRequest>>(custome‌​rJsonString);
+            
+            IEnumerable<DistributorRequest> deserialized = JsonSerializer.Deserialize<IEnumerable<DistributorRequest>>(custome‌​rJsonString,JOptions);
 
             DistributorRequest getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.statusCode.HasValue && x.statusCode.Value == HttpStatusCode.OK).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
             Assert.That(getMatchingData, Is.Not.Null);
