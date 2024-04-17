@@ -434,4 +434,15 @@
     <packageUrl regex="true">^pkg:generic/System\.ClientModel@.*$</packageUrl>
     <cve>CVE-2023-36052</cve>
   </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Identity:1.10.4
+   See https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-29992
+   This will be fixed in https://dev.azure.com/ukhydro/Abzu/_workitems/edit/152362
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Identity@.*$</packageUrl>
+    <vulnerabilityName>CVE-2024-29992</vulnerabilityName>
+  </suppress>
 </suppressions>
