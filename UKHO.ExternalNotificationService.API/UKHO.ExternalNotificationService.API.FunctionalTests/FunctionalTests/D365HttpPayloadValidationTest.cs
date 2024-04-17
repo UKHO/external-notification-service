@@ -17,10 +17,16 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         private D365Payload D365FssMsiPayload { get; set; }
         private D365Payload D365ScsPayload { get; set; }
         private string EnsToken { get; set; }
+        private JsonSerializerOptions JOptions { get; set; }
 
         [SetUp]
         public async Task SetupAsync()
         {
+            JOptions = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
             TestConfig = new TestConfiguration();
             EnsApiClient = new EnsApiClient(TestConfig.EnsApiBaseUrl);
 
@@ -28,9 +34,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             string filePathFssMsi = Path.Combine(Directory.GetCurrentDirectory(), TestConfig.PayloadFolder, TestConfig.FssMsiPayloadFileName);
             string filePathScs = Path.Combine(Directory.GetCurrentDirectory(), TestConfig.PayloadFolder, TestConfig.ScsPayloadFileName);
 
-            D365FssAvcsPayload = JsonSerializer.Deserialize<D365Payload>(await File.ReadAllTextAsync(filePathFssAvcs));
-            D365FssMsiPayload = JsonSerializer.Deserialize<D365Payload>(await File.ReadAllTextAsync(filePathFssMsi));
-            D365ScsPayload = JsonSerializer.Deserialize<D365Payload>(await File.ReadAllTextAsync(filePathScs));
+            D365FssAvcsPayload = JsonSerializer.Deserialize<D365Payload>(await File.ReadAllTextAsync(filePathFssAvcs), JOptions);
+            D365FssMsiPayload = JsonSerializer.Deserialize<D365Payload>(await File.ReadAllTextAsync(filePathFssMsi), JOptions);
+            D365ScsPayload = JsonSerializer.Deserialize<D365Payload>(await File.ReadAllTextAsync(filePathScs), JOptions);
             D365FssAvcsPayload.InputParameters[0].Value.Attributes[9].Value = string.Concat(TestConfig.StubBaseUri, TestConfig.WebhookUrlExtension);
             D365FssMsiPayload.InputParameters[0].Value.Attributes[9].Value = string.Concat(TestConfig.StubBaseUri, TestConfig.WebhookUrlExtension);
             D365ScsPayload.InputParameters[0].Value.Attributes[9].Value = string.Concat(TestConfig.StubBaseUri, TestConfig.WebhookUrlExtension);
