@@ -16,8 +16,13 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         /// <returns></returns>
         public static async Task<T> ReadAsTypeAsync<T>(this HttpResponseMessage httpResponseMessage)
         {
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
             string bodyJson = await httpResponseMessage.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<T>(bodyJson);
+            return JsonSerializer.Deserialize<T>(bodyJson,options);
         }
 
         public static void SetBearerToken(this HttpRequestMessage requestMessage, string accessToken)
