@@ -1,15 +1,27 @@
 ﻿
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+
 namespace UKHO.ExternalNotificationService.Common.Models.Request
 {
-    public class CustomCloudEvent 
+    
+    public class CustomCloudEvent
     {
-        public string Type { get; set; }
-        public string Time { get; set; }
-        public string DataContentType { get; set; }
-        public string DataSchema { get; set; }
-        public string Subject { get; set; }
-        public string Source { get; set; }
+        [JsonPropertyName(name: "id")]
         public string Id { get; set; }
+        [JsonPropertyName(name: "type")]
+        public string Type { get; set; }
+        [JsonPropertyName(name: "time")]
+        public string Time { get; set; }
+        [JsonPropertyName(name: "dataContentType")]
+        public string DataContentType { get; set; }
+        [JsonPropertyName(name: "dataSchema")]
+        public string DataSchema { get; set; }
+        [JsonPropertyName(name: "subject")]
+        public string Subject { get; set; }
+        [JsonPropertyName(name: "source")]
+        public string Source { get; set; }
+        [JsonPropertyName(name: "data")]
         public object Data { get; set; }
     }
 }

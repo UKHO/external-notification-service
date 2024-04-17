@@ -121,15 +121,15 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
             string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
             IEnumerable<DistributorRequest> deserialized = JsonSerializer.Deserialize<IEnumerable<DistributorRequest>>(custome‌​rJsonString,JOptions);
-            DistributorRequest getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.statusCode is HttpStatusCode.OK && x.CloudEvent.Source == source)
+            DistributorRequest getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.StatusCode is HttpStatusCode.OK && x.CloudEvent.Source == source)
                 .OrderByDescending(a => a.TimeStamp)
                 .FirstOrDefault();
             Assert.That(getMatchingData, Is.Not.Null);
-            Assert.That(HttpStatusCode.OK, Is.EqualTo(getMatchingData.statusCode));
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(getMatchingData.StatusCode));
 
             // Validating Event Subject
             Assert.That(subject, Is.EqualTo(getMatchingData.Subject));
-            Assert.That(getMatchingData.CloudEvent, Is.InstanceOf<CloudEvent>());
+            Assert.That(getMatchingData.CloudEvent, Is.InstanceOf<CustomCloudEvent>());  //RHZ
 
             // Validating Event Source
             Assert.That(TestConfig.FssSources.Single(x => x.BusinessUnit == businessUnit).Source, Is.EqualTo(getMatchingData.CloudEvent.Source));
@@ -179,7 +179,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
             
             IEnumerable<DistributorRequest> deserialized = JsonSerializer.Deserialize<IEnumerable<DistributorRequest>>(custome‌​rJsonString, JOptions);
-            IEnumerable<DistributorRequest> getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.statusCode.HasValue && x.statusCode.Value == statusCode)
+            IEnumerable<DistributorRequest> getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.StatusCode.HasValue && x.StatusCode.Value == statusCode)
                 .OrderByDescending(a => a.TimeStamp);
             Assert.That(getMatchingData, Is.Not.Null);
             Assert.That(getMatchingData.Count() > 1);
@@ -204,13 +204,13 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             
             IEnumerable<DistributorRequest> deserialized = JsonSerializer.Deserialize<IEnumerable<DistributorRequest>>(custome‌​rJsonString,JOptions);
 
-            DistributorRequest getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.statusCode.HasValue && x.statusCode.Value == HttpStatusCode.OK).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
+            DistributorRequest getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.StatusCode.HasValue && x.StatusCode.Value == HttpStatusCode.OK).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
             Assert.That(getMatchingData, Is.Not.Null);
-            Assert.That(HttpStatusCode.OK, Is.EqualTo(getMatchingData.statusCode));
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(getMatchingData.StatusCode));
 
             // Validating Event Subject
             Assert.That(subject, Is.EqualTo(getMatchingData.Subject));
-            Assert.That(getMatchingData.CloudEvent, Is.InstanceOf<CloudEvent>());
+            Assert.That(getMatchingData.CloudEvent, Is.InstanceOf<CustomCloudEvent>()); //RHZ
 
             // Validating Event Source
             Assert.That(TestConfig.ScsSource, Is.EqualTo(getMatchingData.CloudEvent.Source));

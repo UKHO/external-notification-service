@@ -65,7 +65,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             // Get the response
             string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
             IEnumerable<DistributorRequest> deserialized = JsonSerializer.Deserialize<IEnumerable<DistributorRequest>>(custome‌​rJsonString, JOptions);
-            IEnumerable<DistributorRequest> getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.statusCode.HasValue && x.statusCode.Value == statusCode)
+            IEnumerable<DistributorRequest> getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.StatusCode.HasValue && x.StatusCode.Value == statusCode)
                 .OrderByDescending(a => a.TimeStamp);
             Assert.That(getMatchingData, Is.Not.Null);
             Assert.That(getMatchingData.Count() > 1);
