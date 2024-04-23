@@ -1,6 +1,5 @@
 ﻿
 using System.Text.Json.Serialization;
-using Newtonsoft.Json;
 
 namespace UKHO.ExternalNotificationService.Common.Models.Request
 {
