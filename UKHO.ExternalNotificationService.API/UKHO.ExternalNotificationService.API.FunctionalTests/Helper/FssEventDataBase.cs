@@ -10,12 +10,12 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
     {
         public static JsonObject GetFssEventBodyData(TestConfiguration testConfigure, string businessUnit = "AVCSData")
         {
-            JsonNode ensWebhookJson = JsonObject.Parse(@"{""Type"":""uk.gov.UKHO.FileShareService.NewFilesPublished.v1""}");
-            ensWebhookJson["Source"] = $"https://{testConfigure.FssEventHostName}";
-            ensWebhookJson["Id"] = "49c67cca-9cca-4655-a38e-583693af55ea";
-            ensWebhookJson["Subject"] = "83d08093-7a67-4b3a-b431-92ba42feaea0";
-            ensWebhookJson["DataContentType"] = "application/json";
-            ensWebhookJson["Data"] = JsonObject.Parse(JsonSerializer.Serialize(GetFssEventData(testConfigure, businessUnit)));
+            JsonNode ensWebhookJson = JsonObject.Parse(@"{""type"":""uk.gov.UKHO.FileShareService.NewFilesPublished.v1""}");
+            ensWebhookJson["source"] = $"https://{testConfigure.FssEventHostName}";
+            ensWebhookJson["id"] = "49c67cca-9cca-4655-a38e-583693af55ea";
+            ensWebhookJson["subject"] = "83d08093-7a67-4b3a-b431-92ba42feaea0";
+            ensWebhookJson["dataContentType"] = "application/json";
+            ensWebhookJson["data"] = JsonObject.Parse(JsonSerializer.Serialize(GetFssEventData(testConfigure, businessUnit)));
 
             return (JsonObject)ensWebhookJson;
         }
