@@ -32,8 +32,13 @@ namespace UKHO.ExternalNotificationService.API.Services
 
         public CloudEvent FssEventDataMapping(CustomCloudEvent customCloudEvent, string correlationId)
         {
+            JsonSerializerOptions options = new(JsonSerializerDefaults.Web)
+            {
+                WriteIndented = true
+            };
+
             string data = JsonSerializer.Serialize(customCloudEvent.Data);
-            FssEventData fssEventData = JsonSerializer.Deserialize<FssEventData>(data);
+            FssEventData fssEventData = JsonSerializer.Deserialize<FssEventData>(data,options);
 
             fssEventData.Links.BatchStatus.Href = ReplaceHostValueMethod(fssEventData.Links.BatchStatus.Href);
             fssEventData.Links.BatchDetails.Href = ReplaceHostValueMethod(fssEventData.Links.BatchDetails.Href);
