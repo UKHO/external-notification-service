@@ -10,6 +10,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Configuration;
@@ -98,11 +99,16 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
         // We have to do this because the data object is most likely a JsonElement.
         public T? ConvertObjectTo<T>(object data) where T : class
         {
+            JsonSerializerOptions options = new(JsonSerializerDefaults.Web)
+            {
+                WriteIndented = true
+            };
+
             T obj = default!;
             string jsonString = JsonSerializer.Serialize(data);
             if (jsonString != null)
             {
-                obj = JsonSerializer.Deserialize<T>(jsonString)!;
+                obj = JsonSerializer.Deserialize<T>(jsonString,options)!;
             }
             return obj;
         }
