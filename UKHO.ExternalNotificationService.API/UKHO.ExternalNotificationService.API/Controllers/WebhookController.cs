@@ -48,7 +48,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         {
             using var reader = new StreamReader(Request.Body, Encoding.UTF8);
             string jsonContent = await reader.ReadToEndAsync();
-            CustomCloudEvent customCloudEvent = JsonSerializer.Deserialize<CustomCloudEvent>(jsonContent);
+            CustomCloudEvent customCloudEvent = JsonSerializer.Deserialize<CustomCloudEvent>(jsonContent, JOptions);
 
             _logger.LogInformation(EventIds.ENSWebhookRequestStart.ToEventId(), "External notification service webhook request started for event:{eventGridEvent} and _X-Correlation-ID:{correlationId}.", customCloudEvent, GetCurrentCorrelationId());
 

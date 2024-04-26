@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
+using System.Text.Json;
 using UKHO.ExternalNotificationService.API.Filters;
 using UKHO.ExternalNotificationService.Common.Logging;
 using UKHO.ExternalNotificationService.Common.Models.Response;
@@ -20,6 +21,10 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         protected readonly ILogger<T> Logger;
         protected new HttpContext HttpContext => _httpContextAccessor.HttpContext;
         public const string InternalServerError = "Internal Server Error";
+        public readonly JsonSerializerOptions JOptions = new(JsonSerializerDefaults.Web)
+        {
+            WriteIndented = true
+        };
 
         protected BaseController(IHttpContextAccessor httpContextAccessor, ILogger<T> logger)
         {
