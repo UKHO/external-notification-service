@@ -111,8 +111,11 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             // RHZ Test End
 
             JsonObject ensWebhookJson = FssEventDataBase.GetFssEventBodyData(TestConfig, businessUnit);
+            Assert.That(ensWebhookJson, Is.Not.Null);  // RHZ Test
 
             FssEventData publishDataFromFss = FssEventDataBase.GetFssEventData(TestConfig, businessUnit);
+            Assert.That(publishDataFromFss, Is.Not.Null);  // RHZ Test
+
             await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, null);
 
             DateTime startTime = DateTime.UtcNow;
