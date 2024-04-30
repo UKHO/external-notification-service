@@ -24,21 +24,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         private JsonObject ScsEventBody { get; set; }
         private JsonSerializerOptions JOptions { get; set; }
 
-        [SetUpFixture]
-        public class SetupTrace
-        {
-            [OneTimeSetUp]
-            public void StartTest()
-            {
-                Trace.Listeners.Add(new ConsoleTraceListener());
-            }
-
-            [OneTimeTearDown]
-            public void EndTest()
-            {
-                Trace.Flush();
-            }
-        }
+        
 
         [SetUp]
         public async Task SetupAsync()
@@ -112,34 +98,20 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             Assert.That(401, Is.EqualTo((int)apiResponse.StatusCode), $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 401.");
 
         }
-        // RHZ Alter for Test
-        [Test]
-        //[TestCase("AVCSData", "fss-filesPublished-AvcsData", TestName = "Valid AVCSData Business Unit event")]
-        //[TestCase("MaritimeSafetyInformation", "fss-filesPublished-MaritimeSafetyInformation", TestName = "Valid MaritimeSafetyInformation Business Unit event")]
-        //public async Task WhenICallTheEnsWebhookApiWithAValidFssJObjectBody_ThenOkStatusIsReturned(string businessUnit, string source)
-        public async Task WhenICallTheEnsWebhookApiWithAValidFssJObjectBody_ThenOkStatusIsReturned()
+        [TestCase("AVCSData", "fss-filesPublished-AvcsData", TestName = "Valid AVCSData Business Unit event")]
+        [TestCase("MaritimeSafetyInformation", "fss-filesPublished-MaritimeSafetyInformation", TestName = "Valid MaritimeSafetyInformation Business Unit event")]
+        public async Task WhenICallTheEnsWebhookApiWithAValidFssJObjectBody_ThenOkStatusIsReturned(string businessUnit, string source)
         {
             const string subject = "83d08093-7a67-4b3a-b431-92ba42feaea0";
             const string addHttps = "https://";
 
-            //RHZ Test
-            string businessUnit = "AVCSData";
-            string source = "fss-filesPublished-AvcsData";
-            // RHZ Test End
-
-            Trace.WriteLine("Starting GetFssEventBodyData 1"); // RHZ Test
             JsonObject ensWebhookJson = FssEventDataBase.GetFssEventBodyData(TestConfig, businessUnit);
-            Assert.That(ensWebhookJson, Is.Not.Null);  // RHZ Test
 
-            Trace.WriteLine("Starting GetFssEventData 2"); // RHZ Test
             FssEventData publishDataFromFss = FssEventDataBase.GetFssEventData(TestConfig, businessUnit);
-            Assert.That(publishDataFromFss, Is.Not.Null);  // RHZ Test
 
-            Trace.WriteLine("Starting PostStub Command to return 3"); // RHZ Test
             await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, null);
 
             DateTime startTime = DateTime.UtcNow;
-            Trace.WriteLine("Starting Post ENS Webhook Publish 4"); // RHZ Test
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
 
             while (DateTime.UtcNow - startTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
@@ -149,12 +121,10 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             Assert.That(200, Is.EqualTo((int)apiResponse.StatusCode), $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 200.");
 
-            Trace.WriteLine("Starting Stub Cache Return Status 5"); // RHZ Test
             HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
             Assert.That(stubResponse.StatusCode.Equals(HttpStatusCode.OK)); //RHZ
             string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
             IEnumerable<DistributorRequest> deserialized = JsonSerializer.Deserialize<IEnumerable<DistributorRequest>>(custome‌​rJsonString,JOptions);
-            Trace.WriteLine("Starting getMatchData 6"); // RHZ Test
             DistributorRequest getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.StatusCode is HttpStatusCode.OK && x.CloudEvent.Source == source)
                 .OrderByDescending(a => a.TimeStamp)
                 .FirstOrDefault();
@@ -168,7 +138,6 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             // Validating Event Source
             Assert.That(TestConfig.FssSources.Single(x => x.BusinessUnit == businessUnit).Source, Is.EqualTo(getMatchingData.CloudEvent.Source));
 
-            Trace.WriteLine("Starting Last validations 7"); // RHZ Test
             // Validating Event Type
             Assert.That("uk.co.admiralty.fss.filesPublished.v1", Is.EqualTo(getMatchingData.CloudEvent.Type));
             Uri filesLinkHref = new(publishDataFromFss.Files.FirstOrDefault().Links.Get.Href);
