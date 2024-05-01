@@ -7,6 +7,7 @@ using UKHO.ExternalNotificationService.Common.Models.Request;
 
 namespace UKHO.ExternalNotificationService.Common.Helpers
 {
+#nullable enable  //rhz will try to make this global later
     public interface IAzureEventGridDomainService
     {
         Task<DomainTopicEventSubscriptionResource> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionRequestMessage, CancellationToken cancellationToken);
@@ -14,7 +15,6 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
 
         Task PublishEventAsync(CloudEvent cloudEvent, string correlationId, CancellationToken cancellationToken = default);
 
-        //T JsonDeserialize<T>(object data);  rhz to be removed 
-        T ConvertObjectTo<T>(object data) where T : class;
+        T? ConvertObjectTo<T>(object data) where T : class;
     }
 }

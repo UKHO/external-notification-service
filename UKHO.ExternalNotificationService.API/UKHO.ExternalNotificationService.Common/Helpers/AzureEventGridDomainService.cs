@@ -88,21 +88,10 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             }
         }
 
-        //rhz to be removed
-        //public T JsonDeserialize<T>(object data)
-        //{
-        //    string jsonString = JsonConvert.SerializeObject(data);
-        //    T obj = JsonConvert.DeserializeObject<T>(jsonString);
-        //    return obj;
-        //}
-
-        // We have to do this because the data object is most likely a JsonElement.
+        // We have to do this because the data object is likely to be a JsonElement.
         public T? ConvertObjectTo<T>(object data) where T : class
         {
-            JsonSerializerOptions options = new(JsonSerializerDefaults.Web)
-            {
-                WriteIndented = true
-            };
+            JsonSerializerOptions options = new(JsonSerializerDefaults.Web);
 
             T obj = default!;
             string jsonString = JsonSerializer.Serialize(data);
@@ -112,15 +101,6 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             }
             return obj;
         }
-
-
-        //public T? ConvertObjectTo<T>(object data) where T : class =>
-        //    data switch
-        //    {
-        //        T value => value,
-        //        _ => default
-        //    };
-
 
         private ArmClient GetArmClient()
         {
