@@ -24,6 +24,22 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         private JsonObject FssEventBody { get; set; }
         private JsonSerializerOptions JOptions { get; set; }
 
+        [SetUpFixture]
+        public class SetupTrace
+        {
+            [OneTimeSetUp]
+            public void StartTest()
+            {
+                Trace.Listeners.Add(new ConsoleTraceListener());
+            }
+
+            [OneTimeTearDown]
+            public void EndTest()
+            {
+                Trace.Flush();
+            }
+        }
+
         [SetUp]
         public async Task SetupAsync()
         {
@@ -72,7 +88,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             DateTime requestTime = DateTime.UtcNow;
             await Task.Delay(420000);
+            Trace.WriteLine($"Starting GetEnsCallBackAsync with stub url: {TestConfig.StubBaseUri}/api/dynamics?subscriptionid={subscriptionId}"); // RHZ Test
             HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, subscriptionId.ToUpper());
+            Trace.WriteLine($"GetEnsCallBackAsync return {callBackResponse}");
             Assert.That(200, Is.EqualTo((int)callBackResponse.StatusCode), $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected 200.");
 
             IEnumerable<EnsCallbackResponseModel> callBackResponseBody = JsonSerializer.Deserialize<IEnumerable<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result,JOptions);
