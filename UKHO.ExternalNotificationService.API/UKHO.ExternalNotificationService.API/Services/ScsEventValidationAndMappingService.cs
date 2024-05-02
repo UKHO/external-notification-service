@@ -31,8 +31,13 @@ namespace UKHO.ExternalNotificationService.API.Services
 
         public CloudEvent ScsEventDataMapping(CustomCloudEvent customCloudEvent, string correlationId)
         {
+            JsonSerializerOptions options = new(JsonSerializerDefaults.Web)
+            {
+                WriteIndented = true
+            };
+
             string data = JsonSerializer.Serialize(customCloudEvent.Data);
-            ScsEventData scsEventData = JsonSerializer.Deserialize<ScsEventData>(data);
+            ScsEventData scsEventData = JsonSerializer.Deserialize<ScsEventData>(data,options);
 
             CloudEvent cloudEvent = new(_scsDataMappingConfiguration.Value.Source,
                                         ScsDataMappingValueConstant.Type,

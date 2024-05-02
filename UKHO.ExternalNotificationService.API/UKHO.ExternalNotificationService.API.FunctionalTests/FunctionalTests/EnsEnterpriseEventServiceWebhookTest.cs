@@ -122,7 +122,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             Assert.That(200, Is.EqualTo((int)apiResponse.StatusCode), $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 200.");
 
             HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
-            Assert.That(stubResponse.StatusCode.Equals(HttpStatusCode.OK)); //RHZ
+            Assert.That(stubResponse.StatusCode,Is.EqualTo(HttpStatusCode.OK)); 
             string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
             IEnumerable<DistributorRequest> deserialized = JsonSerializer.Deserialize<IEnumerable<DistributorRequest>>(custome‌​rJsonString,JOptions);
             DistributorRequest getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.StatusCode is HttpStatusCode.OK && x.CloudEvent.Source == source)
@@ -133,7 +133,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             // Validating Event Subject
             Assert.That(subject, Is.EqualTo(getMatchingData.Subject));
-            Assert.That(getMatchingData.CloudEvent, Is.InstanceOf<CustomCloudEvent>());  //RHZ
+            Assert.That(getMatchingData.CloudEvent, Is.InstanceOf<CustomCloudEvent>()); 
 
             // Validating Event Source
             Assert.That(TestConfig.FssSources.Single(x => x.BusinessUnit == businessUnit).Source, Is.EqualTo(getMatchingData.CloudEvent.Source));
@@ -179,7 +179,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             Assert.That(200, Is.EqualTo((int)apiResponse.StatusCode), $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 200.");
             HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
-            Assert.That(stubResponse.StatusCode.Equals(HttpStatusCode.OK)); //RHZ
+            Assert.That(stubResponse.StatusCode,Is.EqualTo(HttpStatusCode.OK));
             // Get the response
             string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
             
@@ -205,7 +205,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             }
             Assert.That(200, Is.EqualTo((int)apiResponse.StatusCode), $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 200.");
             HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
-            Assert.That(stubResponse.StatusCode.Equals(HttpStatusCode.OK)); //RHZ
+            Assert.That(stubResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
             string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
             
             IEnumerable<DistributorRequest> deserialized = JsonSerializer.Deserialize<IEnumerable<DistributorRequest>>(custome‌​rJsonString,JOptions);
@@ -216,7 +216,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             // Validating Event Subject
             Assert.That(subject, Is.EqualTo(getMatchingData.Subject));
-            Assert.That(getMatchingData.CloudEvent, Is.InstanceOf<CustomCloudEvent>()); //RHZ
+            Assert.That(getMatchingData.CloudEvent, Is.InstanceOf<CustomCloudEvent>()); 
 
             // Validating Event Source
             Assert.That(TestConfig.ScsSource, Is.EqualTo(getMatchingData.CloudEvent.Source));
