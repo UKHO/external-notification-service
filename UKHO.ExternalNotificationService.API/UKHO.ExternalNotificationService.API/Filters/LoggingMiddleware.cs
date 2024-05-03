@@ -5,17 +5,18 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using UKHO.ExternalNotificationService.Common.Logging;
 
 namespace UKHO.ExternalNotificationService.API.Filters
 {
+#nullable enable  //rhz will try to make this global later
     [ExcludeFromCodeCoverage]   //Used in Startup.cs
     public static class LoggingMiddleware
     {
@@ -137,30 +138,58 @@ namespace UKHO.ExternalNotificationService.API.Filters
             return bodyAsString;
         }
 
+        // Rhz changes start here
         private static string RedactBody(string propertyNameToRedact, string bodyAsString, ILogger logger)
         {
+            JsonSerializerOptions JOptions = new(JsonSerializerDefaults.Web)
+            {
+                WriteIndented = true
+            };
+
             try
             {
-                var jobj = JObject.Parse(bodyAsString);
-                RedactJObject(propertyNameToRedact, jobj);
+                //var jobj = JObject.Parse(bodyAsString);
+                //RedactJObject(propertyNameToRedact, jobj);
 
-                return jobj.ToString(Formatting.None);
+                //return jobj.ToString(Formatting.None);
+                JsonObject? originalObject = (JsonObject)JsonNode.Parse(bodyAsString)!;
+                JsonObject? redactedObject = (JsonObject)JsonNode.Parse(bodyAsString)!;
+
+                RedactObject(originalObject, propertyNameToRedact, redactedObject);
+
+                return JsonSerializer.Serialize(redactedObject, JOptions);
             }
-            catch (JsonReaderException e)
+            catch (System.Text.Json.JsonException e)
             {
                 logger.LogWarning(EventIds.ErrorRedactingResponseBody.ToEventId(), e, "Error Redacting Response Body for property {propertyNameToRedact}", propertyNameToRedact);
                 return bodyAsString;
             }
         }
 
-        private static void RedactJObject(string propertyNameToRedact, JObject jobj)
+        //private static void RedactJObject(string propertyNameToRedact, JObject jobj)
+        //{
+        //    foreach (var property in jobj.Descendants().OfType<JProperty>())
+        //    {
+        //        if (property.Name == propertyNameToRedact)
+        //            property.Value = RedactedValue;
+        //    }
+        //}
+
+        private static void RedactObject(JsonObject node, string propertyNameToRedact, JsonObject update)
         {
-            foreach (var property in jobj.Descendants().OfType<JProperty>())
+            foreach (var item in node)
             {
-                if (property.Name == propertyNameToRedact)
-                    property.Value = RedactedValue;
+                if (item.Key == propertyNameToRedact)
+                {
+                    update[item.Key] = RedactedValue;
+                }
+                else if (item.Value is JsonObject)
+                {
+                    RedactObject((JsonObject)node[item.Key]!, propertyNameToRedact, (JsonObject)update[item.Key]!);
+                }
             }
         }
+
 
         private static Dictionary<string, string> RedactHeaders(IHeaderDictionary headerDictionary)
         {
