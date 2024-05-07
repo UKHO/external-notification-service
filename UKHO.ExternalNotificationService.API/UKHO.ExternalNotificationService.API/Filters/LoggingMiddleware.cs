@@ -48,7 +48,7 @@ namespace UKHO.ExternalNotificationService.API.Filters
             return appBuilder.Use(async (context, func) =>
             {
                 var logger = loggerFactory
-                    .CreateLogger(typeof(LoggingMiddleware).FullName);
+                    .CreateLogger(typeof(LoggingMiddleware).FullName!);
 
                 await LogRequestAndResponse(context, func, logger);
             });
@@ -68,7 +68,16 @@ namespace UKHO.ExternalNotificationService.API.Filters
 
                     var requestBodyText = await ReadAndResetStream(requestBodyStream);
                     var url = context.Request.GetDisplayUrl();
-                    var requestHeaders = RedactHeaders(context.Request.Headers);
+                    Dictionary<string, string>? requestHeaders = default;
+                    try
+                    {
+                        requestHeaders = RedactHeaders(context.Request.Headers);
+                    }
+                    catch (Exception)
+                    {
+                        requestHeaders = new Dictionary<string, string> { {"RedactError","Unable to redact headers" } };
+                    }
+
                     var ipAddress = context.Request.HttpContext.Connection.RemoteIpAddress;
 
                     var originalResponseBody = context.Response.Body;
@@ -82,8 +91,15 @@ namespace UKHO.ExternalNotificationService.API.Filters
                     {
                         context.Request.Body = originalRequestBody;
                         context.Response.Body = originalResponseBody;
-
-                        var responseHeaders = RedactHeaders(context.Response.Headers);
+                        Dictionary<string, string>? responseHeaders = default;
+                        try
+                        {
+                            responseHeaders = RedactHeaders(context.Response.Headers);
+                        }
+                        catch (Exception)
+                        {
+                            responseHeaders = new Dictionary<string, string> { { "RedactError", "Unable to redact headers" } };
+                        }
 
                         responseBody.Seek(0, SeekOrigin.Begin);
                         if (responseBody.Length > 0)
@@ -109,7 +125,7 @@ namespace UKHO.ExternalNotificationService.API.Filters
             }
         }
 
-        private static async Task<string> ReadResponseBodyAsString(HttpContext context, Stream responseBody, ILogger logger)
+        private static async Task<string?> ReadResponseBodyAsString(HttpContext context, Stream responseBody, ILogger logger)
         {
             if (context.Response.ContentLength == 0)
                 return null;
@@ -199,7 +215,7 @@ namespace UKHO.ExternalNotificationService.API.Filters
                                                && !h.Key.Equals("X-ARR-ClientCert", StringComparison.InvariantCultureIgnoreCase)
                                                && !h.Key.Equals("MS-ASPNETCORE-CLIENTCERT", StringComparison.InvariantCultureIgnoreCase)
                                          )
-                .ToDictionary(h => h.Key, h => HeadersToRedact.Any(r => r.Equals(h.Key, StringComparison.InvariantCultureIgnoreCase)) ? RedactedValue : string.Join(", ", (object[])h.Value));
+                .ToDictionary(h => h.Key, h => HeadersToRedact.Any(r => r.Equals(h.Key, StringComparison.InvariantCultureIgnoreCase)) ? RedactedValue : string.Join(", ", (object[])h.Value!));
         }
 
         private static async Task<string> ReadAndResetStream(Stream stream)
