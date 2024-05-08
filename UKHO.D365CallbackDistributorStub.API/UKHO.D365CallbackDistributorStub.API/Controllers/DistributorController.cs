@@ -1,10 +1,9 @@
-﻿//using Azure.Messaging;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text;
-//using System.Text.Json.Nodes;
+using System.Text.Json;
+
 using UKHO.D365CallbackDistributorStub.API.Models.Request;
 using UKHO.D365CallbackDistributorStub.API.Services;
 
@@ -41,21 +40,19 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
             using StreamReader reader = new(Request.Body, Encoding.UTF8);
             {
                 string jsonContent = await reader.ReadToEndAsync();
-                //rhz old line
-                CustomCloudEvent? customCloudEvent = JsonConvert.DeserializeObject<CustomCloudEvent>(jsonContent);
-                //rhz old line end
+                CustomCloudEvent? customCloudEvent = JsonSerializer.Deserialize<CustomCloudEvent>(jsonContent,JOptions);
 
-                //rhz new SpecVersion is mandatory for CloudEvent class
+                //Rhz new SpecVersion is mandatory for CloudEvent class
                 //JsonObject jsonContentObj = (JsonObject)JsonNode.Parse(jsonContent)!;
                 //if (jsonContentObj.FirstOrDefault(a => a.Key == "SpecVersion").Key is null)
                 //{
                 //    jsonContentObj.TryAdd("SpecVersion", "1.0");
                 //    jsonContent = jsonContentObj.ToString();
                 //}
-                //rhz new end
+                //Rhz new end
 
                 //CustomCloudEvent? customCloudEvent = JsonConvert.DeserializeObject<CustomCloudEvent>(jsonContent);
-                //rhz new var customCloudEvent = CloudEvent.Parse(BinaryData.FromString(jsonContent.ToLower()));
+                //Rhz new var customCloudEvent = CloudEvent.Parse(BinaryData.FromString(jsonContent.ToLower()));
                 if (customCloudEvent != null)
                 {
                     CommandDistributionRequest? commandDistributionRequest = _distributionService.SubjectInCommandDistributionList(customCloudEvent.Subject);
