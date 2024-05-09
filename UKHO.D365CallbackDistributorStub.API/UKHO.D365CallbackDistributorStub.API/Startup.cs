@@ -23,7 +23,6 @@ namespace UKHO.D365CallbackDistributorStub.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-                //.AddNewtonsoftJson(); Rhz
 
             services.AddSwaggerGen(c =>
             {

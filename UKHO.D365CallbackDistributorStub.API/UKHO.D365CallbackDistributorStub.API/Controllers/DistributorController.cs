@@ -42,17 +42,6 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
                 string jsonContent = await reader.ReadToEndAsync();
                 CustomCloudEvent? customCloudEvent = JsonSerializer.Deserialize<CustomCloudEvent>(jsonContent,JOptions);
 
-                //Rhz new SpecVersion is mandatory for CloudEvent class
-                //JsonObject jsonContentObj = (JsonObject)JsonNode.Parse(jsonContent)!;
-                //if (jsonContentObj.FirstOrDefault(a => a.Key == "SpecVersion").Key is null)
-                //{
-                //    jsonContentObj.TryAdd("SpecVersion", "1.0");
-                //    jsonContent = jsonContentObj.ToString();
-                //}
-                //Rhz new end
-
-                //CustomCloudEvent? customCloudEvent = JsonConvert.DeserializeObject<CustomCloudEvent>(jsonContent);
-                //Rhz new var customCloudEvent = CloudEvent.Parse(BinaryData.FromString(jsonContent.ToLower()));
                 if (customCloudEvent != null)
                 {
                     CommandDistributionRequest? commandDistributionRequest = _distributionService.SubjectInCommandDistributionList(customCloudEvent.Subject);
