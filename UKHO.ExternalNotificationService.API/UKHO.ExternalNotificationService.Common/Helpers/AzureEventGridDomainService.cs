@@ -20,7 +20,6 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace UKHO.ExternalNotificationService.Common.Helpers
 {
-#nullable enable  //rhz will try to make this global later
     [ExcludeFromCodeCoverage]
     public class AzureEventGridDomainService : IAzureEventGridDomainService
     {

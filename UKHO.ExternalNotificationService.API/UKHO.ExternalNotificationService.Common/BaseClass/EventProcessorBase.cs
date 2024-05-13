@@ -14,7 +14,7 @@ namespace UKHO.ExternalNotificationService.Common.BaseClass
             _azureEventGridDomainService = azureEventGridDomainService;
         }
 
-        public T GetEventData<T>(object data) where T : class 
+        public T? GetEventData<T>(object data) where T : class 
         {
             return _azureEventGridDomainService.ConvertObjectTo<T>(data);
         }

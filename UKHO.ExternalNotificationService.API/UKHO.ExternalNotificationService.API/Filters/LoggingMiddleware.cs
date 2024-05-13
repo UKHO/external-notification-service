@@ -16,7 +16,6 @@ using UKHO.ExternalNotificationService.Common.Logging;
 
 namespace UKHO.ExternalNotificationService.API.Filters
 {
-#nullable enable  //rhz will try to make this global later
     [ExcludeFromCodeCoverage]   //Used in Startup.cs
     public static class LoggingMiddleware
     {

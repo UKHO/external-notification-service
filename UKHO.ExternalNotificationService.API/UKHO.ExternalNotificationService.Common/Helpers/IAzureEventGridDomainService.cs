@@ -7,7 +7,6 @@ using UKHO.ExternalNotificationService.Common.Models.Request;
 
 namespace UKHO.ExternalNotificationService.Common.Helpers
 {
-#nullable enable  //rhz will try to make this global later
     public interface IAzureEventGridDomainService
     {
         Task<DomainTopicEventSubscriptionResource> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionRequestMessage, CancellationToken cancellationToken);
