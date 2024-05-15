@@ -175,15 +175,15 @@ namespace UKHO.ExternalNotificationService.API
                         additionalValues["_System"] = eventHubLoggingConfiguration.Value.System;
                         additionalValues["_Service"] = eventHubLoggingConfiguration.Value.Service;
                         additionalValues["_NodeName"] = eventHubLoggingConfiguration.Value.NodeName;
-                        additionalValues["_RemoteIPAddress"] = httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
+                        additionalValues["_RemoteIPAddress"] = Convert.ToString(httpContextAccessor.HttpContext.Connection.RemoteIpAddress)!;
                         additionalValues["_User-Agent"] = httpContextAccessor.HttpContext.Request.Headers["User-Agent"].FirstOrDefault() ?? string.Empty;
                         additionalValues["_AssemblyVersion"] = Assembly.GetExecutingAssembly().GetCustomAttributes<AssemblyFileVersionAttribute>().Single().Version;
                         additionalValues["_X-Correlation-ID"] =
                             httpContextAccessor.HttpContext.Request.Headers?[CorrelationIdMiddleware.XCorrelationIdHeaderKey].FirstOrDefault() ?? string.Empty;
 
-                        if (httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+                        if (httpContextAccessor.HttpContext.User.Identity != null &&  httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
                         {
-                            additionalValues["_UserId"] = httpContextAccessor.HttpContext.User.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier");
+                            additionalValues["_UserId"] = httpContextAccessor.HttpContext.User.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier")!;
                         }
                     }
                 }

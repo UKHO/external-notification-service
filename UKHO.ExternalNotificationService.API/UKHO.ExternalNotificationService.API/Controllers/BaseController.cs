@@ -34,7 +34,17 @@ namespace UKHO.ExternalNotificationService.API.Controllers
 
         protected string GetCurrentCorrelationId()
         {
-            return _httpContextAccessor.HttpContext.Request.Headers[CorrelationIdMiddleware.XCorrelationIdHeaderKey].FirstOrDefault();
+            string? correlationId = _httpContextAccessor.HttpContext?.Request.Headers[CorrelationIdMiddleware.XCorrelationIdHeaderKey].FirstOrDefault();
+            if (Guid.TryParse(correlationId, out Guid correlationGuid))
+            {
+                correlationId = correlationGuid.ToString();
+            }
+            else
+            {
+                LogError(EventIds.BadRequest.ToEventId(), null, "BadRequest", correlationGuid.ToString());
+                correlationId = correlationGuid.ToString();
+            }
+            return correlationId;
         }
         protected IActionResult BuildBadRequestErrorResponse(List<Error> errors)
         {
@@ -107,7 +117,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
             return new StatusCodeResult(StatusCodes.Status202Accepted);
         }
 
-        private void LogError(EventId eventId, List<Error> errors, string errorType, string correlationId)
+        private void LogError(EventId eventId, List<Error>? errors, string errorType, string correlationId)
         {
             Logger.LogError(eventId, $"{HttpContext.Request.Path} - {errorType} - {{Errors}} for CorrelationId - {{correlationId}}", errors, correlationId);
         }

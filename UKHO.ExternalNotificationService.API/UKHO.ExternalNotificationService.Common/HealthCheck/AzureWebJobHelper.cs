@@ -39,9 +39,9 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     string data = await response.Content.ReadAsStringAsync();
-                    JsonNode webJobDetails = JsonSerializer.Deserialize<JsonNode>(data);   // Rhz Todo
-                    string webJobStatus = webJobDetails["status"].GetValue<string>();
-                    if (webJobStatus != "Running")
+                    JsonNode? webJobDetails = JsonSerializer.Deserialize<JsonNode>(data);   // Rhz Todo
+                    string? webJobStatus = webJobDetails?["status"]?.GetValue<string>();
+                    if (webJobStatus != null && webJobStatus != "Running")
                     {
                         string webJobDetail = $"Webjob ens-{_webHostEnvironment.EnvironmentName} status is {webJobStatus}";
                         return HealthCheckResult.Unhealthy("Azure webjob is unhealthy", new Exception(webJobDetail));
