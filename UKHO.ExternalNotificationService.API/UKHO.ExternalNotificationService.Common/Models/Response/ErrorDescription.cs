@@ -6,7 +6,7 @@ namespace UKHO.ExternalNotificationService.Common.Models.Response
     [ExcludeFromCodeCoverage]
     public class ErrorDescription
     {
-        public string CorrelationId { get; set; }
+        public string CorrelationId { get; set; } = string.Empty;
         public List<Error> Errors { get; set; } = new List<Error>();
     }
 }

@@ -19,7 +19,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         protected readonly ILogger<T> Logger;
-        protected new HttpContext HttpContext => _httpContextAccessor.HttpContext;
+        protected new HttpContext HttpContext => _httpContextAccessor.HttpContext!;
         public const string InternalServerError = "Internal Server Error";
         public readonly JsonSerializerOptions JOptions = new(JsonSerializerDefaults.Web)
         {
@@ -41,18 +41,18 @@ namespace UKHO.ExternalNotificationService.API.Controllers
             }
             else
             {
-                LogError(EventIds.BadRequest.ToEventId(), null, "BadRequest", correlationGuid.ToString());
+                LogError(EventIds.BadRequest.ToEventId(), null, "Invalid Correlation Id", correlationGuid.ToString());
                 correlationId = correlationGuid.ToString();
             }
             return correlationId;
         }
-        protected IActionResult BuildBadRequestErrorResponse(List<Error> errors)
+        protected IActionResult BuildBadRequestErrorResponse(List<Error>? errors)
         {
             LogError(EventIds.BadRequest.ToEventId(), errors, "BadRequest", GetCurrentCorrelationId());
 
             return new BadRequestObjectResult(new ErrorDescription
             {
-                Errors = errors,
+                Errors = errors ?? [],
                 CorrelationId = GetCurrentCorrelationId()
             });
         }
@@ -81,7 +81,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
             return objectResult;
         }
 
-        protected IActionResult GetEnsResponse(ExternalNotificationServiceResponse model, List<Error> errors = null)
+        protected IActionResult GetEnsResponse(ExternalNotificationServiceResponse model, List<Error>? errors = null)
         {
             switch (model.HttpStatusCode)
             {

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using UKHO.ExternalNotificationService.API.Controllers;
+using UKHO.ExternalNotificationService.API.Filters;
 using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Models.Request;
@@ -40,7 +41,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             _fakeHttpContextAccessor = A.Fake<IHttpContextAccessor>();
             _fakeLogger = A.Fake<ILogger<SubscriptionController>>();
             _fakeSubscriptionService = A.Fake<ISubscriptionService>();
-
+            
             A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(new DefaultHttpContext());
             _fakeSubscriptionService = A.Fake<ISubscriptionService>();
             _fakeNotificationRepository = A.Fake<INotificationRepository>();
@@ -109,14 +110,17 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         [Test]
         public async Task WhenPostValidPayload_ThenReceiveSuccessfulResponse()
         {
+            DefaultHttpContext defaultHttpContext = new();
+            defaultHttpContext.Request.Headers.Append(CorrelationIdMiddleware.XCorrelationIdHeaderKey, value: Guid.NewGuid().ToString());
+            A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(defaultHttpContext);
+
             A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
             A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
             A.CallTo(() => _fakeNotificationRepository.GetAllNotificationTypes()).Returns(_fakeNotificationType);
 
             var result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
-            // Rhz this is the line that is failing, not sure if it is necessary. I believe if the
-            // call had happened then the lines after would also fail.
-            // A.CallTo(_fakeLogger).Where(call => call.GetArgument<LogLevel>(0) == LogLevel.Error).MustNotHaveHappened();
+
+            A.CallTo(_fakeLogger).Where(call => call.GetArgument<LogLevel>(0) == LogLevel.Error).MustNotHaveHappened();
             A.CallTo(() => _fakeSubscriptionService.AddSubscriptionRequest(_fakeSubscriptionRequest, _fakeNotificationType.FirstOrDefault(), A<string>.Ignored)).MustHaveHappenedOnceExactly();
             Assert.That(StatusCodes.Status202Accepted, Is.EqualTo(result.StatusCode));
         }
