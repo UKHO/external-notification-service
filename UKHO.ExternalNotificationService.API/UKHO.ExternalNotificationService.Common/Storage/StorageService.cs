@@ -12,7 +12,7 @@ namespace UKHO.ExternalNotificationService.Common.Storage
         {
             _storageConfig = storageConfig;
         }
-        public string GetStorageAccountConnectionString(string storageAccountName = null, string storageAccountKey = null)
+        public string GetStorageAccountConnectionString(string? storageAccountName = null, string? storageAccountKey = null)
         {
             string storageAccountAccessKeyValue = !string.IsNullOrEmpty(storageAccountKey) ? storageAccountKey : _storageConfig.Value.StorageAccountKey;
             string storageAccountNameValue = !string.IsNullOrEmpty(storageAccountName) ? storageAccountName : _storageConfig.Value.StorageAccountName;

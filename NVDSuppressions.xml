@@ -397,6 +397,24 @@
   <suppress>
     <notes>
       <![CDATA[
+   file name: Newtonsoft.Json.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Newtonsoft\.Json@.*$</packageUrl>
+    <cpe>cpe:/a:newtonsoft:json.net</cpe>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Newtonsoft.Json:10.0.2
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Newtonsoft\.Json@.*$</packageUrl>
+    <cve>CVE-2024-21907</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
    file name: Microsoft.IdentityModel.Abstractions.dll
    Fixed in SDK >= 6.0.418
    ]]>
@@ -444,5 +462,23 @@
     </notes>
     <packageUrl regex="true">^pkg:nuget/Azure\.Identity@.*$</packageUrl>
     <vulnerabilityName>CVE-2024-29992</vulnerabilityName>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.ResourceManager.EventGrid.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Azure\.ResourceManager\.EventGrid@.*$</packageUrl>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.ResourceManager:1.4.0
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.ResourceManager@.*$</packageUrl>
+    <cve>CVE-2023-36052</cve>
   </suppress>
 </suppressions>
