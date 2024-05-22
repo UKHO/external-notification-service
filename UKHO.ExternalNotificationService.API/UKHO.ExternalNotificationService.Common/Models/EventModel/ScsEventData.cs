@@ -4,12 +4,12 @@ namespace UKHO.ExternalNotificationService.Common.Models.EventModel
 {
     public class ScsEventData
     {
-        public string ProductType { get; set; }
-        public string ProductName { get; set; }
+        public string ProductType { get; set; } = string.Empty;
+        public string ProductName { get; set; } = string.Empty;
         public int EditionNumber { get; set; }
         public int UpdateNumber { get; set; }
-        public ProductBoundingBox BoundingBox { get; set; }
-        public ProductUpdateStatus Status { get; set; }
+        public ProductBoundingBox? BoundingBox { get; set; }
+        public ProductUpdateStatus? Status { get; set; }
         public bool IsPermitUpdateRequired { get; set; }
         public long FileSize { get; set; }
     }
@@ -26,6 +26,6 @@ namespace UKHO.ExternalNotificationService.Common.Models.EventModel
     {
         public DateTime? StatusDate { get; set; }
         public bool IsNewCell { get; set; }
-        public string StatusName { get; set; }
+        public string StatusName { get; set; } = string.Empty;
     }
 }
