@@ -15,12 +15,12 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
 
         public static IEnumerable<D365Attribute> D365AttributeDetails(InputParameter inputParameter, EntityImage postEntityImage)
         {
-            return inputParameter.Value?.Attributes.Concat(postEntityImage.Value?.Attributes ?? Array.Empty<D365Attribute>())!;
+            return inputParameter.Value?.Attributes.Concat(postEntityImage?.Value?.Attributes ?? Array.Empty<D365Attribute>())!;
         }
 
         public static IEnumerable<FormattedValue> FormattedValueDetails(InputParameter inputParameter, EntityImage postEntityImage)
         {
-            return inputParameter.Value?.FormattedValues.Concat(postEntityImage.Value?.FormattedValues ?? Array.Empty<FormattedValue>())!;
+            return inputParameter.Value?.FormattedValues.Concat(postEntityImage?.Value?.FormattedValues ?? Array.Empty<FormattedValue>())!;
         } 
     }
 }
