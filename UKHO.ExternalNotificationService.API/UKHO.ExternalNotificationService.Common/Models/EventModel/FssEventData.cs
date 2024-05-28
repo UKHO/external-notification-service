@@ -9,7 +9,7 @@ namespace UKHO.ExternalNotificationService.Common.Models.EventModel
         [JsonPropertyName(name: "batchId")]
         public string BatchId { get; set; } = string.Empty;
         [JsonPropertyName(name: "links")]
-        public BatchLinks? Links { get; set; }
+        public BatchLinks Links { get; set; } = new();
         [JsonPropertyName(name: "attributes")]
         public IEnumerable<Attribute> Attributes { get; set; } = [];
         [JsonPropertyName(name: "businessUnit")]
@@ -31,9 +31,9 @@ namespace UKHO.ExternalNotificationService.Common.Models.EventModel
     public class BatchLinks
     {
         [JsonPropertyName(name: "batchDetails")]
-        public Link? BatchDetails { get; set; }
+        public Link BatchDetails { get; set; } = new();
         [JsonPropertyName(name: "batchStatus")]
-        public Link? BatchStatus { get; set; }
+        public Link BatchStatus { get; set; } = new();
     }
 
     public class Link
@@ -55,12 +55,12 @@ namespace UKHO.ExternalNotificationService.Common.Models.EventModel
         [JsonPropertyName(name: "attributes")]
         public IEnumerable<Attribute> Attributes { get; set; } = [];
         [JsonPropertyName(name: "links")]
-        public FileLinks? Links { get; set; }
+        public FileLinks Links { get; set; } = new();
     }
 
     public class FileLinks
     {
         [JsonPropertyName(name: "get")]
-        public Link? Get { get; set; }
+        public Link Get { get; set; } = new();
     }
 }

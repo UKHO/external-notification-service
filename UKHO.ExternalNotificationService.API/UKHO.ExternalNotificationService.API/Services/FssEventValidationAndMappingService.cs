@@ -18,6 +18,10 @@ namespace UKHO.ExternalNotificationService.API.Services
     {
         private readonly IFssEventDataValidator _fssEventDataValidator;
         private readonly IOptions<FssDataMappingConfiguration> _fssDataMappingConfiguration;
+        private static JsonSerializerOptions _options = new(JsonSerializerDefaults.Web)
+        {
+            WriteIndented = true
+        };
 
         public FssEventValidationAndMappingService(IFssEventDataValidator fssEventDataValidator, IOptions<FssDataMappingConfiguration> fssDataMappingConfiguration)
         {
@@ -32,19 +36,14 @@ namespace UKHO.ExternalNotificationService.API.Services
 
         public CloudEvent FssEventDataMapping(CustomCloudEvent customCloudEvent, string correlationId)
         {
-            JsonSerializerOptions options = new(JsonSerializerDefaults.Web)
-            {
-                WriteIndented = true
-            };
-
             string data = JsonSerializer.Serialize(customCloudEvent.Data);
-            FssEventData fssEventData = JsonSerializer.Deserialize<FssEventData>(data,options);
+            FssEventData fssEventData = JsonSerializer.Deserialize<FssEventData>(data, _options)!;
 
             fssEventData.Links.BatchStatus.Href = ReplaceHostValueMethod(fssEventData.Links.BatchStatus.Href);
             fssEventData.Links.BatchDetails.Href = ReplaceHostValueMethod(fssEventData.Links.BatchDetails.Href);
-            fssEventData.Files.FirstOrDefault().Links.Get.Href = ReplaceHostValueMethod(fssEventData.Files.FirstOrDefault().Links.Get.Href);
+            fssEventData.Files.FirstOrDefault()!.Links.Get.Href = ReplaceHostValueMethod(fssEventData.Files.FirstOrDefault()?.Links.Get.Href!);  //Rhz improve?
 
-            FssDataMappingConfiguration.SourceConfiguration sourceConfiguration = _fssDataMappingConfiguration.Value.Sources
+            FssDataMappingConfiguration.SourceConfiguration? sourceConfiguration = _fssDataMappingConfiguration.Value.Sources
                 .FirstOrDefault(x => x.BusinessUnit.Equals(fssEventData.BusinessUnit, StringComparison.OrdinalIgnoreCase));
 
             if (sourceConfiguration == null)
