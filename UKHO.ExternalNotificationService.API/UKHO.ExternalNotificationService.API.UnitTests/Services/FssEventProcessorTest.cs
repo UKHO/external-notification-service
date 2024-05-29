@@ -96,7 +96,10 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             A.CallTo(() => _fakeAzureEventGridDomainService.ConvertObjectTo<FssEventData>(_fakeCustomCloudEvent.Data)).Returns(_fakeFssEventData);
             A.CallTo(() => _fakeFssEventValidationAndMappingService.ValidateFssEventData(_fakeFssEventData)).Returns(new ValidationResult());
-            A.CallTo(() => _fakeFssEventValidationAndMappingService.FssEventDataMapping(_fakeCustomCloudEvent, CorrelationId)).Throws<ConfigurationMissingException>();
+            // Rhz new may not be calling this any longer
+            //A.CallTo(() => _fakeFssEventValidationAndMappingService.FssEventDataMapping(_fakeCustomCloudEvent, CorrelationId)).Throws<ConfigurationMissingException>();
+            // Rhz may be replaced with
+            A.CallTo(() => _fakeFssEventValidationAndMappingService.MapToCloudEvent(A<CloudEventCandidate<FssEventData>>.Ignored)).Throws<ConfigurationMissingException>();
 
             ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
 

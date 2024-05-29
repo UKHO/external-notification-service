@@ -52,5 +52,22 @@ namespace UKHO.ExternalNotificationService.API.Services
 
             return cloudEvent;
         }
+
+        // Rhz new
+        public CloudEvent MapToCloudEvent(CloudEventCandidate<ScsEventData> candidate)
+        {
+            CloudEvent cloudEvent = new(_scsDataMappingConfiguration.Value.Source,
+                                        ScsDataMappingValueConstant.Type,
+                                        candidate.Data)
+            {
+                Time = DateTimeOffset.Parse(DateTime.UtcNow.ToRfc3339String()),
+                Id = Guid.NewGuid().ToString(),
+                Subject = candidate.Subject,
+                DataContentType = candidate.DataContentType,
+                DataSchema = candidate.DataSchema
+            };
+
+            return cloudEvent;
+        }
     }
 }

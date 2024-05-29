@@ -63,7 +63,35 @@ namespace UKHO.ExternalNotificationService.API.Services
             return cloudEvent;
         }
 
-        private string ReplaceHostValueMethod(string href)
+        // Rhz new
+        public CloudEvent MapToCloudEvent(CloudEventCandidate<FssEventData> candidate)
+        {
+            FssEventData fssEventData = candidate.Data!;
+            fssEventData.Links.BatchStatus.Href = ReplaceHostValueMethod(fssEventData.Links.BatchStatus.Href);
+            fssEventData.Links.BatchDetails.Href = ReplaceHostValueMethod(fssEventData.Links.BatchDetails.Href);
+            fssEventData.Files.FirstOrDefault()!.Links.Get.Href = ReplaceHostValueMethod(fssEventData.Files.FirstOrDefault()?.Links.Get.Href!);  //Rhz improve?
+
+            FssDataMappingConfiguration.SourceConfiguration? sourceConfiguration = _fssDataMappingConfiguration.Value.Sources
+                .FirstOrDefault(x => x.BusinessUnit.Equals(fssEventData.BusinessUnit, StringComparison.OrdinalIgnoreCase));
+
+            if (sourceConfiguration == null)
+            {
+                throw new ConfigurationMissingException($"Missing FssDataMappingConfiguration configuration for {fssEventData.BusinessUnit} business unit");
+            }
+
+            CloudEvent cloudEvent = new(sourceConfiguration.Source, FssDataMappingValueConstant.Type, fssEventData)
+            {
+                Time = DateTimeOffset.Parse(DateTime.UtcNow.ToRfc3339String()),
+                Id = Guid.NewGuid().ToString(),
+                Subject = candidate.Subject,
+                DataContentType = candidate.DataContentType,
+                DataSchema = candidate.DataSchema
+            };
+
+            return cloudEvent;
+        }
+
+            private string ReplaceHostValueMethod(string href)
         {
             return href.Replace(_fssDataMappingConfiguration.Value.EventHostName, _fssDataMappingConfiguration.Value.PublishHostName);
         }
