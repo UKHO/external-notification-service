@@ -36,7 +36,7 @@ namespace UKHO.ExternalNotificationService.API.Services
 
         public async Task<ExternalNotificationServiceProcessResponse> Process(CustomCloudEvent customCloudEvent, string correlationId, CancellationToken cancellationToken = default)
         {
-            ScsEventData scsEventData = GetEventData<ScsEventData>(customCloudEvent.Data);
+            ScsEventData? scsEventData = GetEventData<ScsEventData>(customCloudEvent.Data!);
 
             ValidationResult validationScsEventData = await _scsEventValidationAndMappingService.ValidateScsEventData(scsEventData);
 

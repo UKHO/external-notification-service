@@ -13,12 +13,12 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             postEntityImage = payload.PostEntityImages.SingleOrDefault(i => i.Key == postEntityImageKey);
         }
 
-        public static IEnumerable<D365Attribute> D365AttributeDetails(InputParameter inputParameter, EntityImage postEntityImage)
+        public static IEnumerable<D365Attribute> D365AttributeDetails(InputParameter inputParameter, EntityImage? postEntityImage)
         {
             return inputParameter.Value?.Attributes.Concat(postEntityImage?.Value?.Attributes ?? Array.Empty<D365Attribute>())!;
         }
 
-        public static IEnumerable<FormattedValue> FormattedValueDetails(InputParameter inputParameter, EntityImage postEntityImage)
+        public static IEnumerable<FormattedValue> FormattedValueDetails(InputParameter inputParameter, EntityImage? postEntityImage)
         {
             return inputParameter.Value?.FormattedValues.Concat(postEntityImage?.Value?.FormattedValues ?? Array.Empty<FormattedValue>())!;
         } 

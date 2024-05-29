@@ -13,7 +13,7 @@ namespace UKHO.ExternalNotificationService.Common.Repository
             _ensConfiguration = ensConfiguration;
         }
 
-        public ICollection<NotificationType> GetAllNotificationTypes()
+        public ICollection<NotificationType>? GetAllNotificationTypes()
         {
             return _ensConfiguration.Value.NotificationTypes;
         }

@@ -8,8 +8,8 @@ namespace UKHO.ExternalNotificationService.Common.Models.EventModel
         public string ProductName { get; set; } = string.Empty;
         public int EditionNumber { get; set; }
         public int UpdateNumber { get; set; }
-        public ProductBoundingBox? BoundingBox { get; set; }
-        public ProductUpdateStatus? Status { get; set; }
+        public ProductBoundingBox BoundingBox { get; set; } = new();
+        public ProductUpdateStatus Status { get; set; } = new();
         public bool IsPermitUpdateRequired { get; set; }
         public long FileSize { get; set; }
     }

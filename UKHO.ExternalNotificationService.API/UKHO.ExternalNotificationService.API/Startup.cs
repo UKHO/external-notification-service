@@ -147,7 +147,7 @@ namespace UKHO.ExternalNotificationService.API
 
             builder.AddEnvironmentVariables();
             IConfigurationRoot tempConfig = builder.Build();
-            string kvServiceUri = tempConfig["KeyVaultSettings:ServiceUri"];
+            string? kvServiceUri = tempConfig["KeyVaultSettings:ServiceUri"];
 
             if (!string.IsNullOrWhiteSpace(kvServiceUri))
             {

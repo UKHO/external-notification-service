@@ -25,7 +25,8 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
     {
         private readonly EventGridDomainConfiguration _eventGridDomainConfig;
         private readonly IEventSubscriptionConfiguration _eventSubscriptionConfiguration;
-        private readonly ILogger<AzureEventGridDomainService> _logger;        
+        private readonly ILogger<AzureEventGridDomainService> _logger;
+        private readonly JsonSerializerOptions _options = new(JsonSerializerDefaults.Web);
 
         public AzureEventGridDomainService(IOptions<EventGridDomainConfiguration> eventGridDomainConfig, IEventSubscriptionConfiguration eventSubscriptionConfiguration, ILogger<AzureEventGridDomainService> logger)
         {
@@ -90,13 +91,11 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
         // We have to do this because the data object is likely to be a JsonElement.
         public T? ConvertObjectTo<T>(object data) where T : class
         {
-            JsonSerializerOptions options = new(JsonSerializerDefaults.Web);
-
             T obj = default!;
             string jsonString = JsonSerializer.Serialize(data);
             if (jsonString != null)
             {
-                obj = JsonSerializer.Deserialize<T>(jsonString,options)!;
+                obj = JsonSerializer.Deserialize<T>(jsonString,_options)!;
             }
             return obj;
         }
