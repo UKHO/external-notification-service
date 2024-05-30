@@ -20,7 +20,7 @@ namespace UKHO.ExternalNotificationService.API.Services
     {
         private readonly IScsEventValidationAndMappingService _scsEventValidationAndMappingService;
         private readonly ILogger<ScsEventProcessor> _logger;
-        private List<Error> _errors;
+        private List<Error> _errors = [];
 
         public string EventType => EventProcessorTypes.SCS;
 

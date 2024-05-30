@@ -34,34 +34,34 @@ namespace UKHO.ExternalNotificationService.API.Services
             return _fssEventDataValidator.Validate(fssEventData);
         }
 
-        public CloudEvent FssEventDataMapping(CustomCloudEvent customCloudEvent, string correlationId)
-        {
-            string data = JsonSerializer.Serialize(customCloudEvent.Data);
-            FssEventData fssEventData = JsonSerializer.Deserialize<FssEventData>(data, _options)!;
+        //public CloudEvent FssEventDataMapping(CustomCloudEvent customCloudEvent, string correlationId)
+        //{
+        //    string data = JsonSerializer.Serialize(customCloudEvent.Data);
+        //    FssEventData fssEventData = JsonSerializer.Deserialize<FssEventData>(data, _options)!;
 
-            fssEventData.Links.BatchStatus.Href = ReplaceHostValueMethod(fssEventData.Links.BatchStatus.Href);
-            fssEventData.Links.BatchDetails.Href = ReplaceHostValueMethod(fssEventData.Links.BatchDetails.Href);
-            fssEventData.Files.FirstOrDefault()!.Links.Get.Href = ReplaceHostValueMethod(fssEventData.Files.FirstOrDefault()?.Links.Get.Href!);  //Rhz improve?
+        //    fssEventData.Links.BatchStatus.Href = ReplaceHostValueMethod(fssEventData.Links.BatchStatus.Href);
+        //    fssEventData.Links.BatchDetails.Href = ReplaceHostValueMethod(fssEventData.Links.BatchDetails.Href);
+        //    fssEventData.Files.FirstOrDefault()!.Links.Get.Href = ReplaceHostValueMethod(fssEventData.Files.FirstOrDefault()?.Links.Get.Href!);  //Rhz improve?
 
-            FssDataMappingConfiguration.SourceConfiguration? sourceConfiguration = _fssDataMappingConfiguration.Value.Sources
-                .FirstOrDefault(x => x.BusinessUnit.Equals(fssEventData.BusinessUnit, StringComparison.OrdinalIgnoreCase));
+        //    FssDataMappingConfiguration.SourceConfiguration? sourceConfiguration = _fssDataMappingConfiguration.Value.Sources
+        //        .FirstOrDefault(x => x.BusinessUnit.Equals(fssEventData.BusinessUnit, StringComparison.OrdinalIgnoreCase));
 
-            if (sourceConfiguration == null)
-            {
-                throw new ConfigurationMissingException($"Missing FssDataMappingConfiguration configuration for {fssEventData.BusinessUnit} business unit");
-            }
+        //    if (sourceConfiguration == null)
+        //    {
+        //        throw new ConfigurationMissingException($"Missing FssDataMappingConfiguration configuration for {fssEventData.BusinessUnit} business unit");
+        //    }
 
-            CloudEvent cloudEvent = new(sourceConfiguration.Source, FssDataMappingValueConstant.Type, fssEventData)
-            {
-                Time = DateTimeOffset.Parse(DateTime.UtcNow.ToRfc3339String()),
-                Id = Guid.NewGuid().ToString(),
-                Subject = customCloudEvent.Subject,
-                DataContentType = customCloudEvent.DataContentType,
-                DataSchema = customCloudEvent.DataSchema
-            };
+        //    CloudEvent cloudEvent = new(sourceConfiguration.Source, FssDataMappingValueConstant.Type, fssEventData)
+        //    {
+        //        Time = DateTimeOffset.Parse(DateTime.UtcNow.ToRfc3339String()),
+        //        Id = Guid.NewGuid().ToString(),
+        //        Subject = customCloudEvent.Subject,
+        //        DataContentType = customCloudEvent.DataContentType,
+        //        DataSchema = customCloudEvent.DataSchema
+        //    };
 
-            return cloudEvent;
-        }
+        //    return cloudEvent;
+        //}
 
         // Rhz new
         public CloudEvent MapToCloudEvent(CloudEventCandidate<FssEventData> candidate)

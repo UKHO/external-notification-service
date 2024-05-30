@@ -25,14 +25,17 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         private ScsEventValidationAndMappingService _scsEventValidationAndMappingService;
         private ScsEventData _fakeScsEventData;
         private CustomCloudEvent _fakeCustomCloudEvent;
+        private CloudEventCandidate<ScsEventData> _fakeCloudEventCandidate;
+        
 
         [SetUp]
         public void Setup()
         {
+            
             _fakeScsEventData = CustomCloudEventBase.GetScsEventData();
             _fakeCustomCloudEvent = CustomCloudEventBase.GetCustomCloudEvent();
             _fakeCustomCloudEvent.Data = _fakeScsEventData;
-
+            _fakeCloudEventCandidate = CustomCloudEventBase.GetCloudEventCandidate<ScsEventData>(_fakeCustomCloudEvent);
             _fakeScsEventDataValidator = A.Fake<IScsEventDataValidator>();
             _fakeScsDataMappingConfiguration = A.Fake<IOptions<ScsDataMappingConfiguration>>();
             _fakeScsDataMappingConfiguration.Value.Source = "Scs-Test";
@@ -68,9 +71,10 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [Test]
         public void WhenValidScsEventDataMappingRequest_ThenReturnCloudEvent()
         {
-            const string correlationId = "7b838400-7d73-4a64-982b-f426bddc1296";
-
-            CloudEvent result = _scsEventValidationAndMappingService.ScsEventDataMapping(_fakeCustomCloudEvent, correlationId);
+            //const string correlationId = "7b838400-7d73-4a64-982b-f426bddc1296";
+            // Rhz new Replace
+            //CloudEvent result = _scsEventValidationAndMappingService.ScsEventDataMapping(_fakeCustomCloudEvent, correlationId);
+            CloudEvent result = _scsEventValidationAndMappingService.MapToCloudEvent(_fakeCloudEventCandidate);
 
             string data = Encoding.ASCII.GetString(result.Data);
             ScsEventData cloudEventData = JsonSerializer.Deserialize<ScsEventData>(data);

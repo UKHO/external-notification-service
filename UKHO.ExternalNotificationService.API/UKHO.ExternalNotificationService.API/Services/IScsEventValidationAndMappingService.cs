@@ -10,7 +10,7 @@ namespace UKHO.ExternalNotificationService.API.Services
     {
         Task<ValidationResult> ValidateScsEventData(ScsEventData scsEventData);
 
-        CloudEvent ScsEventDataMapping(CustomCloudEvent customCloudEvent, string correlationId);
+        //CloudEvent ScsEventDataMapping(CustomCloudEvent customCloudEvent, string correlationId);
         // Rhz new
         CloudEvent MapToCloudEvent(CloudEventCandidate<ScsEventData> candidate);
     }

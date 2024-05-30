@@ -76,8 +76,10 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             CloudEvent cloudEvent = new("test", "test", new object());
 
             A.CallTo(() => _fakeScsEventValidationAndMappingService.ValidateScsEventData(A<ScsEventData>.Ignored)).Returns(new ValidationResult());
-
-            A.CallTo(() => _fakeScsEventValidationAndMappingService.ScsEventDataMapping(A<CustomCloudEvent>.Ignored, A<string>.Ignored)).Returns(cloudEvent);
+            // Rhz new Replace
+            //A.CallTo(() => _fakeScsEventValidationAndMappingService.ScsEventDataMapping(A<CustomCloudEvent>.Ignored, A<string>.Ignored)).Returns(cloudEvent);
+            //Replace with
+            A.CallTo(() => _fakeScsEventValidationAndMappingService.MapToCloudEvent(A<CloudEventCandidate<ScsEventData>>.Ignored)).Returns(cloudEvent);
 
             A.CallTo(() => _fakeAzureEventGridDomainService.ConvertObjectTo<ScsEventData>(A<object>.Ignored)).Returns(_fakeScsEventData);
 
@@ -86,7 +88,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             ExternalNotificationServiceProcessResponse result = await _scsEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
 
             Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
-            Assert.That(result.Errors, Is.Null);
+            Assert.That(result.Errors, Is.Empty);
         }
     }
 }

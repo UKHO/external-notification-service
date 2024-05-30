@@ -22,7 +22,7 @@ namespace UKHO.ExternalNotificationService.API.Services
     {
         private readonly IFssEventValidationAndMappingService _fssEventValidationAndMappingService;
         private readonly ILogger<FssEventProcessor> _logger;
-        private List<Error> _errors;
+        private List<Error> _errors = [];
 
         public string EventType => EventProcessorTypes.FSS;
 
