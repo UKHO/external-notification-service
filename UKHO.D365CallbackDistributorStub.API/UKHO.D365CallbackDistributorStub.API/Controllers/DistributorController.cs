@@ -27,8 +27,8 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
         {
             _logger.LogInformation("Distributor option accessed.");
             string? webhookRequestOrigin = HttpContext.Request.Headers["WebHook-Request-Origin"].FirstOrDefault();
-            HttpContext.Response.Headers.Add("WebHook-Allowed-Rate", "*");
-            HttpContext.Response.Headers.Add("WebHook-Allowed-Origin", webhookRequestOrigin);
+            HttpContext.Response.Headers.Append("WebHook-Allowed-Rate", "*");
+            HttpContext.Response.Headers.Append("WebHook-Allowed-Origin", webhookRequestOrigin);
             return OkResponse();
         }
 
