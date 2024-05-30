@@ -37,8 +37,6 @@ namespace UKHO.ExternalNotificationService.API.Services
 
         public async Task<ExternalNotificationServiceProcessResponse> Process(CustomCloudEvent customCloudEvent, string correlationId, CancellationToken cancellationToken = default)
         {
-            // Rhz New
-            //FssEventData? fssEventData = GetEventData<FssEventData>(customCloudEvent.Data!);
             CloudEventCandidate<FssEventData> candidate = ConvertToCloudEventCandidate<FssEventData>(customCloudEvent);
 
             ValidationResult validationFssEventData = await _fssEventValidationAndMappingService.ValidateFssEventData(candidate.Data!);
@@ -53,7 +51,6 @@ namespace UKHO.ExternalNotificationService.API.Services
                 try
                 {
                     _logger.LogInformation(EventIds.FssEventDataMappingStart.ToEventId(), "File share service event data mapping started for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customCloudEvent.Subject, candidate.Data?.BusinessUnit, correlationId);
-                    //CloudEvent cloudEvent = _fssEventValidationAndMappingService.FssEventDataMapping(customCloudEvent, correlationId);
                     CloudEvent cloudEvent = _fssEventValidationAndMappingService.MapToCloudEvent(candidate);
                     _logger.LogInformation(EventIds.FssEventDataMappingCompleted.ToEventId(), "File share service event data mapping successfully completed for subject:{subject}, businessUnit:{businessUnit} and _X-Correlation-ID:{correlationId}.", customCloudEvent.Subject, candidate.Data?.BusinessUnit, correlationId);
 

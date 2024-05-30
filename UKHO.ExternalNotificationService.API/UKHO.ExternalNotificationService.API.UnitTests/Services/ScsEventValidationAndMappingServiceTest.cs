@@ -71,9 +71,6 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [Test]
         public void WhenValidScsEventDataMappingRequest_ThenReturnCloudEvent()
         {
-            //const string correlationId = "7b838400-7d73-4a64-982b-f426bddc1296";
-            // Rhz new Replace
-            //CloudEvent result = _scsEventValidationAndMappingService.ScsEventDataMapping(_fakeCustomCloudEvent, correlationId);
             CloudEvent result = _scsEventValidationAndMappingService.MapToCloudEvent(_fakeCloudEventCandidate);
 
             string data = Encoding.ASCII.GetString(result.Data);

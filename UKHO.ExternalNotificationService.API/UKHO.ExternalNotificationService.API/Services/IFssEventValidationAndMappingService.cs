@@ -10,8 +10,6 @@ namespace UKHO.ExternalNotificationService.API.Services
     {
         Task<ValidationResult> ValidateFssEventData(FssEventData fssEventData);
 
-        //CloudEvent FssEventDataMapping(CustomCloudEvent customCloudEvent, string correlationId);
-        // Rhz new
         CloudEvent MapToCloudEvent(CloudEventCandidate<FssEventData> candidate);
     }
 }

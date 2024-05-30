@@ -69,7 +69,7 @@ namespace UKHO.ExternalNotificationService.API
             services.Configure<FssDataMappingConfiguration>(_configuration.GetSection("FssDataMappingConfiguration"));
             services.Configure<ScsDataMappingConfiguration>(_configuration.GetSection("ScsDataMappingConfiguration"));
 
-            services.AddApplicationInsightsTelemetry(); 
+            services.AddApplicationInsightsTelemetry();
             services.AddLogging(loggingBuilder =>
             {
                 loggingBuilder.AddConfiguration(_configuration.GetSection("Logging"));

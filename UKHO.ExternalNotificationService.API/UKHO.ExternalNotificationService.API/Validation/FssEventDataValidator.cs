@@ -88,7 +88,7 @@ namespace UKHO.ExternalNotificationService.API.Validation
 
         Task<ValidationResult> IFssEventDataValidator.Validate(FssEventData? fssEventData)
         {
-            return ValidateAsync(fssEventData);
+            return ValidateAsync(fssEventData!);
         }
     }
 }

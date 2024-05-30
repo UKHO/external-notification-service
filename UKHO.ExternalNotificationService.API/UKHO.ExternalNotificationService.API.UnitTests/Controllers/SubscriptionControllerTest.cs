@@ -79,7 +79,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         public async Task WhenD365HttpPayloadSizeExceeded_ThenLogError()
         {
             DefaultHttpContext defaultHttpContext = new();
-            defaultHttpContext.Request.Headers.Add(XmsDynamicsMsgSizeExceededHeader, string.Empty);
+            defaultHttpContext.Request.Headers.Append(XmsDynamicsMsgSizeExceededHeader, string.Empty);
             A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(defaultHttpContext);
             A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
             A.CallTo(() => _fakeNotificationRepository.GetAllNotificationTypes()).Returns(_fakeNotificationType);

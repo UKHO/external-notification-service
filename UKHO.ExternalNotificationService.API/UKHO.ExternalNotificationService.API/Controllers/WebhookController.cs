@@ -34,9 +34,12 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         [HttpOptions]
         public IActionResult Options()
         {
-            string webhookRequestOrigin = HttpContext.Request.Headers["WebHook-Request-Origin"].FirstOrDefault();
-            HttpContext.Response.Headers.Add("WebHook-Allowed-Rate", "*");
-            HttpContext.Response.Headers.Add("WebHook-Allowed-Origin", webhookRequestOrigin);
+            string? webhookRequestOrigin = HttpContext.Request.Headers["WebHook-Request-Origin"].FirstOrDefault();
+            HttpContext.Response.Headers.Append("WebHook-Allowed-Rate", "*");
+            if (!string.IsNullOrWhiteSpace(webhookRequestOrigin))
+            {
+               HttpContext.Response.Headers.Append("WebHook-Allowed-Origin", webhookRequestOrigin);
+            }
 
             _logger.LogInformation(EventIds.ENSWebhookOptionsEndPointRequested.ToEventId(), "External notification service webhook options end point requested for _X-Correlation-ID:{correlationId}.", GetCurrentCorrelationId());
 
@@ -54,7 +57,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
 
             if (customCloudEvent?.Type != null)
             {
-                IEventProcessor processor = _eventProcessorFactory.GetProcessor(customCloudEvent.Type);
+                IEventProcessor? processor = _eventProcessorFactory.GetProcessor(customCloudEvent.Type);
 
                 if (processor != null)
                 {

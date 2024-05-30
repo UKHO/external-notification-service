@@ -29,31 +29,7 @@ namespace UKHO.ExternalNotificationService.API.Services
             return _scsEventDataValidator.Validate(scsEventData);
         }
 
-        //public CloudEvent ScsEventDataMapping(CustomCloudEvent customCloudEvent, string correlationId)
-        //{
-        //    JsonSerializerOptions options = new(JsonSerializerDefaults.Web)
-        //    {
-        //        WriteIndented = true
-        //    };
-
-        //    string data = JsonSerializer.Serialize(customCloudEvent.Data);
-        //    ScsEventData scsEventData = JsonSerializer.Deserialize<ScsEventData>(data,options);
-
-        //    CloudEvent cloudEvent = new(_scsDataMappingConfiguration.Value.Source,
-        //                                ScsDataMappingValueConstant.Type,
-        //                                scsEventData)
-        //    {
-        //        Time = DateTimeOffset.Parse(DateTime.UtcNow.ToRfc3339String()),
-        //        Id = Guid.NewGuid().ToString(),
-        //        Subject = customCloudEvent.Subject,
-        //        DataContentType = customCloudEvent.DataContentType,
-        //        DataSchema = customCloudEvent.DataSchema
-        //    };
-
-        //    return cloudEvent;
-        //}
-
-        // Rhz new
+        
         public CloudEvent MapToCloudEvent(CloudEventCandidate<ScsEventData> candidate)
         {
             CloudEvent cloudEvent = new(_scsDataMappingConfiguration.Value.Source,

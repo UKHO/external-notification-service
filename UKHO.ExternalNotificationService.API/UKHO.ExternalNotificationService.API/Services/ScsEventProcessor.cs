@@ -36,8 +36,6 @@ namespace UKHO.ExternalNotificationService.API.Services
 
         public async Task<ExternalNotificationServiceProcessResponse> Process(CustomCloudEvent customCloudEvent, string correlationId, CancellationToken cancellationToken = default)
         {
-            // Rhz new
-            //ScsEventData? scsEventData = GetEventData<ScsEventData>(customCloudEvent.Data!);
             CloudEventCandidate<ScsEventData> candidate = ConvertToCloudEventCandidate<ScsEventData>(customCloudEvent);
 
             ValidationResult validationScsEventData = await _scsEventValidationAndMappingService.ValidateScsEventData(candidate.Data!);
@@ -46,7 +44,6 @@ namespace UKHO.ExternalNotificationService.API.Services
                 return ProcessResponse();
 
             _logger.LogInformation(EventIds.ScsEventDataMappingStart.ToEventId(), "Sales catalogue service event data mapping started for subject:{subject} and _X-Correlation-ID:{correlationId}.", customCloudEvent.Subject, correlationId);
-            //CloudEvent cloudEvent = _scsEventValidationAndMappingService.ScsEventDataMapping(customCloudEvent, correlationId);
             CloudEvent cloudEvent = _scsEventValidationAndMappingService.MapToCloudEvent(candidate);
             _logger.LogInformation(EventIds.ScsEventDataMappingCompleted.ToEventId(), "Sales catalogue service event data mapping successfully completed for subject:{subject} and _X-Correlation-ID:{correlationId}.", customCloudEvent.Subject, correlationId);
 
