@@ -153,7 +153,6 @@ namespace UKHO.ExternalNotificationService.API.Filters
             return bodyAsString;
         }
 
-        // Rhz changes start here
         private static string RedactBody(string propertyNameToRedact, string bodyAsString, ILogger logger)
         {
             JsonSerializerOptions JOptions = new(JsonSerializerDefaults.Web)
@@ -163,10 +162,6 @@ namespace UKHO.ExternalNotificationService.API.Filters
 
             try
             {
-                //var jobj = JObject.Parse(bodyAsString);
-                //RedactJObject(propertyNameToRedact, jobj);
-
-                //return jobj.ToString(Formatting.None);
                 JsonObject? originalObject = (JsonObject)JsonNode.Parse(bodyAsString)!;
                 JsonObject? redactedObject = (JsonObject)JsonNode.Parse(bodyAsString)!;
 
@@ -181,14 +176,6 @@ namespace UKHO.ExternalNotificationService.API.Filters
             }
         }
 
-        //private static void RedactJObject(string propertyNameToRedact, JObject jobj)
-        //{
-        //    foreach (var property in jobj.Descendants().OfType<JProperty>())
-        //    {
-        //        if (property.Name == propertyNameToRedact)
-        //            property.Value = RedactedValue;
-        //    }
-        //}
 
         private static void RedactObject(JsonObject node, string propertyNameToRedact, JsonObject update)
         {
