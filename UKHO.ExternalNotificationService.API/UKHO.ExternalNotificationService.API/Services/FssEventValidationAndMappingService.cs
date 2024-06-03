@@ -34,6 +34,11 @@ namespace UKHO.ExternalNotificationService.API.Services
             return _fssEventDataValidator.Validate(fssEventData);
         }
 
+        // <summary>
+        /// Maps the FSS event data to a CloudEvent.
+        /// </summary>
+        /// <param name="candidate">CloudEventCandidate a subset CustomCloudEvent containing an instance of FssEventData.</param>
+        /// <returns>The mapped CloudEvent.</returns>
         public CloudEvent MapToCloudEvent(CloudEventCandidate<FssEventData> candidate)
         {
             FssEventData fssEventData = candidate.Data!;

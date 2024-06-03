@@ -19,6 +19,14 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
             _logger = logger;
         }
 
+        /// <summary>
+        /// A Wrapper method to create or update a subscription, using the AzureEventGridDomainService.
+        /// The new Azure SDK for EventGrid required the introduction of Azure.ResourceManager.EventGrid.
+        /// Subsiqently, the method signature has changed to return a DomainTopicEventSubscriptionResource.
+        /// </summary>
+        /// <param name="subscriptionRequestMessage"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>The domain topic event subscription resource.</returns>
         public async Task<DomainTopicEventSubscriptionResource> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionMessage, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation(EventIds.CreateSubscriptionServiceStart.ToEventId(),
@@ -29,6 +37,13 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
             return response;
         }
 
+        /// <summary>
+        /// A Wrapper method to delete a subscription, using the AzureEventGridDomainService.
+        /// Changes are due to the new Azure SDK for EventGrid.
+        /// </summary>
+        /// <param name="subscriptionRequestMessage"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task DeleteSubscription(SubscriptionRequestMessage subscriptionMessage, CancellationToken cancellationToken)
         {
             _logger.LogInformation(EventIds.DeleteSubscriptionServiceEventStart.ToEventId(),

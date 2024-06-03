@@ -34,7 +34,15 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             _eventSubscriptionConfiguration = eventSubscriptionConfiguration;
             _logger = logger;            
         }
-        
+
+        /// <summary>
+        /// Creates or updates a subscription for an Azure Event Grid domain.
+        /// The new Azure SDK for EventGrid required the introduction of Azure.ResourceManager.EventGrid.
+        /// Subsiqently, the method signature has changed to return a DomainTopicEventSubscriptionResource.
+        /// </summary>
+        /// <param name="subscriptionRequestMessage"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>The domain topic event subscription resource.</returns>
         public async Task<DomainTopicEventSubscriptionResource> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionRequestMessage, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation(EventIds.CreateOrUpdateAzureEventDomainTopicStart.ToEventId(),
@@ -54,6 +62,13 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             return eventSubscriptionResult;
         }
 
+        /// <summary>
+        /// Deletes a subscription for an Azure Event Grid domain.
+        /// Changes are due to the new Azure SDK for EventGrid.
+        /// </summary>
+        /// <param name="subscriptionRequestMessage"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task DeleteSubscription(SubscriptionRequestMessage subscriptionRequestMessage, CancellationToken cancellationToken)
         {
             _logger.LogInformation(EventIds.DeleteAzureEventDomainSubscriptionStart.ToEventId(),
@@ -100,6 +115,11 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             return obj;
         }
 
+        /// <summary>
+        /// Gets the instance of ArmClient.
+        /// Introduced due to the new Azure SDK for EventGrid.
+        /// </summary>
+        /// <returns>The instance of ArmClient.</returns>
         private ArmClient GetArmClient()
         {
             DefaultAzureCredential azureCredential = new();
@@ -109,6 +129,13 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Retrieves the domain topic resource for the specified notification type topic name.
+        /// Changes are due to the new Azure SDK for EventGrid.
+        /// </summary>
+        /// <param name="notificationTypeTopicName"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>The Domain topic resource</returns>
         protected virtual async Task<DomainTopicResource> GetDomainTopic(string notificationTypeTopicName, CancellationToken cancellationToken=default)
         {
             ArmClient client = GetArmClient();
@@ -124,6 +151,14 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             return topic.Value;
         }
 
+        /// <summary>
+        /// Edits the domain topic event subscription.
+        /// Changes are due to the new Azure SDK for EventGrid.
+        /// </summary>
+        /// <param name="topic"></param>
+        /// <param name="message"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>The domain topic event subscription resource</returns>
         protected async Task<DomainTopicEventSubscriptionResource> EditDomainTopicEventSubscription(DomainTopicResource topic, SubscriptionRequestMessage message, CancellationToken cancellationToken = default)
         {
             EventGridSubscriptionData eventSubscriptionData = _eventSubscriptionConfiguration.SetEventSubscription(message);

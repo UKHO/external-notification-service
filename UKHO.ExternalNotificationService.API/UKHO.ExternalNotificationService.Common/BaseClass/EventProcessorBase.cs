@@ -20,6 +20,14 @@ namespace UKHO.ExternalNotificationService.Common.BaseClass
             return _azureEventGridDomainService.ConvertObjectTo<T>(data);
         }
 
+        /// <summary>
+        /// Converts the provided CustomCloudEvent to a CloudEventCandidate of type T.
+        /// CloudEventCandidate contains the properties needed to create a CloudEvent.
+        /// This includes the appropriately typed Data property.
+        /// </summary>
+        /// <typeparam name="T">The type of the CloudEventCandidate.</typeparam>
+        /// <param name="source">The CustomCloudEvent to convert.</param>
+        /// <returns>The converted CloudEventCandidate of type T.</returns>
         public CloudEventCandidate<T> ConvertToCloudEventCandidate<T>(CustomCloudEvent source) where T : class
         {
             CloudEventCandidate<T> cloudEventCandidate = new CloudEventCandidate<T>
