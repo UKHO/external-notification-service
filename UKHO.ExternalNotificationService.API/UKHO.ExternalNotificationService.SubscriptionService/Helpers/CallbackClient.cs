@@ -34,7 +34,6 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Helpers
             httpClient.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
 
-            //HttpContent content = new StringContent(JsonObject.FromObject(externalNotificationEntity).ToString());
             HttpContent content = new StringContent(JsonSerializer.Serialize(externalNotificationEntity));
 
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");

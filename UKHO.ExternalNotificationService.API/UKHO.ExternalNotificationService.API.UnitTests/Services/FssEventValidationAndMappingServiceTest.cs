@@ -72,12 +72,10 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [TestCase("MaritimeSafetyInformation")]
         public void WhenValidFssEventDataMappingRequest_ThenReturnCloudEvent(string businessUnit)
         {
-            //const string correlationId = "7b838400-7d73-4a64-982b-f426bddc1296";
             const string batchDetailsUri = "https://test/fss/batch/83d08093-7a67-4b3a-b431-92ba42feaea0";
 
             CustomCloudEvent customCloudEvent = CustomCloudEventBase.GetCustomCloudEvent(businessUnit);
             CloudEventCandidate<FssEventData> candidate = CustomCloudEventBase.GetCloudEventCandidate<FssEventData>(customCloudEvent);
-            //CloudEvent result = _fssEventValidationAndMappingService.FssEventDataMapping(customCloudEvent, correlationId);
             CloudEvent result = _fssEventValidationAndMappingService.MapToCloudEvent(candidate);
 
             string data = Encoding.ASCII.GetString(result.Data);
@@ -94,14 +92,12 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         public void WhenFssEventDataMappingRequestForUnconfiguredBusinessUnit_ThenThrowConfigurationMissingException()
         {
             const string businessUnit = "UnconfiguredBusinessUnit";
-            //const string correlationId = "7b838400-7d73-4a64-982b-f426bddc1296";
             CustomCloudEvent customCloudEvent = CustomCloudEventBase.GetCustomCloudEvent(businessUnit);
             CloudEventCandidate<FssEventData> candidate = CustomCloudEventBase.GetCloudEventCandidate<FssEventData>(customCloudEvent);
 
             Assert.Throws(Is.TypeOf<ConfigurationMissingException>().And.Message.EqualTo($"Missing FssDataMappingConfiguration configuration for {businessUnit} business unit"),
                 delegate
                 {
-                    // _fssEventValidationAndMappingService.FssEventDataMapping(customCloudEvent, correlationId);
                     _fssEventValidationAndMappingService.MapToCloudEvent(candidate);
                 });
         }

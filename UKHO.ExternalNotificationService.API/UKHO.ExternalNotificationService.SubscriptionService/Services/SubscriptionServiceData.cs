@@ -21,8 +21,6 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
 
         /// <summary>
         /// A Wrapper method to create or update a subscription, using the AzureEventGridDomainService.
-        /// The new Azure SDK for EventGrid required the introduction of Azure.ResourceManager.EventGrid.
-        /// Subsiqently, the method signature has changed to return a DomainTopicEventSubscriptionResource.
         /// </summary>
         /// <param name="subscriptionRequestMessage"></param>
         /// <param name="cancellationToken"></param>

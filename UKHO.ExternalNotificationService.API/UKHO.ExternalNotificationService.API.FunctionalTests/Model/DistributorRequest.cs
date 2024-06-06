@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using System.Text.Json.Serialization;
-//using Azure.Messaging;
 
 namespace UKHO.ExternalNotificationService.API.FunctionalTests.Model
 {

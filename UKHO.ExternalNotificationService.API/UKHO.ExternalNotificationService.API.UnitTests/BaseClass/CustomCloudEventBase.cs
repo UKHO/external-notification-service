@@ -10,7 +10,6 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.BaseClass
 {
     public static class CustomCloudEventBase
     {
-        //private static JsonSerializerOptions _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
         public static CustomCloudEvent GetCustomCloudEvent(string businessUnit = "AVCSData")
         {

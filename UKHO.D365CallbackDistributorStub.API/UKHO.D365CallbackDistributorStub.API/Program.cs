@@ -1,21 +1,3 @@
-//namespace UKHO.D365CallbackDistributorStub.API
-//{
-//    public static class Program
-//    {
-//        public static void Main(string[] args)
-//        {
-//            CreateHostBuilder(args).Build().Run();
-//        }
-
-//        public static IHostBuilder CreateHostBuilder(string[] args) =>
-//            Host.CreateDefaultBuilder(args)
-//                .ConfigureWebHostDefaults(webBuilder =>
-//                {
-//                    webBuilder.UseStartup<Startup>();
-//                });
-//    }
-//}
-
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using UKHO.D365CallbackDistributorStub.API.Services;

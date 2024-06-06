@@ -1,5 +1,4 @@
 ﻿using Azure.Messaging;
-//using Microsoft.Azure.Management.EventGrid.Models;
 using Azure.ResourceManager.EventGrid;
 using System.Threading;
 using System.Threading.Tasks;
