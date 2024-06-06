@@ -67,7 +67,7 @@ stages:
   jobs:
   - template: Deployment/Template/build-test-publish.yml
     parameters:
-      DisableDependencyCheck: ${{ parameters.SkipDependencyCheck }}
+      DisableDependencyCheck: ${{ parameters.DisableDependencyCheck }}
       DotNetVersion: '8.0.x'
   # Start of code move to BuildTestPublish stage
   # - stage: PERFORM_DEPENDENCYCHECK_DOTNETBUILD_DOTNETTEST_AND_PUBLISH
