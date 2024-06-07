@@ -111,28 +111,7 @@ stages:
       variables:
       - template: Deployment/templates/var/dev-deploy.yml
         # will become var/${{ lower(parameters.ShortName) }}-deploy.yml
-        # - group: "ENS-Dev-TF-Variables"
-        # - group: "ENS-Dev-Variables"
-        # - name: "D365AuthConfiguration.TenantId"
-        #   value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
-        # - name: "D365AuthConfiguration.ClientId"
-        #   value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
-        # - name: "D365AuthConfiguration.ClientSecret"
-        #   value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
-        # - name: "EnsAuthConfiguration.ClientId"
-        #   value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
-        # - name: "EnsAuthConfiguration.TenantId"
-        #   value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
-        # - name: "ElasticAPM.ApiKey"
-        #   value: $(elasticAPM-ApiKey)
-        # - name: "ElasticAPM.Environment"
-        #   value: $(elasticAPM-Environment)
-        # - name: "ElasticAPM.ServerURL"
-        #   value: $(elasticAPM-ServerURL)
-        # - name: "ElasticAPM.ServiceName"
-        #   value: $(elasticAPM-ServiceName)
-        # - name: "ElasticAPM.WebJobServiceName"
-        #   value: $(elasticAPM-WebJobServiceName)
+        
       strategy:
         runOnce:
           deploy:
@@ -208,28 +187,7 @@ stages:
       variables:
       - template: Deployment/templates/var/vnextiat-deploy.yml
         # will become var/${{ lower(parameters.ShortName) }}-deploy.yml
-        # - group: "ENS-IAT-VNext-TF-Variables"
-        # - group: "ENS-IAT-VNext-Variables"
-        # - name: "D365AuthConfiguration.TenantId"
-        #   value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
-        # - name: "D365AuthConfiguration.ClientId"
-        #   value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
-        # - name: "D365AuthConfiguration.ClientSecret"
-        #   value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
-        # - name: "EnsAuthConfiguration.ClientId"
-        #   value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
-        # - name: "EnsAuthConfiguration.TenantId"
-        #   value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
-        # - name: "ElasticAPM.ApiKey"
-        #   value: $(elasticAPM-ApiKey)
-        # - name: "ElasticAPM.Environment"
-        #   value: $(elasticAPM-Environment)
-        # - name: "ElasticAPM.ServerURL"
-        #   value: $(elasticAPM-ServerURL)
-        # - name: "ElasticAPM.ServiceName"
-        #   value: $(elasticAPM-ServiceName)
-        # - name: "ElasticAPM.WebJobServiceName"
-        #   value: $(elasticAPM-WebJobServiceName)
+        
       strategy:
         runOnce:
           deploy:
