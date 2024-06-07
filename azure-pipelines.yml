@@ -109,10 +109,10 @@ stages:
 - stage: DevDeployAppStage
   jobs:
     - deployment: DevDeployApp
-      dependsOn: [DevDeployApimSolas]
+      # dependsOn: [DevDeployApimSolas]    # This is temperory because this job will probably  have its own template
       displayName: "Dev - deploy terraform and dotnet App"
       environment: "Ens-Dev"
-      pool: $(DeploymentPool)c
+      pool: $(DeploymentPool)
       container: ${{variables.Container}}
       workspace:
         clean: all
