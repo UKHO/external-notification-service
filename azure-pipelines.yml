@@ -75,39 +75,43 @@ stages:
   - BuildTestPublish
   displayName: "Devdeploy (inc terraform, webapp deploy)"
   jobs:
+    -template: Deployment/templates/deploy-solas.yml
+    parameters:
+      ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+      AzureEnvironment: "Ens-Dev"
+      ShortName: "dev"
+      Container: ${{variables.Container}}
     # Deploy SOLAS APIM Start
-    - deployment: DevDeployApimSolas
-      displayName: "Dev - deploy SOLAS APIM"
-      environment: "Ens-Dev"
-      pool: $(DeploymentPool)
-      container: ${{variables.Container}}
-      workspace:
-        clean: all
-      variables:
-        - template: Deployment/templates/var/dev-groups.yml
-        # - group: "ENS-Dev-TF-Variables"
-        # - group: "ENS-Dev-Variables"
-        # - group: "ENS-Dev-APIM-SOLAS-Variables"
-      strategy:
-        runOnce:
-          deploy:
-            steps:
-              - template: Deployment/templates/continuous-deployment-apim.yml
-                parameters:
-                  ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                  AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
-                  TerraformKeyVault: $(APIM_SOLAS_TERRAFORM_KEYVAULT)
-                  APIMResourceGroup: $(APIM_SOLAS_RESOURCE_GROUP_NAME)
-                  APIMServiceInstance: $(APIM_SOLAS_SERVICE_NAME)
-                  tfstateStorageAccountRG: $(APIM_SOLAS_RESOURCE_GROUP_NAME)
-                  tfstateStorageAccountName: $(APIM_SOLAS_TFSTATE_STORAGE_ACCOUNT_NAME)
+    # - deployment: DevDeployApimSolas
+    #   displayName: "Dev - deploy SOLAS APIM"
+    #   environment: "Ens-Dev"
+    #   pool: $(DeploymentPool)
+    #   container: ${{variables.Container}}
+    #   workspace:
+    #     clean: all
+    #   variables:
+    #     - template: Deployment/templates/var/dev-groups.yml
+    #     # will become var/${{ lower(parameters.ShortName) }}-groups.yml
+    #   strategy:
+    #     runOnce:
+    #       deploy:
+    #         steps:
+    #           - template: Deployment/templates/continuous-deployment-apim.yml
+    #             parameters:
+    #               ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+    #               AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
+    #               TerraformKeyVault: $(APIM_SOLAS_TERRAFORM_KEYVAULT)
+    #               APIMResourceGroup: $(APIM_SOLAS_RESOURCE_GROUP_NAME)
+    #               APIMServiceInstance: $(APIM_SOLAS_SERVICE_NAME)
+    #               tfstateStorageAccountRG: $(APIM_SOLAS_RESOURCE_GROUP_NAME)
+    #               tfstateStorageAccountName: $(APIM_SOLAS_TFSTATE_STORAGE_ACCOUNT_NAME)
       # Deploy SOLAS APIM End
 
     - deployment: DevDeployApp
       dependsOn: [DevDeployApimSolas]
       displayName: "Dev - deploy terraform and dotnet App"
       environment: "Ens-Dev"
-      pool: $(DeploymentPool)
+      pool: $(DeploymentPool)c
       container: ${{variables.Container}}
       workspace:
         clean: all
@@ -163,9 +167,7 @@ stages:
         clean: all
       variables:
         - template: Deployment/templates/var/vnextiat-groups.yml
-        # - group: "ENS-IAT-VNext-TF-Variables"
-        # - group: "ENS-IAT-VNext-Variables"
-        # - group: "ENS-IAT-VNext-APIM-SOLAS-Variables"
+        # will become var/${{ lower(parameters.ShortName) }}-groups.yml
       strategy:
         runOnce:
           deploy:
