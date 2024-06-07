@@ -75,7 +75,7 @@ stages:
   - BuildTestPublish
   displayName: "Devdeploy (inc terraform, webapp deploy)"
   jobs:
-    -template: Deployment/templates/deploy-solas.yml
+    - template: Deployment/templates/deploy-solas.yml
     parameters:
       ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
       AzureEnvironment: "Ens-Dev"
