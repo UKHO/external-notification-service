@@ -109,7 +109,7 @@ stages:
       workspace:
         clean: all
       variables:
-      - template: templates/var/dev-deploy.yml
+      - template: Deployment/templates/var/dev-deploy.yml
         # will become var/${{ lower(parameters.ShortName) }}-deploy.yml
         # - group: "ENS-Dev-TF-Variables"
         # - group: "ENS-Dev-Variables"
@@ -206,7 +206,7 @@ stages:
       workspace:
         clean: all
       variables:
-      - template: templates/var/vnextiat-deploy.yml
+      - template: Deployment/templates/var/vnextiat-deploy.yml
         # will become var/${{ lower(parameters.ShortName) }}-deploy.yml
         # - group: "ENS-IAT-VNext-TF-Variables"
         # - group: "ENS-IAT-VNext-Variables"
