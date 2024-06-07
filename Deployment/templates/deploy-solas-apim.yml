@@ -12,7 +12,7 @@ parameters:
   - name: Container
     type: string
 
-jobs:
+stage:
     # Deploy SOLAS APIM Start
     - deployment: ${{ parameters.ShortName }}DeployApimSolas
       displayName: "${{ upper(parameters.ShortName) }} - deploy SOLAS APIM"
