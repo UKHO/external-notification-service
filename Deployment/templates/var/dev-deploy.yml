@@ -1,5 +1,3 @@
 variables:
-       # only the groups seem to be specific
-        - group: "ENS-Dev-TF-Variables"
-        - group: "ENS-Dev-Variables"
-        - template: common.yml
+       - template: dev-groups.yml
+       - template: common.yml

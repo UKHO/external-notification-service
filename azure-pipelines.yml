@@ -69,12 +69,13 @@ stages:
     parameters:
       DisableDependencyCheck: ${{ parameters.DisableDependencyCheck }}
       DotNetVersion: '8.0.x'
-  
+# Rhz Changes start here...   
 - stage: Devdeploy
   dependsOn: 
   - BuildTestPublish
   displayName: "Devdeploy (inc terraform, webapp deploy)"
   jobs:
+    # Deploy SOLAS APIM Start
     - deployment: DevDeployApimSolas
       displayName: "Dev - deploy SOLAS APIM"
       environment: "Ens-Dev"
@@ -83,9 +84,10 @@ stages:
       workspace:
         clean: all
       variables:
-        - group: "ENS-Dev-TF-Variables"
-        - group: "ENS-Dev-Variables"
-        - group: "ENS-Dev-APIM-SOLAS-Variables"
+        - template: Deployment/templates/var/dev-groups.yml
+        # - group: "ENS-Dev-TF-Variables"
+        # - group: "ENS-Dev-Variables"
+        # - group: "ENS-Dev-APIM-SOLAS-Variables"
       strategy:
         runOnce:
           deploy:
@@ -99,6 +101,7 @@ stages:
                   APIMServiceInstance: $(APIM_SOLAS_SERVICE_NAME)
                   tfstateStorageAccountRG: $(APIM_SOLAS_RESOURCE_GROUP_NAME)
                   tfstateStorageAccountName: $(APIM_SOLAS_TFSTATE_STORAGE_ACCOUNT_NAME)
+      # Deploy SOLAS APIM End
 
     - deployment: DevDeployApp
       dependsOn: [DevDeployApimSolas]
@@ -159,9 +162,10 @@ stages:
       workspace:
         clean: all
       variables:
-        - group: "ENS-IAT-VNext-TF-Variables"
-        - group: "ENS-IAT-VNext-Variables"
-        - group: "ENS-IAT-VNext-APIM-SOLAS-Variables"
+        - template: Deployment/templates/var/vnextiat-groups.yml
+        # - group: "ENS-IAT-VNext-TF-Variables"
+        # - group: "ENS-IAT-VNext-Variables"
+        # - group: "ENS-IAT-VNext-APIM-SOLAS-Variables"
       strategy:
         runOnce:
           deploy:
