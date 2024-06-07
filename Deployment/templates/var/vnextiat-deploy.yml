@@ -1,4 +1,5 @@
 variables:
+   # only the groups seem to be specific
         - group: "ENS-IAT-VNext-TF-Variables"
         - group: "ENS-IAT-VNext-Variables"
         - name: "D365AuthConfiguration.TenantId"

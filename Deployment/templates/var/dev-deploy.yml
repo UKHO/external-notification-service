@@ -1,4 +1,5 @@
 variables:
+       # only the groups seem to be specific
         - group: "ENS-Dev-TF-Variables"
         - group: "ENS-Dev-Variables"
         - name: "D365AuthConfiguration.TenantId"
