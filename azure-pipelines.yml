@@ -106,7 +106,8 @@ stages:
     #               tfstateStorageAccountRG: $(APIM_SOLAS_RESOURCE_GROUP_NAME)
     #               tfstateStorageAccountName: $(APIM_SOLAS_TFSTATE_STORAGE_ACCOUNT_NAME)
       # Deploy SOLAS APIM End
-- stage: DeployApp
+- stage: DevDeployAppStage
+    jobs:
     - deployment: DevDeployApp
       dependsOn: [DevDeployApimSolas]
       displayName: "Dev - deploy terraform and dotnet App"
