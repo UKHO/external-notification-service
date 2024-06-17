@@ -1,10 +1,18 @@
-  jobs:
+parameters:
+# If set to true, the pipeline will continue even if resources are getting destroyed. Default is false.
+  - name: ContinueEvenIfResourcesAreGettingDestroyed
+    type: boolean
+# The Terraform Azure PowerShell container.
+  - name: Container
+    type: string
+
+jobs:
   - deployment: DevDeployApp
     # dependsOn: [DevDeployApimSolas]    # This is temperory because this job will probably  have its own template
     displayName: "Dev - deploy terraform and dotnet App"
     environment: "Ens-Dev"
     pool: $(DeploymentPool)
-    container: ${{variables.Container}}
+    container: ${{parameters.Container}}
     workspace:
       clean: all
     variables: 

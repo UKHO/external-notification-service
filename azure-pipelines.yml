@@ -82,6 +82,9 @@ stages:
       ShortName: "dev"
       Container: ${{variables.Container}}
   - template: Deployment/templates/test-deploy.yml
+    parameters:
+      ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+      Container: ${{variables.Container}}
 
     # Deploy SOLAS APIM Start
     # - deployment: DevDeployApimSolas
