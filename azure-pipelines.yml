@@ -106,8 +106,8 @@ stages:
     #               tfstateStorageAccountRG: $(APIM_SOLAS_RESOURCE_GROUP_NAME)
     #               tfstateStorageAccountName: $(APIM_SOLAS_TFSTATE_STORAGE_ACCOUNT_NAME)
       # Deploy SOLAS APIM End
-- stage: DevDeployAppStage
-  jobs:
+- # stage: DevDeployAppStage
+  # jobs:
     - deployment: DevDeployApp
       # dependsOn: [DevDeployApimSolas]    # This is temperory because this job will probably  have its own template
       displayName: "Dev - deploy terraform and dotnet App"
