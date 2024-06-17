@@ -16,19 +16,19 @@ jobs:
     workspace:
       clean: all
     variables: 
-    - template: Deployment/templates/var/dev-deploy.yml
+    - template: /Deployment/templates/var/dev-deploy.yml
       # will become var/${{ lower(parameters.ShortName) }}-deploy.yml
         
     strategy:
       runOnce:
         deploy:
           steps:
-            - template: Deployment/templates/continuous-deployment.yml
+            - template: /Deployment/templates/continuous-deployment.yml
               parameters:
                 ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
                 AzureSubscription: "External Notification Service Dev - A.008.02"
 
-            - template: Deployment/templates/continuous-deployment-apim.yml
+            - template: /Deployment/templates/continuous-deployment-apim.yml
               parameters:
                 ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
                 AzureSubscription: "UKHO-APIM-Dev"
@@ -38,7 +38,7 @@ jobs:
                 tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
                 tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
                   
-            - template: Deployment/templates/functional-test-process.yml
+            - template: /Deployment/templates/functional-test-process.yml
               parameters:
                 TestTitle: "Dev-AutomationTests"
 
