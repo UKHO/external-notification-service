@@ -75,12 +75,12 @@ stages:
   - BuildTestPublish
   displayName: "Devdeploy (inc terraform, webapp deploy)"
   jobs:
-    - template: Deployment/templates/deploy-solas-apim.yml
-      parameters:
-        ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-        AzureEnvironment: "Ens-Dev"
-        ShortName: "dev"
-        Container: ${{variables.Container}}
+  - template: Deployment/templates/deploy-solas-apim.yml
+    parameters:
+      ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+      AzureEnvironment: "Ens-Dev"
+      ShortName: "dev"
+      Container: ${{variables.Container}}
     # Deploy SOLAS APIM Start
     # - deployment: DevDeployApimSolas
     #   displayName: "Dev - deploy SOLAS APIM"
