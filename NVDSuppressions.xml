@@ -206,4 +206,49 @@
     </notes>
     <cve>CVE-2018-8409</cve>
   </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+    file name: Microsoft.AspNetCore.Hosting.Abstractions.dll
+    See https://github.com/dotnet/announcements/issues/194 for full MS Details on CVE.
+    A denial of service vulnerability exists in .NET 5.0, .NET Core 3.1 and .NET Core 2.1 where .NET (Core) server applications providing WebSocket endpoints could be tricked into endlessly looping while trying to read a single WebSocket frame.
+    This CVE applies to any .NET Core 3.1 but patch is provided at 3.1.412, ENS is pinned to .Net core SDK > 6.0.101 which is not vunerable, and deployed to Azure App Service which will have the security patch applied.
+    I don't think this applies to Net * 8.0.
+    ]]>
+    </notes>
+    <cve>CVE-2021-26423</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+    file name: Microsoft.AspNetCore.Hosting.Abstractions.dll
+    See https://github.com/dotnet/announcements/issues/175 for full MS Details on CVE.
+    .NET Core and Visual Studio Denial of Service Vulnerability. 
+    This CVE applies to any .NET Core 3.1 but patch is provided at 3.1.405, ENS is pinned to .Net core SDK > 6.0.101 which is not vunerable, and deployed to Azure App Service which will have the security patch applied.
+    I don't think this applies to Net * 8.0.
+    ]]>
+    </notes>
+    <cve>CVE-2021-1721</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+    file name: Microsoft.AspNetCore.Hosting.Abstractions.dll
+    See https://github.com/dotnet/announcements/issues/194 for full MS Details on CVE.
+    A denial of service vulnerability exists in .NET 5.0, .NET Core 3.1 and .NET Core 2.1 where .NET (Core) server applications providing WebSocket endpoints could be tricked into endlessly looping while trying to read a single WebSocket frame.
+    This CVE applies to any .NET Core 3.1 but patch is provided at 3.1.412, ENS is pinned to .Net core SDK > 6.0.101 which is not vunerable, and deployed to Azure App Service which will have the security patch applied.
+    I don't think this applies to Net * 8.0.
+    ]]>
+    </notes>
+    <cve>CVE-2021-26423</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Azure.WebJobs.Core:3.0.30, Microsoft.Azure.WebJobs.dll
+   https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=68857
+   ]]>
+    </notes>
+    <cve>CVE-2022-29149</cve>
+  </suppress>
 </suppressions>
