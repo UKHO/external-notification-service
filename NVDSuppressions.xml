@@ -35,6 +35,17 @@
   <suppress>
     <notes>
       <![CDATA[
+   file name: Azure.Core.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Azure\.Core@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+    <cpe>cpe:/a:microsoft:azure_sdk_for_.net</cpe>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
    file name: Azure.Core:1.38.0
    ]]>
     </notes>
