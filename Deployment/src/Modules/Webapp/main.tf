@@ -58,7 +58,7 @@ resource "azurerm_app_service_slot" "staging" {
   tags                = azurerm_app_service.webapp_service.tags
 
   site_config {
-    windows_fx_version  =   "DOTNET|8.0"
+    windows_fx_version  =   "DOTNET|6.0"
     
     always_on  = true
     ftps_state = "Disabled"
@@ -98,7 +98,7 @@ resource "azurerm_app_service" "stub_webapp_service" {
   tags                = var.tags
 
   site_config {
-    windows_fx_version  =   "DOTNET|8.0"
+    windows_fx_version  =   "DOTNET|6.0"
 
     always_on  = true
     ftps_state = "Disabled"
