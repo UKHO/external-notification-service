@@ -119,4 +119,91 @@
     <cpe>cpe:/a:elastic:elastic_agent</cpe>
     <cve>CVE-2019-7617</cve>
   </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+    Applies to Azure.Storage.Blobs:12.13.0 using Azure.Storage.Blobs:12.19.1
+    Applies to Azure.Storage.Queues:12.11.0 using Azure.Storage.Queues:12.17.1
+    False positive. 
+    https://nvd.nist.gov/vuln/detail/CVE-2022-30187
+    Azure Storage Library Information Disclosure Vulnerability.
+    This is a temporary suppression pending a fix being available.
+    Bug to track the fix - https://dev.azure.com/ukhydro/Abzu/_workitems/edit/52787
+    ]]>
+    </notes>
+    <cve>CVE-2022-30187</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: GetDocument.Insider.dll
+   False positive - this vulnerabilty impacts Blazor Server Forms
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/GetDocument\.Insider@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cpe>cpe:/a:microsoft:asp.net</cpe>
+    <cpe>cpe:/a:microsoft:asp.net_core</cpe>
+    <cve>CVE-2023-36558</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: dotnet-getdocument.dll
+   False positive - this vulnerabilty impacts Blazor Server Forms
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/dotnet\-getdocument@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cpe>cpe:/a:microsoft:asp.net</cpe>
+    <cpe>cpe:/a:microsoft:asp.net_core</cpe>
+    <cve>CVE-2023-36558</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: GetDocument.Insider.dll
+   Suppressing this CVE as it is a .NetCore runtime issue affecting .NetCore runtimes below .NET Core 3.1.4 or lower. The ENS Runs in an AppService which will have the fixes already applied, and the global.json has been addeded to require .NetCore SDK > 6.0.101 or greater.
+   More details can be found here: https://github.com/dotnet/announcements/issues/156
+   This should not apply to DotNet 8.0
+   ]]>
+    </notes>
+    <cve>CVE-2020-1108</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+    file name: Microsoft.AspNetCore.Hosting.Abstractions.dll
+    See https://github.com/dotnet/announcements/issues/176 for full MS Details on CVE.
+    A remote code execution vulnerability exists when parsing certain types of graphics files.
+    This vulnerability only exists on systems running on MacOS or Linux.
+    This CVE applies to any .NET Core 3.1 but patch is provided at 3.1.405, ENS is pinned to .Net core SDK > 6.0.101 which is not vunerable, and deployed to Azure App Service which will have the security patch applied.
+    ]]>
+    </notes>
+    <cve>CVE-2021-24112</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+    file name: Microsoft.AspNetCore.Hosting.Abstractions.dll
+    See https://github.com/dotnet/announcements/issues/178 for full MS Details on CVE.
+    A remote code execution vulnerability exists in .NET 5 and .NET Core due to how text encoding is performed.This vulnerability is for System.Text.Encodings.Web and fixed on 5.0.1 and we are using 5.0.1
+    This CVE applies to any .NET Core 3.1 but patch is provided at 3.1.407, ENS is pinned to .Net core SDK > 6.0.101 which is not vunerable, and deployed to Azure App Service which will have the security patch applied.
+    ]]>
+    </notes>
+    <cve>CVE-2021-26701</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+	file name: Microsoft.AspNetCore.Hosting.Abstractions.dll
+	See https://nvd.nist.gov/vuln/detail/CVE-2018-8409 for details on this CVE.
+	Note: This was reanalysed by NIST on 4th October, and is now a breaking issue.
+	This is a temporary suppression pending a fix being available.
+	Bug to track the fix - https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=58430
+  I don't think this applies to Net * 8.0.
+	]]>
+    </notes>
+    <cve>CVE-2018-8409</cve>
+  </suppress>
 </suppressions>
