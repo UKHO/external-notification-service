@@ -2,6 +2,12 @@ parameters:
 # If set to true, the pipeline will continue even if resources are getting destroyed. Default is false.
   - name: ContinueEvenIfResourcesAreGettingDestroyed
     type: boolean
+# The name of the environment to be used in Azure DevOps.
+  - name: AzureEnvironment
+    type: string
+# The name of the Terraform workspace to use. Will also be used to generate job names and, in lower case, used to select the correct var/x-deploy.yml variable file.
+  - name: ShortName
+    type: string
 # The Terraform Azure PowerShell container.
   - name: Container
     type: string
@@ -9,15 +15,15 @@ parameters:
 jobs:
   - deployment: DevDeployApp
     # dependsOn: [DevDeployApimSolas]    # This is temperory because this job will probably  have its own template
-    displayName: "Dev - deploy terraform and dotnet App"
-    environment: "Ens-Dev"
+    displayName: "${{ upper(parameters.ShortName) }} - deploy terraform and dotnet App"
+    environment: ${{ parameters.AzureEnvironment }}
     pool: $(DeploymentPool)
     container: ${{parameters.Container}}
     workspace:
       clean: all
     variables: 
-    - template: /Deployment/templates/var/dev-deploy.yml
-      # will become var/${{ lower(parameters.ShortName) }}-deploy.yml
+    # - template: /Deployment/templates/var/dev-deploy.yml
+    - template: var/${{ lower(parameters.ShortName) }}-deploy.yml
         
     strategy:
       runOnce:
