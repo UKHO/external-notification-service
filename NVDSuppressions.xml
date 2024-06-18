@@ -12,6 +12,39 @@
   <suppress>
     <notes>
       <![CDATA[
+   file name: Azure.Identity:1.11.3
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Identity@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+    <cpe>cpe:/a:microsoft:azure_identity_sdk</cpe>
+    <cve>CVE-2023-36415</cve>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Identity.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Azure\.Identity@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_identity_sdk</cpe>
+    <cpe>cpe:/a:microsoft:azure_sdk_for_.net</cpe>
+    <cve>CVE-2023-36415</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Core:1.38.0
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Core@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
    file name: Azure.ResourceManager.EventGrid.dll
    ]]>
     </notes>
@@ -26,5 +59,53 @@
     </notes>
     <packageUrl regex="true">^pkg:nuget/Azure\.ResourceManager@.*$</packageUrl>
     <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Elastic.Apm.AspNetCore.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.AspNetCore@.*$</packageUrl>
+    <cpe>cpe:/a:asp-project:asp-project</cpe>
+    <cpe>cpe:/a:elastic:apm_.net_agent</cpe>
+    <cpe>cpe:/a:elastic:apm_agent</cpe>
+    <cpe>cpe:/a:elastic:elastic_agent</cpe>
+    <cve>CVE-2019-7617</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Elastic.Apm.Extensions.Hosting.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.Extensions\.Hosting@.*$</packageUrl>
+    <cpe>cpe:/a:elastic:apm_.net_agent</cpe>
+    <cpe>cpe:/a:elastic:apm_agent</cpe>
+    <cpe>cpe:/a:elastic:elastic_agent</cpe>
+    <cve>CVE-2019-7617</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Elastic.Apm.Extensions.Logging.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.Extensions\.Logging@.*$</packageUrl>
+    <cpe>cpe:/a:elastic:apm_agent</cpe>
+    <cpe>cpe:/a:elastic:elastic_agent</cpe>
+    <cve>CVE-2019-7617</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Elastic.Apm.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Elastic\.Apm@.*$</packageUrl>
+    <cpe>cpe:/a:elastic:apm_.net_agent</cpe>
+    <cpe>cpe:/a:elastic:apm_agent</cpe>
+    <cpe>cpe:/a:elastic:elastic_agent</cpe>
+    <cve>CVE-2019-7617</cve>
   </suppress>
 </suppressions>
