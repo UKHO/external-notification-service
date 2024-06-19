@@ -108,6 +108,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
 
         public void ClearDistributorQueue()
         {
+            _logger.LogInformation("Starting to Clear the distributor queue");
             var distQueue = s_recordDistributorRequestQueue.ToList();
 
             if (distQueue.Count > 0)
@@ -115,6 +116,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
                 foreach (var dist in distQueue)
                 {
                     s_recordDistributorRequestQueue.Remove(dist);
+                    _logger.LogInformation("Item with subject {subject} deleted", dist.Subject);
                 }
             }
         }
