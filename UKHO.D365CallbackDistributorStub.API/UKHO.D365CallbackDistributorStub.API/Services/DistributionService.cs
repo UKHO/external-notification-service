@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Net;
+using Microsoft.Extensions.Logging;
 using UKHO.D365CallbackDistributorStub.API.Models.Request;
 using UKHO.D365CallbackDistributorStub.API.Services.Data;
 
@@ -108,13 +109,15 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
 
         public void ClearDistributorQueue()
         {
-            var distQueue = s_recordDistributorRequestQueue.ToList();
+            _logger.LogInformation("Starting to Clear the distributor queue");
+           var distQueue = s_recordDistributorRequestQueue.ToList();
 
             if (distQueue.Count > 0)
             {
                 foreach (var dist in distQueue)
                 {
                     s_recordDistributorRequestQueue.Remove(dist);
+                    _logger.LogInformation("Item with subject {subject} deleted", dist.Subject);
                 }
             }
         }
