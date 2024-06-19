@@ -599,7 +599,7 @@ stages:
         workspace:
           clean: all
         variables:
-          - group: "ENS-QA-Variables"
+          - group: "ENS-QA-TF-Variables"
           - group: "ENS-QA-Variables"
           - group: "ENS-QA-APIM-SOLAS-Variables"
         strategy:

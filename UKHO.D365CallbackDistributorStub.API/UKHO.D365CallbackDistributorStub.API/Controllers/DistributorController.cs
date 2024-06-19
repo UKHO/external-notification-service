@@ -99,5 +99,13 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
             _logger.LogInformation("Command distributor webhook request not stored in memory for Subject: {Subject}", subject);
             return BadRequestResponse();
         }
+
+        [HttpGet("clear-queue")]
+        public IActionResult ClearDistributorQueue()
+        {
+            _logger.LogInformation("GET call to clear the queue");
+            _distributionService.ClearDistributorQueue();
+            return OkResponse();
+        }
     }
 }
