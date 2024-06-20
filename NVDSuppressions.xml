@@ -251,4 +251,110 @@
     </notes>
     <cve>CVE-2022-29149</cve>
   </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+    file name: Microsoft.AspNetCore.Hosting.Abstractions.dll
+    See https://github.com/dotnet/announcements/issues/196 for full MS Details on CVE.
+    An information disclosure vulnerability exists in .NET 5.0, .NET Core 3.1 and .NET Core 2.1 when dumps created by the tool to collect crash dumps and dumps on demand are created with global read permissions on Linux and macOS.
+    This CVE applies to any .NET Core 3.1 but patch is provided at 3.1.412, ENS is pinned to .Net core SDK > 6.0.101 which is not vunerable, and deployed to Azure App Service which will have the security patch applied.
+    ]]>
+    </notes>
+    <cve>CVE-2021-34485</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Serilog.Sinks.Async.dll
+   https://nvd.nist.gov/vuln/detail/CVE-2021-43138
+   A vulnerability exists in Async through 3.2.1 (fixed in 3.2.2) , which could let a malicious user obtain privileges via the mapValues() method.
+   False positive because this CVE applies to a Javascript module named Async (https://github.com/caolan/async) which has nothing to do with Serilog.Sinks.Async apart from the word Async.
+   ]]>
+    </notes>
+    <cve>CVE-2021-43138</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.CSharp:4.0.1, Microsoft.CSharp:4.3.0, Microsoft.CSharp:4.5.0, Microsoft.CSharp:4.5.0,
+   Microsoft.NETCore.Platforms:1.0.1, Microsoft.NETCore.Platforms:1.1.0, Microsoft.NETCore.Platforms:1.1.1,
+   Microsoft.NETCore.Platforms:2.0.0
+   https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=68857
+   ]]>
+    </notes>
+    <cve>CVE-2022-41064</cve>
+    <cve>CVE-2022-30184</cve>
+  </suppress>
+
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Core.dll
+   False positive - imapcts the Azure CLI
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Azure\.Core@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+    <cpe>cpe:/a:microsoft:azure_sdk_for_.net</cpe>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Core:1.36.0
+   False positive - imapcts the Azure CLI
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Core@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Identity:1.10.3
+   False positive - imapcts the Azure CLI
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Identity@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+    <cpe>cpe:/a:microsoft:azure_identity_sdk</cpe>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Azure.Services.AppAuthentication.dll
+   False positive - imapcts the Azure CLI
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Azure\.Services\.AppAuthentication@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_active_directory</cpe>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Extensions.Azure.dll
+   False positive - imapcts the Azure CLI
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Extensions\.Azure@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+    <cpe>cpe:/a:microsoft:azure_sdk_for_.net</cpe>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Extensions.Azure:1.6.3
+   False positive - imapcts the Azure CLI
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Microsoft\.Extensions\.Azure@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
 </suppressions>
