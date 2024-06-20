@@ -535,5 +535,39 @@
     <cve>CVE-2020-22475</cve>
     <cve>CVE-2022-39349</cve>
   </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: System.Threading.Tasks.Extensions:4.3.0
+   file name: System.Threading.Tasks.Extensions:4.5.2
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/System\.Threading\.Tasks\.Extensions@.*$</packageUrl>
+    <cpe>cpe:/a:tasks:tasks</cpe>
+    <cve>CVE-2020-22475</cve>
+    <cve>CVE-2022-39349</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: System.Threading.Tasks.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/System\.Threading\.Tasks@.*$</packageUrl>
+    <cpe>cpe:/a:tasks:tasks</cpe>
+    <cve>CVE-2020-22475</cve>
+    <cve>CVE-2022-39349</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: System.Threading.Tasks:4.0.11
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/System\.Threading\.Tasks@.*$</packageUrl>
+    <cpe>cpe:/a:tasks:tasks</cpe>
+    <cve>CVE-2020-22475</cve>
+    <cve>CVE-2022-39349</cve>
+  </suppress>
   
 </suppressions>
