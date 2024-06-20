@@ -495,6 +495,17 @@
   <suppress>
     <notes>
       <![CDATA[
+   file name: Microsoft.AspNetCore.Hosting.Abstractions.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.AspNetCore\.Hosting\.Abstractions@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:web_applications</cpe>
+    <cve>CVE-2017-11826</cve>
+  </suppress>
+  
+  <suppress>
+    <notes>
+      <![CDATA[
    file name: Microsoft.AspNetCore.Hosting.Server.Abstractions.dll
    ]]>
     </notes>
@@ -507,6 +518,16 @@
   <suppress>
     <notes>
       <![CDATA[
+   file name: Microsoft.AspNetCore.Hosting.Server.Abstractions.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.AspNetCore\.Hosting\.Server\.Abstractions@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:web_applications</cpe>
+    <cve>CVE-2017-11826</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
    file name: Microsoft.AspNetCore.Hosting.dll
    ]]>
     </notes>
@@ -515,6 +536,14 @@
     <cpe>cpe:/a:microsoft:.net_core</cpe>
     <cve>CVE-2021-26423</cve>
     <cve>CVE-2021-1721</cve>
+  </suppress>
+  <suppress>
+   <notes><![CDATA[
+   file name: Microsoft.AspNetCore.Hosting.dll
+   ]]></notes>
+   <packageUrl regex="true">^pkg:generic/Microsoft\.AspNetCore\.Hosting@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:web_applications</cpe>
+    <cve>CVE-2017-11826</cve>
   </suppress>
   <suppress>
     <notes>
@@ -620,4 +649,16 @@
     <packageUrl regex="true">^pkg:generic/Microsoft\.Net\.Http\.Headers@.*$</packageUrl>
     <cpe>cpe:/a:microsoft:.net_core</cpe>
   </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: System.Threading.Tasks.Dataflow.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/System\.Threading\.Tasks\.Dataflow@.*$</packageUrl>
+    <cpe>cpe:/a:tasks:tasks</cpe>
+    <cve>CVE-2020-22475</cve>
+    <cve>CVE-2022-39349</cve>
+  </suppress>
+  
 </suppressions>
