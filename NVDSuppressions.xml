@@ -406,26 +406,6 @@
   <suppress>
     <notes>
       <![CDATA[
-   file name: System.Threading.Tasks.Dataflow.dll
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/System\.Threading\.Tasks\.Dataflow@.*$</packageUrl>
-    <cpe>cpe:/a:tasks:tasks</cpe>
-    <cve>CVE-2020-22475</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: System.Threading.Tasks.Dataflow.dll
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/System\.Threading\.Tasks\.Dataflow@.*$</packageUrl>
-    <cpe>cpe:/a:tasks:tasks</cpe>
-    <cve>CVE-2020-22475</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
    file name: System.Threading.Tasks.Dataflow:4.8.0
    ]]>
     </notes>
@@ -500,5 +480,144 @@
     <cve>CVE-2020-22475</cve>
     <cve>CVE-2022-39349</cve>
   </suppress>
-  
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNetCore.Hosting.Abstractions.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.AspNetCore\.Hosting\.Abstractions@.*$</packageUrl>
+    <cpe>cpe:/a:asp-project:asp-project</cpe>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNetCore.Hosting.Server.Abstractions.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.AspNetCore\.Hosting\.Server\.Abstractions@.*$</packageUrl>
+    <cpe>cpe:/a:asp-project:asp-project</cpe>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNetCore.Hosting.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.AspNetCore\.Hosting@.*$</packageUrl>
+    <cpe>cpe:/a:asp-project:asp-project</cpe>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNetCore.Http.Abstractions.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.AspNetCore\.Http\.Abstractions@.*$</packageUrl>
+    <cpe>cpe:/a:asp-project:asp-project</cpe>
+    <cpe>cpe:/a:http_request_project:http_request</cpe>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNetCore.Http.Extensions.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.AspNetCore\.Http\.Extensions@.*$</packageUrl>
+    <cpe>cpe:/a:asp-project:asp-project</cpe>
+    <cpe>cpe:/a:http_request_project:http_request</cpe>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNetCore.Http.Features.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.AspNetCore\.Http\.Features@.*$</packageUrl>
+    <cpe>cpe:/a:asp-project:asp-project</cpe>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNetCore.Http.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.AspNetCore\.Http@.*$</packageUrl>
+    <cpe>cpe:/a:asp-project:asp-project</cpe>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNetCore.WebUtilities.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.AspNetCore\.WebUtilities@.*$</packageUrl>
+    <cpe>cpe:/a:asp-project:asp-project</cpe>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Extensions.Hosting.Abstractions.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Extensions\.Hosting\.Abstractions@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Net.Http.Headers.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Net\.Http\.Headers@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Extensions.Hosting.Abstractions.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Extensions\.Hosting\.Abstractions@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Net.Http.Headers.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Net\.Http\.Headers@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+  </suppress>
 </suppressions>
