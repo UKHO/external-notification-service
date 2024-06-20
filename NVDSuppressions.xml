@@ -524,5 +524,16 @@
     <packageUrl regex="true">^pkg:nuget/System\.Threading\.Tasks\.Dataflow@.*$</packageUrl>
     <cve>CVE-2022-39349</cve>
   </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: System.Threading.Tasks.Extensions.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/System\.Threading\.Tasks\.Extensions@.*$</packageUrl>
+    <cpe>cpe:/a:tasks:tasks</cpe>
+    <cve>CVE-2020-22475</cve>
+    <cve>CVE-2022-39349</cve>
+  </suppress>
   
 </suppressions>
