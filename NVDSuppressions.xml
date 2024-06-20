@@ -465,5 +465,13 @@
     <cpe>cpe:/a:services_project:services</cpe>
     <cve>CVE-2014-9152</cve>
   </suppress>
-  
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Identity:1.10.4
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Identity@.*$</packageUrl>
+    <vulnerabilityName>CVE-2024-35255</vulnerabilityName>
+  </suppress>
 </suppressions>
