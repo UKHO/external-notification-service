@@ -365,6 +365,8 @@
    ]]>
     </notes>
     <packageUrl regex="true">^pkg:generic/Serilog\.Extensions\.Logging\.File@.*$</packageUrl>
+    <cpe>cpe:/a:line:line</cpe>
+    <cpe>cpe:/a:asp-project:asp-project</cpe>
     <cve>CVE-2015-0897</cve>
   </suppress>
   <suppress>
@@ -411,4 +413,57 @@
     <packageUrl regex="true">^pkg:generic/Newtonsoft\.Json\.Bson@.*$</packageUrl>
     <cve>CVE-2024-21907</cve>
   </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Newtonsoft.Json.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Newtonsoft\.Json@.*$</packageUrl>
+    <cpe>cpe:/a:newtonsoft:json.net</cpe>
+    <cve>CVE-2024-21907</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Newtonsoft.Json:10.0.2
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Newtonsoft\.Json@.*$</packageUrl>
+    <cpe>cpe:/a:newtonsoft:json.net</cpe>
+    <cve>CVE-2024-21907</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: System.ClientModel.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/System\.ClientModel@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+    <cpe>cpe:/a:microsoft:azure_sdk_for_.net</cpe>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: System.ClientModel:1.0.0
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/System\.ClientModel@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:services</cpe>
+    <cpe>cpe:/a:services_project:services</cpe>
+    <cve>CVE-2014-9152</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: System.Runtime.CompilerServices.Unsafe.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/System\.Runtime\.CompilerServices\.Unsafe@.*$</packageUrl>
+    <cpe>cpe:/a:services_project:services</cpe>
+    <cve>CVE-2014-9152</cve>
+  </suppress>
+  
 </suppressions>
