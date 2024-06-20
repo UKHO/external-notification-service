@@ -357,4 +357,58 @@
     <cpe>cpe:/a:microsoft:azure_cli</cpe>
     <cve>CVE-2023-36052</cve>
   </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Serilog.Extensions.Logging.File.dll
+   False positive - applies to LINE app for Android and iOS
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Serilog\.Extensions\.Logging\.File@.*$</packageUrl>
+    <cve>CVE-2015-0897</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Various
+   False positive - relates to Drupal
+   ]]>
+    </notes>
+    <cve>CVE-2014-9152</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: System.Security.Cryptography.X509Certificates:4.1.0
+   file name: System.Security.Cryptography.X509Certificates:4.3.0
+   Applies to .NET Core 1.0, 1.1, and 2.0 only.
+   False positive
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/System\.Security\.Cryptography\.X509Certificates@.*$</packageUrl>
+    <vulnerabilityName>CVE-2017-11770</vulnerabilityName>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+    file name: Microsoft.AspNetCore.Hosting.Abstractions.dll
+    See https://github.com/dotnet/announcements/issues/111 for MS details on this CVE.
+        Package name: System.Text.RegularExpressions.dll (included as part of the .Net Core runtime)
+      	Vulnerable versions: 4.3.0 and below
+        Secure versions: 4.3.1+
+    This CVE applies to .Net Core versions below 2.2.107 (runtime 2.2.5). ENS is pinned to .Net core SDK > 6.0.101 which is not vulnerable, and deployed to Azure App Service which will have the security patch applied.
+    ]]>
+    </notes>
+    <cve>CVE-2019-0820</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Newtonsoft.Json.Bson.dll
+   False positive - Newtonsoft.Json > 13.0.1 included in project
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Newtonsoft\.Json\.Bson@.*$</packageUrl>
+    <cve>CVE-2024-21907</cve>
+  </suppress>
 </suppressions>
