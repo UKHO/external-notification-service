@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
+using System.Text.Json;
 
 namespace UKHO.D365CallbackDistributorStub.API.Controllers
 {
@@ -40,6 +41,10 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
                 _ => BadRequestResponse(),
             };
         }
+        protected readonly JsonSerializerOptions JOptions = new(JsonSerializerDefaults.Web)
+        {
+            WriteIndented = true
+        };
 
     }
 }

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using UKHO.ExternalNotificationService.API.Controllers;
+using UKHO.ExternalNotificationService.API.Filters;
 using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Models.Request;
@@ -40,7 +41,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             _fakeHttpContextAccessor = A.Fake<IHttpContextAccessor>();
             _fakeLogger = A.Fake<ILogger<SubscriptionController>>();
             _fakeSubscriptionService = A.Fake<ISubscriptionService>();
-
+            
             A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(new DefaultHttpContext());
             _fakeSubscriptionService = A.Fake<ISubscriptionService>();
             _fakeNotificationRepository = A.Fake<INotificationRepository>();
@@ -78,7 +79,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         public async Task WhenD365HttpPayloadSizeExceeded_ThenLogError()
         {
             DefaultHttpContext defaultHttpContext = new();
-            defaultHttpContext.Request.Headers.Add(XmsDynamicsMsgSizeExceededHeader, string.Empty);
+            defaultHttpContext.Request.Headers.Append(XmsDynamicsMsgSizeExceededHeader, string.Empty);
             A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(defaultHttpContext);
             A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
             A.CallTo(() => _fakeNotificationRepository.GetAllNotificationTypes()).Returns(_fakeNotificationType);
@@ -109,6 +110,10 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         [Test]
         public async Task WhenPostValidPayload_ThenReceiveSuccessfulResponse()
         {
+            DefaultHttpContext defaultHttpContext = new();
+            defaultHttpContext.Request.Headers.Append(CorrelationIdMiddleware.XCorrelationIdHeaderKey, value: Guid.NewGuid().ToString());
+            A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(defaultHttpContext);
+
             A.CallTo(() => _fakeSubscriptionService.ValidateD365PayloadRequest(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
             A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
             A.CallTo(() => _fakeNotificationRepository.GetAllNotificationTypes()).Returns(_fakeNotificationType);

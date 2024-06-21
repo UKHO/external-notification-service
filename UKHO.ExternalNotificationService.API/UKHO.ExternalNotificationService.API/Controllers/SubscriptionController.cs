@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Extensions;
 using UKHO.ExternalNotificationService.API.Services;
@@ -24,7 +24,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
     {
         private readonly ILogger<SubscriptionController> _logger;
         private readonly ISubscriptionService _subscriptionService;  
-        private List<Error> _errors;
+        private List<Error>? _errors;
         private const string XmsDynamicsMsgSizeExceededHeader = "x-ms-dynamics-msg-size-exceeded";
         private readonly INotificationRepository _notificationRepository;
 
@@ -38,7 +38,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Post([FromBody] D365Payload d365Payload)
         {
-            _logger.LogInformation(EventIds.ENSSubscriptionRequestStart.ToEventId(), "Subscription request for D365Payload:{d365Payload} with _X-Correlation-ID:{correlationId}", JsonConvert.SerializeObject(d365Payload), GetCurrentCorrelationId());
+            _logger.LogInformation(EventIds.ENSSubscriptionRequestStart.ToEventId(), "Subscription request for D365Payload:{d365Payload} with _X-Correlation-ID:{correlationId}", JsonSerializer.Serialize(d365Payload), GetCurrentCorrelationId());
 
             if (HttpContext.Request.Headers.ContainsKey(XmsDynamicsMsgSizeExceededHeader))
             {
@@ -67,7 +67,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
 
             SubscriptionRequest subscription = _subscriptionService.ConvertToSubscriptionRequestModel(d365Payload);
            
-            NotificationType notificationType = _notificationRepository.GetAllNotificationTypes().FirstOrDefault(x => x.Name == subscription.NotificationType);
+            NotificationType? notificationType = _notificationRepository.GetAllNotificationTypes()?.FirstOrDefault(x => x.Name == subscription.NotificationType);
 
             if (notificationType == null)
             {

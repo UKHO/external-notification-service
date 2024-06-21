@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.FunctionalTests.Model;
 
@@ -27,7 +27,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         public async Task<HttpResponseMessage> PostEnsApiSubscriptionAsync([FromBody] D365Payload d365Payload, string accessToken = null)
         {
             string uri = $"{_apiHost}/api/subscription";
-            string payloadJson = JsonConvert.SerializeObject(d365Payload);
+            string payloadJson = JsonSerializer.Serialize(d365Payload);
             HttpRequestMessage httpRequestMessage = GetHttpRequestMessage(accessToken, uri, payloadJson);
 
             return await s_httpClient.SendAsync(httpRequestMessage);
@@ -48,10 +48,10 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             return await s_httpClient.SendAsync(httpRequestMessage);
         }
 
-        public async Task<HttpResponseMessage> PostEnsWebhookNewEventPublishedAsync([FromBody] JObject request, string accessToken = null)
+        public async Task<HttpResponseMessage> PostEnsWebhookNewEventPublishedAsync([FromBody] JsonObject request, string accessToken = null)
         {
             string uri = $"{_apiHost}/api/webhook";
-            string payloadJson = JsonConvert.SerializeObject(request);
+            string payloadJson = JsonSerializer.Serialize(request);
             using HttpRequestMessage httpRequestMessage = GetHttpRequestMessage(accessToken, uri, payloadJson);
 
             return await s_httpClient.SendAsync(httpRequestMessage);

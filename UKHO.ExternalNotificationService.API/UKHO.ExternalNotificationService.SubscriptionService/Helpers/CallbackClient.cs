@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.SubscriptionService.Configuration;
@@ -22,6 +22,8 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Helpers
             _d365CallbackConfiguration = d365CallbackConfiguration;
         }
 
+        public object Jsonserializer { get; private set; }
+
         public async Task<HttpResponseMessage> GetCallbackD365Client(string externalEntityPath, string accessToken, object externalNotificationEntity, string correlationId, CancellationToken cancellationToken)
         {
             HttpClient httpClient = _httpClientFactory.CreateClient("D365DataverseApi");
@@ -32,7 +34,7 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Helpers
             httpClient.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
 
-            HttpContent content = new StringContent(JObject.FromObject(externalNotificationEntity).ToString());
+            HttpContent content = new StringContent(JsonSerializer.Serialize(externalNotificationEntity));
 
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 

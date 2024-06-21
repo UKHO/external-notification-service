@@ -3,14 +3,14 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using FakeItEasy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using UKHO.ExternalNotificationService.API.Controllers;
 using UKHO.ExternalNotificationService.API.Services;
@@ -33,7 +33,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         [SetUp]
         public void Setup()
         {
-            string jsonString = JsonConvert.SerializeObject(CustomCloudEventBase.GetCustomCloudEvent());
+            string jsonString = JsonSerializer.Serialize(CustomCloudEventBase.GetCustomCloudEvent());
             MemoryStream FssEventBodyData = new(Encoding.UTF8.GetBytes(jsonString));
             _fakeFssEventBodyData = FssEventBodyData;
 
@@ -71,7 +71,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         [Test]
         public async Task WhenPostFssNullEventInRequest_ThenReceiveSuccessfulResponse()
         {
-            string jsonString = JsonConvert.SerializeObject(new JObject());
+            string jsonString = JsonSerializer.Serialize(new JsonObject());
             var requestData = new MemoryStream(Encoding.UTF8.GetBytes(jsonString));
 
             _controller.ControllerContext.HttpContext = new DefaultHttpContext();

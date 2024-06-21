@@ -27,7 +27,7 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
             }
             else
             {
-                _logger.LogError(EventIds.AzureWebJobIsUnhealthy.ToEventId(), healthCheckResult.Exception, "Azure webjob is unhealthy with error {Message}", healthCheckResult.Exception.Message);
+                _logger.LogError(EventIds.AzureWebJobIsUnhealthy.ToEventId(), healthCheckResult.Exception, "Azure webjob is unhealthy with error {Message}", healthCheckResult.Exception?.Message);
             }
             return healthCheckResult;
         }

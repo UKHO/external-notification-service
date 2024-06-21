@@ -76,16 +76,16 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             A.CallTo(() => _fakeFssEventValidationAndMappingService.ValidateFssEventData(A<FssEventData>.Ignored)).Returns(new ValidationResult());
 
-            A.CallTo(() => _fakeFssEventValidationAndMappingService.FssEventDataMapping(A<CustomCloudEvent>.Ignored, A<string>.Ignored)).Returns(cloudEvent);
+            A.CallTo(() => _fakeFssEventValidationAndMappingService.MapToCloudEvent(A<CloudEventCandidate<FssEventData>>.Ignored)).Returns(cloudEvent);
 
-            A.CallTo(() => _fakeAzureEventGridDomainService.JsonDeserialize<FssEventData>(A<object>.Ignored)).Returns(_fakeFssEventData);
+            A.CallTo(() => _fakeAzureEventGridDomainService.ConvertObjectTo<FssEventData>(A<object>.Ignored)).Returns(_fakeFssEventData);
 
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(A<CloudEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored));
 
             ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
 
             Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
-            Assert.That(result.Errors, Is.Null);
+            Assert.That(result.Errors, Is.Empty);
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(A<CloudEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();
         }
 
@@ -94,14 +94,16 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         {
             CancellationToken cancellationToken = CancellationToken.None;
 
-            A.CallTo(() => _fakeAzureEventGridDomainService.JsonDeserialize<FssEventData>(_fakeCustomCloudEvent.Data)).Returns(_fakeFssEventData);
+            A.CallTo(() => _fakeAzureEventGridDomainService.ConvertObjectTo<FssEventData>(_fakeCustomCloudEvent.Data)).Returns(_fakeFssEventData);
+
             A.CallTo(() => _fakeFssEventValidationAndMappingService.ValidateFssEventData(_fakeFssEventData)).Returns(new ValidationResult());
-            A.CallTo(() => _fakeFssEventValidationAndMappingService.FssEventDataMapping(_fakeCustomCloudEvent, CorrelationId)).Throws<ConfigurationMissingException>();
+            
+            A.CallTo(() => _fakeFssEventValidationAndMappingService.MapToCloudEvent(A<CloudEventCandidate<FssEventData>>.Ignored)).Throws<ConfigurationMissingException>();
 
             ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
 
             Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
-            Assert.That(result.Errors, Is.Null);
+            Assert.That(result.Errors, Is.Empty);
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(A<CloudEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();
             A.CallTo(_fakeLogger).Where(call =>
                 call.Method.Name == "Log"
@@ -122,16 +124,17 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             A.CallTo(() => _fakeFssEventValidationAndMappingService.ValidateFssEventData(A<FssEventData>.Ignored)).Returns(new ValidationResult());
 
-            A.CallTo(() => _fakeFssEventValidationAndMappingService.FssEventDataMapping(A<CustomCloudEvent>.Ignored, A<string>.Ignored)).Returns(cloudEvent);
+            A.CallTo(() => _fakeFssEventValidationAndMappingService.MapToCloudEvent(A<CloudEventCandidate<FssEventData>>.Ignored)).Returns(cloudEvent); 
 
-            A.CallTo(() => _fakeAzureEventGridDomainService.JsonDeserialize<FssEventData>(A<object>.Ignored)).Returns(fssEventData);
+
+            A.CallTo(() => _fakeAzureEventGridDomainService.ConvertObjectTo<FssEventData>(A<object>.Ignored)).Returns(fssEventData);
 
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(A<CloudEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored));
 
             ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(customCloudEvent, CorrelationId, cancellationToken);
 
             Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
-            Assert.That(result.Errors, Is.Null);
+            Assert.That(result.Errors, Is.Empty);
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(A<CloudEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored)).MustHaveHappenedOnceExactly();
         }
     }

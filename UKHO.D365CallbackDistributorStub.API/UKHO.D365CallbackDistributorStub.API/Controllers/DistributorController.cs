@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text;
+using System.Text.Json;
+
 using UKHO.D365CallbackDistributorStub.API.Models.Request;
 using UKHO.D365CallbackDistributorStub.API.Services;
 
@@ -26,8 +27,8 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
         {
             _logger.LogInformation("Distributor option accessed.");
             string? webhookRequestOrigin = HttpContext.Request.Headers["WebHook-Request-Origin"].FirstOrDefault();
-            HttpContext.Response.Headers.Add("WebHook-Allowed-Rate", "*");
-            HttpContext.Response.Headers.Add("WebHook-Allowed-Origin", webhookRequestOrigin);
+            HttpContext.Response.Headers.Append("WebHook-Allowed-Rate", "*");
+            HttpContext.Response.Headers.Append("WebHook-Allowed-Origin", webhookRequestOrigin);
             return OkResponse();
         }
 
@@ -39,7 +40,8 @@ namespace UKHO.D365CallbackDistributorStub.API.Controllers
             using StreamReader reader = new(Request.Body, Encoding.UTF8);
             {
                 string jsonContent = await reader.ReadToEndAsync();
-                CustomCloudEvent? customCloudEvent = JsonConvert.DeserializeObject<CustomCloudEvent>(jsonContent);
+                CustomCloudEvent? customCloudEvent = JsonSerializer.Deserialize<CustomCloudEvent>(jsonContent,JOptions);
+
                 if (customCloudEvent != null)
                 {
                     CommandDistributionRequest? commandDistributionRequest = _distributionService.SubjectInCommandDistributionList(customCloudEvent.Subject);

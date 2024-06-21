@@ -20,7 +20,7 @@ namespace UKHO.ExternalNotificationService.API.Services
     {
         private readonly IScsEventValidationAndMappingService _scsEventValidationAndMappingService;
         private readonly ILogger<ScsEventProcessor> _logger;
-        private List<Error> _errors;
+        private List<Error> _errors = [];
 
         public string EventType => EventProcessorTypes.SCS;
 
@@ -36,15 +36,15 @@ namespace UKHO.ExternalNotificationService.API.Services
 
         public async Task<ExternalNotificationServiceProcessResponse> Process(CustomCloudEvent customCloudEvent, string correlationId, CancellationToken cancellationToken = default)
         {
-            ScsEventData scsEventData = GetEventData<ScsEventData>(customCloudEvent.Data);
+            CloudEventCandidate<ScsEventData> candidate = ConvertToCloudEventCandidate<ScsEventData>(customCloudEvent);
 
-            ValidationResult validationScsEventData = await _scsEventValidationAndMappingService.ValidateScsEventData(scsEventData);
+            ValidationResult validationScsEventData = await _scsEventValidationAndMappingService.ValidateScsEventData(candidate.Data!);
 
             if (!validationScsEventData.IsValid && validationScsEventData.HasOkErrors(out _errors))
                 return ProcessResponse();
 
             _logger.LogInformation(EventIds.ScsEventDataMappingStart.ToEventId(), "Sales catalogue service event data mapping started for subject:{subject} and _X-Correlation-ID:{correlationId}.", customCloudEvent.Subject, correlationId);
-            CloudEvent cloudEvent = _scsEventValidationAndMappingService.ScsEventDataMapping(customCloudEvent, correlationId);
+            CloudEvent cloudEvent = _scsEventValidationAndMappingService.MapToCloudEvent(candidate);
             _logger.LogInformation(EventIds.ScsEventDataMappingCompleted.ToEventId(), "Sales catalogue service event data mapping successfully completed for subject:{subject} and _X-Correlation-ID:{correlationId}.", customCloudEvent.Subject, correlationId);
 
             await PublishEventAsync(cloudEvent, correlationId, cancellationToken);

@@ -1,22 +1,23 @@
 ﻿
-using Newtonsoft.Json.Linq;
 using System;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using UKHO.ExternalNotificationService.Common.Models.EventModel;
 
 namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
 {
     public static class ScsEventDataBase
     {
-        public static JObject GetScsEventBodyData(TestConfiguration testConfigure)
+        public static JsonObject GetScsEventBodyData(TestConfiguration testConfigure)
         {
-            var ensWebhookJson = JObject.Parse(@"{""Type"":""uk.gov.UKHO.catalogue.productUpdated.v1""}");
-            ensWebhookJson["Source"] = $"{testConfigure.ScsSource}";
-            ensWebhookJson["Id"] = "0d2f05f5-3691-476a-9011-6007bcaa9cbf";
-            ensWebhookJson["Subject"] = "GB53496A";
-            ensWebhookJson["DataContentType"] = "application/json";
-            ensWebhookJson["Data"] = JObject.FromObject(GetScsEventData());
+            JsonNode ensWebhookJson = JsonObject.Parse(@"{""type"":""uk.gov.UKHO.catalogue.productUpdated.v1""}");
+            ensWebhookJson["source"] = $"{testConfigure.ScsSource}";
+            ensWebhookJson["id"] = "0d2f05f5-3691-476a-9011-6007bcaa9cbf";
+            ensWebhookJson["subject"] = "GB53496A";
+            ensWebhookJson["dataContentType"] = "application/json";
+            ensWebhookJson["data"] = JsonObject.Parse(JsonSerializer.Serialize(GetScsEventData()));
 
-            return ensWebhookJson;
+            return (JsonObject)ensWebhookJson;
         }
 
         private static ScsEventData GetScsEventData()

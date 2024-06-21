@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using UKHO.ExternalNotificationService.API.FunctionalTests.Helper;
 using UKHO.ExternalNotificationService.API.FunctionalTests.Model;
@@ -20,8 +21,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         private D365Payload D365Payload { get; set; }
         private string EnsToken { get; set; }
         private StubApiClient StubApiClient { get; set; }
-        private JObject FssEventBody { get; set; }
-
+        private JsonObject FssEventBody { get; set; }
+        private JsonSerializerOptions JOptions { get; set; }
 
         [SetUp]
         public async Task SetupAsync()
@@ -30,11 +31,15 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             EnsApiClient = new EnsApiClient(TestConfig.EnsApiBaseUrl);
             StubApiClient = new(TestConfig.StubApiUri);
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), TestConfig.PayloadFolder, TestConfig.FssAvcsPayloadFileName);
-            D365Payload = JsonConvert.DeserializeObject<D365Payload>(await File.ReadAllTextAsync(filePath));
+            D365Payload = JsonSerializer.Deserialize<D365Payload>(await File.ReadAllTextAsync(filePath));
 
             ADAuthTokenProvider adAuthTokenProvider = new();
             EnsToken = await adAuthTokenProvider.GetEnsAuthToken();
             FssEventBody = FssEventDataBase.GetFssEventBodyData(TestConfig);
+            JOptions = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
 
         }
 
@@ -42,39 +47,37 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         public async Task WhenICallTheEnsWebhookApiWithAINValidFssJObjectBodyForDeadLetterCallbackToD365UsingDataverse_ThenNonOkStatusIsReturned(string subject, HttpStatusCode statusCode)
         {
             string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
-            JObject ensWebhookJson = FssEventBody;
+            JsonObject ensWebhookJson = FssEventBody;
             await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, statusCode);
 
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
             DateTime startTime = DateTime.UtcNow;
 
-            //while (DateTime.UtcNow - startTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
-            //{
-            //    await Task.Delay(10000);
-            //}
+            while (DateTime.UtcNow - startTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
+            {
+                await Task.Delay(10000);
+            }
 
-            await Task.Delay(TestConfig.WaitingTimeForQueueInSeconds * 1000);
 
             Assert.That(200, Is.EqualTo((int)apiResponse.StatusCode), $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 200.");
             HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
-
+            Assert.That(stubResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK)); 
             // Get the response
             string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
-            IEnumerable<DistributorRequest> deserialized = JsonConvert.DeserializeObject<IEnumerable<DistributorRequest>>(custome‌​rJsonString);
-            IEnumerable<DistributorRequest> getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.statusCode.HasValue && x.statusCode.Value == statusCode)
+            IEnumerable<DistributorRequest> deserialized = JsonSerializer.Deserialize<IEnumerable<DistributorRequest>>(custome‌​rJsonString, JOptions);
+            IEnumerable<DistributorRequest> getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.StatusCode.HasValue && x.StatusCode.Value == statusCode)
                 .OrderByDescending(a => a.TimeStamp);
             Assert.That(getMatchingData, Is.Not.Null);
             Assert.That(getMatchingData.Count() > 1);
 
             DateTime requestTime = DateTime.UtcNow;
             await Task.Delay(420000);
-            //await Task.Delay(TestConfig.WaitingTimeForQueueInSeconds * 3000);
-
+           
             HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, subscriptionId.ToUpper());
-
+            
             Assert.That(200, Is.EqualTo((int)callBackResponse.StatusCode), $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected 200.");
 
-            IEnumerable<EnsCallbackResponseModel> callBackResponseBody = JsonConvert.DeserializeObject<IEnumerable<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result);
+            IEnumerable<EnsCallbackResponseModel> callBackResponseBody = JsonSerializer.Deserialize<IEnumerable<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result,JOptions);
 
             EnsCallbackResponseModel callBackResponseLatest = callBackResponseBody.Where(x => x.TimeStamp >= requestTime).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
 

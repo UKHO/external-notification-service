@@ -12,7 +12,7 @@ namespace UKHO.ExternalNotificationService.API.Services
             _eventProcessors = eventProcessors;
         }
 
-        public IEventProcessor GetProcessor(string eventType)
+        public IEventProcessor? GetProcessor(string eventType)
         {
             return _eventProcessors.FirstOrDefault(x => x.EventType.Equals(eventType));
         }

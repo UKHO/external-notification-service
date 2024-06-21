@@ -16,6 +16,10 @@ namespace UKHO.ExternalNotificationService.API.Validation
     {
         public FssEventDataValidator()
         {
+            RuleFor(v => v).NotNull()
+                .WithErrorCode(HttpStatusCode.OK.ToString())
+                .WithMessage("FssEventData cannot be null.");
+
             RuleFor(v => v.BatchId).NotNull().NotEmpty()
                 .WithErrorCode(HttpStatusCode.OK.ToString())
                 .WithMessage("BatchId cannot be blank or null.");
@@ -82,9 +86,9 @@ namespace UKHO.ExternalNotificationService.API.Validation
                 .WithMessage("File size cannot be null.");
         }
 
-        Task<ValidationResult> IFssEventDataValidator.Validate(FssEventData fssEventData)
+        Task<ValidationResult> IFssEventDataValidator.Validate(FssEventData? fssEventData)
         {
-            return ValidateAsync(fssEventData);
+            return ValidateAsync(fssEventData!);
         }
     }
 }

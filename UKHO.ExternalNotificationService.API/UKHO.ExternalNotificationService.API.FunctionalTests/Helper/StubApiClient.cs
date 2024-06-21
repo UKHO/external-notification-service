@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
@@ -18,14 +18,14 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             _apiHost = apiHost;
         }
 
-        public async Task<HttpResponseMessage> PostStubApiCommandToReturnStatusAsync([FromBody] JObject request, string subject, HttpStatusCode? statusCode, string accessToken = null)
+        public async Task<HttpResponseMessage> PostStubApiCommandToReturnStatusAsync([FromBody] JsonObject request, string subject, HttpStatusCode? statusCode, string accessToken = null)
         {
             string uri = $"{_apiHost}/webhook/notification/command-to-return-status/{subject}";
             if (statusCode.HasValue)
             {
                 uri += $"/{(int)statusCode.Value}";
             }
-            string payloadJson = JsonConvert.SerializeObject(request);
+            string payloadJson = JsonSerializer.Serialize(request);
             HttpRequestMessage httpRequestMessage = GetHttpRequestMessage(HttpMethod.Post, accessToken, uri, payloadJson);
 
             return await _httpClient.SendAsync(httpRequestMessage);
