@@ -445,4 +445,49 @@
     <packageUrl regex="true">^pkg:nuget/Azure\.Identity@.*$</packageUrl>
     <vulnerabilityName>CVE-2024-29992</vulnerabilityName>
   </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Identity.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Azure\.Identity@.*$</packageUrl>
+    <cve>CVE-2024-35255</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Identity:1.10.4
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Identity@.*$</packageUrl>
+    <vulnerabilityName>CVE-2024-35255</vulnerabilityName>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Identity.Client.Extensions.Msal.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Identity\.Client\.Extensions\.Msal@.*$</packageUrl>
+    <cve>CVE-2024-35255</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Identity.Client.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Identity\.Client@.*$</packageUrl>
+    <cve>CVE-2024-35255</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Identity.Client.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Identity\.Client@.*$</packageUrl>
+    <cve>CVE-2024-35255</cve>
+  </suppress>
 </suppressions>
