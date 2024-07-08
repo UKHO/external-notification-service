@@ -75,37 +75,22 @@ stages:
   - BuildTestPublish
   displayName: "Devdeploy (inc terraform, webapp deploy)"
   jobs:
-    strategy:
-        runOnce:
-          deploy:
-            steps:
-              - template: Deployment/templates/deploy-solas-apim.yml
-                parameters:
-                  ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                  AzureEnvironment: "Ens-Dev"
-                  ShortName: "Dev"
-                  Container: ${{variables.Container}}
-              - template: Deployment/templates/app-deploy.yml
-                parameters:
-                  ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                  AzureEnvironment: "Ens-Dev"
-                  ShortName: "Dev"
-                  ApimShortName: "Dev"
-                  AzureSubscriptionVersion: "Dev - A.008.02"
-                  Container: ${{variables.Container}}
-              - template: /Deployment/templates/functional-test-process.yml
-                parameters:
-                  TestTitle: "Dev-AutomationTests"
- 
-              - task: AzureCLI@2
-                displayName: "Swap Stub URL"
-                condition: always()
-                inputs:
-                  azureSubscription: "External Notification Service Dev - A.008.02"
-                  scriptType: 'pscore'
-                  scriptLocation: 'scriptPath'
-                  scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
-                  arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
+  - template: Deployment/templates/deploy-solas-apim.yml
+    parameters:
+      ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+      AzureEnvironment: "Ens-Dev"
+      ShortName: "Dev"
+      Container: ${{variables.Container}}
+  - template: Deployment/templates/app-deploy.yml
+    parameters:
+      ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+      AzureEnvironment: "Ens-Dev"
+      ShortName: "Dev"
+      ApimShortName: "Dev"
+      AzureSubscriptionVersion: "Dev - A.008.02"
+      RunFunctionalTests: true
+      Container: ${{variables.Container}}
+  
 
 
     # Deploy SOLAS APIM Start
