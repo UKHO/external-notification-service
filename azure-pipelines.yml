@@ -92,6 +92,7 @@ stages:
   - template: /Deployment/templates/functional-test-process.yml
     parameters:
       TestTitle: "Dev-AutomationTests"
+  steps:
   - task: AzureCLI@2
     displayName: "Swap Stub URL"
     condition: always()
