@@ -8,13 +8,20 @@ parameters:
 # The name of the Terraform workspace to use. Will also be used to generate job names and, in lower case, used to select the correct var/x-deploy.yml variable file.
   - name: ShortName
     type: string
+# The apim short name
+  - name: ApimShortName
+    type: string
 # The Terraform Azure PowerShell container.
   - name: Container
     type: string
+# The Azure Subscription version
+  - name: AzureSubscriptionVersion
+    type: string
 
 jobs:
-  - deployment: DevDeployApp
-    # dependsOn: [DevDeployApimSolas]    # This is temperory because this job will probably  have its own template
+  - deployment: ${{ upper(parameters.ShortName) }}DeployApp
+    dependsOn: 
+    - ${{ upper(parameters.ShortName) }}DeployApimSolas
     displayName: "${{ upper(parameters.ShortName) }} - deploy terraform and dotnet App"
     environment: ${{ parameters.AzureEnvironment }}
     pool: $(DeploymentPool)
@@ -22,7 +29,6 @@ jobs:
     workspace:
       clean: all
     variables: 
-    # - template: /Deployment/templates/var/dev-deploy.yml
     - template: var/${{ lower(parameters.ShortName) }}-deploy.yml
         
     strategy:
@@ -32,28 +38,16 @@ jobs:
             - template: /Deployment/templates/continuous-deployment.yml
               parameters:
                 ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                AzureSubscription: "External Notification Service Dev - A.008.02"
+                AzureSubscription: External Notification Service ${{ parameters.AzureSubscriptionVersion }} 
 
             - template: /Deployment/templates/continuous-deployment-apim.yml
               parameters:
                 ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                AzureSubscription: "UKHO-APIM-Dev"
+                AzureSubscription: UKHO-APIM-${{ parameters.ApimShortName }}
                 TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
                 APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
                 APIMServiceInstance: $(APIM_SERVICE_NAME)
                 tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
                 tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
                   
-            - template: /Deployment/templates/functional-test-process.yml
-              parameters:
-                TestTitle: "Dev-AutomationTests"
-
-            - task: AzureCLI@2
-              displayName: "Swap Stub URL"
-              condition: always()
-              inputs:
-                azureSubscription: "External Notification Service Dev - A.008.02"
-                scriptType: 'pscore'
-                scriptLocation: 'scriptPath'
-                scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
-                arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
+            

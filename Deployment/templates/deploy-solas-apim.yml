@@ -14,7 +14,7 @@ parameters:
 
 jobs:
 # Deploy SOLAS APIM Start
-- deployment: ${{ parameters.ShortName }}DeployApimSolas
+- deployment: ${{ upper(parameters.ShortName) }}DeployApimSolas
   displayName: "${{ upper(parameters.ShortName) }} - deploy SOLAS APIM"
   environment: ${{ parameters.AzureEnvironment }}   #"Ens-Dev"
   pool: $(DeploymentPool)
