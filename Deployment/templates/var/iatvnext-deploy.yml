@@ -1,4 +1,4 @@
 variables:
-        - template: vnextiat-groups.yml
+        - template: iatvnext-groups.yml
         - template: common.yml
         

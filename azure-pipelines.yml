@@ -90,19 +90,29 @@ stages:
       AzureSubscriptionVersion: "Dev - A.008.02"
       RunFunctionalTests: true
       Container: ${{variables.Container}}
-  
+    
+- stage: IATvNextDeploy
+  dependsOn:
+    - DevDeploy
+  displayName: "IATvNextDeploy (inc terraform, webapp deploy)"
+  condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/develop'),startsWith(variables['Build.SourceBranch'], 'refs/heads/dev/')))
+  jobs:
+    - template: Deployment/templates/deploy-solas-apim.yml
+      parameters:
+        ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+        AzureEnvironment: "Ens-IATvNext"
+        ShortName: "IATvNext"
+        Container: ${{variables.Container}}
 
-
-    # Deploy SOLAS APIM Start
-    # - deployment: DevDeployApimSolas
-    #   displayName: "Dev - deploy SOLAS APIM"
-    #   environment: "Ens-Dev"
+    # - deployment: IATvNextDeployApimSolas
+    #   displayName: "IATvNext - deploy SOLAS APIM"
+    #   environment: "Ens-IATvNext"
     #   pool: $(DeploymentPool)
     #   container: ${{variables.Container}}
     #   workspace:
     #     clean: all
     #   variables:
-    #     - template: Deployment/templates/var/dev-groups.yml
+    #     - template: Deployment/templates/var/vnextiat-groups.yml
     #     # will become var/${{ lower(parameters.ShortName) }}-groups.yml
     #   strategy:
     #     runOnce:
@@ -117,114 +127,47 @@ stages:
     #               APIMServiceInstance: $(APIM_SOLAS_SERVICE_NAME)
     #               tfstateStorageAccountRG: $(APIM_SOLAS_RESOURCE_GROUP_NAME)
     #               tfstateStorageAccountName: $(APIM_SOLAS_TFSTATE_STORAGE_ACCOUNT_NAME)
-      # Deploy SOLAS APIM End
-#- # stage: DevDeployAppStage
-  # #jobs:
-  # - deployment: DevDeployApp
-  #   # dependsOn: [DevDeployApimSolas]    # This is temperory because this job will probably  have its own template
-  #   displayName: "Dev - deploy terraform and dotnet App"
-  #   environment: "Ens-Dev"
-  #   pool: $(DeploymentPool)
-  #   container: ${{variables.Container}}
-  #   workspace:
-  #     clean: all
-  #   variables:
-  #   - template: Deployment/templates/var/dev-deploy.yml
-  #     # will become var/${{ lower(parameters.ShortName) }}-deploy.yml
+
+    - template: Deployment/templates/app-deploy.yml
+      parameters:
+        ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+        AzureEnvironment: "Ens-IATvNext"
+        ShortName: "IATvNext"
+        ApimShortName: "Dev"
+        AzureSubscriptionVersion: "vNext IAT - A.011.08"
+        RunFunctionalTests: false
+        Container: ${{variables.Container}}
+
+    # - deployment: IATvNextDeployApp
+    #   dependsOn: [IATvNextDeployApimSolas]
+    #   displayName: IATvNext - deploy terraform and dotnet App
+    #   environment: "Ens-IATvNext"
+    #   pool: $(DeploymentPool)
+    #   container: ${{variables.Container}}
+    #   workspace:
+    #     clean: all
+    #   variables:
+    #   - template: Deployment/templates/var/vnextiat-deploy.yml
+    #     # will become var/${{ lower(parameters.ShortName) }}-deploy.yml
         
-  #   strategy:
-  #     runOnce:
-  #       deploy:
-  #         steps:
-  #           - template: Deployment/templates/continuous-deployment.yml
-  #             parameters:
-  #               ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-  #               AzureSubscription: "External Notification Service Dev - A.008.02"
+    #   strategy:
+    #     runOnce:
+    #       deploy:
+    #         steps:
+    #           - template: Deployment/templates/continuous-deployment.yml
+    #             parameters:
+    #               ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+    #               AzureSubscription: "External Notification Service vNext IAT - A.011.08"
 
-  #           - template: Deployment/templates/continuous-deployment-apim.yml
-  #             parameters:
-  #               ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-  #               AzureSubscription: "UKHO-APIM-Dev"
-  #               TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
-  #               APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
-  #               APIMServiceInstance: $(APIM_SERVICE_NAME)
-  #               tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
-  #               tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
-                  
-  #           - template: Deployment/templates/functional-test-process.yml
-  #             parameters:
-  #               TestTitle: "Dev-AutomationTests"
-
-  #           - task: AzureCLI@2
-  #             displayName: "Swap Stub URL"
-  #             condition: always()
-  #             inputs:
-  #               azureSubscription: "External Notification Service Dev - A.008.02"
-  #               scriptType: 'pscore'
-  #               scriptLocation: 'scriptPath'
-  #               scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
-  #               arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
-
-- stage: IATvNextDeploy
-  dependsOn:
-    - DevDeploy
-  displayName: "IATvNextDeploy (inc terraform, webapp deploy)"
-  condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/develop'),startsWith(variables['Build.SourceBranch'], 'refs/heads/dev/')))
-  jobs:
-    - deployment: IATvNextDeployApimSolas
-      displayName: "IATvNext - deploy SOLAS APIM"
-      environment: "Ens-IATvNext"
-      pool: $(DeploymentPool)
-      container: ${{variables.Container}}
-      workspace:
-        clean: all
-      variables:
-        - template: Deployment/templates/var/vnextiat-groups.yml
-        # will become var/${{ lower(parameters.ShortName) }}-groups.yml
-      strategy:
-        runOnce:
-          deploy:
-            steps:
-              - template: Deployment/templates/continuous-deployment-apim.yml
-                parameters:
-                  ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                  AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
-                  TerraformKeyVault: $(APIM_SOLAS_TERRAFORM_KEYVAULT)
-                  APIMResourceGroup: $(APIM_SOLAS_RESOURCE_GROUP_NAME)
-                  APIMServiceInstance: $(APIM_SOLAS_SERVICE_NAME)
-                  tfstateStorageAccountRG: $(APIM_SOLAS_RESOURCE_GROUP_NAME)
-                  tfstateStorageAccountName: $(APIM_SOLAS_TFSTATE_STORAGE_ACCOUNT_NAME)
-
-    - deployment: IATvNextDeployApp
-      dependsOn: [IATvNextDeployApimSolas]
-      displayName: IATvNext - deploy terraform and dotnet App
-      environment: "Ens-IATvNext"
-      pool: $(DeploymentPool)
-      container: ${{variables.Container}}
-      workspace:
-        clean: all
-      variables:
-      - template: Deployment/templates/var/vnextiat-deploy.yml
-        # will become var/${{ lower(parameters.ShortName) }}-deploy.yml
-        
-      strategy:
-        runOnce:
-          deploy:
-            steps:
-              - template: Deployment/templates/continuous-deployment.yml
-                parameters:
-                  ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                  AzureSubscription: "External Notification Service vNext IAT - A.011.08"
-
-              - template: Deployment/templates/continuous-deployment-apim.yml
-                parameters:
-                  ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                  AzureSubscription: "UKHO-APIM-Dev"
-                  TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
-                  APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
-                  APIMServiceInstance: $(APIM_SERVICE_NAME)
-                  tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
-                  tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
+    #           - template: Deployment/templates/continuous-deployment-apim.yml
+    #             parameters:
+    #               ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+    #               AzureSubscription: "UKHO-APIM-Dev"
+    #               TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
+    #               APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
+    #               APIMServiceInstance: $(APIM_SERVICE_NAME)
+    #               tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
+    #               tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
   
 - stage: E2EvNextDeploy
   dependsOn:
