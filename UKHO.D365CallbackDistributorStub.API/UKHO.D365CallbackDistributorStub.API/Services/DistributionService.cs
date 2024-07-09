@@ -105,6 +105,21 @@ namespace UKHO.D365CallbackDistributorStub.API.Services
         {
             return s_commandDistributionList.LastOrDefault(a => a.Subject == subject);
         }
+
+        public void ClearDistributorQueue()
+        {
+            _logger.LogInformation("Starting to Clear the distributor queue");
+            var distQueue = s_recordDistributorRequestQueue.ToList();
+
+            if (distQueue.Count > 0)
+            {
+                foreach (var dist in distQueue)
+                {
+                    s_recordDistributorRequestQueue.Remove(dist);
+                    _logger.LogInformation("Item with subject {subject} deleted", dist.Subject);
+                }
+            }
+        }
     }
 }
 
