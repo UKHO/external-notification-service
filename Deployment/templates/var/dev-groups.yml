@@ -1,0 +1,4 @@
+variables:
+        - group: "ENS-Dev-TF-Variables"
+        - group: "ENS-Dev-Variables"
+        - group: "ENS-Dev-APIM-SOLAS-Variables"
