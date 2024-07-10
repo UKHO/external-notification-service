@@ -1,0 +1,4 @@
+variables:
+        - group: "ENS-E2E-VNext-TF-Variables"
+        - group: "ENS-E2E-VNext-Variables"
+        - group: "ENS-E2E-VNext-APIM-SOLAS-Variables"
