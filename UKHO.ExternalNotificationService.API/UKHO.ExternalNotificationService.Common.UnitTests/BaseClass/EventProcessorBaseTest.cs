@@ -1,7 +1,9 @@
-﻿using System.Threading;
+﻿using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging;
 using FakeItEasy;
+using FakeItEasy.Configuration;
 using NUnit.Framework;
 using UKHO.ExternalNotificationService.Common.BaseClass;
 using UKHO.ExternalNotificationService.Common.Helpers;
@@ -49,6 +51,35 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.BaseClass
             Task response = _eventProcessorBase.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken);
 
             Assert.That(response.IsCompleted);
+        }
+
+        [Test]
+        [TestCase(-1000)]
+        [TestCase(0)]
+        [TestCase(1000)]
+        [TestCase(5000)]
+        [TestCase(12000)]
+        [Parallelizable(ParallelScope.All)]
+        public async Task WhenPublishEventWithDelayAsync_ThenEventPublishedSuccessfullyWithDelay(int millisecondsDelay)
+        {
+            CancellationToken cancellationToken = CancellationToken.None;
+            CloudEvent cloudEvent = new CloudEvent("test", "test", new object());
+
+            Stopwatch stopwatch = new();
+
+            IReturnValueArgumentValidationConfiguration<Task> callToPublishEventAsync  =
+                A.CallTo(() =>
+                    _fakeAzureEventGridDomainService.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken));
+
+            stopwatch.Start();
+
+            await _eventProcessorBase.PublishEventWithDelayAsync(cloudEvent, CorrelationId, millisecondsDelay, cancellationToken);
+
+            stopwatch.Stop();
+
+            callToPublishEventAsync.MustHaveHappened();
+            
+            Assert.That(stopwatch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(millisecondsDelay < 0 ? 0 : millisecondsDelay));
         }
     }
 }

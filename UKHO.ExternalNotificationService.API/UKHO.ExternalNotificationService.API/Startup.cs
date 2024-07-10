@@ -68,6 +68,7 @@ namespace UKHO.ExternalNotificationService.API
             services.Configure<EventGridDomainConfiguration>(_configuration.GetSection("EventGridDomainConfiguration"));
             services.Configure<FssDataMappingConfiguration>(_configuration.GetSection("FssDataMappingConfiguration"));
             services.Configure<ScsDataMappingConfiguration>(_configuration.GetSection("ScsDataMappingConfiguration"));
+            services.Configure<EventProcessorConfiguration>(_configuration.GetSection("EventProcessorConfiguration"));
 
             services.AddApplicationInsightsTelemetry();
             services.AddLogging(loggingBuilder =>
