@@ -130,7 +130,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             callToPublishEventAsync.MustHaveHappened();
 
             Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
-            Assert.That(result.Errors, Is.Null);
+            Assert.That(result.Errors, Is.Empty);
 
             Assert.That(stopwatch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(expectedDelay * 1000));
         }
