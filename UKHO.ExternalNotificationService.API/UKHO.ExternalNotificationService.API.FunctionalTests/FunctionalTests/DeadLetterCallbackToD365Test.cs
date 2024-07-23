@@ -72,12 +72,12 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             Assert.That(getMatchingData.Count() > 1);
 
             DateTime requestTime = DateTime.UtcNow;
-            await Task.Delay(420000);
+            //await Task.Delay(420000);
            
             HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, subscriptionId.ToUpper());
 
             // rhz Assert.That(200, Is.EqualTo((int)callBackResponse.StatusCode), $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected 200.");
-            Assert.That(callBackResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK), $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected {HttpStatusCode.OK}.");
+            Assert.That(callBackResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK), $"Incorrect status code {callBackResponse}  is  returned, instead of the expected {HttpStatusCode.OK}.");
             IEnumerable<EnsCallbackResponseModel> callBackResponseBody = JsonSerializer.Deserialize<IEnumerable<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result,JOptions);
 
             EnsCallbackResponseModel callBackResponseLatest = callBackResponseBody.Where(x => x.TimeStamp >= requestTime).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
