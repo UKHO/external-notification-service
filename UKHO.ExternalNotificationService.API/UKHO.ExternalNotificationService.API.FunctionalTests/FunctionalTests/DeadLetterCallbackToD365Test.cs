@@ -46,8 +46,6 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [TestCase("83d08093-7a67-4b3a-b431-92ba42feaea0", HttpStatusCode.BadRequest, TestName = "BadRequest for WebHook")]
         public async Task WhenICallTheEnsWebhookApiWithAINValidFssJObjectBodyForDeadLetterCallbackToD365UsingDataverse_ThenNonOkStatusIsReturned(string subject, HttpStatusCode statusCode)
         {
-            // rhz
-            Debug.WriteLine("FAILING TEST STARTED!");
             string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
             JsonObject ensWebhookJson = FssEventBody;
             await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, statusCode);
@@ -78,10 +76,10 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, subscriptionId.ToUpper());
             // rhz
-            Debug.WriteLine("TEST LOG forGetEnsCallBackAsync method in {BadRequest for WebHook} ");
-            Debug.WriteLine(callBackResponse.RequestMessage.RequestUri.ToString());
+            string requestUri = callBackResponse.RequestMessage.RequestUri.ToString();
             // rhz Assert.That(200, Is.EqualTo((int)callBackResponse.StatusCode), $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected 200.");
-            Assert.That(callBackResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK), $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected {HttpStatusCode.OK}.");
+            //Assert.That(callBackResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK), $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected {HttpStatusCode.OK}.");
+            Assert.That(callBackResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK), $"Incorrect status code  returned from , {requestUri}.");
             IEnumerable<EnsCallbackResponseModel> callBackResponseBody = JsonSerializer.Deserialize<IEnumerable<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result,JOptions);
 
             EnsCallbackResponseModel callBackResponseLatest = callBackResponseBody.Where(x => x.TimeStamp >= requestTime).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
