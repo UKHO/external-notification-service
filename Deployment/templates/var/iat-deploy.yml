@@ -1,0 +1,3 @@
+variables:
+        - template: iat-groups.yml
+        - template: common.yml

@@ -1,0 +1,4 @@
+variables:
+        - group: "ENS-IAT-TF-Variables"
+        - group: "ENS-IAT-Variables"
+        - group: "ENS-IAT-APIM-SOLAS-Variables"
