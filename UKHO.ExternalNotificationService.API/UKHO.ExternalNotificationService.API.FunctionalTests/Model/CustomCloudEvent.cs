@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using Microsoft.Azure.EventGrid.Models;
 
 namespace UKHO.ExternalNotificationService.API.FunctionalTests.Model
 {
