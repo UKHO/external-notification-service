@@ -44,6 +44,7 @@ variable "env_suffix_text" {
     "live"    = " "
     "vne"     = "VNE"
     "vni"     = "VNI"
+    "iat"     = "IAT"
   }
 }
 
