@@ -69,10 +69,10 @@ stages:
         DisableDependencyCheck: ${{ parameters.DisableDependencyCheck }}
         DotNetVersion: '8.0.x'
 
-  # - stage: Devdeploy
-  #   dependsOn: 
-  #   - BuildTestPublish
-  #   displayName: "Devdeploy (inc terraform, webapp deploy)"
+  - stage: Devdeploy
+    dependsOn: 
+    - BuildTestPublish
+    displayName: "Devdeploy (inc terraform, webapp deploy)"
   #   jobs:
   #   - template: Deployment/templates/deploy-solas-apim.yml
   #     parameters:
@@ -134,27 +134,27 @@ stages:
   #       RunFunctionalTests: false
   #       Container: ${{variables.Container}}
   
-  - stage: E2EvNextDeploy
-    dependsOn:
-    - IATvNextDeploy
-    displayName: E2EvNextDeploy (inc terraform, webapp deploy)
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
-    jobs:
-    - template: Deployment/templates/deploy-solas-apim.yml
-      parameters:
-        ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-        AzureEnvironment: "Ens-E2EvNext"
-        ShortName: "E2EvNext"
-        Container: ${{variables.Container}}
-    - template: Deployment/templates/app-deploy.yml
-      parameters:
-        ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-        AzureEnvironment: "Ens-E2EvNext"
-        ShortName: "E2EvNext"
-        ApimShortName: "Dev"
-        AzureSubscriptionVersion: "vNext E2E - A.011.08"
-        RunFunctionalTests: false
-        Container: ${{variables.Container}}
+  # - stage: E2EvNextDeploy
+  #   dependsOn:
+  #   - IATvNextDeploy
+  #   displayName: E2EvNextDeploy (inc terraform, webapp deploy)
+  #   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+  #   jobs:
+  #   - template: Deployment/templates/deploy-solas-apim.yml
+  #     parameters:
+  #       ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+  #       AzureEnvironment: "Ens-E2EvNext"
+  #       ShortName: "E2EvNext"
+  #       Container: ${{variables.Container}}
+  #   - template: Deployment/templates/app-deploy.yml
+  #     parameters:
+  #       ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+  #       AzureEnvironment: "Ens-E2EvNext"
+  #       ShortName: "E2EvNext"
+  #       ApimShortName: "Dev"
+  #       AzureSubscriptionVersion: "vNext E2E - A.011.08"
+  #       RunFunctionalTests: false
+  #       Container: ${{variables.Container}}
       
 
       
