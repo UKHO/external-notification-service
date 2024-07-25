@@ -24,8 +24,8 @@ parameters:
 
 jobs:
   - deployment: ${{ upper(parameters.ShortName) }}DeployApp
-    dependsOn: 
-    - ${{ upper(parameters.ShortName) }}DeployApimSolas
+    # dependsOn: 
+    # - ${{ upper(parameters.ShortName) }}DeployApimSolas
     displayName: "${{ upper(parameters.ShortName) }} - deploy terraform and dotnet App"
     environment: ${{ parameters.AzureEnvironment }}
     pool: $(DeploymentPool)
