@@ -70,13 +70,13 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             Assert.That(getMatchingData, Is.Not.Null);
             Assert.That(getMatchingData.Count() > 1);
 
-            // rhz - Disabled until the test is fixed.
+            // rhz - Remove until we can figure out how to get the correct response
             //DateTime requestTime = DateTime.UtcNow;
             //await Task.Delay(420000);
 
 
             //HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, subscriptionId.ToUpper());
-           
+
             //Assert.That(callBackResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK), $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected {HttpStatusCode.OK}.");
             //IEnumerable<EnsCallbackResponseModel> callBackResponseBody = JsonSerializer.Deserialize<IEnumerable<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result,JOptions);
 
