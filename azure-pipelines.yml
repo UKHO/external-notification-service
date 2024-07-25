@@ -69,10 +69,10 @@ stages:
         DisableDependencyCheck: ${{ parameters.DisableDependencyCheck }}
         DotNetVersion: '8.0.x'
 
-  - stage: Devdeploy
-    dependsOn: 
-    - BuildTestPublish
-    displayName: "Devdeploy (inc terraform, webapp deploy)"
+  # - stage: Devdeploy
+  #   dependsOn: 
+  #   - BuildTestPublish
+  #   displayName: "Devdeploy (inc terraform, webapp deploy)"
   #   jobs:
   #   - template: Deployment/templates/deploy-solas-apim.yml
   #     parameters:
@@ -161,7 +161,8 @@ stages:
 
   - stage: QAdeploy
     dependsOn:
-      - DevDeploy
+#      - DevDeploy
+      - IATDeploy 
     displayName: QAdeploy (inc terraform, webapp deploy)
     condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
