@@ -96,12 +96,12 @@ stages:
     displayName: "IATDeploy (inc terraform, webapp deploy)"
     #condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/develop'),startsWith(variables['Build.SourceBranch'], 'refs/heads/dev/')))
     jobs:
-    # - template: Deployment/templates/deploy-solas-apim.yml
-    #   parameters:
-    #     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-    #     AzureEnvironment: "Ens-IAT"
-    #     ShortName: "IAT"
-    #     Container: ${{variables.Container}}
+    - template: Deployment/templates/deploy-solas-apim.yml
+      parameters:
+        ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+        AzureEnvironment: "Ens-IAT"
+        ShortName: "IAT"
+        Container: ${{variables.Container}}
     - template: Deployment/templates/app-deploy.yml
       parameters:
         ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
