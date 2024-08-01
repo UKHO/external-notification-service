@@ -133,7 +133,28 @@ stages:
         AzureSubscriptionVersion: "IAT - A.011.08"
         RunFunctionalTests: false
         Container: ${{variables.Container}}
-    
+
+  - stage: PreProdDeploy
+    # dependsOn:
+    # - IATDeploy
+    displayName: "PreProdDeploy (inc terraform, webapp deploy)"
+    # condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/develop'),startsWith(variables['Build.SourceBranch'], 'refs/heads/dev/')))
+    jobs:
+    - template: Deployment/templates/deploy-solas-apim.yml
+      parameters:
+        ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+        AzureEnvironment: "Ens-PreProd"
+        ShortName: "PreProd"
+        Container: ${{variables.Container}}
+    - template: Deployment/templates/app-deploy.yml
+      parameters:
+        ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+        AzureEnvironment: "Ens-PreProd"
+        ShortName: "PreProd"
+        ApimShortName: "Dev"
+        AzureSubscriptionVersion: "PreProd - A.011.08"
+        RunFunctionalTests: false
+        Container: ${{variables.Container}}      
   
   
   # - stage: E2EvNextDeploy

@@ -45,6 +45,7 @@ variable "env_suffix_text" {
     "vne"     = "VNE"
     "vni"     = "VNI"
     "iat"     = "IAT"
+    "pre"     = "PRE"
   }
 }
 
