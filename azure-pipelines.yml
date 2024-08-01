@@ -143,16 +143,16 @@ stages:
     - template: Deployment/templates/deploy-solas-apim.yml
       parameters:
         ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-        AzureEnvironment: "Ens-PreProd"
-        ShortName: "PreProd"
+        AzureEnvironment: "Ens-Pre"
+        ShortName: "Pre"
         Container: ${{variables.Container}}
     - template: Deployment/templates/app-deploy.yml
       parameters:
         ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-        AzureEnvironment: "Ens-PreProd"
-        ShortName: "PreProd"
+        AzureEnvironment: "Ens-Pre"
+        ShortName: "Pre"
         ApimShortName: "Dev"
-        AzureSubscriptionVersion: "PreProd - A.011.08"
+        AzureSubscriptionVersion: "Pre - A.011.08"
         RunFunctionalTests: false
         Container: ${{variables.Container}}      
   
