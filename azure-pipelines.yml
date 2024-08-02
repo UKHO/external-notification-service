@@ -152,7 +152,7 @@ stages:
         AzureEnvironment: "Ens-Pre"
         ShortName: "Pre"
         ApimShortName: "Dev"
-        AzureSubscriptionVersion: "Pre - A.011.08"
+        AzureSubscriptionVersion: "PRE- A.011.08"
         RunFunctionalTests: false
         Container: ${{variables.Container}}      
   
