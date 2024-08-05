@@ -1,58 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+  
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Identity:1.11.3
+   cpe:/a:microsoft:azure_cli not needed
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Identity@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_identity_sdk</cpe>
+    <cve>CVE-2023-36415</cve>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Identity.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Azure\.Identity@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_identity_sdk</cpe>
+    <cpe>cpe:/a:microsoft:azure_sdk_for_.net</cpe>
+    <cve>CVE-2023-36415</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Core.dll
+   cpe:/a:microsoft:azure_cli not needed
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Azure\.Core@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_sdk_for_.net</cpe>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.ResourceManager.EventGrid.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Azure\.ResourceManager\.EventGrid@.*$</packageUrl>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.ResourceManager:1.4.0
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.ResourceManager@.*$</packageUrl>
+    <cve>CVE-2023-36052</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Elastic.Apm.AspNetCore.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.AspNetCore@.*$</packageUrl>
+    <cpe>cpe:/a:asp-project:asp-project</cpe>
+    <cpe>cpe:/a:elastic:apm_.net_agent</cpe>
+    <cpe>cpe:/a:elastic:apm_agent</cpe>
+    <cpe>cpe:/a:elastic:elastic_agent</cpe>
+    <cve>CVE-2019-7617</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Elastic.Apm.Extensions.Hosting.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.Extensions\.Hosting@.*$</packageUrl>
+    <cpe>cpe:/a:elastic:apm_.net_agent</cpe>
+    <cpe>cpe:/a:elastic:apm_agent</cpe>
+    <cpe>cpe:/a:elastic:elastic_agent</cpe>
+    <cve>CVE-2019-7617</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Elastic.Apm.Extensions.Logging.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.Extensions\.Logging@.*$</packageUrl>
+    <cpe>cpe:/a:elastic:apm_agent</cpe>
+    <cpe>cpe:/a:elastic:elastic_agent</cpe>
+    <cve>CVE-2019-7617</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Elastic.Apm.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Elastic\.Apm@.*$</packageUrl>
+    <cpe>cpe:/a:elastic:apm_.net_agent</cpe>
+    <cpe>cpe:/a:elastic:apm_agent</cpe>
+    <cpe>cpe:/a:elastic:elastic_agent</cpe>
+    <cve>CVE-2019-7617</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+    Applies to Azure.Storage.Blobs:12.13.0 using Azure.Storage.Blobs:12.19.1
+    Applies to Azure.Storage.Queues:12.11.0 using Azure.Storage.Queues:12.17.1
+    False positive. 
+    https://nvd.nist.gov/vuln/detail/CVE-2022-30187
+    Azure Storage Library Information Disclosure Vulnerability.
+    This is a temporary suppression pending a fix being available.
+    Bug to track the fix - https://dev.azure.com/ukhydro/Abzu/_workitems/edit/52787
+    ]]>
+    </notes>
+    <cve>CVE-2022-30187</cve>
+  </suppress>
   <suppress>
     <notes>
       <![CDATA[
    file name: GetDocument.Insider.dll
-   Suppressing this CVE as it is a .NetCore runtime issue affecting .NetCore runtimes below .NET Core 3.1.4 or lower. The ENS Runs in an AppService which will have the fixes already applied, and the global.json has been addeded to require .NetCore SDK > 6.0.101 or greater.
-   More details can be found here: https://github.com/dotnet/announcements/issues/156
+   False positive - this vulnerabilty impacts Blazor Server Forms
    ]]>
     </notes>
-    <cve>CVE-2020-1108</cve>
+    <packageUrl regex="true">^pkg:generic/GetDocument\.Insider@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cpe>cpe:/a:microsoft:asp.net</cpe>
+    <cpe>cpe:/a:microsoft:asp.net_core</cpe>
+    <cve>CVE-2023-36558</cve>
   </suppress>
   <suppress>
     <notes>
       <![CDATA[
-    file name: Microsoft.AspNetCore.Hosting.Abstractions.dll
-    See https://github.com/dotnet/announcements/issues/175 for full MS Details on CVE.
-    .NET Core and Visual Studio Denial of Service Vulnerability. 
-    This CVE applies to any .NET Core 3.1 but patch is provided at 3.1.405, ENS is pinned to .Net core SDK > 6.0.101 which is not vunerable, and deployed to Azure App Service which will have the security patch applied.
-    ]]>
+   file name: dotnet-getdocument.dll
+   False positive - this vulnerabilty impacts Blazor Server Forms
+   ]]>
     </notes>
-    <cve>CVE-2021-1721</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-    file name: Microsoft.AspNetCore.Hosting.Abstractions.dll
-    See https://github.com/dotnet/announcements/issues/194 for full MS Details on CVE.
-    A denial of service vulnerability exists in .NET 5.0, .NET Core 3.1 and .NET Core 2.1 where .NET (Core) server applications providing WebSocket endpoints could be tricked into endlessly looping while trying to read a single WebSocket frame.
-    This CVE applies to any .NET Core 3.1 but patch is provided at 3.1.412, ENS is pinned to .Net core SDK > 6.0.101 which is not vunerable, and deployed to Azure App Service which will have the security patch applied.
-    ]]>
-    </notes>
-    <cve>CVE-2021-26423</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-    file name: Microsoft.AspNetCore.Hosting.Abstractions.dll
-    See https://github.com/dotnet/announcements/issues/178 for full MS Details on CVE.
-    A remote code execution vulnerability exists in .NET 5 and .NET Core due to how text encoding is performed.This vulnerability is for System.Text.Encodings.Web and fixed on 5.0.1 and we are using 5.0.1
-    This CVE applies to any .NET Core 3.1 but patch is provided at 3.1.407, ENS is pinned to .Net core SDK > 6.0.101 which is not vunerable, and deployed to Azure App Service which will have the security patch applied.
-    ]]>
-    </notes>
-    <cve>CVE-2021-26701</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-    file name: Microsoft.AspNetCore.Hosting.Abstractions.dll
-    See https://github.com/dotnet/announcements/issues/196 for full MS Details on CVE.
-    An information disclosure vulnerability exists in .NET 5.0, .NET Core 3.1 and .NET Core 2.1 when dumps created by the tool to collect crash dumps and dumps on demand are created with global read permissions on Linux and macOS.
-    This CVE applies to any .NET Core 3.1 but patch is provided at 3.1.412, ENS is pinned to .Net core SDK > 6.0.101 which is not vunerable, and deployed to Azure App Service which will have the security patch applied.
-    ]]>
-    </notes>
-    <cve>CVE-2021-34485</cve>
+    <packageUrl regex="true">^pkg:generic/dotnet\-getdocument@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cpe>cpe:/a:microsoft:asp.net</cpe>
+    <cpe>cpe:/a:microsoft:asp.net_core</cpe>
+    <cve>CVE-2023-36558</cve>
   </suppress>
   <suppress>
     <notes>
@@ -69,61 +157,13 @@
   <suppress>
     <notes>
       <![CDATA[
-   file name: Serilog.Sinks.Async.dll
-   https://nvd.nist.gov/vuln/detail/CVE-2021-43138
-   A vulnerability exists in Async through 3.2.1 (fixed in 3.2.2) , which could let a malicious user obtain privileges via the mapValues() method.
-   False positive because this CVE applies to a Javascript module named Async (https://github.com/caolan/async) which has nothing to do with Serilog.Sinks.Async apart from the word Async.
-   ]]>
-    </notes>
-    <cve>CVE-2021-43138</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
     file name: Microsoft.AspNetCore.Hosting.Abstractions.dll
-    See https://github.com/dotnet/announcements/issues/111 for MS details on this CVE.
-        Package name: System.Text.RegularExpressions.dll (included as part of the .Net Core runtime)
-      	Vulnerable versions: 4.3.0 and below
-        Secure versions: 4.3.1+
-    This CVE applies to .Net Core versions below 2.2.107 (runtime 2.2.5). ENS is pinned to .Net core SDK > 6.0.101 which is not vulnerable, and deployed to Azure App Service which will have the security patch applied.
+    See https://github.com/dotnet/announcements/issues/178 for full MS Details on CVE.
+    A remote code execution vulnerability exists in .NET 5 and .NET Core due to how text encoding is performed.This vulnerability is for System.Text.Encodings.Web and fixed on 5.0.1 and we are using 5.0.1
+    This CVE applies to any .NET Core 3.1 but patch is provided at 3.1.407, ENS is pinned to .Net core SDK > 6.0.101 which is not vunerable, and deployed to Azure App Service which will have the security patch applied.
     ]]>
     </notes>
-    <cve>CVE-2019-0820</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-    Azure.Storage.Blobs:12.10.0
-    Azure.Storage.Queues:12.8.0
-    https://nvd.nist.gov/vuln/detail/CVE-2022-30187
-    Azure Storage Library Information Disclosure Vulnerability.
-    This is a temporary suppression pending a fix being available.
-    Bug to track the fix - https://dev.azure.com/ukhydro/Abzu/_workitems/edit/52787
-    ]]>
-    </notes>
-    <cve>CVE-2022-30187</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-	file name: Microsoft.AspNetCore.Hosting.Abstractions.dll
-	See https://nvd.nist.gov/vuln/detail/CVE-2018-8409 for details on this CVE.
-	Note: This was reanalysed by NIST on 4th October, and is now a breaking issue.
-	This is a temporary suppression pending a fix being available.
-	Bug to track the fix - https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=58430
-	]]>
-    </notes>
-    <cve>CVE-2018-8409</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: System.Private.DataContractSerialization:4.3.0
-   This CVE appiles to .net version >= 6.0.0 and < 6.0.12. Version 6.0.13 is not vulnerable
-   See https://github.com/dotnet/announcements/issues/244
-   ]]>
-    </notes>
-    <cve>CVE-2023-21538</cve>
+    <cve>CVE-2021-26701</cve>
   </suppress>
   <suppress>
     <notes>
@@ -137,6 +177,17 @@
   <suppress>
     <notes>
       <![CDATA[
+   file name: Serilog.Sinks.Async.dll
+   https://nvd.nist.gov/vuln/detail/CVE-2021-43138
+   A vulnerability exists in Async through 3.2.1 (fixed in 3.2.2) , which could let a malicious user obtain privileges via the mapValues() method.
+   False positive because this CVE applies to a Javascript module named Async (https://github.com/caolan/async) which has nothing to do with Serilog.Sinks.Async apart from the word Async.
+   ]]>
+    </notes>
+    <cve>CVE-2021-43138</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
    file name: Microsoft.CSharp:4.0.1, Microsoft.CSharp:4.3.0, Microsoft.CSharp:4.5.0, Microsoft.CSharp:4.5.0,
    Microsoft.NETCore.Platforms:1.0.1, Microsoft.NETCore.Platforms:1.1.0, Microsoft.NETCore.Platforms:1.1.1,
    Microsoft.NETCore.Platforms:2.0.0
@@ -146,120 +197,7 @@
     <cve>CVE-2022-41064</cve>
     <cve>CVE-2022-30184</cve>
   </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: System.Security.Cryptography.X509Certificates:4.1.0
-   file name: System.Security.Cryptography.X509Certificates:4.3.0
-   Applies to .NET Core 1.0, 1.1, and 2.0 only.
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:nuget/System\.Security\.Cryptography\.X509Certificates@.*$</packageUrl>
-    <vulnerabilityName>CVE-2017-11770</vulnerabilityName>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Azure.Identity.dll
-   False positive - fixed >= 1.10.2
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Azure\.Identity@.*$</packageUrl>
-    <cve>CVE-2023-36415</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Microsoft.Azure.EventGrid:3.2.1
-   https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=68857
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:nuget/Microsoft\.Azure\.EventGrid@.*$</packageUrl>
-    <cve>CVE-2021-42306</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Microsoft.Azure.KeyVault.dll
-   https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=68857
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Microsoft\.Azure\.KeyVault@.*$</packageUrl>
-    <cve>CVE-2021-42306</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Microsoft.IdentityModel.Clients.ActiveDirectory.dll
-   https://dev.azure.com/ukhydro/Abzu/_boards/board/t/Abzu%20Delivery%20Team/Stories/?workitem=68857
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Microsoft\.IdentityModel\.Clients\.ActiveDirectory@.*$</packageUrl>
-    <cve>CVE-2021-42306</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Serilog.Extensions.Logging.File.dll
-   False positive - applies to LINE app for Android and iOS
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Serilog\.Extensions\.Logging\.File@.*$</packageUrl>
-    <cve>CVE-2015-0897</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Elastic.Apm.AspNetCore.dll
-   False positive - impacts Java or Python
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.AspNetCore@.*$</packageUrl>
-    <cpe>cpe:/a:asp-project:asp-project</cpe>
-    <cpe>cpe:/a:elastic:apm_agent</cpe>
-    <cpe>cpe:/a:elastic:elastic_agent</cpe>
-    <cve>CVE-2021-37941</cve>
-    <cve>CVE-2019-7617</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Elastic.Apm.Extensions.Hosting.dll
-   False positive - impacts Java or Python
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.Extensions\.Hosting@.*$</packageUrl>
-    <cpe>cpe:/a:elastic:apm_agent</cpe>
-    <cpe>cpe:/a:elastic:elastic_agent</cpe>
-    <cve>CVE-2021-37941</cve>
-    <cve>CVE-2019-7617</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Elastic.Apm.Extensions.Logging.dll
-   False positive - impacts Java or Python
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.Extensions\.Logging@.*$</packageUrl>
-    <cpe>cpe:/a:elastic:apm_agent</cpe>
-    <cpe>cpe:/a:elastic:elastic_agent</cpe>
-    <cve>CVE-2021-37941</cve>
-    <cve>CVE-2019-7617</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Elastic.Apm.dll
-   False positive - impacts Java or Python
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Elastic\.Apm@.*$</packageUrl>
-    <cpe>cpe:/a:elastic:apm_agent</cpe>
-    <cpe>cpe:/a:elastic:elastic_agent</cpe>
-    <cve>CVE-2021-37941</cve>
-    <cve>CVE-2019-7617</cve>
-  </suppress>
+
   <suppress>
     <notes>
       <![CDATA[
@@ -296,18 +234,7 @@
     <cpe>cpe:/a:microsoft:azure_identity_sdk</cpe>
     <cve>CVE-2023-36052</cve>
   </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Microsoft.Azure.Services.AppAuthentication.dll
-   False positive - imapcts the Azure CLI
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Microsoft\.Azure\.Services\.AppAuthentication@.*$</packageUrl>
-    <cpe>cpe:/a:microsoft:azure_active_directory</cpe>
-    <cpe>cpe:/a:microsoft:azure_cli</cpe>
-    <cve>CVE-2023-36052</cve>
-  </suppress>
+  
   <suppress>
     <notes>
       <![CDATA[
@@ -334,46 +261,14 @@
   <suppress>
     <notes>
       <![CDATA[
-   file name: GetDocument.Insider.dll
-   False positive - this vulnerabilty impacts Blazor Server Forms
+   file name: Serilog.Extensions.Logging.File.dll
+   False positive - applies to LINE app for Android and iOS
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:generic/GetDocument\.Insider@.*$</packageUrl>
-    <cpe>cpe:/a:microsoft:.net_core</cpe>
-    <cpe>cpe:/a:microsoft:asp.net</cpe>
-    <cpe>cpe:/a:microsoft:asp.net_core</cpe>
-    <cve>CVE-2023-36558</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: dotnet-getdocument.dll
-   False positive - this vulnerabilty impacts Blazor Server Forms
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/dotnet\-getdocument@.*$</packageUrl>
-    <cpe>cpe:/a:microsoft:.net_core</cpe>
-    <cpe>cpe:/a:microsoft:asp.net</cpe>
-    <cpe>cpe:/a:microsoft:asp.net_core</cpe>
-    <cve>CVE-2023-36558</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: System.Threading.Tasks.Dataflow.dll
-   Vunerability due to permissions on VoiceCommandActivity application component, no applicable.
-   ]]>
-    </notes>
-    <cve>CVE-2020-22475</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: System.Threading.Tasks.Dataflow.dll
-   Andriod vunerability. Not applicable
-   ]]>
-    </notes>
-    <cve>CVE-2022-39349</cve>
+    <packageUrl regex="true">^pkg:generic/Serilog\.Extensions\.Logging\.File@.*$</packageUrl>
+    <cpe>cpe:/a:line:line</cpe>
+    <cpe>cpe:/a:asp-project:asp-project</cpe>
+    <cve>CVE-2015-0897</cve>
   </suppress>
   <suppress>
     <notes>
@@ -387,103 +282,336 @@
   <suppress>
     <notes>
       <![CDATA[
-   file name: Newtonsoft.Json.Bson.dll
-   False positive - Newtonsoft.Json > 13.0.1 included in project
+   file name: System.Security.Cryptography.X509Certificates:4.1.0
+   file name: System.Security.Cryptography.X509Certificates:4.3.0
+   Applies to .NET Core 1.0, 1.1, and 2.0 only.
+   False positive
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:generic/Newtonsoft\.Json\.Bson@.*$</packageUrl>
+    <packageUrl regex="true">^pkg:nuget/System\.Security\.Cryptography\.X509Certificates@.*$</packageUrl>
+    <vulnerabilityName>CVE-2017-11770</vulnerabilityName>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+    file name: Microsoft.AspNetCore.Hosting.Abstractions.dll
+    See https://github.com/dotnet/announcements/issues/111 for MS details on this CVE.
+        Package name: System.Text.RegularExpressions.dll (included as part of the .Net Core runtime)
+      	Vulnerable versions: 4.3.0 and below
+        Secure versions: 4.3.1+
+    This CVE applies to .Net Core versions below 2.2.107 (runtime 2.2.5). ENS is pinned to .Net core SDK > 6.0.101 which is not vulnerable, and deployed to Azure App Service which will have the security patch applied.
+    ]]>
+    </notes>
+    <cve>CVE-2019-0820</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Newtonsoft.Json.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Newtonsoft\.Json@.*$</packageUrl>
+    <cpe>cpe:/a:newtonsoft:json.net</cpe>
     <cve>CVE-2024-21907</cve>
   </suppress>
   <suppress>
     <notes>
       <![CDATA[
-   file name: Microsoft.IdentityModel.Abstractions.dll
-   Fixed in SDK >= 6.0.418
+   file name: Newtonsoft.Json:10.0.2
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:generic/Microsoft\.IdentityModel\.Abstractions@.*$</packageUrl>
-    <cve>CVE-2024-21319</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Microsoft.IdentityModel.Abstractions:6.22.0
-   Fixed in SDK >= 6.0.418
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:nuget/Microsoft\.IdentityModel\.Abstractions@.*$</packageUrl>
-    <cve>CVE-2024-21319</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Microsoft.IdentityModel.Clients.ActiveDirectory.dll
-   Fixed in SDK >= 6.0.418
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Microsoft\.IdentityModel\.Clients\.ActiveDirectory@.*$</packageUrl>
-    <cve>CVE-2024-21319</cve>
+    <packageUrl regex="true">^pkg:nuget/Newtonsoft\.Json@.*$</packageUrl>
+    <cpe>cpe:/a:newtonsoft:json.net</cpe>
+    <cve>CVE-2024-21907</cve>
   </suppress>
   <suppress>
     <notes>
       <![CDATA[
    file name: System.ClientModel.dll
-   Applies to Azure CLI
    ]]>
     </notes>
     <packageUrl regex="true">^pkg:generic/System\.ClientModel@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+    <cpe>cpe:/a:microsoft:azure_sdk_for_.net</cpe>
     <cve>CVE-2023-36052</cve>
   </suppress>
   <suppress>
     <notes>
       <![CDATA[
-   file name: Azure.Identity:1.10.4
-   See https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-29992
-   This will be fixed in https://dev.azure.com/ukhydro/Abzu/_workitems/edit/152362
+   file name: System.ClientModel:1.0.0
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:nuget/Azure\.Identity@.*$</packageUrl>
-    <vulnerabilityName>CVE-2024-29992</vulnerabilityName>
-    <vulnerabilityName>CVE-2024-35255</vulnerabilityName>
+    <packageUrl regex="true">^pkg:nuget/System\.ClientModel@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:services</cpe>
+    <cpe>cpe:/a:services_project:services</cpe>
+    <cve>CVE-2014-9152</cve>
   </suppress>
   <suppress>
     <notes>
       <![CDATA[
-   file name: Azure.Identity.dll
-   Will be fixed with package updates as part of update to .NET 8
+   file name: System.Runtime.CompilerServices.Unsafe.dll
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:generic/Azure\.Identity@.*$</packageUrl>
-    <cve>CVE-2024-35255</cve>
+    <packageUrl regex="true">^pkg:generic/System\.Runtime\.CompilerServices\.Unsafe@.*$</packageUrl>
+    <cpe>cpe:/a:services_project:services</cpe>
+    <cve>CVE-2014-9152</cve>
   </suppress>
   <suppress>
     <notes>
       <![CDATA[
-   file name: Microsoft.Identity.Client.Extensions.Msal.dll
-   Will be fixed with package updates as part of update to .NET 8
+   file name: System.Threading.Tasks.Dataflow:4.8.0
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:generic/Microsoft\.Identity\.Client\.Extensions\.Msal@.*$</packageUrl>
-    <cve>CVE-2024-35255</cve>
+    <packageUrl regex="true">^pkg:nuget/System\.Threading\.Tasks\.Dataflow@.*$</packageUrl>
+    <cpe>cpe:/a:tasks:tasks</cpe>
+    <cpe>cpe:/a:tasks:tasks</cpe>
+    <cve>CVE-2020-22475</cve>
   </suppress>
   <suppress>
     <notes>
       <![CDATA[
-   file name: Microsoft.Identity.Client.dll
-   Will be fixed with package updates as part of update to .NET 8
+   file name: System.Threading.Tasks.Dataflow:4.8.0
+   file name: System.Threading.Tasks.Dataflow:4.9.0
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:generic/Microsoft\.Identity\.Client@.*$</packageUrl>
-    <cve>CVE-2024-35255</cve>
+    <packageUrl regex="true">^pkg:nuget/System\.Threading\.Tasks\.Dataflow@.*$</packageUrl>
+    <cve>CVE-2022-39349</cve>
   </suppress>
   <suppress>
     <notes>
       <![CDATA[
-   file name: Microsoft.Identity.Client.dll
-   Will be fixed with package updates as part of update to .NET 8
+   file name: System.Threading.Tasks.Extensions.dll
    ]]>
     </notes>
-    <packageUrl regex="true">^pkg:generic/Microsoft\.Identity\.Client@.*$</packageUrl>
-    <cve>CVE-2024-35255</cve>
+    <packageUrl regex="true">^pkg:generic/System\.Threading\.Tasks\.Extensions@.*$</packageUrl>
+    <cpe>cpe:/a:tasks:tasks</cpe>
+    <cve>CVE-2020-22475</cve>
+    <cve>CVE-2022-39349</cve>
   </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: System.Threading.Tasks.Extensions:4.3.0
+   file name: System.Threading.Tasks.Extensions:4.5.2
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/System\.Threading\.Tasks\.Extensions@.*$</packageUrl>
+    <cpe>cpe:/a:tasks:tasks</cpe>
+    <cve>CVE-2020-22475</cve>
+    <cve>CVE-2022-39349</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: System.Threading.Tasks.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/System\.Threading\.Tasks@.*$</packageUrl>
+    <cpe>cpe:/a:tasks:tasks</cpe>
+    <cve>CVE-2020-22475</cve>
+    <cve>CVE-2022-39349</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: System.Threading.Tasks:4.0.11
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/System\.Threading\.Tasks@.*$</packageUrl>
+    <cpe>cpe:/a:tasks:tasks</cpe>
+    <cve>CVE-2020-22475</cve>
+    <cve>CVE-2022-39349</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: System.Threading.Tasks.Parallel.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/System\.Threading\.Tasks\.Parallel@.*$</packageUrl>
+    <cpe>cpe:/a:tasks:tasks</cpe>
+    <cve>CVE-2020-22475</cve>
+    <cve>CVE-2022-39349</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNetCore.Hosting.Abstractions.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.AspNetCore\.Hosting\.Abstractions@.*$</packageUrl>
+    <cpe>cpe:/a:asp-project:asp-project</cpe>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNetCore.Hosting.Abstractions.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.AspNetCore\.Hosting\.Abstractions@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:web_applications</cpe>
+    <cve>CVE-2017-11826</cve>
+  </suppress>
+  
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNetCore.Hosting.Server.Abstractions.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.AspNetCore\.Hosting\.Server\.Abstractions@.*$</packageUrl>
+    <cpe>cpe:/a:asp-project:asp-project</cpe>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNetCore.Hosting.Server.Abstractions.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.AspNetCore\.Hosting\.Server\.Abstractions@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:web_applications</cpe>
+    <cve>CVE-2017-11826</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNetCore.Hosting.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.AspNetCore\.Hosting@.*$</packageUrl>
+    <cpe>cpe:/a:asp-project:asp-project</cpe>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+  </suppress>
+  <suppress>
+   <notes><![CDATA[
+   file name: Microsoft.AspNetCore.Hosting.dll
+   ]]></notes>
+   <packageUrl regex="true">^pkg:generic/Microsoft\.AspNetCore\.Hosting@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:web_applications</cpe>
+    <cve>CVE-2017-11826</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNetCore.Http.Abstractions.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.AspNetCore\.Http\.Abstractions@.*$</packageUrl>
+    <cpe>cpe:/a:asp-project:asp-project</cpe>
+    <cpe>cpe:/a:http_request_project:http_request</cpe>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNetCore.Http.Extensions.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.AspNetCore\.Http\.Extensions@.*$</packageUrl>
+    <cpe>cpe:/a:asp-project:asp-project</cpe>
+    <cpe>cpe:/a:http_request_project:http_request</cpe>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNetCore.Http.Features.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.AspNetCore\.Http\.Features@.*$</packageUrl>
+    <cpe>cpe:/a:asp-project:asp-project</cpe>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNetCore.Http.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.AspNetCore\.Http@.*$</packageUrl>
+    <cpe>cpe:/a:asp-project:asp-project</cpe>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.AspNetCore.WebUtilities.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.AspNetCore\.WebUtilities@.*$</packageUrl>
+    <cpe>cpe:/a:asp-project:asp-project</cpe>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Extensions.Hosting.Abstractions.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Extensions\.Hosting\.Abstractions@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Net.Http.Headers.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Net\.Http\.Headers@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Extensions.Hosting.Abstractions.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Extensions\.Hosting\.Abstractions@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Net.Http.Headers.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Net\.Http\.Headers@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: System.Threading.Tasks.Dataflow.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/System\.Threading\.Tasks\.Dataflow@.*$</packageUrl>
+    <cpe>cpe:/a:tasks:tasks</cpe>
+    <cve>CVE-2020-22475</cve>
+    <cve>CVE-2022-39349</cve>
+  </suppress>
+  
 </suppressions>

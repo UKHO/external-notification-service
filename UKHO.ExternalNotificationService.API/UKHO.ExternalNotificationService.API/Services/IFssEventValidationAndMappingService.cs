@@ -8,8 +8,8 @@ namespace UKHO.ExternalNotificationService.API.Services
 {
     public interface IFssEventValidationAndMappingService
     {
-       Task<ValidationResult> ValidateFssEventData(FssEventData fssEventData);
+        Task<ValidationResult> ValidateFssEventData(FssEventData fssEventData);
 
-       CloudEvent FssEventDataMapping(CustomCloudEvent customCloudEvent, string correlationId);
+        CloudEvent MapToCloudEvent(CloudEventCandidate<FssEventData> candidate);
     }
 }

@@ -1,12 +1,13 @@
 ﻿
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Newtonsoft.Json;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -37,9 +38,10 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
 
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    dynamic webJobDetails = JsonConvert.DeserializeObject<dynamic>(await response.Content.ReadAsStringAsync());
-                    string webJobStatus = webJobDetails["status"];
-                    if (webJobStatus != "Running")
+                    string data = await response.Content.ReadAsStringAsync();
+                    JsonNode? webJobDetails = JsonSerializer.Deserialize<JsonNode>(data);
+                    string? webJobStatus = webJobDetails?["status"]?.GetValue<string>();
+                    if (webJobStatus != null && webJobStatus != "Running")
                     {
                         string webJobDetail = $"Webjob ens-{_webHostEnvironment.EnvironmentName} status is {webJobStatus}";
                         return HealthCheckResult.Unhealthy("Azure webjob is unhealthy", new Exception(webJobDetail));

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using UKHO.ExternalNotificationService.Common.Helpers;
+﻿using UKHO.ExternalNotificationService.Common.Helpers;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 
 namespace UKHO.ExternalNotificationService.API.Validation
@@ -14,11 +11,11 @@ namespace UKHO.ExternalNotificationService.API.Validation
             { return true; }
             try
             {
-                ExtractD365Payload.D365PayloadDetails(payload, postEntityImageKey, out InputParameter inputParameter, out EntityImage postEntityImage);
+                ExtractD365Payload.D365PayloadDetails(payload, postEntityImageKey, out InputParameter inputParameter, out EntityImage? postEntityImage);
                 IEnumerable<D365Attribute> attributes = ExtractD365Payload.D365AttributeDetails(inputParameter, postEntityImage);
 
-                D365Attribute validAttributeKey = attributes.FirstOrDefault(a => a.Key == attributeKey);
-                return (validAttributeKey != null && !string.IsNullOrWhiteSpace(validAttributeKey.Value.ToString()));
+                D365Attribute? validAttributeKey = attributes.FirstOrDefault(a => a.Key == attributeKey);
+                return (validAttributeKey != null && !string.IsNullOrWhiteSpace(validAttributeKey?.Value?.ToString()));
             }
             catch (Exception)
             {
@@ -32,11 +29,11 @@ namespace UKHO.ExternalNotificationService.API.Validation
             { return true; }
             try
             {
-                ExtractD365Payload.D365PayloadDetails(payload, postEntityImageKey, out InputParameter inputParameter, out EntityImage postEntityImage);
+                ExtractD365Payload.D365PayloadDetails(payload, postEntityImageKey, out InputParameter inputParameter, out EntityImage? postEntityImage);
                 IEnumerable<FormattedValue> formattedValues = ExtractD365Payload.FormattedValueDetails(inputParameter, postEntityImage);
 
-                FormattedValue validFormattedKey = formattedValues.FirstOrDefault(a => a.Key == formattedKey);
-                return (validFormattedKey != null && !string.IsNullOrWhiteSpace(validFormattedKey.Value.ToString()));
+                FormattedValue? validFormattedKey = formattedValues.FirstOrDefault(a => a.Key == formattedKey);
+                return (validFormattedKey != null && !string.IsNullOrWhiteSpace(validFormattedKey?.Value?.ToString()));
             }
             catch (Exception)
             {

@@ -6,8 +6,8 @@ namespace UKHO.ExternalNotificationService.Common.Models.AzureEventGridDomain
     [ExcludeFromCodeCoverage]
     public class SubscriptionRequestResult: BaseSubscriptionRequest
     {
-        public string ProvisioningState { get; set; }
-        public string ErrorMessage { get; set; }
+        public string ProvisioningState { get; set; } = string.Empty;
+        public string ErrorMessage { get; set; } = string.Empty;
 
         public SubscriptionRequestResult(SubscriptionRequestMessage subscriptionMessage)
         {

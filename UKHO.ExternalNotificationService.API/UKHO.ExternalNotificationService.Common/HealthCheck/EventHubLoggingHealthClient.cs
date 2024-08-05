@@ -3,11 +3,11 @@ using Azure.Messaging.EventHubs.Producer;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Configuration;
@@ -47,7 +47,7 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
                     EventId = EventIds.EventHubLoggingEventDataForHealthCheck.ToEventId()
                 };
 
-                string jsonLogEntry = JsonConvert.SerializeObject(logEntry);
+                string jsonLogEntry = JsonSerializer.Serialize(logEntry);
 
                 using EventDataBatch eventBatch = await eventHubProducerClient.CreateBatchAsync(cancellationToken);
 

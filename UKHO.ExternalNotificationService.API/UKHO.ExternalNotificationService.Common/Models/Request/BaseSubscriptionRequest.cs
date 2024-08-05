@@ -2,8 +2,8 @@
 {
     public class BaseSubscriptionRequest
     {
-        public string SubscriptionId { get; set; }
-        public string NotificationType { get; set; }
-        public string WebhookUrl { get; set; }
+        public string SubscriptionId { get; set; } = string.Empty;
+        public string NotificationType { get; set; } = string.Empty;
+        public string WebhookUrl { get; set; } = string.Empty;
     }
 }

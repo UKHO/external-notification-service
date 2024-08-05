@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.Common.Logging;
@@ -34,9 +34,12 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         [HttpOptions]
         public IActionResult Options()
         {
-            string webhookRequestOrigin = HttpContext.Request.Headers["WebHook-Request-Origin"].FirstOrDefault();
-            HttpContext.Response.Headers.Add("WebHook-Allowed-Rate", "*");
-            HttpContext.Response.Headers.Add("WebHook-Allowed-Origin", webhookRequestOrigin);
+            string? webhookRequestOrigin = HttpContext.Request.Headers["WebHook-Request-Origin"].FirstOrDefault();
+            HttpContext.Response.Headers.Append("WebHook-Allowed-Rate", "*");
+            if (!string.IsNullOrWhiteSpace(webhookRequestOrigin))
+            {
+               HttpContext.Response.Headers.Append("WebHook-Allowed-Origin", webhookRequestOrigin);
+            }
 
             _logger.LogInformation(EventIds.ENSWebhookOptionsEndPointRequested.ToEventId(), "External notification service webhook options end point requested for _X-Correlation-ID:{correlationId}.", GetCurrentCorrelationId());
 
@@ -48,13 +51,13 @@ namespace UKHO.ExternalNotificationService.API.Controllers
         {
             using var reader = new StreamReader(Request.Body, Encoding.UTF8);
             string jsonContent = await reader.ReadToEndAsync();
-            CustomCloudEvent customCloudEvent = JsonConvert.DeserializeObject<CustomCloudEvent>(jsonContent);
+            CustomCloudEvent? customCloudEvent = JsonSerializer.Deserialize<CustomCloudEvent>(jsonContent, JOptions);
 
-            _logger.LogInformation(EventIds.ENSWebhookRequestStart.ToEventId(), "External notification service webhook request started for event:{eventGridEvent} and _X-Correlation-ID:{correlationId}.", JsonConvert.SerializeObject(customCloudEvent), GetCurrentCorrelationId());
+            _logger.LogInformation(EventIds.ENSWebhookRequestStart.ToEventId(), "External notification service webhook request started for event:{eventGridEvent} and _X-Correlation-ID:{correlationId}.", customCloudEvent, GetCurrentCorrelationId());
 
-            if (customCloudEvent.Type != null)
+            if (customCloudEvent?.Type != null)
             {
-                IEventProcessor processor = _eventProcessorFactory.GetProcessor(customCloudEvent.Type);
+                IEventProcessor? processor = _eventProcessorFactory.GetProcessor(customCloudEvent.Type);
 
                 if (processor != null)
                 {

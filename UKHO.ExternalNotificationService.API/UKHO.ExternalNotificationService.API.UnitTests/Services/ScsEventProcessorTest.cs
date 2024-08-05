@@ -84,17 +84,71 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             CloudEvent cloudEvent = new("test", "test", new object());
 
             A.CallTo(() => _fakeScsEventValidationAndMappingService.ValidateScsEventData(A<ScsEventData>.Ignored)).Returns(new ValidationResult());
+            
+            A.CallTo(() => _fakeScsEventValidationAndMappingService.MapToCloudEvent(A<CloudEventCandidate<ScsEventData>>.Ignored)).Returns(cloudEvent);
 
-            A.CallTo(() => _fakeScsEventValidationAndMappingService.ScsEventDataMapping(A<CustomCloudEvent>.Ignored, A<string>.Ignored)).Returns(cloudEvent);
-
-            A.CallTo(() => _fakeAzureEventGridDomainService.JsonDeserialize<ScsEventData>(A<object>.Ignored)).Returns(_fakeScsEventData);
+            A.CallTo(() => _fakeAzureEventGridDomainService.ConvertObjectTo<ScsEventData>(A<object>.Ignored)).Returns(_fakeScsEventData);
 
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken));
 
             ExternalNotificationServiceProcessResponse result = await _scsEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
 
             Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
-            Assert.That(result.Errors, Is.Null);
+            Assert.That(result.Errors, Is.Empty);
+        }
+
+        [Test]
+        [TestCase(-1, 0)]
+        [TestCase(0, 0)]
+        [TestCase(5, 5)]
+        [TestCase(10, 10)]
+        [TestCase(12, 10)]
+        [TestCase(60, 10)]
+        public async Task WhenValidPayloadInRequestAndConfiguredDelay_ThenReceiveSuccessfulResponse(int configuredDelay, int expectedDelay)
+        {
+            CancellationToken cancellationToken = CancellationToken.None;
+            CloudEvent cloudEvent = new("test", "test", new object());
+
+            _fakeEventProcessorConfiguration.Value.ScsEventPublishDelayInSeconds = configuredDelay; 
+
+            A.CallTo(() => _fakeScsEventValidationAndMappingService.ValidateScsEventData(A<ScsEventData>.Ignored)).Returns(new ValidationResult());
+
+            A.CallTo(() => _fakeScsEventValidationAndMappingService.MapToCloudEvent(A<CloudEventCandidate<ScsEventData>>.Ignored)).Returns(cloudEvent);
+
+            A.CallTo(() => _fakeAzureEventGridDomainService.ConvertObjectTo<ScsEventData>(A<object>.Ignored)).Returns(_fakeScsEventData);
+
+            IReturnValueArgumentValidationConfiguration<Task> callToPublishEventAsync = A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken));
+
+            Stopwatch stopwatch = new();
+
+            stopwatch.Start();
+
+            ExternalNotificationServiceProcessResponse result = await _scsEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
+
+            stopwatch.Stop();
+
+            callToPublishEventAsync.MustHaveHappened();
+
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+            Assert.That(result.Errors, Is.Empty);
+
+            Assert.That(stopwatch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(expectedDelay * 1000));
+        }
+
+        [Test]
+        [TestCase(-1, 0)]
+        [TestCase(0, 0)]
+        [TestCase(5, 5)]
+        [TestCase(10, 10)]
+        [TestCase(12, 10)]
+        [TestCase(60, 10)]
+        public void WhenDelayInMillisecondsIsAccessed_ThenReturnedSuccessfully(int configuredDelay, int expectedDelay)
+        {
+            _fakeEventProcessorConfiguration.Value.ScsEventPublishDelayInSeconds = configuredDelay;
+
+            int result = _scsEventProcessor.DelayInMilliseconds;
+
+            Assert.That(expectedDelay * 1000, Is.EqualTo(result));
         }
 
         [Test]

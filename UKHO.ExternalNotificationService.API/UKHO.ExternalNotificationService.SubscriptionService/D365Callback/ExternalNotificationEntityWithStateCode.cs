@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿
+using System.Text.Json.Serialization;
 
 namespace UKHO.ExternalNotificationService.SubscriptionService.D365Callback
 {
     public class ExternalNotificationEntityWithStateCode : ExternalNotificationEntity
     {
-        [JsonProperty("statecode")]
+        [JsonPropertyName("statecode")]
         public int ResponseStateCode { get; set; }
     }
 }

@@ -31,7 +31,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.BaseClass
         [Test]
         public void WhenPostFssValidEventRequest_ThenReturnsFssEventData()
         {
-            A.CallTo(() => _fakeAzureEventGridDomainService.JsonDeserialize<FssEventData>(A<object>.Ignored)).Returns(_fssEventData);
+            A.CallTo(() => _fakeAzureEventGridDomainService.ConvertObjectTo<FssEventData>(A<object>.Ignored)).Returns(_fssEventData);
             object data = (object)_fssEventData;
 
             FssEventData response =  _eventProcessorBase.GetEventData<FssEventData>(data);

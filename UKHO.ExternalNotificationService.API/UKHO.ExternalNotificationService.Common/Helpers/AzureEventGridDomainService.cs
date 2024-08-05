@@ -3,15 +3,14 @@ using Azure.Core;
 using Azure.Identity;
 using Azure.Messaging;
 using Azure.Messaging.EventGrid;
-using Microsoft.Azure.Management.EventGrid;
-using Microsoft.Azure.Management.EventGrid.Models;
+using Azure.ResourceManager;
+using Azure.ResourceManager.EventGrid;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Rest;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Configuration;
@@ -26,7 +25,8 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
     {
         private readonly EventGridDomainConfiguration _eventGridDomainConfig;
         private readonly IEventSubscriptionConfiguration _eventSubscriptionConfiguration;
-        private readonly ILogger<AzureEventGridDomainService> _logger;        
+        private readonly ILogger<AzureEventGridDomainService> _logger;
+        private readonly JsonSerializerOptions _options = new(JsonSerializerDefaults.Web);
 
         public AzureEventGridDomainService(IOptions<EventGridDomainConfiguration> eventGridDomainConfig, IEventSubscriptionConfiguration eventSubscriptionConfiguration, ILogger<AzureEventGridDomainService> logger)
         {
@@ -34,38 +34,54 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             _eventSubscriptionConfiguration = eventSubscriptionConfiguration;
             _logger = logger;            
         }
-        
-        public async Task<EventSubscription> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionRequestMessage, CancellationToken cancellationToken)
+
+        /// <summary>
+        /// Creates or updates a subscription for an Azure Event Grid domain.
+        /// The new Azure SDK for EventGrid required the introduction of Azure.ResourceManager.EventGrid.
+        /// Subsiqently, the method signature has changed to return a DomainTopicEventSubscriptionResource.
+        /// </summary>
+        /// <param name="subscriptionRequestMessage"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>The domain topic event subscription resource.</returns>
+        public async Task<DomainTopicEventSubscriptionResource> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionRequestMessage, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation(EventIds.CreateOrUpdateAzureEventDomainTopicStart.ToEventId(),
                     "Create or update azure event domain topic started for SubscriptionId:{SubscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId} with Event domain topic {NotificationTypeTopicName}", subscriptionRequestMessage.SubscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId, subscriptionRequestMessage.NotificationTypeTopicName);
 
-            EventGridManagementClient eventGridMgmtClient = await GetEventGridClient(_eventGridDomainConfig.SubscriptionId, cancellationToken);
-            DomainTopic topic = await GetDomainTopic(eventGridMgmtClient, subscriptionRequestMessage.NotificationTypeTopicName, cancellationToken);
-            string eventSubscriptionScope = topic.Id;
+            DomainTopicResource topic = await GetDomainTopic(subscriptionRequestMessage.NotificationTypeTopicName, cancellationToken);
 
-            EventSubscription eventSubscription = _eventSubscriptionConfiguration.SetEventSubscription(subscriptionRequestMessage);
-            EventSubscription createdOrUpdatedEventSubscription = await eventGridMgmtClient.EventSubscriptions.CreateOrUpdateAsync(eventSubscriptionScope, subscriptionRequestMessage.SubscriptionId, eventSubscription, cancellationToken);
+            DomainTopicEventSubscriptionResource eventSubscriptionResult = await EditDomainTopicEventSubscription(
+                            topic,
+                            subscriptionRequestMessage,
+                            cancellationToken);
 
             _logger.LogInformation(EventIds.CreateOrUpdateAzureEventDomainTopicCompleted.ToEventId(),
                     "Create or update azure event domain topic and subscription completed for SubscriptionId:{SubscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId} for Event domain topic {topic}",
-                    subscriptionRequestMessage.SubscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId, topic.Name);
-            return createdOrUpdatedEventSubscription;
+                    subscriptionRequestMessage.SubscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId, topic.Id.Name);
+
+            return eventSubscriptionResult;
         }
+
+        /// <summary>
+        /// Deletes a subscription for an Azure Event Grid domain.
+        /// Changes are due to the new Azure SDK for EventGrid.
+        /// </summary>
+        /// <param name="subscriptionRequestMessage"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task DeleteSubscription(SubscriptionRequestMessage subscriptionRequestMessage, CancellationToken cancellationToken)
         {
             _logger.LogInformation(EventIds.DeleteAzureEventDomainSubscriptionStart.ToEventId(),
                     "Delete azure event grid domain subscription started for SubscriptionId:{SubscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId} with Event domain topic {NotificationTypeTopicName}", subscriptionRequestMessage.SubscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId, subscriptionRequestMessage.NotificationTypeTopicName);
 
-            EventGridManagementClient eventGridMgmtClient = await GetEventGridClient(_eventGridDomainConfig.SubscriptionId, cancellationToken);
-            DomainTopic topic = await GetDomainTopic(eventGridMgmtClient, subscriptionRequestMessage.NotificationTypeTopicName, cancellationToken);
-            string eventSubscriptionScope = topic.Id;
-        
-            await eventGridMgmtClient.EventSubscriptions.DeleteAsync(eventSubscriptionScope, subscriptionRequestMessage.SubscriptionId, cancellationToken);
+            DomainTopicResource topic = await GetDomainTopic(subscriptionRequestMessage.NotificationTypeTopicName, cancellationToken);
+
+            DomainTopicEventSubscriptionResource topicEventSubscription = await topic.GetDomainTopicEventSubscriptionAsync(subscriptionRequestMessage.SubscriptionId, cancellationToken);
+            await topicEventSubscription.DeleteAsync(WaitUntil.Completed, cancellationToken);
 
             _logger.LogInformation(EventIds.DeleteAzureEventDomainSubscriptionCompleted.ToEventId(),
                     "Delete azure event grid domain subscription completed for SubscriptionId:{SubscriptionId} with _D365-Correlation-ID:{correlationId} and _X-Correlation-ID:{CorrelationId} for Event domain topic {topic}",
-                    subscriptionRequestMessage.SubscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId, topic.Name);           
+                    subscriptionRequestMessage.SubscriptionId, subscriptionRequestMessage.D365CorrelationId, subscriptionRequestMessage.CorrelationId, topic.Id.Name);           
         }
 
         public async Task PublishEventAsync(CloudEvent cloudEvent, string correlationId, CancellationToken cancellationToken = default)
@@ -87,30 +103,71 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
             }
         }
 
-        public T JsonDeserialize<T>(object data)
+        // We have to do this because the data object is likely to be a JsonElement.
+        public T? ConvertObjectTo<T>(object data) where T : class
         {
-            string jsonString = JsonConvert.SerializeObject(data);
-            T obj = JsonConvert.DeserializeObject<T>(jsonString);
+            T obj = default!;
+            string jsonString = JsonSerializer.Serialize(data);
+            if (jsonString != null)
+            {
+                obj = JsonSerializer.Deserialize<T>(jsonString,_options)!;
+            }
             return obj;
         }
 
-        private static async Task<EventGridManagementClient> GetEventGridClient(string subscriptionId, CancellationToken cancellationToken)
+        /// <summary>
+        /// Gets the instance of ArmClient.
+        /// Introduced due to the new Azure SDK for EventGrid.
+        /// </summary>
+        /// <returns>The instance of ArmClient.</returns>
+        private ArmClient GetArmClient()
         {
             DefaultAzureCredential azureCredential = new();
-            TokenRequestContext tokenRequestContext = new(new string[] { "https://management.azure.com/.default" });
 
-            AccessToken tokenResult = await azureCredential.GetTokenAsync(tokenRequestContext, cancellationToken);
-            TokenCredentials credential = new(tokenResult.Token);
+            var result = new ArmClient(azureCredential, _eventGridDomainConfig.SubscriptionId);
 
-            return new(credential)
-            {
-                SubscriptionId = subscriptionId
-            };
+            return result;
         }
 
-        protected virtual async Task<DomainTopic> GetDomainTopic(EventGridManagementClient eventGridMgmtClient, string notificationTypeTopicName, CancellationToken cancellationToken)
+        /// <summary>
+        /// Retrieves the domain topic resource for the specified notification type topic name.
+        /// Changes are due to the new Azure SDK for EventGrid.
+        /// </summary>
+        /// <param name="notificationTypeTopicName"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>The Domain topic resource</returns>
+        protected virtual async Task<DomainTopicResource> GetDomainTopic(string notificationTypeTopicName, CancellationToken cancellationToken=default)
         {
-            return await eventGridMgmtClient.DomainTopics.CreateOrUpdateAsync(_eventGridDomainConfig.ResourceGroup, _eventGridDomainConfig.EventGridDomainName, notificationTypeTopicName, cancellationToken);
+            ArmClient client = GetArmClient();
+            ResourceIdentifier ri = EventGridDomainResource.CreateResourceIdentifier(
+                    _eventGridDomainConfig.SubscriptionId,
+                    _eventGridDomainConfig.ResourceGroup,
+                    _eventGridDomainConfig.EventGridDomainName);
+
+            EventGridDomainResource eventGridDomain = client.GetEventGridDomainResource(ri);
+
+            DomainTopicCollection collection = eventGridDomain.GetDomainTopics();
+            ArmOperation<DomainTopicResource> topic = await collection.CreateOrUpdateAsync(WaitUntil.Completed, notificationTypeTopicName, cancellationToken);
+            return topic.Value;
+        }
+
+        /// <summary>
+        /// Edits the domain topic event subscription.
+        /// Changes are due to the new Azure SDK for EventGrid.
+        /// </summary>
+        /// <param name="topic"></param>
+        /// <param name="message"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>The domain topic event subscription resource</returns>
+        protected async Task<DomainTopicEventSubscriptionResource> EditDomainTopicEventSubscription(DomainTopicResource topic, SubscriptionRequestMessage message, CancellationToken cancellationToken = default)
+        {
+            EventGridSubscriptionData eventSubscriptionData = _eventSubscriptionConfiguration.SetEventSubscription(message);
+
+            ArmOperation<DomainTopicEventSubscriptionResource> eventSubscriptionResult = await topic.GetDomainTopicEventSubscriptions().CreateOrUpdateAsync(
+                          WaitUntil.Completed,
+                          message.SubscriptionId,
+                          eventSubscriptionData, cancellationToken);
+            return eventSubscriptionResult.Value;
         }
     }
 }

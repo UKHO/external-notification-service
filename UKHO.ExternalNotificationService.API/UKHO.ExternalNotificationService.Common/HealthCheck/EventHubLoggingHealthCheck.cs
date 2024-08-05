@@ -26,7 +26,7 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
             }
             else
             {
-                _logger.LogError(EventIds.EventHubLoggingIsUnhealthy.ToEventId(), healthCheckResult.Exception, "Event hub is unhealthy responded with error {Message}", healthCheckResult.Exception.Message);
+                _logger.LogError(EventIds.EventHubLoggingIsUnhealthy.ToEventId(), healthCheckResult.Exception, "Event hub is unhealthy responded with error {Message}", healthCheckResult.Exception?.Message);
             }
             return healthCheckResult;
         }

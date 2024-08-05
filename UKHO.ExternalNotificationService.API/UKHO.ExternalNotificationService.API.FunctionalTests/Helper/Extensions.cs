@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
@@ -16,8 +16,13 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         /// <returns></returns>
         public static async Task<T> ReadAsTypeAsync<T>(this HttpResponseMessage httpResponseMessage)
         {
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
             string bodyJson = await httpResponseMessage.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(bodyJson);
+            return JsonSerializer.Deserialize<T>(bodyJson,options);
         }
 
         public static void SetBearerToken(this HttpRequestMessage requestMessage, string accessToken)
