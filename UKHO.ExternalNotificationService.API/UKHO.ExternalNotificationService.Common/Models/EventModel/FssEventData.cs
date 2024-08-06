@@ -1,47 +1,66 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace UKHO.ExternalNotificationService.Common.Models.EventModel
 {
     public class FssEventData
     {
-        public string BatchId { get; set; }
-        public BatchLinks Links { get; set; }
-        public IEnumerable<Attribute> Attributes { get; set; }
-        public string BusinessUnit { get; set; }
+        [JsonPropertyName(name: "batchId")]
+        public string BatchId { get; set; } = string.Empty;
+        [JsonPropertyName(name: "links")]
+        public BatchLinks Links { get; set; } = new();
+        [JsonPropertyName(name: "attributes")]
+        public IEnumerable<Attribute> Attributes { get; set; } = [];
+        [JsonPropertyName(name: "businessUnit")]
+        public string BusinessUnit { get; set; } = string.Empty;
+        [JsonPropertyName(name: "batchPublishedDate")]
         public DateTime? BatchPublishedDate { get; set; }
-        public IEnumerable<File> Files { get; set; }
+        [JsonPropertyName(name: "files")]
+        public IEnumerable<File> Files { get; set; } = [];
     }
 
     public class Attribute
     {
-        public string Key { get; set; }
-        public string Value { get; set; }
+        [JsonPropertyName(name: "key")]
+        public string Key { get; set; } = string.Empty;
+        [JsonPropertyName(name: "value")]
+        public string Value { get; set; } = string.Empty;
     }
 
     public class BatchLinks
     {
-        public Link BatchDetails { get; set; }
-        public Link BatchStatus { get; set; }
+        [JsonPropertyName(name: "batchDetails")]
+        public Link BatchDetails { get; set; } = new();
+        [JsonPropertyName(name: "batchStatus")]
+        public Link BatchStatus { get; set; } = new();
     }
 
     public class Link
     {
-        public string Href { get; set; }
+        [JsonPropertyName(name: "href")]
+        public string Href { get; set; } = string.Empty;
     }
 
     public class File
     {
-        public string FileName { get; set; }
+        [JsonPropertyName(name: "fileName")]
+        public string FileName { get; set; } = string.Empty;
+        [JsonPropertyName(name: "fileSize")]
         public long FileSize { get; set; }
-        public string MIMEType { get; set; }
-        public string Hash { get; set; }
-        public IEnumerable<Attribute> Attributes { get; set; }
-        public FileLinks Links { get; set; }
+        [JsonPropertyName(name: "mimeType")]
+        public string MIMEType { get; set; } = string.Empty;
+        [JsonPropertyName(name: "hash")]
+        public string Hash { get; set; } = string.Empty;
+        [JsonPropertyName(name: "attributes")]
+        public IEnumerable<Attribute> Attributes { get; set; } = [];
+        [JsonPropertyName(name: "links")]
+        public FileLinks Links { get; set; } = new();
     }
 
     public class FileLinks
     {
-        public Link Get { get; set; }
+        [JsonPropertyName(name: "get")]
+        public Link Get { get; set; } = new();
     }
 }

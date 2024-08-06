@@ -5,8 +5,8 @@ namespace UKHO.ExternalNotificationService.Common.Models.Response
     [ExcludeFromCodeCoverage]
     public class Error
     {
-        public string Source { get; set; }
-        public string Description { get; set; }
+        public string Source { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
 
         public override string ToString()
         {

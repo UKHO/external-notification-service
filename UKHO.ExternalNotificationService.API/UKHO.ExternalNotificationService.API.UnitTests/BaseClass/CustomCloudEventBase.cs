@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using UKHO.ExternalNotificationService.Common.Models.EventModel;
 using UKHO.ExternalNotificationService.Common.Models.Request;
 using Attribute = UKHO.ExternalNotificationService.Common.Models.EventModel.Attribute;
@@ -9,6 +10,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.BaseClass
 {
     public static class CustomCloudEventBase
     {
+
         public static CustomCloudEvent GetCustomCloudEvent(string businessUnit = "AVCSData")
         {
             return new CustomCloudEvent
@@ -22,6 +24,20 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.BaseClass
                 Time = "2021-11-09T14:52:28+00:00"
             };
         }
+
+        public static CloudEventCandidate<T> GetCloudEventCandidate<T>(CustomCloudEvent customCloudEvent) where T : class
+        {
+            string data = JsonSerializer.Serialize(customCloudEvent.Data);
+            T eventData = JsonSerializer.Deserialize<T>(data)!;
+            return new CloudEventCandidate<T>
+            {
+                Subject = customCloudEvent.Subject,
+                DataContentType = customCloudEvent.DataContentType,
+                Data = eventData,
+                
+            };
+        }
+
 
         public static FssEventData GetFssEventData(string businessUnit = "AVCSData")
         {

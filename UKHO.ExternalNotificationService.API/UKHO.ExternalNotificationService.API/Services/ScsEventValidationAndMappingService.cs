@@ -1,8 +1,8 @@
 ﻿using Azure.Messaging;
 using FluentValidation.Results;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.API.Validation;
 using UKHO.ExternalNotificationService.Common.Configuration;
@@ -29,20 +29,18 @@ namespace UKHO.ExternalNotificationService.API.Services
             return _scsEventDataValidator.Validate(scsEventData);
         }
 
-        public CloudEvent ScsEventDataMapping(CustomCloudEvent customCloudEvent, string correlationId)
+        
+        public CloudEvent MapToCloudEvent(CloudEventCandidate<ScsEventData> candidate)
         {
-            string data = JsonConvert.SerializeObject(customCloudEvent.Data);
-            ScsEventData scsEventData = JsonConvert.DeserializeObject<ScsEventData>(data);
-
             CloudEvent cloudEvent = new(_scsDataMappingConfiguration.Value.Source,
                                         ScsDataMappingValueConstant.Type,
-                                        scsEventData)
+                                        candidate.Data)
             {
                 Time = DateTimeOffset.Parse(DateTime.UtcNow.ToRfc3339String()),
                 Id = Guid.NewGuid().ToString(),
-                Subject = customCloudEvent.Subject,
-                DataContentType = customCloudEvent.DataContentType,
-                DataSchema = customCloudEvent.DataSchema
+                Subject = candidate.Subject,
+                DataContentType = candidate.DataContentType,
+                DataSchema = candidate.DataSchema
             };
 
             return cloudEvent;

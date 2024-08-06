@@ -42,7 +42,7 @@ namespace UKHO.ExternalNotificationService.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddNewtonsoftJson();
+            services.AddControllers();
 
             var ensAuthConfiguration = new AzureADConfiguration();
             _configuration.Bind("EnsAuthConfiguration", ensAuthConfiguration);
@@ -137,7 +137,6 @@ namespace UKHO.ExternalNotificationService.API
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/health");
             });
-
             app.UseElasticApm(_configuration);
         }
 
@@ -149,7 +148,7 @@ namespace UKHO.ExternalNotificationService.API
 
             builder.AddEnvironmentVariables();
             IConfigurationRoot tempConfig = builder.Build();
-            string kvServiceUri = tempConfig["KeyVaultSettings:ServiceUri"];
+            string? kvServiceUri = tempConfig["KeyVaultSettings:ServiceUri"];
 
             if (!string.IsNullOrWhiteSpace(kvServiceUri))
             {
@@ -177,15 +176,15 @@ namespace UKHO.ExternalNotificationService.API
                         additionalValues["_System"] = eventHubLoggingConfiguration.Value.System;
                         additionalValues["_Service"] = eventHubLoggingConfiguration.Value.Service;
                         additionalValues["_NodeName"] = eventHubLoggingConfiguration.Value.NodeName;
-                        additionalValues["_RemoteIPAddress"] = httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
+                        additionalValues["_RemoteIPAddress"] = Convert.ToString(httpContextAccessor.HttpContext.Connection.RemoteIpAddress)!;
                         additionalValues["_User-Agent"] = httpContextAccessor.HttpContext.Request.Headers["User-Agent"].FirstOrDefault() ?? string.Empty;
                         additionalValues["_AssemblyVersion"] = Assembly.GetExecutingAssembly().GetCustomAttributes<AssemblyFileVersionAttribute>().Single().Version;
                         additionalValues["_X-Correlation-ID"] =
                             httpContextAccessor.HttpContext.Request.Headers?[CorrelationIdMiddleware.XCorrelationIdHeaderKey].FirstOrDefault() ?? string.Empty;
 
-                        if (httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+                        if (httpContextAccessor.HttpContext.User.Identity != null &&  httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
                         {
-                            additionalValues["_UserId"] = httpContextAccessor.HttpContext.User.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier");
+                            additionalValues["_UserId"] = httpContextAccessor.HttpContext.User.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier")!;
                         }
                     }
                 }

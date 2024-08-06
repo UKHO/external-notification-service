@@ -5,6 +5,6 @@ namespace UKHO.ExternalNotificationService.Common.Repository
 {
     public interface INotificationRepository
     {
-        ICollection<NotificationType> GetAllNotificationTypes();
+        ICollection<NotificationType>? GetAllNotificationTypes();
     }
 }

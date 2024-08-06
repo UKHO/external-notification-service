@@ -43,7 +43,7 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
                 }
                 else
                 {
-                    _logger.LogError(EventIds.AzureMessageQueueIsUnhealthy.ToEventId(), messageQueuesHealth.Exception, "Azure message queue is unhealthy with error {Message}", messageQueuesHealth.Result.Exception.Message);
+                    _logger.LogError(EventIds.AzureMessageQueueIsUnhealthy.ToEventId(), messageQueuesHealth.Exception, "Azure message queue is unhealthy with error {Message}", messageQueuesHealth.Result.Exception?.Message);
                     return HealthCheckResult.Unhealthy("Azure message queue is unhealthy", messageQueuesHealth.Exception);
                 }
             }

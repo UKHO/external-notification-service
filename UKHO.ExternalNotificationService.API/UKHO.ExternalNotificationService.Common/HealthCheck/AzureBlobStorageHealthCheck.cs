@@ -38,7 +38,7 @@ namespace UKHO.ExternalNotificationService.Common.HealthCheck
 
                 if (azureBlobStorageHealthStatus.Status == HealthStatus.Unhealthy)
                 {
-                    _logger.LogError(EventIds.AzureBlobStorageIsUnhealthy.ToEventId(), azureBlobStorageHealthStatus.Exception, "Azure blob storage is unhealthy with error {Message}", azureBlobStorageHealthStatus.Exception.Message);
+                    _logger.LogError(EventIds.AzureBlobStorageIsUnhealthy.ToEventId(), azureBlobStorageHealthStatus.Exception, "Azure blob storage is unhealthy with error {Message}", azureBlobStorageHealthStatus.Exception?.Message);
                     azureBlobStorageHealthStatus = HealthCheckResult.Unhealthy("Azure blob storage is unhealthy", azureBlobStorageHealthStatus.Exception);
                     return azureBlobStorageHealthStatus;
                 }

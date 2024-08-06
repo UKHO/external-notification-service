@@ -1,6 +1,7 @@
 ﻿using System;
+using Azure.ResourceManager.EventGrid;
+using Azure.ResourceManager.EventGrid.Models;
 using FakeItEasy;
-using Microsoft.Azure.Management.EventGrid.Models;
 using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using UKHO.ExternalNotificationService.Common.Configuration;
@@ -49,13 +50,13 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.Helpers
                 SubscriptionId = Guid.NewGuid().ToString(),
                 WebhookUrl = WebhookUrl
             };
-            EventSubscription result = _eventSubscriptionConfiguration.SetEventSubscription(subscriptionRequestMessage);
+            EventGridSubscriptionData result = _eventSubscriptionConfiguration.SetEventSubscription(subscriptionRequestMessage);
             Assert.That(result, Is.Not.Null);
-            Assert.That(result, Is.InstanceOf<EventSubscription>());
+            Assert.That(result, Is.InstanceOf<EventGridSubscriptionData>());
             Assert.That(result.Destination, Is.InstanceOf<EventSubscriptionDestination>());
-            Assert.That(WebhookUrl, Is.EqualTo(((WebHookEventSubscriptionDestination)result.Destination).EndpointUrl));
-            Assert.That(EventDeliverySchema.CloudEventSchemaV10, Is.EqualTo(result.EventDeliverySchema));
-            Assert.That(result.RetryPolicy, Is.InstanceOf<RetryPolicy>());
+            Assert.That(WebhookUrl, Is.EqualTo(((WebHookEventSubscriptionDestination)result.Destination).Endpoint));
+            Assert.That(EventDeliverySchema.CloudEventSchemaV1_0, Is.EqualTo(result.EventDeliverySchema));
+            Assert.That(result.RetryPolicy, Is.InstanceOf<EventSubscriptionRetryPolicy>());
             Assert.That(_fakeEventGridDomainConfig.Value.MaxDeliveryAttempts, Is.EqualTo(result.RetryPolicy.MaxDeliveryAttempts));
             Assert.That(_fakeEventGridDomainConfig.Value.EventTimeToLiveInMinutes, Is.EqualTo(result.RetryPolicy.EventTimeToLiveInMinutes));
             Assert.That(result.DeadLetterDestination, Is.InstanceOf<DeadLetterDestination>());

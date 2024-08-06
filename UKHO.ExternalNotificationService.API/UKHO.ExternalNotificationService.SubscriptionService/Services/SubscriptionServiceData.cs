@@ -1,4 +1,4 @@
-﻿using Microsoft.Azure.Management.EventGrid.Models;
+﻿using Azure.ResourceManager.EventGrid;
 using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,16 +19,29 @@ namespace UKHO.ExternalNotificationService.SubscriptionService.Services
             _logger = logger;
         }
 
-        public async Task<EventSubscription> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionMessage, CancellationToken cancellationToken)
+        /// <summary>
+        /// A Wrapper method to create or update a subscription, using the AzureEventGridDomainService.
+        /// </summary>
+        /// <param name="subscriptionRequestMessage"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>The domain topic event subscription resource.</returns>
+        public async Task<DomainTopicEventSubscriptionResource> CreateOrUpdateSubscription(SubscriptionRequestMessage subscriptionMessage, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation(EventIds.CreateSubscriptionServiceStart.ToEventId(),
                     "Create Subscription service started for _D365-Correlation-ID:{CorrelationId} and _X-Correlation-ID:{CorrelationId}", subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
-            EventSubscription response = await _azureEventGridDomainService.CreateOrUpdateSubscription(subscriptionMessage, cancellationToken);
+            DomainTopicEventSubscriptionResource response = await _azureEventGridDomainService.CreateOrUpdateSubscription(subscriptionMessage, cancellationToken);
             _logger.LogInformation(EventIds.CreateSubscriptionServiceCompleted.ToEventId(),
                     "Create Subscription service completed for _D365-Correlation-ID:{CorrelationId} and _X-Correlation-ID:{CorrelationId}", subscriptionMessage.D365CorrelationId, subscriptionMessage.CorrelationId);
             return response;
         }
 
+        /// <summary>
+        /// A Wrapper method to delete a subscription, using the AzureEventGridDomainService.
+        /// Changes are due to the new Azure SDK for EventGrid.
+        /// </summary>
+        /// <param name="subscriptionRequestMessage"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task DeleteSubscription(SubscriptionRequestMessage subscriptionMessage, CancellationToken cancellationToken)
         {
             _logger.LogInformation(EventIds.DeleteSubscriptionServiceEventStart.ToEventId(),

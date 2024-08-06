@@ -84,17 +84,17 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             CloudEvent cloudEvent = new("test", "test", new object());
 
             A.CallTo(() => _fakeScsEventValidationAndMappingService.ValidateScsEventData(A<ScsEventData>.Ignored)).Returns(new ValidationResult());
+            
+            A.CallTo(() => _fakeScsEventValidationAndMappingService.MapToCloudEvent(A<CloudEventCandidate<ScsEventData>>.Ignored)).Returns(cloudEvent);
 
-            A.CallTo(() => _fakeScsEventValidationAndMappingService.ScsEventDataMapping(A<CustomCloudEvent>.Ignored, A<string>.Ignored)).Returns(cloudEvent);
-
-            A.CallTo(() => _fakeAzureEventGridDomainService.JsonDeserialize<ScsEventData>(A<object>.Ignored)).Returns(_fakeScsEventData);
+            A.CallTo(() => _fakeAzureEventGridDomainService.ConvertObjectTo<ScsEventData>(A<object>.Ignored)).Returns(_fakeScsEventData);
 
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken));
 
             ExternalNotificationServiceProcessResponse result = await _scsEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
 
             Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
-            Assert.That(result.Errors, Is.Null);
+            Assert.That(result.Errors, Is.Empty);
         }
 
         [Test]
@@ -113,9 +113,9 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             A.CallTo(() => _fakeScsEventValidationAndMappingService.ValidateScsEventData(A<ScsEventData>.Ignored)).Returns(new ValidationResult());
 
-            A.CallTo(() => _fakeScsEventValidationAndMappingService.ScsEventDataMapping(A<CustomCloudEvent>.Ignored, A<string>.Ignored)).Returns(cloudEvent);
+            A.CallTo(() => _fakeScsEventValidationAndMappingService.MapToCloudEvent(A<CloudEventCandidate<ScsEventData>>.Ignored)).Returns(cloudEvent);
 
-            A.CallTo(() => _fakeAzureEventGridDomainService.JsonDeserialize<ScsEventData>(A<object>.Ignored)).Returns(_fakeScsEventData);
+            A.CallTo(() => _fakeAzureEventGridDomainService.ConvertObjectTo<ScsEventData>(A<object>.Ignored)).Returns(_fakeScsEventData);
 
             IReturnValueArgumentValidationConfiguration<Task> callToPublishEventAsync = A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken));
 
@@ -130,7 +130,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             callToPublishEventAsync.MustHaveHappened();
 
             Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
-            Assert.That(result.Errors, Is.Null);
+            Assert.That(result.Errors, Is.Empty);
 
             Assert.That(stopwatch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(expectedDelay * 1000));
         }
@@ -150,5 +150,6 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             Assert.That(expectedDelay * 1000, Is.EqualTo(result));
         }
+        
     }
 }
