@@ -150,5 +150,6 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             Assert.That(expectedDelay * 1000, Is.EqualTo(result));
         }
+        
     }
 }
