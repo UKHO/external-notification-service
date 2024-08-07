@@ -197,7 +197,7 @@ stages:
         workspace:
           clean: all
         variables:
-          - group: "ENS-QA-Variables"
+          - group: "ENS-QA-TF-Variables"
           - group: "ENS-QA-Variables"
           - group: "ENS-QA-APIM-SOLAS-Variables"
         strategy:
@@ -360,7 +360,7 @@ stages:
                 - template: Deployment/templates/continuous-deployment-apim.yml
                   parameters:
                     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
+                    AzureSubscription: "UKHO-APIM-SOLAS-Live"
                     TerraformKeyVault: $(APIM_SOLAS_TERRAFORM_KEYVAULT)
                     APIMResourceGroup: $(APIM_SOLAS_RESOURCE_GROUP_NAME)
                     APIMServiceInstance: $(APIM_SOLAS_SERVICE_NAME)
