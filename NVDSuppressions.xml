@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
-  
   <suppress>
     <notes>
       <![CDATA[
@@ -35,7 +34,6 @@
     <cpe>cpe:/a:microsoft:azure_sdk_for_.net</cpe>
     <cve>CVE-2023-36052</cve>
   </suppress>
-  
   <suppress>
     <notes>
       <![CDATA[
@@ -234,7 +232,6 @@
     <cpe>cpe:/a:microsoft:azure_identity_sdk</cpe>
     <cve>CVE-2023-36052</cve>
   </suppress>
-  
   <suppress>
     <notes>
       <![CDATA[
@@ -370,16 +367,6 @@
   <suppress>
     <notes>
       <![CDATA[
-   file name: System.Threading.Tasks.Dataflow:4.8.0
-   file name: System.Threading.Tasks.Dataflow:4.9.0
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:nuget/System\.Threading\.Tasks\.Dataflow@.*$</packageUrl>
-    <cve>CVE-2022-39349</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
    file name: System.Threading.Tasks.Extensions.dll
    ]]>
     </notes>
@@ -455,7 +442,6 @@
     <cpe>cpe:/a:microsoft:web_applications</cpe>
     <cve>CVE-2017-11826</cve>
   </suppress>
-  
   <suppress>
     <notes>
       <![CDATA[
@@ -491,10 +477,12 @@
     <cve>CVE-2021-1721</cve>
   </suppress>
   <suppress>
-   <notes><![CDATA[
+    <notes>
+      <![CDATA[
    file name: Microsoft.AspNetCore.Hosting.dll
-   ]]></notes>
-   <packageUrl regex="true">^pkg:generic/Microsoft\.AspNetCore\.Hosting@.*$</packageUrl>
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.AspNetCore\.Hosting@.*$</packageUrl>
     <cpe>cpe:/a:microsoft:web_applications</cpe>
     <cve>CVE-2017-11826</cve>
   </suppress>
@@ -585,26 +573,6 @@
   <suppress>
     <notes>
       <![CDATA[
-   file name: Microsoft.Extensions.Hosting.Abstractions.dll
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Microsoft\.Extensions\.Hosting\.Abstractions@.*$</packageUrl>
-    <cpe>cpe:/a:microsoft:.net_core</cpe>
-    <cve>CVE-2021-26423</cve>
-    <cve>CVE-2021-1721</cve>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
-   file name: Microsoft.Net.Http.Headers.dll
-   ]]>
-    </notes>
-    <packageUrl regex="true">^pkg:generic/Microsoft\.Net\.Http\.Headers@.*$</packageUrl>
-    <cpe>cpe:/a:microsoft:.net_core</cpe>
-  </suppress>
-  <suppress>
-    <notes>
-      <![CDATA[
    file name: System.Threading.Tasks.Dataflow.dll
    ]]>
     </notes>
@@ -613,5 +581,4 @@
     <cve>CVE-2020-22475</cve>
     <cve>CVE-2022-39349</cve>
   </suppress>
-  
 </suppressions>
