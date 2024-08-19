@@ -113,8 +113,8 @@ namespace UKHO.ExternalNotificationService.API
             services.AddHealthChecks()
                 .AddCheck<EventHubLoggingHealthCheck>("EventHubLoggingHealthCheck")
                 .AddCheck<AzureBlobStorageHealthCheck>("AzureBlobStorageHealthCheck")
-                .AddCheck<AzureMessageQueueHealthCheck>("AzureMessageQueueHealthCheck")
-                .AddCheck<AzureWebJobHealthCheck>("AzureWebJobsHealthCheck");
+                .AddCheck<AzureMessageQueueHealthCheck>("AzureMessageQueueHealthCheck");
+                //.AddCheck<AzureWebJobHealthCheck>("AzureWebJobsHealthCheck");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
