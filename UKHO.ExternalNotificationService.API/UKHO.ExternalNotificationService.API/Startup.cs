@@ -26,6 +26,10 @@ using UKHO.ExternalNotificationService.Common.Repository;
 using UKHO.ExternalNotificationService.Common.Storage;
 using UKHO.Logging.EventHubLogProvider;
 using Elastic.Apm.AspNetCore;
+using Elastic.Clients.Elasticsearch;
+using Elastic.Transport;
+using UKHO.ExternalNotificationService.API.Extensions;
+using System.Configuration;
 
 namespace UKHO.ExternalNotificationService.API
 {
@@ -69,6 +73,7 @@ namespace UKHO.ExternalNotificationService.API
             services.Configure<FssDataMappingConfiguration>(_configuration.GetSection("FssDataMappingConfiguration"));
             services.Configure<ScsDataMappingConfiguration>(_configuration.GetSection("ScsDataMappingConfiguration"));
             services.Configure<EventProcessorConfiguration>(_configuration.GetSection("EventProcessorConfiguration"));
+            services.Configure<ElasticApmConfiguration>(_configuration.GetSection("ElasticAPM"));
 
             services.AddApplicationInsightsTelemetry();
             services.AddLogging(loggingBuilder =>
@@ -114,6 +119,11 @@ namespace UKHO.ExternalNotificationService.API
                 .AddCheck<AzureBlobStorageHealthCheck>("AzureBlobStorageHealthCheck")
                 .AddCheck<AzureMessageQueueHealthCheck>("AzureMessageQueueHealthCheck")
                 .AddCheck<AzureWebJobHealthCheck>("AzureWebJobsHealthCheck");
+
+
+            services.AddElasticSearchClient(_configuration);
+            services.AddScoped<IAddsMonitoringService, AddsElasticMonitoringService>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
