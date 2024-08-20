@@ -11,6 +11,12 @@ parameters:
     type: boolean
     default: false
 
+  - name: TestIatandPreProd
+    displayName: "Test IAT and PreProd"
+    type: boolean
+    default: false
+
+
 trigger:
   - main
   - release/*
@@ -69,53 +75,33 @@ stages:
         DisableDependencyCheck: ${{ parameters.DisableDependencyCheck }}
         DotNetVersion: '8.0.x'
 
-  # - stage: Devdeploy
-  #   dependsOn: 
-  #   - BuildTestPublish
-  #   displayName: "Devdeploy (inc terraform, webapp deploy)"
-  #   jobs:
-  #   - template: Deployment/templates/deploy-solas-apim.yml
-  #     parameters:
-  #       ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-  #       AzureEnvironment: "Ens-Dev"
-  #       ShortName: "Dev"
-  #       Container: ${{variables.Container}}
-  #   - template: Deployment/templates/app-deploy.yml
-  #     parameters:
-  #       ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-  #       AzureEnvironment: "Ens-Dev"
-  #       ShortName: "Dev"
-  #       ApimShortName: "Dev"
-  #       AzureSubscriptionVersion: "Dev - A.008.02"
-  #       RunFunctionalTests: true
-  #       Container: ${{variables.Container}}
+  - stage: Devdeploy
+    dependsOn: 
+    - BuildTestPublish
+    displayName: "Devdeploy (inc terraform, webapp deploy)"
+    jobs:
+    - template: Deployment/templates/deploy-solas-apim.yml
+      parameters:
+        ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+        AzureEnvironment: "Ens-Dev"
+        ShortName: "Dev"
+        Container: ${{variables.Container}}
+    - template: Deployment/templates/app-deploy.yml
+      parameters:
+        ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+        AzureEnvironment: "Ens-Dev"
+        ShortName: "Dev"
+        ApimShortName: "Dev"
+        AzureSubscriptionVersion: "Dev - A.008.02"
+        RunFunctionalTests: true
+        Container: ${{variables.Container}}
 
-  # - stage: IATvNextDeploy
-  #   dependsOn:
-  #   - DevDeploy
-  #   displayName: "IATvNextDeploy (inc terraform, webapp deploy)"
-  #   condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/develop'),startsWith(variables['Build.SourceBranch'], 'refs/heads/dev/')))
-  #   jobs:
-  #   - template: Deployment/templates/deploy-solas-apim.yml
-  #     parameters:
-  #       ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-  #       AzureEnvironment: "Ens-IATvNext"
-  #       ShortName: "IATvNext"
-  #       Container: ${{variables.Container}}
-  #   - template: Deployment/templates/app-deploy.yml
-  #     parameters:
-  #       ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-  #       AzureEnvironment: "Ens-IATvNext"
-  #       ShortName: "IATvNext"
-  #       ApimShortName: "Dev"
-  #       AzureSubscriptionVersion: "vNext IAT - A.011.08"
-  #       RunFunctionalTests: false
-  #       Container: ${{variables.Container}}
 
   - stage: IATDeploy
-    # dependsOn:
-    # - IATvNextDeploy
+    dependsOn:
+    - DevDeploy
     displayName: "IATDeploy (inc terraform, webapp deploy)"
+    condition: eq('${{ parameters.TestIatandPreProd }}', true) 
     # condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/develop'),startsWith(variables['Build.SourceBranch'], 'refs/heads/dev/')))
     jobs:
     - template: Deployment/templates/deploy-solas-apim.yml
@@ -135,9 +121,10 @@ stages:
         Container: ${{variables.Container}}
 
   - stage: PreProdDeploy
-    # dependsOn:
-    # - IATDeploy
+    dependsOn:
+    - IATDeploy
     displayName: "PreProdDeploy (inc terraform, webapp deploy)"
+    condition: eq('${{ parameters.TestIatandPreProd }}', true) 
     # condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/develop'),startsWith(variables['Build.SourceBranch'], 'refs/heads/dev/')))
     jobs:
     - template: Deployment/templates/deploy-solas-apim.yml
@@ -156,36 +143,56 @@ stages:
         RunFunctionalTests: false
         Container: ${{variables.Container}}      
   
-  
-  # - stage: E2EvNextDeploy
-  #   dependsOn:
-  #   - IATvNextDeploy
-  #   displayName: E2EvNextDeploy (inc terraform, webapp deploy)
-  #   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
-  #   jobs:
-  #   - template: Deployment/templates/deploy-solas-apim.yml
-  #     parameters:
-  #       ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-  #       AzureEnvironment: "Ens-E2EvNext"
-  #       ShortName: "E2EvNext"
-  #       Container: ${{variables.Container}}
-  #   - template: Deployment/templates/app-deploy.yml
-  #     parameters:
-  #       ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-  #       AzureEnvironment: "Ens-E2EvNext"
-  #       ShortName: "E2EvNext"
-  #       ApimShortName: "Dev"
-  #       AzureSubscriptionVersion: "vNext E2E - A.011.08"
-  #       RunFunctionalTests: false
-  #       Container: ${{variables.Container}}
-      
 
+  - stage: IATvNextDeploy
+    dependsOn:
+    - DevDeploy
+    displayName: "IATvNextDeploy (inc terraform, webapp deploy)"
+    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/develop'),startsWith(variables['Build.SourceBranch'], 'refs/heads/dev/')))
+    jobs:
+    - template: Deployment/templates/deploy-solas-apim.yml
+      parameters:
+        ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+        AzureEnvironment: "Ens-IATvNext"
+        ShortName: "IATvNext"
+        Container: ${{variables.Container}}
+    - template: Deployment/templates/app-deploy.yml
+      parameters:
+        ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+        AzureEnvironment: "Ens-IATvNext"
+        ShortName: "IATvNext"
+        ApimShortName: "Dev"
+        AzureSubscriptionVersion: "vNext IAT - A.011.08"
+        RunFunctionalTests: false
+        Container: ${{variables.Container}}
+
+  
+  - stage: E2EvNextDeploy
+    dependsOn:
+    - IATvNextDeploy
+    displayName: E2EvNextDeploy (inc terraform, webapp deploy)
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+    jobs:
+    - template: Deployment/templates/deploy-solas-apim.yml
+      parameters:
+        ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+        AzureEnvironment: "Ens-E2EvNext"
+        ShortName: "E2EvNext"
+        Container: ${{variables.Container}}
+    - template: Deployment/templates/app-deploy.yml
+      parameters:
+        ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+        AzureEnvironment: "Ens-E2EvNext"
+        ShortName: "E2EvNext"
+        ApimShortName: "Dev"
+        AzureSubscriptionVersion: "vNext E2E - A.011.08"
+        RunFunctionalTests: false
+        Container: ${{variables.Container}}
       
 
   - stage: QAdeploy
     dependsOn:
-#      - DevDeploy
-      - PreProdDeploy 
+    - DevDeploy
     displayName: QAdeploy (inc terraform, webapp deploy)
     condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
