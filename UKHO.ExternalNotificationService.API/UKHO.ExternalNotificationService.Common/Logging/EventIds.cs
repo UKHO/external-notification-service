@@ -264,6 +264,22 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// 900065 -  File share service event data mapping configuration error.
         /// </summary>
         FSSEventDataMappingConfigurationError = 900065,
+        /// <summary>
+        /// 900066 -  Elasticsearch Client is not configured.
+        /// </summary>
+        ElasticsearchClientNotConfigured = 900066,
+        /// <summary>
+        /// 900067 -  Stop ADDS Elastic Monitoring Process Start.
+        /// </summary>
+        StopAddsElasticMonitoringProcessStart = 900067,
+        /// <summary>
+        /// 900068 -  Stop ADDS Elastic Monitoring Process completed.
+        /// </summary>
+        StopAddsElasticMonitoringProcessCompleted = 900068,
+        /// <summary>
+        /// 900069 -  Stop ADDS Elastic Monitoring Process error.
+        /// </summary>
+        StopAddsElasticMonitoringProcessError = 900069
     }
 
     public static class EventIdExtensions
