@@ -18,7 +18,10 @@ resource "azurerm_windows_web_app" "webapp_service" {
   tags                = var.tags
 
   site_config {
-    windows_fx_version  =   "DOTNET|8.0"
+    application_stack {
+      current_stack = "dotnet"
+      dotnet_version = "v8.0"
+    }
     
     always_on  = true
     ftps_state = "Disabled"
@@ -58,7 +61,10 @@ resource "azurerm_windows_web_app_slot" "staging" {
   tags           = azurerm_windows_web_app.webapp_service.tags
 
   site_config {
-    windows_fx_version  =   "DOTNET|8.0"
+    application_stack {
+      current_stack = "dotnet"
+      dotnet_version = "v8.0"
+    }
     
     always_on  = true
     ftps_state = "Disabled"
@@ -97,7 +103,10 @@ resource "azurerm_windows_web_app" "stub_webapp_service" {
   tags                = var.tags
 
   site_config {
-    windows_fx_version  =   "DOTNET|8.0"
+    application_stack {
+      current_stack = "dotnet"
+      dotnet_version = "v8.0"
+    }
 
     always_on  = true
     ftps_state = "Disabled"
