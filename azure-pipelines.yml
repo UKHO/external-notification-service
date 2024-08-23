@@ -11,11 +11,6 @@ parameters:
     type: boolean
     default: false
 
-  - name: TestIatandPreProd
-    displayName: "Test IAT and PreProd"
-    type: boolean
-    default: false
-
 
 trigger:
   - main
@@ -80,7 +75,6 @@ stages:
     dependsOn: 
     - BuildTestPublish
     displayName: "Devdeploy (inc terraform, webapp deploy)"
-    condition: eq('${{ parameters.TestIatandPreProd }}', false)
     jobs:
     - template: Deployment/templates/deploy-solas-apim.yml
       parameters:
@@ -103,8 +97,9 @@ stages:
     dependsOn:
     - DevDeploy
     displayName: "IATDeploy (inc terraform, webapp deploy)"
-    condition: eq('${{ parameters.TestIatandPreProd }}', true) 
-    # condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/develop'),startsWith(variables['Build.SourceBranch'], 'refs/heads/dev/')))
+    ## The final condition may be
+    ## condition: and(succeeded(), or(!eq(variables['Build.SourceBranch'], 'refs/heads/develop'),!startsWith(variables['Build.SourceBranch'], 'refs/heads/dev/')))
+    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/develop'),startsWith(variables['Build.SourceBranch'], 'refs/heads/dev/')))
     jobs:
     - template: Deployment/templates/deploy-solas-apim.yml
       parameters:
@@ -127,8 +122,9 @@ stages:
     dependsOn:
     - IATDeploy
     displayName: "PreProdDeploy (inc terraform, webapp deploy)"
-    condition: eq('${{ parameters.TestIatandPreProd }}', true) 
-    # condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/develop'),startsWith(variables['Build.SourceBranch'], 'refs/heads/dev/')))
+    ## The final condition will be the same as QA
+    ## condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
+    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/develop'),startsWith(variables['Build.SourceBranch'], 'refs/heads/dev/')))
     jobs:
     - template: Deployment/templates/deploy-solas-apim.yml
       parameters:
@@ -151,8 +147,7 @@ stages:
     dependsOn:
     - DevDeploy
     displayName: "IATvNextDeploy (inc terraform, webapp deploy)"
-    condition: eq('${{ parameters.TestIatandPreProd }}', false)
-    ##condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/develop'),startsWith(variables['Build.SourceBranch'], 'refs/heads/dev/')))
+    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/develop'),startsWith(variables['Build.SourceBranch'], 'refs/heads/dev/')))
     jobs:
     - template: Deployment/templates/deploy-solas-apim.yml
       parameters:

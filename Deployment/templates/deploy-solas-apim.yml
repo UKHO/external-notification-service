@@ -16,13 +16,12 @@ jobs:
 # Deploy SOLAS APIM Start
 - deployment: ${{ upper(parameters.ShortName) }}DeployApimSolas
   displayName: "${{ upper(parameters.ShortName) }} - deploy SOLAS APIM"
-  environment: ${{ parameters.AzureEnvironment }}   #"Ens-Dev"
+  environment: ${{ parameters.AzureEnvironment }}  
   pool: $(DeploymentPool)
   container: ${{ parameters.Container }}
   workspace:
     clean: all
   variables:
-    #- template: Deployment/templates/var/dev-groups.yml
     - template: var/${{ lower(parameters.ShortName) }}-groups.yml
   strategy:
     runOnce:
