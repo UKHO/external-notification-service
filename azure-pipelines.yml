@@ -98,7 +98,7 @@ stages:
     - DevDeploy
     displayName: "IATDeploy (inc terraform, webapp deploy)"
     ## The final condition may be
-    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),!startsWith(variables['Build.SourceBranch'], 'refs/heads/dev/')))
+    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),not(startsWith(variables['Build.SourceBranch'], 'refs/heads/dev/'))))
     ## condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/develop'),startsWith(variables['Build.SourceBranch'], 'refs/heads/dev/')))
     jobs:
     - template: Deployment/templates/deploy-solas-apim.yml
