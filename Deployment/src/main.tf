@@ -44,6 +44,7 @@ module "webapp_service" {
   source                    = "./Modules/Webapp"
   name                      = local.web_app_name
   resource_group_name       = azurerm_resource_group.rg.name
+  resource_group_id         = azurerm_resource_group.rg.id
   subnet_id                 = data.azurerm_subnet.main_subnet.id
   agent_id                  = data.azurerm_subnet.agent_subnet.id
   env_name                  = local.env_name

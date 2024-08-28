@@ -120,6 +120,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Webapp", "Webapp", "{FE4ABAA3-64F9-4F33-9132-A12285B72802}"
 	ProjectSection(SolutionItems) = preProject
 		..\Deployment\src\Modules\Webapp\main.tf = ..\Deployment\src\Modules\Webapp\main.tf
+		..\Deployment\src\Modules\Webapp\migration.tf = ..\Deployment\src\Modules\Webapp\migration.tf
 		..\Deployment\src\Modules\Webapp\outputs.tf = ..\Deployment\src\Modules\Webapp\outputs.tf
 		..\Deployment\src\Modules\Webapp\variables.tf = ..\Deployment\src\Modules\Webapp\variables.tf
 	EndProjectSection
