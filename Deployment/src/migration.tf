@@ -13,7 +13,7 @@ removed {
 
 import {
   to = module.webapp_service.azurerm_windows_web_app.webapp_service
-  id = "${azurerm_resource_group.rg.id}/providers/Microsoft.Web/sites/${var.name}"
+  id = "${azurerm_resource_group.rg.id}/providers/Microsoft.Web/sites/${local.web_app_name}"
 }
 
 # staging
@@ -27,7 +27,7 @@ removed {
 
 import {
   to = module.webapp_service.azurerm_windows_web_app_slot.staging
-  id = "${azurerm_resource_group.rg.id}/providers/Microsoft.Web/sites/${var.name}/slots/staging"
+  id = "${azurerm_resource_group.rg.id}/providers/Microsoft.Web/sites/${local.web_app_name}/slots/staging"
 }
 
 # stub (non-live only)
@@ -41,12 +41,12 @@ removed {
 
 locals {
   stubs = (
-    var.env_name == "live" ? [] : [0]
+    local.env_name == "live" ? [] : [0]
   )
 }
 
 import {
   for_each = local.stubs
   to    = module.webapp_service.azurerm_windows_web_app.stub_webapp_service[each.key]
-  id    = "${azurerm_resource_group.rg.id}/providers/Microsoft.Web/sites/${var.name}-stub"
+  id    = "${azurerm_resource_group.rg.id}/providers/Microsoft.Web/sites/${local.web_app_name}-stub"
 }
