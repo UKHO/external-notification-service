@@ -93,7 +93,7 @@ resource "azurerm_windows_web_app_slot" "staging" {
 }
 
 resource "azurerm_windows_web_app" "stub_webapp_service" {
-  count               = var.env_name == "live" ? 0 : 1
+  count               = var.deploy_stub ? 1 : 0
   name                = "${var.name}-stub"
   location            = var.location
   resource_group_name = var.resource_group_name

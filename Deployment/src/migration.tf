@@ -55,7 +55,7 @@ removed {
 
 locals {
   stubs = (
-    local.env_name == "live" ? [] : [0]
+    local.deploy_stub ? [0] : []
   )
 }
 
