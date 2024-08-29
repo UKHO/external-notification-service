@@ -11,11 +11,12 @@ resource "azurerm_app_service_plan" "app_service_plan" {
 }
 
 resource "azurerm_windows_web_app" "webapp_service" {
-  name                = var.name
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  service_plan_id     = azurerm_app_service_plan.app_service_plan.id
-  tags                = var.tags
+  name                      = var.name
+  location                  = var.location
+  resource_group_name       = var.resource_group_name
+  service_plan_id           = azurerm_app_service_plan.app_service_plan.id
+  tags                      = var.tags
+  virtual_network_subnet_id = var.subnet_id
 
   site_config {
     application_stack {
@@ -56,9 +57,10 @@ resource "azurerm_windows_web_app" "webapp_service" {
 }
 
 resource "azurerm_windows_web_app_slot" "staging" {
-  name           = "staging"
-  app_service_id = azurerm_windows_web_app.webapp_service.id
-  tags           = azurerm_windows_web_app.webapp_service.tags
+  name                      = "staging"
+  app_service_id            = azurerm_windows_web_app.webapp_service.id
+  tags                      = azurerm_windows_web_app.webapp_service.tags
+  virtual_network_subnet_id = var.subnet_id
 
   site_config {
     application_stack {
@@ -119,15 +121,4 @@ resource "azurerm_windows_web_app" "stub_webapp_service" {
   }
 
   https_only = true
-}
-
-resource "azurerm_app_service_virtual_network_swift_connection" "webapp_vnet_integration" {
-  app_service_id = azurerm_windows_web_app.webapp_service.id
-  subnet_id      = var.subnet_id
-}
-
-resource "azurerm_app_service_slot_virtual_network_swift_connection" "slot_vnet_integration" {
-  app_service_id = azurerm_windows_web_app.webapp_service.id
-  subnet_id      = var.subnet_id
-  slot_name      = azurerm_windows_web_app_slot.staging.name
 }
