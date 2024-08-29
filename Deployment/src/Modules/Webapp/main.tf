@@ -1,12 +1,8 @@
-resource "azurerm_app_service_plan" "app_service_plan" {
+resource "azurerm_service_plan" "app_service_plan" {
   name                = "${var.name}-asp"
   location            = var.location
   resource_group_name = var.resource_group_name
-  
-  sku {
-	tier = var.app_service_sku.tier
-	size = var.app_service_sku.size
-  }
+  sku_name            = var.app_service_sku.size
   tags                = var.tags
 }
 
@@ -14,7 +10,7 @@ resource "azurerm_windows_web_app" "webapp_service" {
   name                      = var.name
   location                  = var.location
   resource_group_name       = var.resource_group_name
-  service_plan_id           = azurerm_app_service_plan.app_service_plan.id
+  service_plan_id           = azurerm_service_plan.app_service_plan.id
   tags                      = var.tags
   virtual_network_subnet_id = var.subnet_id
 
@@ -101,7 +97,7 @@ resource "azurerm_windows_web_app" "stub_webapp_service" {
   name                = "${var.name}-stub"
   location            = var.location
   resource_group_name = var.resource_group_name
-  service_plan_id     = azurerm_app_service_plan.app_service_plan.id
+  service_plan_id     = azurerm_service_plan.app_service_plan.id
   tags                = var.tags
 
   site_config {
