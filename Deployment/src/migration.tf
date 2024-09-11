@@ -91,3 +91,17 @@ import {
   to = module.webapp_service.azurerm_app_service_slot_virtual_network_swift_connection.slot_vnet_integration2
   id = "${azurerm_resource_group.rg.id}/providers/Microsoft.Web/sites/${local.web_app_name}/slots/staging/config/virtualNetwork"
 }
+
+# dashboard
+removed {
+  from = module.azure-dashboard.azurerm_dashboard.azure-dashboard
+
+  lifecycle {
+    destroy = false
+  }
+}
+
+import {
+  to = module.azure-dashboard.azurerm_portal_dashboard.azure-dashboard
+  id = "${azurerm_resource_group.rg.id}/providers/Microsoft.Portal/dashboards/ENS-${local.env_name}-monitoring-dashboard"
+}
