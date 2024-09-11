@@ -64,3 +64,30 @@ import {
   to    = module.webapp_service.azurerm_windows_web_app.stub_webapp_service[each.key]
   id    = "${azurerm_resource_group.rg.id}/providers/Microsoft.Web/sites/${local.web_app_name}-stub"
 }
+
+# swift
+removed {
+  from = module.webapp_service.azurerm_app_service_virtual_network_swift_connection.webapp_vnet_integration
+
+  lifecycle {
+    destroy = false
+  }
+}
+
+removed {
+  from = module.webapp_service.azurerm_app_service_slot_virtual_network_swift_connection.slot_vnet_integration
+
+  lifecycle {
+    destroy = false
+  }
+}
+
+import {
+  to = module.webapp_service.azurerm_app_service_virtual_network_swift_connection.webapp_vnet_integration
+  id = "${azurerm_resource_group.rg.id}/providers/Microsoft.Web/sites/${local.web_app_name}/config/virtualNetwork"
+}
+
+import {
+  to = module.webapp_service.azurerm_app_service_slot_virtual_network_swift_connection.slot_vnet_integration
+  id = "${azurerm_resource_group.rg.id}/providers/Microsoft.Web/sites/${local.web_app_name}/slots/staging/config/virtualNetwork"
+}
