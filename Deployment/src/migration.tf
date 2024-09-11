@@ -83,11 +83,11 @@ removed {
 }
 
 import {
-  to = module.webapp_service.azurerm_app_service_virtual_network_swift_connection.webapp_vnet_integration
+  to = module.webapp_service.azurerm_app_service_virtual_network_swift_connection.webapp_vnet_integration2
   id = "${azurerm_resource_group.rg.id}/providers/Microsoft.Web/sites/${local.web_app_name}/config/virtualNetwork"
 }
 
 import {
-  to = module.webapp_service.azurerm_app_service_slot_virtual_network_swift_connection.slot_vnet_integration
+  to = module.webapp_service.azurerm_app_service_slot_virtual_network_swift_connection.slot_vnet_integration2
   id = "${azurerm_resource_group.rg.id}/providers/Microsoft.Web/sites/${local.web_app_name}/slots/staging/config/virtualNetwork"
 }
