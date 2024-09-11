@@ -118,12 +118,12 @@ resource "azurerm_windows_web_app" "stub_webapp_service" {
   https_only = true
 }
 
-resource "azurerm_app_service_virtual_network_swift_connection" "webapp_vnet_integration2" {
+resource "azurerm_app_service_virtual_network_swift_connection" "webapp_vnet_swift_connection" {
   app_service_id = azurerm_windows_web_app.webapp_service.id
   subnet_id      = var.subnet_id
 }
 
-resource "azurerm_app_service_slot_virtual_network_swift_connection" "slot_vnet_integration2" {
+resource "azurerm_app_service_slot_virtual_network_swift_connection" "webapp_slot_vnet_swift_connection" {
   app_service_id = azurerm_windows_web_app.webapp_service.id
   subnet_id      = var.subnet_id
   slot_name      = azurerm_windows_web_app_slot.staging.name
