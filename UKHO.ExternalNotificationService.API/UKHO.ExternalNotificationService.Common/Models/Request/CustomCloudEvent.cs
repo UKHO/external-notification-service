@@ -7,19 +7,19 @@ namespace UKHO.ExternalNotificationService.Common.Models.Request
     public class CustomCloudEvent
     {
         [JsonPropertyName(name: "id")]
-        public string Id { get; set; } = string.Empty;
+        public string? Id { get; set; } 
         [JsonPropertyName(name: "type")]
-        public string Type { get; set; } = string.Empty;
+        public string? Type { get; set; }
         [JsonPropertyName(name: "time")]
-        public string Time { get; set; } = string.Empty;
+        public string? Time { get; set; } 
         [JsonPropertyName(name: "dataContentType")]
-        public string DataContentType { get; set; } = string.Empty;
+        public string? DataContentType { get; set; } 
         [JsonPropertyName(name: "dataSchema")]
-        public string DataSchema { get; set; } = string.Empty;
+        public string? DataSchema { get; set; } 
         [JsonPropertyName(name: "subject")]
-        public string Subject { get; set; } = string.Empty;
+        public string? Subject { get; set; } 
         [JsonPropertyName(name: "source")]
-        public string Source { get; set; } = string.Empty;
+        public string? Source { get; set; } 
         [JsonPropertyName(name: "data")]
         public object? Data { get; set; }
     }
