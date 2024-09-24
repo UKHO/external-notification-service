@@ -1,13 +1,13 @@
 data "azurerm_subscription" "current" {
 }
-#Deprecated Resource and will be removed in V4 replacement azurerm_portal_dashboard
-resource "azurerm_dashboard" "azure-dashboard" {
-  name                = var.name
-  resource_group_name = var.resource_group.name
-  location            = var.resource_group.location
-  tags                = var.tags
+
+resource "azurerm_portal_dashboard" "azure-dashboard" {
+  name                 = var.name
+  resource_group_name  = var.resource_group.name
+  location             = var.resource_group.location
+  tags                 = var.tags
   dashboard_properties = templatefile("${path.module}/dashboard.tpl", {
     subscription_id = data.azurerm_subscription.current.subscription_id,
-    environment = var.environment
+    environment     = var.environment
   })
 }

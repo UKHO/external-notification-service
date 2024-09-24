@@ -26,7 +26,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pipeline", "Pipeline", "{E8
 		..\azure-pipelines.yml = ..\azure-pipelines.yml
 		..\BuildNuget.config = ..\BuildNuget.config
 		..\external-notification-service.openApi.yaml = ..\external-notification-service.openApi.yaml
-		..\global.json = ..\global.json
 		..\NVDSuppressions.xml = ..\NVDSuppressions.xml
 	EndProjectSection
 EndProject
@@ -45,6 +44,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{54CC8841-B26
 	ProjectSection(SolutionItems) = preProject
 		..\Deployment\src\azure.tf = ..\Deployment\src\azure.tf
 		..\Deployment\src\main.tf = ..\Deployment\src\main.tf
+		..\Deployment\src\migration.tf = ..\Deployment\src\migration.tf
 		..\Deployment\src\outputs.tf = ..\Deployment\src\outputs.tf
 		..\Deployment\src\resource-group.tf = ..\Deployment\src\resource-group.tf
 		..\Deployment\src\variables.tf = ..\Deployment\src\variables.tf
