@@ -378,7 +378,7 @@ stages:
                 - template: Deployment/templates/continuous-deployment-apim.yml
                   parameters:
                     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "UKHO-APIM-Dev"
+                    AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
                     TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
                     APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
                     APIMServiceInstance: $(APIM_SERVICE_NAME)
@@ -446,7 +446,7 @@ stages:
                 - template: Deployment/templates/continuous-deployment-apim.yml
                   parameters:
                     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "UKHO-APIM-Dev"
+                    AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
                     TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
                     APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
                     APIMServiceInstance: $(APIM_SERVICE_NAME)
@@ -500,7 +500,7 @@ stages:
                 - template: Deployment/templates/continuous-deployment-apim.yml
                   parameters:
                     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "UKHO-APIM-Dev"
+                    AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
                     TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
                     APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
                     APIMServiceInstance: $(APIM_SERVICE_NAME)
@@ -554,7 +554,7 @@ stages:
                 - template: Deployment/templates/continuous-deployment-apim.yml
                   parameters:
                     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "UKHO-APIM-Dev"
+                    AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
                     TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
                     APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
                     APIMServiceInstance: $(APIM_SERVICE_NAME)
@@ -680,7 +680,7 @@ stages:
                 - template: Deployment/templates/continuous-deployment-apim.yml
                   parameters:
                     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "UKHO-APIM-Live"
+                    AzureSubscription: "UKHO-APIM-SOLAS-Live"
                     TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
                     APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
                     APIMServiceInstance: $(APIM_SERVICE_NAME)
