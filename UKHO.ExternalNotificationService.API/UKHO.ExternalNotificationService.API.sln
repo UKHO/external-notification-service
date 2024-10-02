@@ -53,7 +53,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "APIM", "APIM", "{51B43DDA-9AC8-40B0-A0A2-8627545B6CAE}"
 	ProjectSection(SolutionItems) = preProject
 		..\Deployment\src\APIM\azure.tf = ..\Deployment\src\APIM\azure.tf
-		..\Deployment\src\APIM\imports.tf = ..\Deployment\src\APIM\imports.tf
 		..\Deployment\src\APIM\main.tf = ..\Deployment\src\APIM\main.tf
 		..\Deployment\src\APIM\terraform_run.ps1 = ..\Deployment\src\APIM\terraform_run.ps1
 		..\Deployment\src\APIM\variables.tf = ..\Deployment\src\APIM\variables.tf
