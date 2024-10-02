@@ -48,15 +48,6 @@ steps:
       xmlTransformationRules:
       jsonTargetFiles: '**/appsettings.json'
 
-  - task: AzureCLI@2
-    displayName: "Staging slot sticky appsettings"
-    inputs:
-      azureSubscription: "${{ parameters.AzureSubscription }}"
-      scriptType: pscore
-      scriptLocation: inlineScript
-      inlineScript: |
-        az webapp config appsettings set --resource-group $(ResourceGroup) --name $(WEB_APP_NAME) --slot $(WEB_APP_SLOT_NAME) --slot-settings WEBJOBS_STOPPED=1
-
   - task: AzureWebApp@1
     displayName: "Azure App Deploy: Staging slot"
     inputs:
