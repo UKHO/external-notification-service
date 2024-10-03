@@ -26,7 +26,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pipeline", "Pipeline", "{E8
 		..\azure-pipelines.yml = ..\azure-pipelines.yml
 		..\BuildNuget.config = ..\BuildNuget.config
 		..\external-notification-service.openApi.yaml = ..\external-notification-service.openApi.yaml
-		..\global.json = ..\global.json
 		..\NVDSuppressions.xml = ..\NVDSuppressions.xml
 	EndProjectSection
 EndProject
@@ -126,10 +125,27 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Webapp", "Webapp", "{FE4ABA
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "templates", "templates", "{1C8F1DCF-57BC-466E-8488-BFED90B76913}"
 	ProjectSection(SolutionItems) = preProject
+		..\Deployment\templates\app-deploy.yml = ..\Deployment\templates\app-deploy.yml
+		..\Deployment\templates\build-test-publish.yml = ..\Deployment\templates\build-test-publish.yml
 		..\Deployment\templates\continuous-deployment-apim.yml = ..\Deployment\templates\continuous-deployment-apim.yml
 		..\Deployment\templates\continuous-deployment.yml = ..\Deployment\templates\continuous-deployment.yml
 		..\Deployment\templates\functional-test-process.yml = ..\Deployment\templates\functional-test-process.yml
 		..\Deployment\templates\retain-pipeline.yml = ..\Deployment\templates\retain-pipeline.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "var", "var", "{C07D7931-3D9A-4A37-B36E-9631C68A6584}"
+	ProjectSection(SolutionItems) = preProject
+		..\Deployment\templates\var\common.yml = ..\Deployment\templates\var\common.yml
+		..\Deployment\templates\var\dev-deploy.yml = ..\Deployment\templates\var\dev-deploy.yml
+		..\Deployment\templates\var\dev-groups.yml = ..\Deployment\templates\var\dev-groups.yml
+		..\Deployment\templates\var\e2evnext-deploy.yml = ..\Deployment\templates\var\e2evnext-deploy.yml
+		..\Deployment\templates\var\e2evnext-groups.yml = ..\Deployment\templates\var\e2evnext-groups.yml
+		..\Deployment\templates\var\iat-deploy.yml = ..\Deployment\templates\var\iat-deploy.yml
+		..\Deployment\templates\var\iat-groups.yml = ..\Deployment\templates\var\iat-groups.yml
+		..\Deployment\templates\var\iatvnext-deploy.yml = ..\Deployment\templates\var\iatvnext-deploy.yml
+		..\Deployment\templates\var\iatvnext-groups.yml = ..\Deployment\templates\var\iatvnext-groups.yml
+		..\Deployment\templates\var\pre-deploy.yml = ..\Deployment\templates\var\pre-deploy.yml
+		..\Deployment\templates\var\pre-groups.yml = ..\Deployment\templates\var\pre-groups.yml
 	EndProjectSection
 EndProject
 Global
@@ -191,6 +207,7 @@ Global
 		{029A4F45-C4DE-4982-8230-6BA3A7B01844} = {DD00F0A5-A699-4812-8BB7-FFD01FBEDD86}
 		{FE4ABAA3-64F9-4F33-9132-A12285B72802} = {DD00F0A5-A699-4812-8BB7-FFD01FBEDD86}
 		{1C8F1DCF-57BC-466E-8488-BFED90B76913} = {97C6916B-C219-4447-BFD1-C943E3DFCBDA}
+		{C07D7931-3D9A-4A37-B36E-9631C68A6584} = {1C8F1DCF-57BC-466E-8488-BFED90B76913}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {89FDA2AA-B8BC-4B29-B441-85F2C5F6CB91}

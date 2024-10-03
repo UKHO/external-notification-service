@@ -1,4 +1,3 @@
 variables:
         - group: "ENS-PreProd-TF-Variables"
         - group: "ENS-PreProd-Variables"
-        - group: "ENS-PreProd-APIM-SOLAS-Variables"

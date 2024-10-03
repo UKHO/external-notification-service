@@ -24,8 +24,6 @@ parameters:
 
 jobs:
   - deployment: ${{ upper(parameters.ShortName) }}DeployApp
-    dependsOn: 
-    - ${{ upper(parameters.ShortName) }}DeployApimSolas
     displayName: "${{ upper(parameters.ShortName) }} - deploy terraform and dotnet App"
     environment: ${{ parameters.AzureEnvironment }}
     pool: $(DeploymentPool)
@@ -47,11 +45,10 @@ jobs:
             - template: /Deployment/templates/continuous-deployment-apim.yml
               parameters:
                 ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                AzureSubscription: UKHO-APIM-${{ parameters.ApimShortName }}
+                AzureSubscription: UKHO-APIM-SOLAS-${{ parameters.ApimShortName }}
                 TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
                 APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
                 APIMServiceInstance: $(APIM_SERVICE_NAME)
-                tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
                 tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
 
             - ${{ if eq(parameters.RunFunctionalTests, true) }}:

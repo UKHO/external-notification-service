@@ -76,18 +76,12 @@ stages:
     - BuildTestPublish
     displayName: "Devdeploy (inc terraform, webapp deploy)"
     jobs:
-    - template: Deployment/templates/deploy-solas-apim.yml
-      parameters:
-        ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-        AzureEnvironment: "Ens-Dev"
-        ShortName: "Dev"
-        Container: ${{variables.Container}}
     - template: Deployment/templates/app-deploy.yml
       parameters:
         ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
         AzureEnvironment: "Ens-Dev"
         ShortName: "Dev"
-        ApimShortName: "Dev"
+        ApimShortName: "NonLive"
         AzureSubscriptionVersion: "Dev - A.008.02"
         RunFunctionalTests: true
         Container: ${{variables.Container}}
@@ -99,18 +93,12 @@ stages:
     displayName: "IATDeploy (inc terraform, webapp deploy)"
     condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),not(startsWith(variables['Build.SourceBranch'], 'refs/heads/dev/'))))
     jobs:
-    - template: Deployment/templates/deploy-solas-apim.yml
-      parameters:
-        ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-        AzureEnvironment: "Ens-IAT"
-        ShortName: "IAT"
-        Container: ${{variables.Container}}
     - template: Deployment/templates/app-deploy.yml
       parameters:
         ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
         AzureEnvironment: "Ens-IAT"
         ShortName: "IAT"
-        ApimShortName: "Dev"
+        ApimShortName: "NonLive"
         AzureSubscriptionVersion: "IAT - A.011.08"
         RunFunctionalTests: false
         Container: ${{variables.Container}}
@@ -122,18 +110,12 @@ stages:
     displayName: "PreProdDeploy (inc terraform, webapp deploy)"
     condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
-    - template: Deployment/templates/deploy-solas-apim.yml
-      parameters:
-        ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-        AzureEnvironment: "Ens-Pre"
-        ShortName: "Pre"
-        Container: ${{variables.Container}}
     - template: Deployment/templates/app-deploy.yml
       parameters:
         ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
         AzureEnvironment: "Ens-Pre"
         ShortName: "Pre"
-        ApimShortName: "Dev"
+        ApimShortName: "NonLive"
         AzureSubscriptionVersion: "PRE- A.011.08"
         RunFunctionalTests: false
         Container: ${{variables.Container}}      
@@ -145,18 +127,12 @@ stages:
     displayName: "IATvNextDeploy (inc terraform, webapp deploy)"
     condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/develop'),startsWith(variables['Build.SourceBranch'], 'refs/heads/dev/')))
     jobs:
-    - template: Deployment/templates/deploy-solas-apim.yml
-      parameters:
-        ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-        AzureEnvironment: "Ens-IATvNext"
-        ShortName: "IATvNext"
-        Container: ${{variables.Container}}
     - template: Deployment/templates/app-deploy.yml
       parameters:
         ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
         AzureEnvironment: "Ens-IATvNext"
         ShortName: "IATvNext"
-        ApimShortName: "Dev"
+        ApimShortName: "NonLive"
         AzureSubscriptionVersion: "vNext IAT - A.011.08"
         RunFunctionalTests: false
         Container: ${{variables.Container}}
@@ -168,18 +144,12 @@ stages:
     displayName: E2EvNextDeploy (inc terraform, webapp deploy)
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
     jobs:
-    - template: Deployment/templates/deploy-solas-apim.yml
-      parameters:
-        ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-        AzureEnvironment: "Ens-E2EvNext"
-        ShortName: "E2EvNext"
-        Container: ${{variables.Container}}
     - template: Deployment/templates/app-deploy.yml
       parameters:
         ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
         AzureEnvironment: "Ens-E2EvNext"
         ShortName: "E2EvNext"
-        ApimShortName: "Dev"
+        ApimShortName: "NonLive"
         AzureSubscriptionVersion: "vNext E2E - A.011.08"
         RunFunctionalTests: false
         Container: ${{variables.Container}}
@@ -191,33 +161,7 @@ stages:
     displayName: QAdeploy (inc terraform, webapp deploy)
     condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
-      - deployment: QADeployApimSolas
-        displayName: "QA - deploy SOLAS APIM"
-        environment: "Ens-Qa"
-        pool: $(DeploymentPool)
-        container: ${{variables.Container}}
-        workspace:
-          clean: all
-        variables:
-          - group: "ENS-QA-TF-Variables"
-          - group: "ENS-QA-Variables"
-          - group: "ENS-QA-APIM-SOLAS-Variables"
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - template: Deployment/templates/continuous-deployment-apim.yml
-                  parameters:
-                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
-                    TerraformKeyVault: $(APIM_SOLAS_TERRAFORM_KEYVAULT)
-                    APIMResourceGroup: $(APIM_SOLAS_RESOURCE_GROUP_NAME)
-                    APIMServiceInstance: $(APIM_SOLAS_SERVICE_NAME)
-                    tfstateStorageAccountRG: $(APIM_SOLAS_RESOURCE_GROUP_NAME)
-                    tfstateStorageAccountName: $(APIM_SOLAS_TFSTATE_STORAGE_ACCOUNT_NAME)
-
       - deployment: QADeployApp
-        dependsOn: [QADeployApimSolas]
         displayName: QA - deploy terraform and dotnet App
         environment: "Ens-Qa"
         pool: $(DeploymentPool)
@@ -259,11 +203,10 @@ stages:
                 - template: Deployment/templates/continuous-deployment-apim.yml
                   parameters:
                     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "UKHO-APIM-Dev"
+                    AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
                     TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
                     APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
                     APIMServiceInstance: $(APIM_SERVICE_NAME)
-                    tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
                     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
 
                 - task: DownloadBuildArtifacts@0
@@ -344,33 +287,7 @@ stages:
     displayName: Livedeploy (inc terraform, webapp deploy)
     condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
-      - deployment: LiveDeployApimSolas
-        displayName: "Live - deploy SOLAS APIM"
-        environment: "Ens-Live"
-        pool: $(DeploymentPool)
-        container: ${{variables.Container}}
-        workspace:
-          clean: all
-        variables:
-          - group: "ENS-Live-TF-Variables"
-          - group: "ENS-Live-Variables"
-          - group: "ENS-Live-APIM-SOLAS-Variables"
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - template: Deployment/templates/continuous-deployment-apim.yml
-                  parameters:
-                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "UKHO-APIM-SOLAS-Live"
-                    TerraformKeyVault: $(APIM_SOLAS_TERRAFORM_KEYVAULT)
-                    APIMResourceGroup: $(APIM_SOLAS_RESOURCE_GROUP_NAME)
-                    APIMServiceInstance: $(APIM_SOLAS_SERVICE_NAME)
-                    tfstateStorageAccountRG: $(APIM_SOLAS_RESOURCE_GROUP_NAME)
-                    tfstateStorageAccountName: $(APIM_SOLAS_TFSTATE_STORAGE_ACCOUNT_NAME)
-
       - deployment: LiveDeployApp
-        dependsOn: [LiveDeployApimSolas]
         displayName: Live - deploy terraform and dotnet App
         environment: "Ens-Live"
         pool: $(DeploymentPool)
@@ -412,11 +329,10 @@ stages:
                 - template: Deployment/templates/continuous-deployment-apim.yml
                   parameters:
                     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "UKHO-APIM-Live"
+                    AzureSubscription: "UKHO-APIM-SOLAS-Live"
                     TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
                     APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
                     APIMServiceInstance: $(APIM_SERVICE_NAME)
-                    tfstateStorageAccountRG: $(APIM_TFSTATE_STORAGE_ACCOUNT_RG)
                     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
 
       - job: PostDeploymentActions

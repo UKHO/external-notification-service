@@ -1,4 +1,3 @@
 variables:
         - group: "ENS-IAT-VNext-TF-Variables"
         - group: "ENS-IAT-VNext-Variables"
-        - group: "ENS-IAT-VNext-APIM-SOLAS-Variables"
