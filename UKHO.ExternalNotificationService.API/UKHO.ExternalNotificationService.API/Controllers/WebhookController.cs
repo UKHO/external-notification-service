@@ -53,7 +53,7 @@ namespace UKHO.ExternalNotificationService.API.Controllers
             string jsonContent = await reader.ReadToEndAsync();
             CustomCloudEvent? customCloudEvent = JsonSerializer.Deserialize<CustomCloudEvent>(jsonContent, JOptions);
 
-            _logger.LogInformation(EventIds.ENSWebhookRequestStart.ToEventId(), "External notification service webhook request started for event:{eventGridEvent} and _X-Correlation-ID:{correlationId}.", customCloudEvent, GetCurrentCorrelationId());
+            _logger.LogInformation(EventIds.ENSWebhookRequestStart.ToEventId(), "External notification service webhook request started for event:{eventGridEvent} and _X-Correlation-ID:{correlationId}.", JsonSerializer.Serialize(customCloudEvent), GetCurrentCorrelationId());
 
             if (customCloudEvent?.Type != null)
             {
