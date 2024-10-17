@@ -631,7 +631,6 @@ stages:
             scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
             arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
 
-            
   - stage: Livedeploy
     dependsOn:
       - QADeploy
