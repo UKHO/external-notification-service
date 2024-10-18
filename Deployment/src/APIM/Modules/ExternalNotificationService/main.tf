@@ -61,6 +61,19 @@ resource "azurerm_api_management_product" "ees_product" {
   subscriptions_limit   = 1
 }
 
+# Create Monitoring Product
+resource "azurerm_api_management_product" "monitor_product" {
+  resource_group_name   = data.azurerm_api_management.apim_instance.resource_group_name
+  api_management_name   = data.azurerm_api_management.apim_instance.name
+  product_id            = "ens-monitor-${local.formatted_env}"
+  display_name          = "External Notification Service for monitoring ${var.env_suffix}"
+  description           = "Provides the ability to monitor External Notification Service"
+  subscription_required = false
+  approval_required     = true
+  published             = true
+  subscriptions_limit   = 1
+}
+
 # API - Product mappings
 resource "azurerm_api_management_product_api" "d365_product_api_mapping" {
   resource_group_name = data.azurerm_api_management.apim_instance.resource_group_name
@@ -76,6 +89,13 @@ resource "azurerm_api_management_product_api" "ees_product_api_mapping" {
   product_id          = azurerm_api_management_product.ees_product.product_id
 }
 
+resource "azurerm_api_management_product_api" "monitor_product_api_mapping" {
+  resource_group_name = data.azurerm_api_management.apim_instance.resource_group_name
+  api_management_name = data.azurerm_api_management.apim_instance.name
+  api_name            = azurerm_api_management_api.ens_api.name
+  product_id          = azurerm_api_management_product.monitor_product.product_id
+}
+
 # D365 product-Group mapping
 resource "azurerm_api_management_product_group" "d365_product_group_mappping" {
   resource_group_name = data.azurerm_api_management.apim_instance.resource_group_name
@@ -89,6 +109,14 @@ resource "azurerm_api_management_product_group" "ees_product_group_mappping" {
   resource_group_name = data.azurerm_api_management.apim_instance.resource_group_name
   api_management_name = data.azurerm_api_management.apim_instance.name
   product_id          = azurerm_api_management_product.ees_product.product_id
+  group_name          = azurerm_api_management_group.ens_management_group.name
+}
+
+# EES product-Group mapping
+resource "azurerm_api_management_product_group" "monitor_product_group_mappping" {
+  resource_group_name = data.azurerm_api_management.apim_instance.resource_group_name
+  api_management_name = data.azurerm_api_management.apim_instance.name
+  product_id          = azurerm_api_management_product.monitor_product.product_id
   group_name          = azurerm_api_management_group.ens_management_group.name
 }
 

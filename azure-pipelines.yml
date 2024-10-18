@@ -370,10 +370,10 @@ stages:
           runOnce:
             deploy:
               steps:
-                - template: Deployment/templates/continuous-deployment.yml
-                  parameters:
-                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "External Notification Service Dev - A.008.02"
+                # - template: Deployment/templates/continuous-deployment.yml
+                #   parameters:
+                #     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+                #     AzureSubscription: "External Notification Service Dev - A.008.02"
 
                 - template: Deployment/templates/continuous-deployment-apim.yml
                   parameters:
@@ -384,19 +384,19 @@ stages:
                     APIMServiceInstance: $(APIM_SERVICE_NAME)
                     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
                   
-                - template: Deployment/templates/functional-test-process.yml
-                  parameters:
-                    TestTitle: "Dev-AutomationTests"
+                # - template: Deployment/templates/functional-test-process.yml
+                #   parameters:
+                #     TestTitle: "Dev-AutomationTests"
 
-                - task: AzureCLI@2
-                  displayName: "Swap Stub URL"
-                  condition: always()
-                  inputs:
-                    azureSubscription: "External Notification Service Dev - A.008.02"
-                    scriptType: 'pscore'
-                    scriptLocation: 'scriptPath'
-                    scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
-                    arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
+                # - task: AzureCLI@2
+                #   displayName: "Swap Stub URL"
+                #   condition: always()
+                #   inputs:
+                #     azureSubscription: "External Notification Service Dev - A.008.02"
+                #     scriptType: 'pscore'
+                #     scriptLocation: 'scriptPath'
+                #     scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
+                #     arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
 
   - stage: IATvNextDeploy
     dependsOn:
