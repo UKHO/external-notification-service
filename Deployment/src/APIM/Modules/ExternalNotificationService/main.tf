@@ -211,4 +211,54 @@ resource "azurerm_api_management_product_policy" "ees_product_policy" {
 	XML
 }
 
+# Create ENS Monitor API
+resource "azurerm_api_management_api" "ens_monitor_api" {
+  resource_group_name = data.azurerm_api_management.apim_instance.resource_group_name
+  api_management_name = data.azurerm_api_management.apim_instance.name 
+  name                = "ens-monitor-api-${local.formatted_env}"
+  display_name        = "${var.env}" == "live" ? "ENS Monitor API" : "ENS Monitor API ${var.env_suffix}"
+  description         = "The ENS Monitor API provides the ability to check health of the External Notification Service."
+  revision            = "1"
+  path                = "ens-monitor-api-${local.formatted_env}"
+  protocols           = ["https"]
+  service_url         = var.apim_api_service_url
 
+  subscription_key_parameter_names {
+    header = "Ocp-Apim-Subscription-Key"
+    query  = "subscription-key"
+  }
+
+  import {
+    content_format = "openapi"
+    content_value  = var.api_monitor_openapi_spec_path
+  }
+}
+
+# Create Monitor Product
+resource "azurerm_api_management_product" "monitor_product" {
+  resource_group_name   = data.azurerm_api_management.apim_instance.resource_group_name
+  api_management_name   = data.azurerm_api_management.apim_instance.name
+  product_id            = "ens-monitor-${local.formatted_env}"
+  display_name          = "ENS monitor ${var.env_suffix}"
+  description           = "Provides the ability to monitor External Notification Service"
+  subscription_required = true
+  approval_required     = true
+  published             = true
+  subscriptions_limit   = 1
+}
+
+# API - Product mappings
+resource "azurerm_api_management_product_api" "monitor_product_api_mapping" {
+  resource_group_name = data.azurerm_api_management.apim_instance.resource_group_name
+  api_management_name = data.azurerm_api_management.apim_instance.name
+  api_name            = azurerm_api_management_api.ens_monitor_api.name
+  product_id          = azurerm_api_management_product.monitor_product.product_id
+}
+
+# ENS Monitor product-Group mapping
+resource "azurerm_api_management_product_group" "monitor_product_group_mappping" {
+  resource_group_name = data.azurerm_api_management.apim_instance.resource_group_name
+  api_management_name = data.azurerm_api_management.apim_instance.name
+  product_id          = azurerm_api_management_product.monitor_product.product_id
+  group_name          = azurerm_api_management_group.ens_management_group.name
+}

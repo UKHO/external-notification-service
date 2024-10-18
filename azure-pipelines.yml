@@ -271,6 +271,13 @@ stages:
               Contents: 'external-notification-service.openApi.yaml'
               TargetFolder: '$(Build.SourcesDirectory)\Deployment\src\APIM'
 
+          - task: CopyFiles@2
+            displayName: "Copy OpenAPI spec for deployment (ENS Monitor)"
+            inputs:
+              SourceFolder: '$(Build.SourcesDirectory)'
+              Contents: 'external-notification-service-monitor.openApi.yaml'
+              TargetFolder: '$(Build.SourcesDirectory)\Deployment\src\APIM'
+
           - task: PublishBuildArtifacts@1
             displayName: "Publish terraform Artifacts"
             inputs:
