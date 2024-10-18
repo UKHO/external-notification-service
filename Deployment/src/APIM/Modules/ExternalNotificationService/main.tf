@@ -69,7 +69,7 @@ resource "azurerm_api_management_product" "monitor_product" {
   display_name          = "External Notification Service for monitoring ${var.env_suffix}"
   description           = "Provides the ability to monitor External Notification Service"
   subscription_required = false
-  approval_required     = true
+  approval_required     = false
   published             = true
   subscriptions_limit   = 1
 }
