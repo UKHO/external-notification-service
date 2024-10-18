@@ -42,6 +42,9 @@
     </notes>
     <packageUrl regex="true">^pkg:generic/Azure\.ResourceManager\.EventGrid@.*$</packageUrl>
     <cve>CVE-2023-36052</cve>
+    <cve>CVE-2024-43591</cve>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
+    <cpe>cpe:/a:microsoft:azure_sdk_for_.net</cpe>
   </suppress>
   <suppress>
     <notes>
@@ -51,6 +54,8 @@
     </notes>
     <packageUrl regex="true">^pkg:nuget/Azure\.ResourceManager@.*$</packageUrl>
     <cve>CVE-2023-36052</cve>
+    <cve>CVE-2024-43591</cve>
+    <cpe>cpe:/a:microsoft:azure_cli</cpe>
   </suppress>
   <suppress>
     <notes>
@@ -553,4 +558,5 @@
     <cve>CVE-2020-22475</cve>
     <cve>CVE-2022-39349</cve>
   </suppress>
+  
 </suppressions>
