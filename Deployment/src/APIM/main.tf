@@ -3,6 +3,7 @@ module "APIM" {
   env						      = local.env_name  
   env_suffix                      = var.env_suffix_text[local.env_name]
   api_openapi_spec_path           = file("${path.module}/external-notification-service.openApi.yaml")
+  api_monitor_openapi_spec_path   = file("${path.module}/external-notification-service-monitor.openApi.yaml")
 
   resource_group_name             = var.resource_group_name
   apim_service_name               = var.apim_service_name

@@ -376,3 +376,4 @@ terraform_output.json
 /.ionide/
 /Deployment/src/APIM/.terraform.lock.hcl
 /Deployment/src/APIM/external-notification-service.openApi.yaml
+/Deployment/src/APIM/external-notification-service-monitor.openApi.yaml
