@@ -47,6 +47,7 @@ module "webapp_service" {
   subnet_id                 = data.azurerm_subnet.main_subnet.id
   agent_id                  = data.azurerm_subnet.agent_subnet.id
   env_name                  = local.env_name
+  deploy_stub               = local.deploy_stub
   location                  = azurerm_resource_group.rg.location
   app_service_sku           = var.app_service_sku[local.env_name]
   app_settings = {

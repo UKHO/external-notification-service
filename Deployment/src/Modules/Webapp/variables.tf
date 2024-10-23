@@ -42,3 +42,7 @@ variable "agent_id" {
 variable "env_name" {
   type = string
 }
+
+variable "deploy_stub" {
+  type = bool
+}
