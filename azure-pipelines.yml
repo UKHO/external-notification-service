@@ -25,9 +25,8 @@ schedules:
   always: true
 
 pool: 
-    name: NautilusBuild
-    demands: vs_16 -equals 1 #exclude agents 13 and 14 as code coverage report fails
-
+    name: 'UKHO-Engineering'
+    demands:  - imageName -equals 'azure-pipeline-image-ubuntu-22-04'
 variables:
   - name: BuildConfiguration
     value: "release"
