@@ -336,77 +336,77 @@ stages:
 #            inputs:
 #              PathtoPublish: '$(Build.ArtifactStagingDirectory)\StubWebAPI'
 #              ArtifactName: StubWebAPI
-#
-#  - stage: Devdeploy
-#    dependsOn:
-#      - PERFORM_DEPENDENCYCHECK_DOTNETBUILD_DOTNETTEST_AND_PUBLISH
-#    displayName: "Devdeploy (inc terraform, webapp deploy)"
-#    jobs:
-#      - deployment: DevDeployApp
-#        displayName: "Dev - deploy terraform and dotnet App"
-#        environment: "Ens-Dev"
-#        pool: $(DeploymentPool)
-#        container: ${{variables.Container}}
-#        workspace:
-#          clean: all
-#        variables:
-#          - group: "ENS-Dev-TF-Variables"
-#          - group: "ENS-Dev-Variables"
-#          - name: "D365AuthConfiguration.TenantId"
-#            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
-#          - name: "D365AuthConfiguration.ClientId"
-#            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
-#          - name: "D365AuthConfiguration.ClientSecret"
-#            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
-#          - name: "EnsAuthConfiguration.ClientId"
-#            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
-#          - name: "EnsAuthConfiguration.TenantId"
-#            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
-#          - name: "ElasticAPM.ApiKey"
-#            value: $(elasticAPM-ApiKey)
-#          - name: "ElasticAPM.Environment"
-#            value: $(elasticAPM-Environment)
-#          - name: "ElasticAPM.ServerURL"
-#            value: $(elasticAPM-ServerURL)
-#          - name: "ElasticAPM.ServiceName"
-#            value: $(elasticAPM-ServiceName)
-#          - name: "ElasticAPM.WebJobServiceName"
-#            value: $(elasticAPM-WebJobServiceName)
-#          - name: "ElasticAPM.CloudId"
-#            value: $(elasticAPM-CloudId)
-#          - name: "ElasticAPM.IndexName"
-#            value: $(elasticAPM-IndexName)
-#        strategy:
-#          runOnce:
-#            deploy:
-#              steps:
-#                - template: Deployment/templates/continuous-deployment.yml
-#                  parameters:
-#                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-#                    AzureSubscription: "External Notification Service Dev - A.008.02"
-#
-#                - template: Deployment/templates/continuous-deployment-apim.yml
-#                  parameters:
-#                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-#                    AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
-#                    TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
-#                    APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
-#                    APIMServiceInstance: $(APIM_SERVICE_NAME)
-#                    tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
-#
-#                - template: Deployment/templates/functional-test-process.yml
-#                  parameters:
-#                    TestTitle: "Dev-AutomationTests"
-#
-#                - task: AzureCLI@2
-#                  displayName: "Swap Stub URL"
-#                  condition: always()
-#                  inputs:
-#                    azureSubscription: "External Notification Service Dev - A.008.02"
-#                    scriptType: 'pscore'
-#                    scriptLocation: 'scriptPath'
-#                    scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
-#                    arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
+
+  - stage: Devdeploy
+    dependsOn:
+      - PERFORM_DEPENDENCYCHECK_DOTNETBUILD_DOTNETTEST_AND_PUBLISH
+    displayName: "Devdeploy (inc terraform, webapp deploy)"
+    jobs:
+      - deployment: DevDeployApp
+        displayName: "Dev - deploy terraform and dotnet App"
+        environment: "Ens-Dev"
+        pool: $(DeploymentPool)
+        container: ${{variables.Container}}
+        workspace:
+          clean: all
+        variables:
+          - group: "ENS-Dev-TF-Variables"
+          - group: "ENS-Dev-Variables"
+          - name: "D365AuthConfiguration.TenantId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
+          - name: "D365AuthConfiguration.ClientId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
+          - name: "D365AuthConfiguration.ClientSecret"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
+          - name: "EnsAuthConfiguration.ClientId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
+          - name: "EnsAuthConfiguration.TenantId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
+          - name: "ElasticAPM.ApiKey"
+            value: $(elasticAPM-ApiKey)
+          - name: "ElasticAPM.Environment"
+            value: $(elasticAPM-Environment)
+          - name: "ElasticAPM.ServerURL"
+            value: $(elasticAPM-ServerURL)
+          - name: "ElasticAPM.ServiceName"
+            value: $(elasticAPM-ServiceName)
+          - name: "ElasticAPM.WebJobServiceName"
+            value: $(elasticAPM-WebJobServiceName)
+          - name: "ElasticAPM.CloudId"
+            value: $(elasticAPM-CloudId)
+          - name: "ElasticAPM.IndexName"
+            value: $(elasticAPM-IndexName)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: Deployment/templates/continuous-deployment.yml
+                  parameters:
+                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+                    AzureSubscription: "External Notification Service Dev - A.008.02"
+
+                - template: Deployment/templates/continuous-deployment-apim.yml
+                  parameters:
+                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+                    AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
+                    TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
+                    APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
+                    APIMServiceInstance: $(APIM_SERVICE_NAME)
+                    tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
+
+                - template: Deployment/templates/functional-test-process.yml
+                  parameters:
+                    TestTitle: "Dev-AutomationTests"
+
+                - task: AzureCLI@2
+                  displayName: "Swap Stub URL"
+                  condition: always()
+                  inputs:
+                    azureSubscription: "External Notification Service Dev - A.008.02"
+                    scriptType: 'pscore'
+                    scriptLocation: 'scriptPath'
+                    scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
+                    arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
 
   - stage: IATvNextDeploy
     dependsOn:
@@ -466,256 +466,255 @@ stages:
                     APIMServiceInstance: $(APIM_SERVICE_NAME)
                     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
 
-#  - stage: E2EvNextDeploy
-#    dependsOn:
-#      - IATvNextDeploy
-#    displayName: E2EvNextDeploy (inc terraform, webapp deploy)
-#    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
-#    jobs:
-#      - deployment: E2EvNextDeployApp
-#        displayName: E2EvNext - deploy terraform and dotnet App
-#        environment: "Ens-E2EvNext"
-#        pool: $(DeploymentPool)
-#        container: ${{variables.Container}}
-#        workspace:
-#          clean: all
-#        variables:
-#          - group: "ENS-E2E-VNext-TF-Variables"
-#          - group: "ENS-E2E-VNext-Variables"
-#          - name: "D365AuthConfiguration.TenantId"
-#            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
-#          - name: "D365AuthConfiguration.ClientId"
-#            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
-#          - name: "D365AuthConfiguration.ClientSecret"
-#            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
-#          - name: "EnsAuthConfiguration.ClientId"
-#            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
-#          - name: "EnsAuthConfiguration.TenantId"
-#            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
-#          - name: "ElasticAPM.ApiKey"
-#            value: $(elasticAPM-ApiKey)
-#          - name: "ElasticAPM.Environment"
-#            value: $(elasticAPM-Environment)
-#          - name: "ElasticAPM.ServerURL"
-#            value: $(elasticAPM-ServerURL)
-#          - name: "ElasticAPM.ServiceName"
-#            value: $(elasticAPM-ServiceName)
-#          - name: "ElasticAPM.WebJobServiceName"
-#            value: $(elasticAPM-WebJobServiceName)
-#          - name: "ElasticAPM.CloudId"
-#            value: $(elasticAPM-CloudId)
-#          - name: "ElasticAPM.IndexName"
-#            value: $(elasticAPM-IndexName)
-#        strategy:
-#          runOnce:
-#            deploy:
-#              steps:
-#                - template: Deployment/templates/continuous-deployment.yml
-#                  parameters:
-#                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-#                    AzureSubscription: "External Notification Service vNext E2E - A.011.08"
-#
-#                - template: Deployment/templates/continuous-deployment-apim.yml
-#                  parameters:
-#                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-#                    AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
-#                    TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
-#                    APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
-#                    APIMServiceInstance: $(APIM_SERVICE_NAME)
-#                    tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
-#
-#  - stage: QAdeploy
-#    dependsOn:
-#      - DevDeploy
-#    displayName: QAdeploy (inc terraform, webapp deploy)
-#    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
-#    jobs:
-#      - deployment: QADeployApp
-#        displayName: QA - deploy terraform and dotnet App
-#        environment: "Ens-Qa"
-#        pool: $(DeploymentPool)
-#        container: ${{variables.Container}}
-#        workspace:
-#          clean: all
-#        variables:
-#          - group: "ENS-QA-TF-Variables"
-#          - group: "ENS-QA-Variables"
-#          - name: "D365AuthConfiguration.TenantId"
-#            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
-#          - name: "D365AuthConfiguration.ClientId"
-#            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
-#          - name: "D365AuthConfiguration.ClientSecret"
-#            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
-#          - name: "EnsAuthConfiguration.ClientId"
-#            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
-#          - name: "EnsAuthConfiguration.TenantId"
-#            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
-#          - name: "ElasticAPM.ApiKey"
-#            value: $(elasticAPM-ApiKey)
-#          - name: "ElasticAPM.Environment"
-#            value: $(elasticAPM-Environment)
-#          - name: "ElasticAPM.ServerURL"
-#            value: $(elasticAPM-ServerURL)
-#          - name: "ElasticAPM.ServiceName"
-#            value: $(elasticAPM-ServiceName)
-#          - name: "ElasticAPM.WebJobServiceName"
-#            value: $(elasticAPM-WebJobServiceName)
-#          - name: "ElasticAPM.CloudId"
-#            value: $(elasticAPM-CloudId)
-#          - name: "ElasticAPM.IndexName"
-#            value: $(elasticAPM-IndexName)
-#        strategy:
-#          runOnce:
-#            deploy:
-#              steps:
-#                - template: Deployment/templates/continuous-deployment.yml
-#                  parameters:
-#                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-#                    AzureSubscription: "External Notification Service QA - A.008.02"
-#
-#                - template: Deployment/templates/continuous-deployment-apim.yml
-#                  parameters:
-#                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-#                    AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
-#                    TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
-#                    APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
-#                    APIMServiceInstance: $(APIM_SERVICE_NAME)
-#                    tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
-#
-#                - task: DownloadBuildArtifacts@0
-#                  displayName: "Download Functional test Artifact"
-#                  inputs:
-#                    buildType: 'current'
-#                    downloadType: 'single'
-#                    artifactName: 'functionaltests'
-#                    downloadPath: '$(Build.SourcesDirectory)'
-#
-#                - task: FileTransform@2
-#                  displayName: "File Transform: functionaltests"
-#                  inputs:
-#                    folderPath: '$(Build.SourcesDirectory)/functionaltests/'
-#                    xmlTransformationRules:
-#                    jsonTargetFiles: '**/appsettings.json'
-#
-#                - task: UseDotNet@2
-#                  displayName: 'Use .NET Core sdk'
-#                  inputs:
-#                    packageType: sdk
-#                    version: '8.0.x'
-#
-#                - task: DotNetCoreCLI@2
-#                  displayName: "Run Functional tests"
-#                  inputs:
-#                    command: "test"
-#                    projects: |
-#                      **/*FunctionalTest*.dll
-#                      !**/*TestAdapter.dll
-#                      !**/obj/**
-#                    testRunTitle: "QA-AutomationTests"
-#                    workingDirectory: '$(Build.SourcesDirectory)/functionaltests'
-#
-#      - job: Run_ADDS_E2E_tests
-#        displayName: Run ADDS E2E tests
-#        dependsOn: QADeployApp
-#        pool: $(DeploymentPool)
-#        variables:
-#          - group: "ADDS-E2E"
-#          - group: "ENS-QA-Variables"
-#          - name : ResourceGroup
-#            value : $[ dependencies.QADeployApp.outputs['QADeployApp.setVariable.ResourceGroupName'] ]
-#          - name : WEB_APP_NAME
-#            value : $[ dependencies.QADeployApp.outputs['QADeployApp.setVariable.WEB_APP'] ]
-#        container: ${{variables.Container}}
-#        steps:
-#        - task: DownloadBuildArtifacts@0
-#          displayName: "Download Integration test Artifact"
-#          inputs:
-#            buildType: 'current'
-#            downloadType: 'single'
-#            artifactName: 'terraformartifact'
-#            downloadPath: '$(Pipeline.Workspace)'
-#
-#        - task: PowerShell@2
-#          displayName: "Run ADDS E2E pipeline tests"
-#          inputs:
-#              pwsh: true
-#              targetType: filePath
-#              filePath: '$(System.DefaultWorkingDirectory)/Deployment/ADDS-e2e-tests.ps1'
-#              arguments: '-queueSecret $(QueueSecret) -pollSecret $(PollSecret) -pollTimeInSecs $(PollTimeInSecs) -functionEndPoint $(FunctionEndPoint)'
-#
-#        - task: AzureCLI@2
-#          displayName: "Swap Stub URL"
-#          condition: always()
-#          inputs:
-#            azureSubscription: "External Notification Service QA - A.008.02"
-#            scriptType: 'pscore'
-#            scriptLocation: 'scriptPath'
-#            scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
-#            arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
-#
-#  - stage: Livedeploy
-#    dependsOn:
-#      - QADeploy
-#    displayName: Livedeploy (inc terraform, webapp deploy)
-#    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
-#    jobs:
-#      - deployment: LiveDeployApp
-#        displayName: Live - deploy terraform and dotnet App
-#        environment: "Ens-Live"
-#        pool: $(DeploymentPool)
-#        container: ${{variables.Container}}
-#        workspace:
-#          clean: all
-#        variables:
-#          - group: "ENS-Live-TF-Variables"
-#          - group: "ENS-Live-Variables"
-#          - name: "D365AuthConfiguration.TenantId"
-#            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
-#          - name: "D365AuthConfiguration.ClientId"
-#            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
-#          - name: "D365AuthConfiguration.ClientSecret"
-#            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
-#          - name: "EnsAuthConfiguration.ClientId"
-#            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
-#          - name: "EnsAuthConfiguration.TenantId"
-#            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
-#          - name: "ElasticAPM.ApiKey"
-#            value: $(elasticAPM-ApiKey)
-#          - name: "ElasticAPM.Environment"
-#            value: $(elasticAPM-Environment)
-#          - name: "ElasticAPM.ServerURL"
-#            value: $(elasticAPM-ServerURL)
-#          - name: "ElasticAPM.ServiceName"
-#            value: $(elasticAPM-ServiceName)
-#          - name: "ElasticAPM.WebJobServiceName"
-#            value: $(elasticAPM-WebJobServiceName)
-#          - name: "ElasticAPM.CloudId"
-#            value: $(elasticAPM-CloudId)
-#          - name: "ElasticAPM.IndexName"
-#            value: $(elasticAPM-IndexName)
-#        strategy:
-#          runOnce:
-#            deploy:
-#              steps:
-#                - template: Deployment/templates/continuous-deployment.yml
-#                  parameters:
-#                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-#                    AzureSubscription: "External Notification Service Live - A.008.02"
-#
-#                - template: Deployment/templates/continuous-deployment-apim.yml
-#                  parameters:
-#                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-#                    AzureSubscription: "UKHO-APIM-SOLAS-Live"
-#                    TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
-#                    APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
-#                    APIMServiceInstance: $(APIM_SERVICE_NAME)
-#                    tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
-#
-#      - job: PostDeploymentActions
-#        dependsOn:
-#        - LiveDeployApp
-#        pool: $(WindowPool)
-#        displayName: Post Deployment Actions
-#        steps:
-#          - template: Deployment/templates/retain-pipeline.yml
-#
+  - stage: E2EvNextDeploy
+    dependsOn:
+      - IATvNextDeploy
+    displayName: E2EvNextDeploy (inc terraform, webapp deploy)
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+    jobs:
+      - deployment: E2EvNextDeployApp
+        displayName: E2EvNext - deploy terraform and dotnet App
+        environment: "Ens-E2EvNext"
+        pool: $(DeploymentPool)
+        container: ${{variables.Container}}
+        workspace:
+          clean: all
+        variables:
+          - group: "ENS-E2E-VNext-TF-Variables"
+          - group: "ENS-E2E-VNext-Variables"
+          - name: "D365AuthConfiguration.TenantId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
+          - name: "D365AuthConfiguration.ClientId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
+          - name: "D365AuthConfiguration.ClientSecret"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
+          - name: "EnsAuthConfiguration.ClientId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
+          - name: "EnsAuthConfiguration.TenantId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
+          - name: "ElasticAPM.ApiKey"
+            value: $(elasticAPM-ApiKey)
+          - name: "ElasticAPM.Environment"
+            value: $(elasticAPM-Environment)
+          - name: "ElasticAPM.ServerURL"
+            value: $(elasticAPM-ServerURL)
+          - name: "ElasticAPM.ServiceName"
+            value: $(elasticAPM-ServiceName)
+          - name: "ElasticAPM.WebJobServiceName"
+            value: $(elasticAPM-WebJobServiceName)
+          - name: "ElasticAPM.CloudId"
+            value: $(elasticAPM-CloudId)
+          - name: "ElasticAPM.IndexName"
+            value: $(elasticAPM-IndexName)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: Deployment/templates/continuous-deployment.yml
+                  parameters:
+                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+                    AzureSubscription: "External Notification Service vNext E2E - A.011.08"
+
+                - template: Deployment/templates/continuous-deployment-apim.yml
+                  parameters:
+                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+                    AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
+                    TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
+                    APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
+                    APIMServiceInstance: $(APIM_SERVICE_NAME)
+                    tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
+
+  - stage: QAdeploy
+    dependsOn:
+      - DevDeploy
+    displayName: QAdeploy (inc terraform, webapp deploy)
+    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
+    jobs:
+      - deployment: QADeployApp
+        displayName: QA - deploy terraform and dotnet App
+        environment: "Ens-Qa"
+        pool: $(DeploymentPool)
+        container: ${{variables.Container}}
+        workspace:
+          clean: all
+        variables:
+          - group: "ENS-QA-TF-Variables"
+          - group: "ENS-QA-Variables"
+          - name: "D365AuthConfiguration.TenantId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
+          - name: "D365AuthConfiguration.ClientId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
+          - name: "D365AuthConfiguration.ClientSecret"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
+          - name: "EnsAuthConfiguration.ClientId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
+          - name: "EnsAuthConfiguration.TenantId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
+          - name: "ElasticAPM.ApiKey"
+            value: $(elasticAPM-ApiKey)
+          - name: "ElasticAPM.Environment"
+            value: $(elasticAPM-Environment)
+          - name: "ElasticAPM.ServerURL"
+            value: $(elasticAPM-ServerURL)
+          - name: "ElasticAPM.ServiceName"
+            value: $(elasticAPM-ServiceName)
+          - name: "ElasticAPM.WebJobServiceName"
+            value: $(elasticAPM-WebJobServiceName)
+          - name: "ElasticAPM.CloudId"
+            value: $(elasticAPM-CloudId)
+          - name: "ElasticAPM.IndexName"
+            value: $(elasticAPM-IndexName)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: Deployment/templates/continuous-deployment.yml
+                  parameters:
+                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+                    AzureSubscription: "External Notification Service QA - A.008.02"
+
+                - template: Deployment/templates/continuous-deployment-apim.yml
+                  parameters:
+                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+                    AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
+                    TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
+                    APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
+                    APIMServiceInstance: $(APIM_SERVICE_NAME)
+                    tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
+
+                - task: DownloadBuildArtifacts@0
+                  displayName: "Download Functional test Artifact"
+                  inputs:
+                    buildType: 'current'
+                    downloadType: 'single'
+                    artifactName: 'functionaltests'
+                    downloadPath: '$(Build.SourcesDirectory)'
+
+                - task: FileTransform@2
+                  displayName: "File Transform: functionaltests"
+                  inputs:
+                    folderPath: '$(Build.SourcesDirectory)/functionaltests/'
+                    xmlTransformationRules:
+                    jsonTargetFiles: '**/appsettings.json'
+
+                - task: UseDotNet@2
+                  displayName: 'Use .NET Core sdk'
+                  inputs:
+                    packageType: sdk
+                    version: '8.0.x'
+
+                - task: DotNetCoreCLI@2
+                  displayName: "Run Functional tests"
+                  inputs:
+                    command: "test"
+                    projects: |
+                      **/*FunctionalTest*.dll
+                      !**/*TestAdapter.dll
+                      !**/obj/**
+                    testRunTitle: "QA-AutomationTests"
+                    workingDirectory: '$(Build.SourcesDirectory)/functionaltests'
+
+      - job: Run_ADDS_E2E_tests
+        displayName: Run ADDS E2E tests
+        dependsOn: QADeployApp
+        pool: $(DeploymentPool)
+        variables:
+          - group: "ADDS-E2E"
+          - group: "ENS-QA-Variables"
+          - name : ResourceGroup
+            value : $[ dependencies.QADeployApp.outputs['QADeployApp.setVariable.ResourceGroupName'] ]
+          - name : WEB_APP_NAME
+            value : $[ dependencies.QADeployApp.outputs['QADeployApp.setVariable.WEB_APP'] ]
+        container: ${{variables.Container}}
+        steps:
+        - task: DownloadBuildArtifacts@0
+          displayName: "Download Integration test Artifact"
+          inputs:
+            buildType: 'current'
+            downloadType: 'single'
+            artifactName: 'terraformartifact'
+            downloadPath: '$(Pipeline.Workspace)'
+
+        - task: PowerShell@2
+          displayName: "Run ADDS E2E pipeline tests"
+          inputs:
+              pwsh: true
+              targetType: filePath
+              filePath: '$(System.DefaultWorkingDirectory)/Deployment/ADDS-e2e-tests.ps1'
+              arguments: '-queueSecret $(QueueSecret) -pollSecret $(PollSecret) -pollTimeInSecs $(PollTimeInSecs) -functionEndPoint $(FunctionEndPoint)'
+
+        - task: AzureCLI@2
+          displayName: "Swap Stub URL"
+          condition: always()
+          inputs:
+            azureSubscription: "External Notification Service QA - A.008.02"
+            scriptType: 'pscore'
+            scriptLocation: 'scriptPath'
+            scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
+            arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
+
+  - stage: Livedeploy
+    dependsOn:
+      - QADeploy
+    displayName: Livedeploy (inc terraform, webapp deploy)
+    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
+    jobs:
+      - deployment: LiveDeployApp
+        displayName: Live - deploy terraform and dotnet App
+        environment: "Ens-Live"
+        pool: $(DeploymentPool)
+        container: ${{variables.Container}}
+        workspace:
+          clean: all
+        variables:
+          - group: "ENS-Live-TF-Variables"
+          - group: "ENS-Live-Variables"
+          - name: "D365AuthConfiguration.TenantId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
+          - name: "D365AuthConfiguration.ClientId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
+          - name: "D365AuthConfiguration.ClientSecret"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
+          - name: "EnsAuthConfiguration.ClientId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
+          - name: "EnsAuthConfiguration.TenantId"
+            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
+          - name: "ElasticAPM.ApiKey"
+            value: $(elasticAPM-ApiKey)
+          - name: "ElasticAPM.Environment"
+            value: $(elasticAPM-Environment)
+          - name: "ElasticAPM.ServerURL"
+            value: $(elasticAPM-ServerURL)
+          - name: "ElasticAPM.ServiceName"
+            value: $(elasticAPM-ServiceName)
+          - name: "ElasticAPM.WebJobServiceName"
+            value: $(elasticAPM-WebJobServiceName)
+          - name: "ElasticAPM.CloudId"
+            value: $(elasticAPM-CloudId)
+          - name: "ElasticAPM.IndexName"
+            value: $(elasticAPM-IndexName)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: Deployment/templates/continuous-deployment.yml
+                  parameters:
+                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+                    AzureSubscription: "External Notification Service Live - A.008.02"
+
+                - template: Deployment/templates/continuous-deployment-apim.yml
+                  parameters:
+                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+                    AzureSubscription: "UKHO-APIM-SOLAS-Live"
+                    TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
+                    APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
+                    APIMServiceInstance: $(APIM_SERVICE_NAME)
+                    tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
+
+      - job: PostDeploymentActions
+        dependsOn:
+        - LiveDeployApp
+        pool: $(WindowPool)
+        displayName: Post Deployment Actions
+        steps:
+          - template: Deployment/templates/retain-pipeline.yml
