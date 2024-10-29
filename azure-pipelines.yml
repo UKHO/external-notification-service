@@ -120,9 +120,9 @@ stages:
               projects: "**/*Tests.csproj"
               feedsToUse: config
               noCache: true
-              nugetConfigPath: '$(Build.SourcesDirectory)/BuildNuget.config'
-              workingDirectory: '$(Build.SourcesDirectory)/UKHO.ExternalNotificationService.API'
-              packagesDirectory: '$(Build.SourcesDirectory)/UKHO.ExternalNotificationService.API/packagesForTests'
+              nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
+              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
+              packagesDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API\packagesForTests'
 
           - task: DotNetCoreCLI@2
             displayName: "dotnet test - Perform Unit Tests"
