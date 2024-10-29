@@ -24,7 +24,7 @@ schedules:
     - main
   always: true
 
-pool: 
+pool:
     name: 'UKHO-Engineering'
     demands:  -imageName -equals 'azure-pipeline-image-ubuntu-22-04'
 variables:
@@ -120,9 +120,9 @@ stages:
               projects: "**/*Tests.csproj"
               feedsToUse: config
               noCache: true
-              nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
-              packagesDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API\packagesForTests'
+              nugetConfigPath: '$(Build.SourcesDirectory)/BuildNuget.config'
+              workingDirectory: '$(Build.SourcesDirectory)/UKHO.ExternalNotificationService.API'
+              packagesDirectory: '$(Build.SourcesDirectory)/UKHO.ExternalNotificationService.API/packagesForTests'
 
           - task: DotNetCoreCLI@2
             displayName: "dotnet test - Perform Unit Tests"
@@ -393,7 +393,7 @@ stages:
                     APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
                     APIMServiceInstance: $(APIM_SERVICE_NAME)
                     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
-                  
+
                 - template: Deployment/templates/functional-test-process.yml
                   parameters:
                     TestTitle: "Dev-AutomationTests"
@@ -465,7 +465,7 @@ stages:
                     APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
                     APIMServiceInstance: $(APIM_SERVICE_NAME)
                     tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
-  
+
   - stage: E2EvNextDeploy
     dependsOn:
       - IATvNextDeploy
@@ -635,7 +635,7 @@ stages:
             artifactName: 'terraformartifact'
             downloadPath: '$(Pipeline.Workspace)'
 
-        - task: PowerShell@2          
+        - task: PowerShell@2
           displayName: "Run ADDS E2E pipeline tests"
           inputs:
               pwsh: true
