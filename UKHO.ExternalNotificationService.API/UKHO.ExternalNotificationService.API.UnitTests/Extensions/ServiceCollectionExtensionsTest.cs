@@ -19,7 +19,7 @@ public class ServiceCollectionExtensionsTest
         _inMemorySettings = new()
         {
             {"ElasticApm:CloudId", cloudId},
-            {"ElasticApm:ApiKey", "test-api-key"},
+            {"ElasticApm:ADDSApiKey", "test-api-key"},
             {"ADDSMonitoringEnabled", "true"}
         };
     }

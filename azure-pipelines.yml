@@ -377,6 +377,8 @@ stages:
             value: $(elasticAPM-CloudId)
           - name: "ElasticAPM.IndexName"
             value: $(elasticAPM-IndexName)
+          - name: "ElasticAPM.ADDSApiKey"
+            value: $(elasticAPM-ADDSApiKey)
         strategy:
           runOnce:
             deploy:
@@ -449,6 +451,8 @@ stages:
             value: $(elasticAPM-CloudId)
           - name: "ElasticAPM.IndexName"
             value: $(elasticAPM-IndexName)
+          - name: "ElasticAPM.ADDSApiKey"
+            value: $(elasticAPM-ADDSApiKey)
         strategy:
           runOnce:
             deploy:
@@ -507,6 +511,8 @@ stages:
             value: $(elasticAPM-CloudId)
           - name: "ElasticAPM.IndexName"
             value: $(elasticAPM-IndexName)
+          - name: "ElasticAPM.ADDSApiKey"
+            value: $(elasticAPM-ADDSApiKey)
         strategy:
           runOnce:
             deploy:
@@ -565,6 +571,8 @@ stages:
             value: $(elasticAPM-CloudId)
           - name: "ElasticAPM.IndexName"
             value: $(elasticAPM-IndexName)
+          - name: "ElasticAPM.ADDSApiKey"
+            value: $(elasticAPM-ADDSApiKey)
         strategy:
           runOnce:
             deploy:
@@ -694,6 +702,8 @@ stages:
             value: $(elasticAPM-CloudId)
           - name: "ElasticAPM.IndexName"
             value: $(elasticAPM-IndexName)
+          - name: "ElasticAPM.ADDSApiKey"
+            value: $(elasticAPM-ADDSApiKey)
         strategy:
           runOnce:
             deploy:
