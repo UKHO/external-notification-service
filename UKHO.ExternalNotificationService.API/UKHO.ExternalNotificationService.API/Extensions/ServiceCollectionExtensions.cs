@@ -17,7 +17,7 @@ public static class ServiceCollectionExtensions
             () ?? new ElasticApmConfiguration();
 
         ElasticsearchClientSettings settings = new(elasticApmConfiguration.CloudId,
-            new ApiKey(elasticApmConfiguration.ApiKey));
+            new ApiKey(elasticApmConfiguration.AddsApiKey));
 
         services.AddSingleton(new ElasticsearchClient(settings));
 
