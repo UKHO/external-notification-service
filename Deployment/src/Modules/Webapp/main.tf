@@ -1,27 +1,29 @@
-resource "azurerm_app_service_plan" "app_service_plan" {
+resource "azurerm_service_plan" "app_service_plan" {
   name                = "${var.name}-asp"
   location            = var.location
   resource_group_name = var.resource_group_name
-  
-  sku {
-	tier = var.app_service_sku.tier
-	size = var.app_service_sku.size
-  }
+  sku_name            = var.app_service_sku.size
+  os_type             = "Windows"
   tags                = var.tags
 }
 
-resource "azurerm_app_service" "webapp_service" {
-  name                = var.name
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  app_service_plan_id = azurerm_app_service_plan.app_service_plan.id
-  tags                = var.tags
+resource "azurerm_windows_web_app" "webapp_service" {
+  name                      = var.name
+  location                  = var.location
+  resource_group_name       = var.resource_group_name
+  service_plan_id           = azurerm_service_plan.app_service_plan.id
+  tags                      = var.tags
+  virtual_network_subnet_id = var.subnet_id
 
   site_config {
-    windows_fx_version  =   "DOTNET|8.0"
+    application_stack {
+      current_stack = "dotnet"
+      dotnet_version = "v8.0"
+    }
     
-    always_on  = true
-    ftps_state = "Disabled"
+    always_on         = true
+    ftps_state        = "Disabled"
+    use_32_bit_worker = false
 
     ip_restriction {
       virtual_network_subnet_id = var.agent_id
@@ -37,10 +39,13 @@ resource "azurerm_app_service" "webapp_service" {
           ip_address  = length(split("/",ip_restriction.value)) > 1 ? ip_restriction.value : "${ip_restriction.value}/32"
       }
     }
-
-}
+  }
 
   app_settings = var.app_settings
+
+  sticky_settings {
+    app_setting_names = [ "WEBJOBS_STOPPED" ]
+  }
 
   identity {
     type = "SystemAssigned"
@@ -49,19 +54,21 @@ resource "azurerm_app_service" "webapp_service" {
   https_only = true
 }
 
-resource "azurerm_app_service_slot" "staging" {
-  name                = "staging"
-  app_service_name    = azurerm_app_service.webapp_service.name
-  location            = azurerm_app_service.webapp_service.location
-  resource_group_name = azurerm_app_service.webapp_service.resource_group_name
-  app_service_plan_id = azurerm_app_service.webapp_service.app_service_plan_id
-  tags                = azurerm_app_service.webapp_service.tags
+resource "azurerm_windows_web_app_slot" "staging" {
+  name                      = "staging"
+  app_service_id            = azurerm_windows_web_app.webapp_service.id
+  tags                      = azurerm_windows_web_app.webapp_service.tags
+  virtual_network_subnet_id = var.subnet_id
 
   site_config {
-    windows_fx_version  =   "DOTNET|8.0"
+    application_stack {
+      current_stack = "dotnet"
+      dotnet_version = "v8.0"
+    }
     
-    always_on  = true
-    ftps_state = "Disabled"
+    always_on         = true
+    ftps_state        = "Disabled"
+    use_32_bit_worker = false
 
     ip_restriction {
       virtual_network_subnet_id = var.agent_id
@@ -77,31 +84,34 @@ resource "azurerm_app_service_slot" "staging" {
           ip_address  = length(split("/",ip_restriction.value)) > 1 ? ip_restriction.value : "${ip_restriction.value}/32"
       }
     }
+  }
 
-}
-
-  app_settings = azurerm_app_service.webapp_service.app_settings
+  app_settings = merge(azurerm_windows_web_app.webapp_service.app_settings, { "WEBJOBS_STOPPED" = "1" })
 
   identity {
     type = "SystemAssigned"
   }
 
-  https_only = azurerm_app_service.webapp_service.https_only
+  https_only = azurerm_windows_web_app.webapp_service.https_only
 }
 
-resource "azurerm_app_service" "stub_webapp_service" {
-  count               = var.env_name == "live" ? 0 : 1
+resource "azurerm_windows_web_app" "stub_webapp_service" {
+  count               = var.deploy_stub ? 1 : 0
   name                = "${var.name}-stub"
   location            = var.location
   resource_group_name = var.resource_group_name
-  app_service_plan_id = azurerm_app_service_plan.app_service_plan.id
+  service_plan_id     = azurerm_service_plan.app_service_plan.id
   tags                = var.tags
 
   site_config {
-    windows_fx_version  =   "DOTNET|8.0"
+    application_stack {
+      current_stack = "dotnet"
+      dotnet_version = "v8.0"
+    }
 
-    always_on  = true
-    ftps_state = "Disabled"
+    always_on         = true
+    ftps_state        = "Disabled"
+    use_32_bit_worker = false
   }
 
   app_settings = var.app_settings_stub
@@ -111,15 +121,4 @@ resource "azurerm_app_service" "stub_webapp_service" {
   }
 
   https_only = true
-}
-
-resource "azurerm_app_service_virtual_network_swift_connection" "webapp_vnet_integration" {
-  app_service_id = azurerm_app_service.webapp_service.id
-  subnet_id      = var.subnet_id
-}
-
-resource "azurerm_app_service_slot_virtual_network_swift_connection" "slot_vnet_integration" {
-  app_service_id = azurerm_app_service.webapp_service.id
-  subnet_id      = var.subnet_id
-  slot_name      = azurerm_app_service_slot.staging.name
 }

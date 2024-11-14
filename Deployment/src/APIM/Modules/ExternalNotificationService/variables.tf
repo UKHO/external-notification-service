@@ -22,6 +22,10 @@ variable "api_openapi_spec_path" {
   type = string
 }
 
+variable "api_monitor_openapi_spec_path" {
+  type = string
+}
+
 variable "d365_product_daily_quota_limit" {
   type = number
 }

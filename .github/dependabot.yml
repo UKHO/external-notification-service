@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: "nuget"
     directory: "/UKHO.D365CallbackDistributorStub.API"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
@@ -14,7 +14,7 @@ updates:
   - package-ecosystem: "nuget"
     directory: "/UKHO.ExternalNotificationService.API"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]

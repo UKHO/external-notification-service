@@ -10,6 +10,7 @@ variable "resource_group_name" {
 
 locals {
   env_name           = lower(terraform.workspace)
+  deploy_stub        = local.env_name != "live"
   service_name       = "ens"
   web_app_name       = "${local.service_name}-${local.env_name}-webapp"
   key_vault_name     = "${local.service_name}-ukho-${local.env_name}-kv"
