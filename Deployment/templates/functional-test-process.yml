@@ -16,6 +16,7 @@ steps:
     inputs:
       folderPath: '$(Build.SourcesDirectory)/functionaltests/'
       enableXmlTransform: false
+      xmlTransformationRules: ''
       jsonTargetFiles: '**/appsettings.json'
 
   - task: UseDotNet@2
