@@ -10,7 +10,8 @@ steps:
     displayName: "File Transform: Ens Config" #Replace ens instance value from pipeline 
     inputs:
       folderPath: '$(Pipeline.Workspace)/terraformartifact/src'
-      xmlTransformationRules:
+      xmlTransformationRules: ''
+      enableXmlTransform: false
       jsonTargetFiles: 'appsettings.json'
 
   - task: PowerShell@2
@@ -45,7 +46,8 @@ steps:
     displayName: "File Transform: WebAppSettings"
     inputs:
       folderPath: '$(Pipeline.Workspace)/ExternalNotificationService/*.zip'
-      xmlTransformationRules:
+      xmlTransformationRules: ''
+      enableXmlTransform: false
       jsonTargetFiles: '**/appsettings.json'
 
   - task: AzureWebApp@1
@@ -87,7 +89,8 @@ steps:
     condition: and(succeeded(), ne(variables['Environment.Name'], 'Ens-Live'))
     inputs:
       folderPath: '$(Pipeline.Workspace)/StubWebAPI/*.zip'
-      xmlTransformationRules:
+      xmlTransformationRules: ''
+      enableXmlTransform: false
       jsonTargetFiles: '**/appsettings.json'           
 
   - task: AzureWebApp@1
