@@ -554,5 +554,71 @@
     <cpe>cpe:/a:tasks:tasks</cpe>
     <cve>CVE-2020-22475</cve>
     <cve>CVE-2022-39349</cve>
-  </suppress>  
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Azure.Identity:1.10.3
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Azure\.Identity@.*$</packageUrl>
+    <cve>CVE-2024-29992</cve>
+    <cve>CVE-2024-35255</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Azure.WebJobs:3.0.37
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Microsoft\.Azure\.WebJobs@.*$</packageUrl>
+    <cve>CVE-2022-29149</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Azure.WebJobs:3.0.39
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Microsoft\.Azure\.WebJobs@.*$</packageUrl>
+    <cve>CVE-2022-29149</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Extensions.Hosting.dll
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Extensions\.Hosting@.*$</packageUrl>
+    <cpe>cpe:/a:microsoft:.net_core</cpe>
+    <cve>CVE-2020-1147</cve>
+    <cve>CVE-2018-8409</cve>
+    <cve>CVE-2019-0545</cve>
+    <cve>CVE-2019-0980</cve>
+    <cve>CVE-2019-0981</cve>
+    <cve>CVE-2019-1301</cve>
+    <cve>CVE-2020-1108</cve>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+    <cve>CVE-2019-0657</cve>
+    <cve>CVE-2021-34485</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: System.Text.Json:6.0.0
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/System\.Text\.Json@.*$</packageUrl>
+    <cve>CVE-2024-43485</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: System.Text.Json:6.0.9
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/System\.Text\.Json@.*$</packageUrl>
+    <cve>CVE-2024-43485</cve>
+  </suppress>
 </suppressions>
