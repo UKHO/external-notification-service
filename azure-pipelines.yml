@@ -4,7 +4,7 @@ parameters:
   - name: ContinueEvenIfResourcesAreGettingDestroyed
     displayName: "Continue even if resources are getting destroyed"
     type: boolean
-    default: false
+    default: true
 
   - name: DisableDependencyCheck
     displayName: "Disable OWASP dependency checking"
@@ -55,214 +55,214 @@ stages:
     displayName: "Build (inc DependencyChecker, Dotnet Build , dotnet test and publish artifact )"
     dependsOn: []
     jobs:
-      - job: Dependencychecker
-        condition: eq('${{ parameters.DisableDependencyCheck }}', false)
-        workspace:
-          clean: all
-        displayName: "Dependencychecker"
-        steps:
-          - task: UseDotNet@2
-            displayName: 'Use .NET 8.0.x sdk'
-            inputs:
-              packageType: sdk
-              version: '8.0.x'
-              workingDirectory: '$(Build.SourcesDirectory)'
+      # - job: Dependencychecker
+      #   condition: eq('${{ parameters.DisableDependencyCheck }}', false)
+      #   workspace:
+      #     clean: all
+      #   displayName: "Dependencychecker"
+      #   steps:
+      #     - task: UseDotNet@2
+      #       displayName: 'Use .NET 8.0.x sdk'
+      #       inputs:
+      #         packageType: sdk
+      #         version: '8.0.x'
+      #         workingDirectory: '$(Build.SourcesDirectory)'
 
-          - task: DotNetCoreCLI@2
-            displayName: ".Net Core - NuGet restore non test projects only"
-            inputs:
-              command: "restore"
-              projects: |
-                **/*.csproj
-                !**/*Tests.csproj
-              feedsToUse: config
-              noCache: true
-              nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
-              packagesDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API\packages'
+      #     - task: DotNetCoreCLI@2
+      #       displayName: ".Net Core - NuGet restore non test projects only"
+      #       inputs:
+      #         command: "restore"
+      #         projects: |
+      #           **/*.csproj
+      #           !**/*Tests.csproj
+      #         feedsToUse: config
+      #         noCache: true
+      #         nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
+      #         workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
+      #         packagesDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API\packages'
 
-          - task: CmdLine@1
-            displayName: "Run OWASP Dependency Checker"
-            inputs:
-              filename: 'dependency-check.bat'
-              arguments: '--project "External-Notification-Service - $(Build.SourceBranchName)" --scan "$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API" --out "$(Build.ArtifactStagingDirectory)\DCReport" --suppression $(Build.SourcesDirectory)\NVDSuppressions.xml --noupdate'
+      #     - task: CmdLine@1
+      #       displayName: "Run OWASP Dependency Checker"
+      #       inputs:
+      #         filename: 'dependency-check.bat'
+      #         arguments: '--project "External-Notification-Service - $(Build.SourceBranchName)" --scan "$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API" --out "$(Build.ArtifactStagingDirectory)\DCReport" --suppression $(Build.SourcesDirectory)\NVDSuppressions.xml --noupdate'
 
-          - task: PublishBuildArtifacts@1
-            displayName: "Publish Artifact: OWASP Dependency Checker Report"
-            inputs:
-              PathtoPublish: '$(Build.ArtifactStagingDirectory)\DCReport'
-              ArtifactName: "OWASP Dependency Checker Report"
+      #     - task: PublishBuildArtifacts@1
+      #       displayName: "Publish Artifact: OWASP Dependency Checker Report"
+      #       inputs:
+      #         PathtoPublish: '$(Build.ArtifactStagingDirectory)\DCReport'
+      #         ArtifactName: "OWASP Dependency Checker Report"
 
-          - task: PowerShell@1
-            displayName: "Fail Build if Dependency Check Finds Any Vulnerabilities"
-            inputs:
-              scriptType: inlineScript
-              arguments: '-ReportLocation $(Build.ArtifactStagingDirectory)\DCReport\*'
-              inlineScript: |
-                param($ReportLocation)
-                Invoke-VulnerabilityCheck -ReportLocation $ReportLocation
+      #     - task: PowerShell@1
+      #       displayName: "Fail Build if Dependency Check Finds Any Vulnerabilities"
+      #       inputs:
+      #         scriptType: inlineScript
+      #         arguments: '-ReportLocation $(Build.ArtifactStagingDirectory)\DCReport\*'
+      #         inlineScript: |
+      #           param($ReportLocation)
+      #           Invoke-VulnerabilityCheck -ReportLocation $ReportLocation
 
-      - job: UnitTestsAndCodeCoverage
-        workspace:
-          clean: all
-        displayName: "Dotnet Test and Publish Code Coverage"
-        steps:
-          - task: UseDotNet@2
-            displayName: 'Use .NET 8.0.x sdk'
-            inputs:
-              packageType: sdk
-              version: '8.0.x'
-              workingDirectory: '$(Build.SourcesDirectory)'
+      # - job: UnitTestsAndCodeCoverage
+      #   workspace:
+      #     clean: all
+      #   displayName: "Dotnet Test and Publish Code Coverage"
+      #   steps:
+      #     - task: UseDotNet@2
+      #       displayName: 'Use .NET 8.0.x sdk'
+      #       inputs:
+      #         packageType: sdk
+      #         version: '8.0.x'
+      #         workingDirectory: '$(Build.SourcesDirectory)'
 
-          - task: DotNetCoreCLI@2
-            displayName: ".Net Core - NuGet restore test projects only"
-            inputs:
-              command: "restore"
-              projects: "**/*Tests.csproj"
-              feedsToUse: config
-              noCache: true
-              nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
-              packagesDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API\packagesForTests'
+      #     - task: DotNetCoreCLI@2
+      #       displayName: ".Net Core - NuGet restore test projects only"
+      #       inputs:
+      #         command: "restore"
+      #         projects: "**/*Tests.csproj"
+      #         feedsToUse: config
+      #         noCache: true
+      #         nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
+      #         workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
+      #         packagesDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API\packagesForTests'
 
-          - task: DotNetCoreCLI@2
-            displayName: "dotnet test - Perform Unit Tests"
-            inputs:
-              command: "test"
-              projects: "**/*UnitTests.csproj"
-              arguments: '--configuration $(BuildConfiguration) --settings "$(Build.SourcesDirectory)\test.runsettings" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
-              publishTestResults: true
-              testRunTitle: "UnitTests"
+      #     - task: DotNetCoreCLI@2
+      #       displayName: "dotnet test - Perform Unit Tests"
+      #       inputs:
+      #         command: "test"
+      #         projects: "**/*UnitTests.csproj"
+      #         arguments: '--configuration $(BuildConfiguration) --settings "$(Build.SourcesDirectory)\test.runsettings" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
+      #         publishTestResults: true
+      #         testRunTitle: "UnitTests"
 
-          - task: PowerShell@2
-            displayName: "Generate code coverage report"
-            inputs:
-              targetType: filePath
-              filePath: '$(Build.SourcesDirectory)\CodeCoverageReport.ps1'
-              arguments: '-source "$(Build.SourcesDirectory)" -reportFolder "$(Build.ArtifactStagingDirectory)"'
+      #     - task: PowerShell@2
+      #       displayName: "Generate code coverage report"
+      #       inputs:
+      #         targetType: filePath
+      #         filePath: '$(Build.SourcesDirectory)\CodeCoverageReport.ps1'
+      #         arguments: '-source "$(Build.SourcesDirectory)" -reportFolder "$(Build.ArtifactStagingDirectory)"'
 
-          - task: PublishBuildArtifacts@1
-            displayName: "Publish Code coverage"
-            inputs:
-              PathtoPublish: "$(Build.ArtifactStagingDirectory)/codecoveragereport"
-              ArtifactName: codecoveragereport
+      #     - task: PublishBuildArtifacts@1
+      #       displayName: "Publish Code coverage"
+      #       inputs:
+      #         PathtoPublish: "$(Build.ArtifactStagingDirectory)/codecoveragereport"
+      #         ArtifactName: codecoveragereport
 
-      - job: BuildAndPublishAPI
-        workspace:
-          clean: all
-        displayName: "Dotnet Build publish API"
-        steps:
-          - task: PowerShell@2
-            displayName: "Set assembly version numbers based on build ID"
-            inputs:
-              targetType: filePath
-              filePath: '$(Build.SourcesDirectory)\Apply-AssemblyVersionAndDefaults.ps1'
-              arguments: '-buildNumber "$(Build.BuildNumber)" -solutionDirectory "$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API\" -UKHOAssemblyCompany "$env:UKHOAssemblyCompany" -UKHOAssemblyCopyright "$(UKHOAssemblyCopyright)" -UKHOAssemblyVersionPrefix "$env:UKHOAssemblyVersionPrefix" -UKHOAssemblyProduct "$env:UKHOAssemblyProduct"'
+      # - job: BuildAndPublishAPI
+      #   workspace:
+      #     clean: all
+      #   displayName: "Dotnet Build publish API"
+      #   steps:
+      #     - task: PowerShell@2
+      #       displayName: "Set assembly version numbers based on build ID"
+      #       inputs:
+      #         targetType: filePath
+      #         filePath: '$(Build.SourcesDirectory)\Apply-AssemblyVersionAndDefaults.ps1'
+      #         arguments: '-buildNumber "$(Build.BuildNumber)" -solutionDirectory "$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API\" -UKHOAssemblyCompany "$env:UKHOAssemblyCompany" -UKHOAssemblyCopyright "$(UKHOAssemblyCopyright)" -UKHOAssemblyVersionPrefix "$env:UKHOAssemblyVersionPrefix" -UKHOAssemblyProduct "$env:UKHOAssemblyProduct"'
 
-          - task: UseDotNet@2
-            displayName: 'Use .NET 8.0.x sdk'
-            inputs:
-              packageType: sdk
-              version: '8.0.x'
-              workingDirectory: '$(Build.SourcesDirectory)'
+      #     - task: UseDotNet@2
+      #       displayName: 'Use .NET 8.0.x sdk'
+      #       inputs:
+      #         packageType: sdk
+      #         version: '8.0.x'
+      #         workingDirectory: '$(Build.SourcesDirectory)'
 
-          - task: DotNetCoreCLI@2
-            displayName: ".Net Core - NuGet restore"
-            inputs:
-              command: restore
-              projects: |
-                **/*.csproj
-              feedsToUse: config
-              noCache: true
-              nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
+      #     - task: DotNetCoreCLI@2
+      #       displayName: ".Net Core - NuGet restore"
+      #       inputs:
+      #         command: restore
+      #         projects: |
+      #           **/*.csproj
+      #         feedsToUse: config
+      #         noCache: true
+      #         nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
+      #         workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
 
-          - task: DotNetCoreCLI@2
-            displayName: "dotnet build task"
-            inputs:
-              command: "build"
-              projects: "**/*.csproj"
-              arguments: '--configuration $(BuildConfiguration) --output $(Build.BinariesDirectory)'
+      #     - task: DotNetCoreCLI@2
+      #       displayName: "dotnet build task"
+      #       inputs:
+      #         command: "build"
+      #         projects: "**/*.csproj"
+      #         arguments: '--configuration $(BuildConfiguration) --output $(Build.BinariesDirectory)'
 
-          - task: DotNetCoreCLI@2
-            displayName: "Publish WebAPI"
-            inputs:
-              command: "publish"
-              publishWebProjects: false
-              projects: '**/*UKHO.ExternalNotificationService.API.csproj'
-              arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\ExternalNotificationServiceWebAPI'
-              zipAfterPublish: false
-              modifyOutputPath: false
+      #     - task: DotNetCoreCLI@2
+      #       displayName: "Publish WebAPI"
+      #       inputs:
+      #         command: "publish"
+      #         publishWebProjects: false
+      #         projects: '**/*UKHO.ExternalNotificationService.API.csproj'
+      #         arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\ExternalNotificationServiceWebAPI'
+      #         zipAfterPublish: false
+      #         modifyOutputPath: false
 
-          - task: DotNetCoreCLI@2
-            displayName: "Publish SubscriptionServiceWebJob Code"
-            inputs:
-              command: "publish"
-              publishWebProjects: false
-              projects: "**/*UKHO.ExternalNotificationService.SubscriptionService.csproj"
-              arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\ExternalNotificationServiceWebAPI\App_Data\jobs\continuous\SubscriptionServiceWebJob'
-              zipAfterPublish: false
-              modifyOutputPath: false
+      #     - task: DotNetCoreCLI@2
+      #       displayName: "Publish SubscriptionServiceWebJob Code"
+      #       inputs:
+      #         command: "publish"
+      #         publishWebProjects: false
+      #         projects: "**/*UKHO.ExternalNotificationService.SubscriptionService.csproj"
+      #         arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\ExternalNotificationServiceWebAPI\App_Data\jobs\continuous\SubscriptionServiceWebJob'
+      #         zipAfterPublish: false
+      #         modifyOutputPath: false
 
-          - task: ArchiveFiles@2
-            displayName: "Zip ENS service"
-            inputs:
-              rootFolderOrFile: '$(Build.ArtifactStagingDirectory)\ExternalNotificationServiceWebAPI\'
-              includeRootFolder: false
-              archiveType: "zip"
-              archiveFile: '$(Build.ArtifactStagingDirectory)\ExternalNotificationServiceWebAPI\UKHO.ExternalNotificationService.API.zip'
-              replaceExistingArchive: true
+      #     - task: ArchiveFiles@2
+      #       displayName: "Zip ENS service"
+      #       inputs:
+      #         rootFolderOrFile: '$(Build.ArtifactStagingDirectory)\ExternalNotificationServiceWebAPI\'
+      #         includeRootFolder: false
+      #         archiveType: "zip"
+      #         archiveFile: '$(Build.ArtifactStagingDirectory)\ExternalNotificationServiceWebAPI\UKHO.ExternalNotificationService.API.zip'
+      #         replaceExistingArchive: true
 
-          - task: PublishBuildArtifacts@1
-            displayName: "Publish WebAPI Artifact"
-            inputs:
-              PathtoPublish: '$(Build.ArtifactStagingDirectory)\ExternalNotificationServiceWebAPI\UKHO.ExternalNotificationService.API.zip'
-              ArtifactName: ExternalNotificationService
+      #     - task: PublishBuildArtifacts@1
+      #       displayName: "Publish WebAPI Artifact"
+      #       inputs:
+      #         PathtoPublish: '$(Build.ArtifactStagingDirectory)\ExternalNotificationServiceWebAPI\UKHO.ExternalNotificationService.API.zip'
+      #         ArtifactName: ExternalNotificationService
 
       - job: PublishFunctionalTestsAndTerraform
         workspace:
           clean: all
         displayName: "Publish Functional Tests And Terraform"
         steps:
-          - task: UseDotNet@2
-            displayName: 'Use .NET 8.0.x sdk'
-            inputs:
-              packageType: sdk
-              version: '8.0.x'
-              workingDirectory: '$(Build.SourcesDirectory)'
+          # - task: UseDotNet@2
+          #   displayName: 'Use .NET 8.0.x sdk'
+          #   inputs:
+          #     packageType: sdk
+          #     version: '8.0.x'
+          #     workingDirectory: '$(Build.SourcesDirectory)'
 
-          - task: DotNetCoreCLI@2
-            displayName: ".Net Core - NuGet restore"
-            inputs:
-              command: restore
-              projects: |
-                **/*.csproj
-              feedsToUse: config
-              noCache: true
-              nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
+          # - task: DotNetCoreCLI@2
+          #   displayName: ".Net Core - NuGet restore"
+          #   inputs:
+          #     command: restore
+          #     projects: |
+          #       **/*.csproj
+          #     feedsToUse: config
+          #     noCache: true
+          #     nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
+          #     workingDirectory: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API'
 
-          - task: DotNetCoreCLI@2
-            displayName: "Publish functional test"
-            inputs:
-              command: "publish"
-              publishWebProjects: false
-              projects: "**/*UKHO.ExternalNotificationService.API.FunctionalTests.csproj"
-              arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\UKHO.ExternalNotificationService.API.FunctionalTests'
-              zipAfterPublish: false
+          # - task: DotNetCoreCLI@2
+          #   displayName: "Publish functional test"
+          #   inputs:
+          #     command: "publish"
+          #     publishWebProjects: false
+          #     projects: "**/*UKHO.ExternalNotificationService.API.FunctionalTests.csproj"
+          #     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\UKHO.ExternalNotificationService.API.FunctionalTests'
+          #     zipAfterPublish: false
 
-          - task: PublishBuildArtifacts@1
-            displayName: "Publish Functional test Artifact"
-            inputs:
-              PathtoPublish: '$(Build.ArtifactStagingDirectory)\UKHO.ExternalNotificationService.API.FunctionalTests'
-              ArtifactName: functionaltests
+          # - task: PublishBuildArtifacts@1
+          #   displayName: "Publish Functional test Artifact"
+          #   inputs:
+          #     PathtoPublish: '$(Build.ArtifactStagingDirectory)\UKHO.ExternalNotificationService.API.FunctionalTests'
+          #     ArtifactName: functionaltests
 
-          - task: CopyFiles@2
-            displayName: Copy ExternalNotificationService Config
-            inputs:
-              SourceFolder: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API\UKHO.ExternalNotificationService.API\'
-              Contents: 'appsettings.json'
-              TargetFolder: '$(Build.SourcesDirectory)\Deployment\src'
+          # - task: CopyFiles@2
+          #   displayName: Copy ExternalNotificationService Config
+          #   inputs:
+          #     SourceFolder: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API\UKHO.ExternalNotificationService.API\'
+          #     Contents: 'appsettings.json'
+          #     TargetFolder: '$(Build.SourcesDirectory)\Deployment\src'
 
           - task: CopyFiles@2
             displayName: "Copy OpenAPI spec for deployment"
@@ -284,59 +284,59 @@ stages:
               PathtoPublish: '$(Build.SourcesDirectory)\Deployment'
               ArtifactName: terraformartifact
 
-      - job: BuildAndPublishStubAPIAndTerraform
-        workspace:
-          clean: all
-        displayName: "Build and Publish Stub API And Terraform"
-        steps:
-          - task: PowerShell@2
-            displayName: "Set assembly version numbers based on build ID"
-            inputs:
-              targetType: filePath
-              filePath: '$(Build.SourcesDirectory)\Apply-AssemblyVersionAndDefaults.ps1'
-              arguments: '-buildNumber "$(Build.BuildNumber)" -solutionDirectory "$(Build.SourcesDirectory)\UKHO.D365CallbackDistributorStub.API\" -UKHOAssemblyCompany "$env:UKHOAssemblyCompany" -UKHOAssemblyCopyright "$(UKHOAssemblyCopyright)" -UKHOAssemblyVersionPrefix "$env:UKHOAssemblyVersionPrefix" -UKHOAssemblyProduct "$(UKHOAssemblyProduct) Stub"'
+      # - job: BuildAndPublishStubAPIAndTerraform
+      #   workspace:
+      #     clean: all
+      #   displayName: "Build and Publish Stub API And Terraform"
+      #   steps:
+      #     - task: PowerShell@2
+      #       displayName: "Set assembly version numbers based on build ID"
+      #       inputs:
+      #         targetType: filePath
+      #         filePath: '$(Build.SourcesDirectory)\Apply-AssemblyVersionAndDefaults.ps1'
+      #         arguments: '-buildNumber "$(Build.BuildNumber)" -solutionDirectory "$(Build.SourcesDirectory)\UKHO.D365CallbackDistributorStub.API\" -UKHOAssemblyCompany "$env:UKHOAssemblyCompany" -UKHOAssemblyCopyright "$(UKHOAssemblyCopyright)" -UKHOAssemblyVersionPrefix "$env:UKHOAssemblyVersionPrefix" -UKHOAssemblyProduct "$(UKHOAssemblyProduct) Stub"'
 
-          - task: UseDotNet@2
-            displayName: 'Use .NET Core 8.0.x sdk'
-            inputs:
-              packageType: sdk
-              version: '8.0.x'
-              workingDirectory: '$(Build.SourcesDirectory)'
+      #     - task: UseDotNet@2
+      #       displayName: 'Use .NET Core 8.0.x sdk'
+      #       inputs:
+      #         packageType: sdk
+      #         version: '8.0.x'
+      #         workingDirectory: '$(Build.SourcesDirectory)'
 
-          - task: DotNetCoreCLI@2
-            displayName: ".Net Core - NuGet restore"
-            inputs:
-              command: restore
-              projects: |
-                **/*.csproj
-              feedsToUse: config
-              noCache: true
-              nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.D365CallbackDistributorStub.API'
+      #     - task: DotNetCoreCLI@2
+      #       displayName: ".Net Core - NuGet restore"
+      #       inputs:
+      #         command: restore
+      #         projects: |
+      #           **/*.csproj
+      #         feedsToUse: config
+      #         noCache: true
+      #         nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
+      #         workingDirectory: '$(Build.SourcesDirectory)\UKHO.D365CallbackDistributorStub.API'
 
-          - task: DotNetCoreCLI@2
-            displayName: "dotnet build task"
-            inputs:
-              command: "build"
-              projects: "**/*UKHO.D365CallbackDistributorStub.API.csproj"
-              arguments: '--configuration $(BuildConfiguration) --output $(Build.BinariesDirectory)'
-              workingDirectory: '$(Build.SourcesDirectory)\UKHO.D365CallbackDistributorStub.API'
+      #     - task: DotNetCoreCLI@2
+      #       displayName: "dotnet build task"
+      #       inputs:
+      #         command: "build"
+      #         projects: "**/*UKHO.D365CallbackDistributorStub.API.csproj"
+      #         arguments: '--configuration $(BuildConfiguration) --output $(Build.BinariesDirectory)'
+      #         workingDirectory: '$(Build.SourcesDirectory)\UKHO.D365CallbackDistributorStub.API'
 
-          - task: DotNetCoreCLI@2
-            displayName: "Publish StubWebAPI"
-            inputs:
-              command: "publish"
-              publishWebProjects: false
-              projects: '**/*UKHO.D365CallbackDistributorStub.API.csproj'
-              arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\StubWebAPI'
-              zipAfterPublish: true
-              modifyOutputPath: true
+      #     - task: DotNetCoreCLI@2
+      #       displayName: "Publish StubWebAPI"
+      #       inputs:
+      #         command: "publish"
+      #         publishWebProjects: false
+      #         projects: '**/*UKHO.D365CallbackDistributorStub.API.csproj'
+      #         arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\StubWebAPI'
+      #         zipAfterPublish: true
+      #         modifyOutputPath: true
 
-          - task: PublishBuildArtifacts@1
-            displayName: "Publish Stub WebAPI Artifact"
-            inputs:
-              PathtoPublish: '$(Build.ArtifactStagingDirectory)\StubWebAPI'
-              ArtifactName: StubWebAPI
+      #     - task: PublishBuildArtifacts@1
+      #       displayName: "Publish Stub WebAPI Artifact"
+      #       inputs:
+      #         PathtoPublish: '$(Build.ArtifactStagingDirectory)\StubWebAPI'
+      #         ArtifactName: StubWebAPI
 
   - stage: Devdeploy
     dependsOn:
@@ -382,321 +382,321 @@ stages:
                     ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
                     AzureSubscription: "External Notification Service Dev - A.008.02"
 
-                - template: Deployment/templates/continuous-deployment-apim.yml
-                  parameters:
-                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
-                    TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
-                    APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
-                    APIMServiceInstance: $(APIM_SERVICE_NAME)
-                    tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
+  #               - template: Deployment/templates/continuous-deployment-apim.yml
+  #                 parameters:
+  #                   ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+  #                   AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
+  #                   TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
+  #                   APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
+  #                   APIMServiceInstance: $(APIM_SERVICE_NAME)
+  #                   tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
                   
-                - template: Deployment/templates/functional-test-process.yml
-                  parameters:
-                    TestTitle: "Dev-AutomationTests"
+  #               - template: Deployment/templates/functional-test-process.yml
+  #                 parameters:
+  #                   TestTitle: "Dev-AutomationTests"
 
-                - task: AzureCLI@2
-                  displayName: "Swap Stub URL"
-                  condition: always()
-                  inputs:
-                    azureSubscription: "External Notification Service Dev - A.008.02"
-                    scriptType: 'pscore'
-                    scriptLocation: 'scriptPath'
-                    scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
-                    arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
+  #               - task: AzureCLI@2
+  #                 displayName: "Swap Stub URL"
+  #                 condition: always()
+  #                 inputs:
+  #                   azureSubscription: "External Notification Service Dev - A.008.02"
+  #                   scriptType: 'pscore'
+  #                   scriptLocation: 'scriptPath'
+  #                   scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
+  #                   arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
 
-  - stage: IATvNextDeploy
-    dependsOn:
-      - DevDeploy
-    displayName: "IATvNextDeploy (inc terraform, webapp deploy)"
-    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/develop'),startsWith(variables['Build.SourceBranch'], 'refs/heads/dev/')))
-    jobs:
-      - deployment: IATvNextDeployApp
-        displayName: IATvNext - deploy terraform and dotnet App
-        environment: "Ens-IATvNext"
-        pool: $(DeploymentPool)
-        container: ${{variables.Container}}
-        workspace:
-          clean: all
-        variables:
-          - group: "ENS-IAT-VNext-TF-Variables"
-          - group: "ENS-IAT-VNext-Variables"
-          - name: "D365AuthConfiguration.TenantId"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
-          - name: "D365AuthConfiguration.ClientId"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
-          - name: "D365AuthConfiguration.ClientSecret"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
-          - name: "EnsAuthConfiguration.ClientId"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
-          - name: "EnsAuthConfiguration.TenantId"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
-          - name: "ElasticAPM.ApiKey"
-            value: $(elasticAPM-ApiKey)
-          - name: "ElasticAPM.Environment"
-            value: $(elasticAPM-Environment)
-          - name: "ElasticAPM.ServerURL"
-            value: $(elasticAPM-ServerURL)
-          - name: "ElasticAPM.ServiceName"
-            value: $(elasticAPM-ServiceName)
-          - name: "ElasticAPM.WebJobServiceName"
-            value: $(elasticAPM-WebJobServiceName)
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - template: Deployment/templates/continuous-deployment.yml
-                  parameters:
-                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "External Notification Service vNext IAT - A.011.08"
+  # - stage: IATvNextDeploy
+  #   dependsOn:
+  #     - DevDeploy
+  #   displayName: "IATvNextDeploy (inc terraform, webapp deploy)"
+  #   condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/develop'),startsWith(variables['Build.SourceBranch'], 'refs/heads/dev/')))
+  #   jobs:
+  #     - deployment: IATvNextDeployApp
+  #       displayName: IATvNext - deploy terraform and dotnet App
+  #       environment: "Ens-IATvNext"
+  #       pool: $(DeploymentPool)
+  #       container: ${{variables.Container}}
+  #       workspace:
+  #         clean: all
+  #       variables:
+  #         - group: "ENS-IAT-VNext-TF-Variables"
+  #         - group: "ENS-IAT-VNext-Variables"
+  #         - name: "D365AuthConfiguration.TenantId"
+  #           value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
+  #         - name: "D365AuthConfiguration.ClientId"
+  #           value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
+  #         - name: "D365AuthConfiguration.ClientSecret"
+  #           value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
+  #         - name: "EnsAuthConfiguration.ClientId"
+  #           value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
+  #         - name: "EnsAuthConfiguration.TenantId"
+  #           value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
+  #         - name: "ElasticAPM.ApiKey"
+  #           value: $(elasticAPM-ApiKey)
+  #         - name: "ElasticAPM.Environment"
+  #           value: $(elasticAPM-Environment)
+  #         - name: "ElasticAPM.ServerURL"
+  #           value: $(elasticAPM-ServerURL)
+  #         - name: "ElasticAPM.ServiceName"
+  #           value: $(elasticAPM-ServiceName)
+  #         - name: "ElasticAPM.WebJobServiceName"
+  #           value: $(elasticAPM-WebJobServiceName)
+  #       strategy:
+  #         runOnce:
+  #           deploy:
+  #             steps:
+  #               - template: Deployment/templates/continuous-deployment.yml
+  #                 parameters:
+  #                   ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+  #                   AzureSubscription: "External Notification Service vNext IAT - A.011.08"
 
-                - template: Deployment/templates/continuous-deployment-apim.yml
-                  parameters:
-                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
-                    TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
-                    APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
-                    APIMServiceInstance: $(APIM_SERVICE_NAME)
-                    tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
+  #               - template: Deployment/templates/continuous-deployment-apim.yml
+  #                 parameters:
+  #                   ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+  #                   AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
+  #                   TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
+  #                   APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
+  #                   APIMServiceInstance: $(APIM_SERVICE_NAME)
+  #                   tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
   
-  - stage: E2EvNextDeploy
-    dependsOn:
-      - IATvNextDeploy
-    displayName: E2EvNextDeploy (inc terraform, webapp deploy)
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
-    jobs:
-      - deployment: E2EvNextDeployApp
-        displayName: E2EvNext - deploy terraform and dotnet App
-        environment: "Ens-E2EvNext"
-        pool: $(DeploymentPool)
-        container: ${{variables.Container}}
-        workspace:
-          clean: all
-        variables:
-          - group: "ENS-E2E-VNext-TF-Variables"
-          - group: "ENS-E2E-VNext-Variables"
-          - name: "D365AuthConfiguration.TenantId"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
-          - name: "D365AuthConfiguration.ClientId"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
-          - name: "D365AuthConfiguration.ClientSecret"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
-          - name: "EnsAuthConfiguration.ClientId"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
-          - name: "EnsAuthConfiguration.TenantId"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
-          - name: "ElasticAPM.ApiKey"
-            value: $(elasticAPM-ApiKey)
-          - name: "ElasticAPM.Environment"
-            value: $(elasticAPM-Environment)
-          - name: "ElasticAPM.ServerURL"
-            value: $(elasticAPM-ServerURL)
-          - name: "ElasticAPM.ServiceName"
-            value: $(elasticAPM-ServiceName)
-          - name: "ElasticAPM.WebJobServiceName"
-            value: $(elasticAPM-WebJobServiceName)
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - template: Deployment/templates/continuous-deployment.yml
-                  parameters:
-                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "External Notification Service vNext E2E - A.011.08"
+  # - stage: E2EvNextDeploy
+  #   dependsOn:
+  #     - IATvNextDeploy
+  #   displayName: E2EvNextDeploy (inc terraform, webapp deploy)
+  #   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+  #   jobs:
+  #     - deployment: E2EvNextDeployApp
+  #       displayName: E2EvNext - deploy terraform and dotnet App
+  #       environment: "Ens-E2EvNext"
+  #       pool: $(DeploymentPool)
+  #       container: ${{variables.Container}}
+  #       workspace:
+  #         clean: all
+  #       variables:
+  #         - group: "ENS-E2E-VNext-TF-Variables"
+  #         - group: "ENS-E2E-VNext-Variables"
+  #         - name: "D365AuthConfiguration.TenantId"
+  #           value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
+  #         - name: "D365AuthConfiguration.ClientId"
+  #           value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
+  #         - name: "D365AuthConfiguration.ClientSecret"
+  #           value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
+  #         - name: "EnsAuthConfiguration.ClientId"
+  #           value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
+  #         - name: "EnsAuthConfiguration.TenantId"
+  #           value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
+  #         - name: "ElasticAPM.ApiKey"
+  #           value: $(elasticAPM-ApiKey)
+  #         - name: "ElasticAPM.Environment"
+  #           value: $(elasticAPM-Environment)
+  #         - name: "ElasticAPM.ServerURL"
+  #           value: $(elasticAPM-ServerURL)
+  #         - name: "ElasticAPM.ServiceName"
+  #           value: $(elasticAPM-ServiceName)
+  #         - name: "ElasticAPM.WebJobServiceName"
+  #           value: $(elasticAPM-WebJobServiceName)
+  #       strategy:
+  #         runOnce:
+  #           deploy:
+  #             steps:
+  #               - template: Deployment/templates/continuous-deployment.yml
+  #                 parameters:
+  #                   ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+  #                   AzureSubscription: "External Notification Service vNext E2E - A.011.08"
 
-                - template: Deployment/templates/continuous-deployment-apim.yml
-                  parameters:
-                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
-                    TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
-                    APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
-                    APIMServiceInstance: $(APIM_SERVICE_NAME)
-                    tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
+  #               - template: Deployment/templates/continuous-deployment-apim.yml
+  #                 parameters:
+  #                   ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+  #                   AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
+  #                   TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
+  #                   APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
+  #                   APIMServiceInstance: $(APIM_SERVICE_NAME)
+  #                   tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
 
-  - stage: QAdeploy
-    dependsOn:
-      - DevDeploy
-    displayName: QAdeploy (inc terraform, webapp deploy)
-    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
-    jobs:
-      - deployment: QADeployApp
-        displayName: QA - deploy terraform and dotnet App
-        environment: "Ens-Qa"
-        pool: $(DeploymentPool)
-        container: ${{variables.Container}}
-        workspace:
-          clean: all
-        variables:
-          - group: "ENS-QA-TF-Variables"
-          - group: "ENS-QA-Variables"
-          - name: "D365AuthConfiguration.TenantId"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
-          - name: "D365AuthConfiguration.ClientId"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
-          - name: "D365AuthConfiguration.ClientSecret"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
-          - name: "EnsAuthConfiguration.ClientId"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
-          - name: "EnsAuthConfiguration.TenantId"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
-          - name: "ElasticAPM.ApiKey"
-            value: $(elasticAPM-ApiKey)
-          - name: "ElasticAPM.Environment"
-            value: $(elasticAPM-Environment)
-          - name: "ElasticAPM.ServerURL"
-            value: $(elasticAPM-ServerURL)
-          - name: "ElasticAPM.ServiceName"
-            value: $(elasticAPM-ServiceName)
-          - name: "ElasticAPM.WebJobServiceName"
-            value: $(elasticAPM-WebJobServiceName)
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - template: Deployment/templates/continuous-deployment.yml
-                  parameters:
-                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "External Notification Service QA - A.008.02"
+  # - stage: QAdeploy
+  #   dependsOn:
+  #     - DevDeploy
+  #   displayName: QAdeploy (inc terraform, webapp deploy)
+  #   condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
+  #   jobs:
+  #     - deployment: QADeployApp
+  #       displayName: QA - deploy terraform and dotnet App
+  #       environment: "Ens-Qa"
+  #       pool: $(DeploymentPool)
+  #       container: ${{variables.Container}}
+  #       workspace:
+  #         clean: all
+  #       variables:
+  #         - group: "ENS-QA-TF-Variables"
+  #         - group: "ENS-QA-Variables"
+  #         - name: "D365AuthConfiguration.TenantId"
+  #           value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
+  #         - name: "D365AuthConfiguration.ClientId"
+  #           value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
+  #         - name: "D365AuthConfiguration.ClientSecret"
+  #           value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
+  #         - name: "EnsAuthConfiguration.ClientId"
+  #           value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
+  #         - name: "EnsAuthConfiguration.TenantId"
+  #           value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
+  #         - name: "ElasticAPM.ApiKey"
+  #           value: $(elasticAPM-ApiKey)
+  #         - name: "ElasticAPM.Environment"
+  #           value: $(elasticAPM-Environment)
+  #         - name: "ElasticAPM.ServerURL"
+  #           value: $(elasticAPM-ServerURL)
+  #         - name: "ElasticAPM.ServiceName"
+  #           value: $(elasticAPM-ServiceName)
+  #         - name: "ElasticAPM.WebJobServiceName"
+  #           value: $(elasticAPM-WebJobServiceName)
+  #       strategy:
+  #         runOnce:
+  #           deploy:
+  #             steps:
+  #               - template: Deployment/templates/continuous-deployment.yml
+  #                 parameters:
+  #                   ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+  #                   AzureSubscription: "External Notification Service QA - A.008.02"
 
-                - template: Deployment/templates/continuous-deployment-apim.yml
-                  parameters:
-                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
-                    TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
-                    APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
-                    APIMServiceInstance: $(APIM_SERVICE_NAME)
-                    tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
+  #               - template: Deployment/templates/continuous-deployment-apim.yml
+  #                 parameters:
+  #                   ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+  #                   AzureSubscription: "UKHO-APIM-SOLAS-NonLive"
+  #                   TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
+  #                   APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
+  #                   APIMServiceInstance: $(APIM_SERVICE_NAME)
+  #                   tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
 
-                - task: DownloadBuildArtifacts@0
-                  displayName: "Download Functional test Artifact"
-                  inputs:
-                    buildType: 'current'
-                    downloadType: 'single'
-                    artifactName: 'functionaltests'
-                    downloadPath: '$(Build.SourcesDirectory)'
+  #               - task: DownloadBuildArtifacts@0
+  #                 displayName: "Download Functional test Artifact"
+  #                 inputs:
+  #                   buildType: 'current'
+  #                   downloadType: 'single'
+  #                   artifactName: 'functionaltests'
+  #                   downloadPath: '$(Build.SourcesDirectory)'
 
-                - task: FileTransform@2
-                  displayName: "File Transform: functionaltests"
-                  inputs:
-                    folderPath: '$(Build.SourcesDirectory)/functionaltests/'
-                    xmlTransformationRules: ''
-                    enableXmlTransform: false
-                    jsonTargetFiles: '**/appsettings.json'
+  #               - task: FileTransform@2
+  #                 displayName: "File Transform: functionaltests"
+  #                 inputs:
+  #                   folderPath: '$(Build.SourcesDirectory)/functionaltests/'
+  #                   xmlTransformationRules: ''
+  #                   enableXmlTransform: false
+  #                   jsonTargetFiles: '**/appsettings.json'
 
-                - task: UseDotNet@2
-                  displayName: 'Use .NET Core sdk'
-                  inputs:
-                    packageType: sdk
-                    version: '8.0.x'
+  #               - task: UseDotNet@2
+  #                 displayName: 'Use .NET Core sdk'
+  #                 inputs:
+  #                   packageType: sdk
+  #                   version: '8.0.x'
 
-                - task: DotNetCoreCLI@2
-                  displayName: "Run Functional tests"
-                  inputs:
-                    command: "test"
-                    projects: |
-                      **/*FunctionalTest*.dll
-                      !**/*TestAdapter.dll
-                      !**/obj/**
-                    testRunTitle: "QA-AutomationTests"
-                    workingDirectory: '$(Build.SourcesDirectory)/functionaltests'
+  #               - task: DotNetCoreCLI@2
+  #                 displayName: "Run Functional tests"
+  #                 inputs:
+  #                   command: "test"
+  #                   projects: |
+  #                     **/*FunctionalTest*.dll
+  #                     !**/*TestAdapter.dll
+  #                     !**/obj/**
+  #                   testRunTitle: "QA-AutomationTests"
+  #                   workingDirectory: '$(Build.SourcesDirectory)/functionaltests'
 
-      - job: Run_ADDS_E2E_tests
-        displayName: Run ADDS E2E tests
-        dependsOn: QADeployApp
-        pool: $(DeploymentPool)
-        variables:
-          - group: "ADDS-E2E"
-          - group: "ENS-QA-Variables"
-          - name : ResourceGroup
-            value : $[ dependencies.QADeployApp.outputs['QADeployApp.setVariable.ResourceGroupName'] ]
-          - name : WEB_APP_NAME
-            value : $[ dependencies.QADeployApp.outputs['QADeployApp.setVariable.WEB_APP'] ]
-        container: ${{variables.Container}}
-        steps:
-        - task: DownloadBuildArtifacts@0
-          displayName: "Download Integration test Artifact"
-          inputs:
-            buildType: 'current'
-            downloadType: 'single'
-            artifactName: 'terraformartifact'
-            downloadPath: '$(Pipeline.Workspace)'
+  #     - job: Run_ADDS_E2E_tests
+  #       displayName: Run ADDS E2E tests
+  #       dependsOn: QADeployApp
+  #       pool: $(DeploymentPool)
+  #       variables:
+  #         - group: "ADDS-E2E"
+  #         - group: "ENS-QA-Variables"
+  #         - name : ResourceGroup
+  #           value : $[ dependencies.QADeployApp.outputs['QADeployApp.setVariable.ResourceGroupName'] ]
+  #         - name : WEB_APP_NAME
+  #           value : $[ dependencies.QADeployApp.outputs['QADeployApp.setVariable.WEB_APP'] ]
+  #       container: ${{variables.Container}}
+  #       steps:
+  #       - task: DownloadBuildArtifacts@0
+  #         displayName: "Download Integration test Artifact"
+  #         inputs:
+  #           buildType: 'current'
+  #           downloadType: 'single'
+  #           artifactName: 'terraformartifact'
+  #           downloadPath: '$(Pipeline.Workspace)'
 
-        - task: PowerShell@2          
-          displayName: "Run ADDS E2E pipeline tests"
-          inputs:
-              pwsh: true
-              targetType: filePath
-              filePath: '$(System.DefaultWorkingDirectory)/Deployment/ADDS-e2e-tests.ps1'
-              arguments: '-queueSecret $(QueueSecret) -pollSecret $(PollSecret) -pollTimeInSecs $(PollTimeInSecs) -functionEndPoint $(FunctionEndPoint)'
+  #       - task: PowerShell@2          
+  #         displayName: "Run ADDS E2E pipeline tests"
+  #         inputs:
+  #             pwsh: true
+  #             targetType: filePath
+  #             filePath: '$(System.DefaultWorkingDirectory)/Deployment/ADDS-e2e-tests.ps1'
+  #             arguments: '-queueSecret $(QueueSecret) -pollSecret $(PollSecret) -pollTimeInSecs $(PollTimeInSecs) -functionEndPoint $(FunctionEndPoint)'
 
-        - task: AzureCLI@2
-          displayName: "Swap Stub URL"
-          condition: always()
-          inputs:
-            azureSubscription: "External Notification Service QA - A.008.02"
-            scriptType: 'pscore'
-            scriptLocation: 'scriptPath'
-            scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
-            arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
+  #       - task: AzureCLI@2
+  #         displayName: "Swap Stub URL"
+  #         condition: always()
+  #         inputs:
+  #           azureSubscription: "External Notification Service QA - A.008.02"
+  #           scriptType: 'pscore'
+  #           scriptLocation: 'scriptPath'
+  #           scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
+  #           arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
 
-  - stage: Livedeploy
-    dependsOn:
-      - QADeploy
-    displayName: Livedeploy (inc terraform, webapp deploy)
-    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
-    jobs:
-      - deployment: LiveDeployApp
-        displayName: Live - deploy terraform and dotnet App
-        environment: "Ens-Live"
-        pool: $(DeploymentPool)
-        container: ${{variables.Container}}
-        workspace:
-          clean: all
-        variables:
-          - group: "ENS-Live-TF-Variables"
-          - group: "ENS-Live-Variables"
-          - name: "D365AuthConfiguration.TenantId"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
-          - name: "D365AuthConfiguration.ClientId"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
-          - name: "D365AuthConfiguration.ClientSecret"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
-          - name: "EnsAuthConfiguration.ClientId"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
-          - name: "EnsAuthConfiguration.TenantId"
-            value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
-          - name: "ElasticAPM.ApiKey"
-            value: $(elasticAPM-ApiKey)
-          - name: "ElasticAPM.Environment"
-            value: $(elasticAPM-Environment)
-          - name: "ElasticAPM.ServerURL"
-            value: $(elasticAPM-ServerURL)
-          - name: "ElasticAPM.ServiceName"
-            value: $(elasticAPM-ServiceName)
-          - name: "ElasticAPM.WebJobServiceName"
-            value: $(elasticAPM-WebJobServiceName)
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - template: Deployment/templates/continuous-deployment.yml
-                  parameters:
-                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "External Notification Service Live - A.008.02"
+  # - stage: Livedeploy
+  #   dependsOn:
+  #     - QADeploy
+  #   displayName: Livedeploy (inc terraform, webapp deploy)
+  #   condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
+  #   jobs:
+  #     - deployment: LiveDeployApp
+  #       displayName: Live - deploy terraform and dotnet App
+  #       environment: "Ens-Live"
+  #       pool: $(DeploymentPool)
+  #       container: ${{variables.Container}}
+  #       workspace:
+  #         clean: all
+  #       variables:
+  #         - group: "ENS-Live-TF-Variables"
+  #         - group: "ENS-Live-Variables"
+  #         - name: "D365AuthConfiguration.TenantId"
+  #           value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
+  #         - name: "D365AuthConfiguration.ClientId"
+  #           value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
+  #         - name: "D365AuthConfiguration.ClientSecret"
+  #           value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
+  #         - name: "EnsAuthConfiguration.ClientId"
+  #           value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
+  #         - name: "EnsAuthConfiguration.TenantId"
+  #           value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
+  #         - name: "ElasticAPM.ApiKey"
+  #           value: $(elasticAPM-ApiKey)
+  #         - name: "ElasticAPM.Environment"
+  #           value: $(elasticAPM-Environment)
+  #         - name: "ElasticAPM.ServerURL"
+  #           value: $(elasticAPM-ServerURL)
+  #         - name: "ElasticAPM.ServiceName"
+  #           value: $(elasticAPM-ServiceName)
+  #         - name: "ElasticAPM.WebJobServiceName"
+  #           value: $(elasticAPM-WebJobServiceName)
+  #       strategy:
+  #         runOnce:
+  #           deploy:
+  #             steps:
+  #               - template: Deployment/templates/continuous-deployment.yml
+  #                 parameters:
+  #                   ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+  #                   AzureSubscription: "External Notification Service Live - A.008.02"
 
-                - template: Deployment/templates/continuous-deployment-apim.yml
-                  parameters:
-                    ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
-                    AzureSubscription: "UKHO-APIM-SOLAS-Live"
-                    TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
-                    APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
-                    APIMServiceInstance: $(APIM_SERVICE_NAME)
-                    tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
+  #               - template: Deployment/templates/continuous-deployment-apim.yml
+  #                 parameters:
+  #                   ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+  #                   AzureSubscription: "UKHO-APIM-SOLAS-Live"
+  #                   TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
+  #                   APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
+  #                   APIMServiceInstance: $(APIM_SERVICE_NAME)
+  #                   tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
 
-      - job: PostDeploymentActions
-        dependsOn:
-        - LiveDeployApp
-        pool: $(WindowPool)
-        displayName: Post Deployment Actions
-        steps:
-          - template: Deployment/templates/retain-pipeline.yml
+  #     - job: PostDeploymentActions
+  #       dependsOn:
+  #       - LiveDeployApp
+  #       pool: $(WindowPool)
+  #       displayName: Post Deployment Actions
+  #       steps:
+  #         - template: Deployment/templates/retain-pipeline.yml

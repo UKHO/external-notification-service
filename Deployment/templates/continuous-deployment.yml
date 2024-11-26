@@ -38,66 +38,66 @@ steps:
       TF_VAR_core_services_subscription_id: $(coreServicesSubscriptionId)
       TF_VAR_core_services_rg: $(coreServicesRG)
 
-  - bash: echo "##vso[task.setvariable variable=D365CallbackConfiguration.D365ApiUri]$(D365ApiStubUri)"
-    name: SetStubURL
-    condition: and(succeeded(), ne(variables['Environment.Name'], 'Ens-Live'))
+  # - bash: echo "##vso[task.setvariable variable=D365CallbackConfiguration.D365ApiUri]$(D365ApiStubUri)"
+  #   name: SetStubURL
+  #   condition: and(succeeded(), ne(variables['Environment.Name'], 'Ens-Live'))
 
-  - task: FileTransform@2
-    displayName: "File Transform: WebAppSettings"
-    inputs:
-      folderPath: '$(Pipeline.Workspace)/ExternalNotificationService/*.zip'
-      xmlTransformationRules: ''
-      enableXmlTransform: false
-      jsonTargetFiles: '**/appsettings.json'
+  # - task: FileTransform@2
+  #   displayName: "File Transform: WebAppSettings"
+  #   inputs:
+  #     folderPath: '$(Pipeline.Workspace)/ExternalNotificationService/*.zip'
+  #     xmlTransformationRules: ''
+  #     enableXmlTransform: false
+  #     jsonTargetFiles: '**/appsettings.json'
 
-  - task: AzureWebApp@1
-    displayName: "Azure App Deploy: Staging slot"
-    inputs:
-      azureSubscription: "${{ parameters.AzureSubscription }}"
-      appType: webApp
-      appName: "$(WEB_APP_NAME)"
-      package: "$(Pipeline.Workspace)/ExternalNotificationService/UKHO.ExternalNotificationService.API.zip"
-      deployToSlotOrASE: true
-      slotName: $(WEB_APP_SLOT_NAME)
+  # - task: AzureWebApp@1
+  #   displayName: "Azure App Deploy: Staging slot"
+  #   inputs:
+  #     azureSubscription: "${{ parameters.AzureSubscription }}"
+  #     appType: webApp
+  #     appName: "$(WEB_APP_NAME)"
+  #     package: "$(Pipeline.Workspace)/ExternalNotificationService/UKHO.ExternalNotificationService.API.zip"
+  #     deployToSlotOrASE: true
+  #     slotName: $(WEB_APP_SLOT_NAME)
 
-  - task: PowerShell@2
-    displayName: "Check the status of staging slot"
-    inputs:
-      targetType: filePath
-      filePath: "$(Pipeline.Workspace)/terraformartifact/check_service_status.ps1"
-      arguments: "-healthEndPointUrl https://$(WEB_APP_SLOT_HOST_NAME)/health -waitTimeInMinute $(waitTimeInMinute)"
+  # - task: PowerShell@2
+  #   displayName: "Check the status of staging slot"
+  #   inputs:
+  #     targetType: filePath
+  #     filePath: "$(Pipeline.Workspace)/terraformartifact/check_service_status.ps1"
+  #     arguments: "-healthEndPointUrl https://$(WEB_APP_SLOT_HOST_NAME)/health -waitTimeInMinute $(waitTimeInMinute)"
      
-  - task: AzureAppServiceManage@0
-    displayName: "Swap with production slot"
-    inputs:
-      azureSubscription: "${{ parameters.AzureSubscription }}"
-      resourceGroupName: $(ResourceGroup)
-      webAppName: $(WEB_APP_NAME)
-      action: "Swap Slots"
-      swapWithProduction: true
-      sourceSlot: $(WEB_APP_SLOT_NAME)
+  # - task: AzureAppServiceManage@0
+  #   displayName: "Swap with production slot"
+  #   inputs:
+  #     azureSubscription: "${{ parameters.AzureSubscription }}"
+  #     resourceGroupName: $(ResourceGroup)
+  #     webAppName: $(WEB_APP_NAME)
+  #     action: "Swap Slots"
+  #     swapWithProduction: true
+  #     sourceSlot: $(WEB_APP_SLOT_NAME)
 
-  - task: PowerShell@2
-    displayName: "Check the status of Service"
-    inputs:
-      targetType: filePath
-      filePath: "$(Pipeline.Workspace)/terraformartifact/check_service_status.ps1"
-      arguments: "-healthEndPointUrl $(EnsApiUrl)/health -waitTimeInMinute $(waitTimeInMinute)"
+  # - task: PowerShell@2
+  #   displayName: "Check the status of Service"
+  #   inputs:
+  #     targetType: filePath
+  #     filePath: "$(Pipeline.Workspace)/terraformartifact/check_service_status.ps1"
+  #     arguments: "-healthEndPointUrl $(EnsApiUrl)/health -waitTimeInMinute $(waitTimeInMinute)"
 
-  - task: FileTransform@2
-    displayName: "File Transform: StubWebAppSettings"
-    condition: and(succeeded(), ne(variables['Environment.Name'], 'Ens-Live'))
-    inputs:
-      folderPath: '$(Pipeline.Workspace)/StubWebAPI/*.zip'
-      xmlTransformationRules: ''
-      enableXmlTransform: false
-      jsonTargetFiles: '**/appsettings.json'           
+  # - task: FileTransform@2
+  #   displayName: "File Transform: StubWebAppSettings"
+  #   condition: and(succeeded(), ne(variables['Environment.Name'], 'Ens-Live'))
+  #   inputs:
+  #     folderPath: '$(Pipeline.Workspace)/StubWebAPI/*.zip'
+  #     xmlTransformationRules: ''
+  #     enableXmlTransform: false
+  #     jsonTargetFiles: '**/appsettings.json'           
 
-  - task: AzureWebApp@1
-    displayName: "Azure App Deploy: ens-$(Environment)-stub-webapp"
-    condition: and(succeeded(), ne(variables['Environment.Name'], 'Ens-Live'))
-    inputs:
-      azureSubscription: "${{ parameters.AzureSubscription }}"
-      appType: webApp
-      appName: "$(stubWebAppName)"
-      package: "$(Pipeline.Workspace)/StubWebAPI/UKHO.D365CallbackDistributorStub.API.zip"
+  # - task: AzureWebApp@1
+  #   displayName: "Azure App Deploy: ens-$(Environment)-stub-webapp"
+  #   condition: and(succeeded(), ne(variables['Environment.Name'], 'Ens-Live'))
+  #   inputs:
+  #     azureSubscription: "${{ parameters.AzureSubscription }}"
+  #     appType: webApp
+  #     appName: "$(stubWebAppName)"
+  #     package: "$(Pipeline.Workspace)/StubWebAPI/UKHO.D365CallbackDistributorStub.API.zip"
