@@ -257,12 +257,12 @@ stages:
           #     PathtoPublish: '$(Build.ArtifactStagingDirectory)\UKHO.ExternalNotificationService.API.FunctionalTests'
           #     ArtifactName: functionaltests
 
-          # - task: CopyFiles@2
-          #   displayName: Copy ExternalNotificationService Config
-          #   inputs:
-          #     SourceFolder: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API\UKHO.ExternalNotificationService.API\'
-          #     Contents: 'appsettings.json'
-          #     TargetFolder: '$(Build.SourcesDirectory)\Deployment\src'
+          - task: CopyFiles@2
+            displayName: Copy ExternalNotificationService Config
+            inputs:
+              SourceFolder: '$(Build.SourcesDirectory)\UKHO.ExternalNotificationService.API\UKHO.ExternalNotificationService.API\'
+              Contents: 'appsettings.json'
+              TargetFolder: '$(Build.SourcesDirectory)\Deployment\src'
 
           - task: CopyFiles@2
             displayName: "Copy OpenAPI spec for deployment"
