@@ -26,4 +26,9 @@ resource "azurerm_monitor_diagnostic_setting" "egdiagnosticsetting" {
   enabled_log {
     category = "PublishFailures"
   }
+
+  metric {
+    category = "AllMetrics"
+    enabled  = false
+  }
 }
