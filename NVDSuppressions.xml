@@ -554,5 +554,5 @@
     <cpe>cpe:/a:tasks:tasks</cpe>
     <cve>CVE-2020-22475</cve>
     <cve>CVE-2022-39349</cve>
-  </suppress>  
+  </suppress>
 </suppressions>
