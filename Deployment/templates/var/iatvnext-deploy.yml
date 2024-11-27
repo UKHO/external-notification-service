@@ -1,0 +1,4 @@
+variables:
+        - template: iatvnext-groups.yml
+        - template: common.yml
+        

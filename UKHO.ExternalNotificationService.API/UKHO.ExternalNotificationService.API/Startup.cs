@@ -71,6 +71,7 @@ namespace UKHO.ExternalNotificationService.API
             services.Configure<EventProcessorConfiguration>(_configuration.GetSection("EventProcessorConfiguration"));
 
             services.AddApplicationInsightsTelemetry();
+            services.AddAllElasticApm(); 
             services.AddLogging(loggingBuilder =>
             {
                 loggingBuilder.AddConfiguration(_configuration.GetSection("Logging"));
@@ -137,7 +138,7 @@ namespace UKHO.ExternalNotificationService.API
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/health");
             });
-            app.UseElasticApm(_configuration);
+            
         }
 
         protected IConfigurationRoot BuildConfiguration(IWebHostEnvironment hostingEnvironment)
