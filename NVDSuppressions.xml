@@ -217,13 +217,15 @@
     <notes>
       <![CDATA[
    file name: Azure.Identity:1.10.3
-   False positive - imapcts the Azure CLI
+   False positive - imapcts the Azure CLI, and using latest version of package anyway.
    ]]>
     </notes>
     <packageUrl regex="true">^pkg:nuget/Azure\.Identity@.*$</packageUrl>
     <cpe>cpe:/a:microsoft:azure_cli</cpe>
     <cpe>cpe:/a:microsoft:azure_identity_sdk</cpe>
     <cve>CVE-2023-36052</cve>
+    <vulnerabilityName>CVE-2024-35255</vulnerabilityName>
+    <vulnerabilityName>CVE-2024-29992</vulnerabilityName>
   </suppress>
   <suppress>
     <notes>
@@ -554,5 +556,168 @@
     <cpe>cpe:/a:tasks:tasks</cpe>
     <cve>CVE-2020-22475</cve>
     <cve>CVE-2022-39349</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Elastic.Apm.Elasticsearch.dll
+   Suppressed until update released.
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.Elasticsearch@.*$</packageUrl>
+    <cve>CVE-2019-7611</cve>
+    <cve>CVE-2023-46674</cve>
+    <cve>CVE-2023-31418</cve>
+    <cve>CVE-2019-7617</cve>
+    <cve>CVE-2020-7019</cve>
+    <cve>CVE-2021-22144</cve>
+    <cve>CVE-2019-7614</cve>
+    <cve>CVE-2021-22135</cve>
+    <cve>CVE-2021-22137</cve>
+    <cve>CVE-2020-7021</cve>
+    <cve>CVE-2020-7020</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Elastic.Apm.EntityFrameworkCore.dll
+   Suppressed until update released.
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.EntityFrameworkCore@.*$</packageUrl>
+    <cve>CVE-2019-7617</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Elastic.Apm.GrpcClient.dll
+   Suppressed until update released.
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.GrpcClient@.*$</packageUrl>
+    <cve>CVE-2023-33953</cve>
+    <cve>CVE-2023-44487</cve>
+    <cve>CVE-2023-4785</cve>
+    <cve>CVE-2023-32732</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Elastic.Apm.MongoDb.dll
+   MongoDb not used - n/a
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.MongoDb@.*$</packageUrl>
+    <cve>CVE-2012-6619</cve>
+    <cve>CVE-2013-1892</cve>
+    <cve>CVE-2014-8180</cve>
+    <cve>CVE-2016-6494</cve>
+    <cve>CVE-2015-1609</cve>
+    <cve>CVE-2013-2132</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Elastic.Apm.NetCoreAll.dll
+   Suppressed until update released.
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Elastic\.Apm\.NetCoreAll@.*$</packageUrl>
+    <cve>CVE-2019-7617</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Elasticsearch.Net.dll
+   Suppressed until update released.
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Elasticsearch\.Net@.*$</packageUrl>
+    <cve>CVE-2023-46674</cve>
+    <cve>CVE-2023-31418</cve>
+    <cve>CVE-2023-31419</cve>
+    <cve>CVE-2023-46673</cve>
+    <cve>CVE-2023-49921</cve>
+    <cve>CVE-2023-31417</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Azure.WebJobs:Various
+   Applies to Azure VMs. MS says that customers will be notified directly if affected. See https://msrc.microsoft.com/update-guide/vulnerability/CVE-2022-29149
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Microsoft\.Azure\.WebJobs@.*$</packageUrl>
+    <cve>CVE-2022-29149</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Extensions.Hosting.dll
+   Bug to track the fix - https://dev.azure.com/ukhydro/Abzu/_workitems/edit/192148
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Extensions\.Hosting@.*$</packageUrl>
+    <cve>CVE-2020-1147</cve>
+    <cve>CVE-2018-8409</cve>
+    <cve>CVE-2019-0545</cve>
+    <cve>CVE-2019-0980</cve>
+    <cve>CVE-2019-0981</cve>
+    <cve>CVE-2019-1301</cve>
+    <cve>CVE-2020-1108</cve>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+    <cve>CVE-2019-0657</cve>
+    <cve>CVE-2021-34485</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: MongoDB.Bson.dll
+   MongoDb not used - n/a
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/MongoDB\.Bson@.*$</packageUrl>
+    <cve>CVE-2015-4411</cve>
+    <cve>CVE-2021-32036</cve>
+    <cve>CVE-2014-8180</cve>
+    <cve>CVE-2016-6494</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: MongoDB.Driver.Core.dll
+   MongoDb not used - n/a
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/MongoDB\.Driver\.Core@.*$</packageUrl>
+    <cve>CVE-2021-32036</cve>
+    <cve>CVE-2014-8180</cve>
+    <cve>CVE-2016-6494</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: MongoDB.Libmongocrypt.dll
+   MongoDb not used - n/a
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/MongoDB\.Libmongocrypt@.*$</packageUrl>
+    <cve>CVE-2012-6619</cve>
+    <cve>CVE-2013-1892</cve>
+    <cve>CVE-2014-8180</cve>
+    <cve>CVE-2016-6494</cve>
+    <cve>CVE-2015-1609</cve>
+    <cve>CVE-2013-2132</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: System.Text.Json:Various
+   Transitive reference - suppressed until parent package is updated.
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/System\.Text\.Json@.*$</packageUrl>
+    <vulnerabilityName>CVE-2024-43485</vulnerabilityName>
   </suppress>
 </suppressions>
