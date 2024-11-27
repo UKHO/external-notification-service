@@ -223,7 +223,6 @@ stages:
                     folderPath: '$(Build.SourcesDirectory)/functionaltests/'
                     xmlTransformationRules: ''
                     enableXmlTransform: false
-                    xmlTransformationRules: ''
                     jsonTargetFiles: '**/appsettings.json'
 
                 - task: UseDotNet@2
