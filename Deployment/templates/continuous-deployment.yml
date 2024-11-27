@@ -12,7 +12,6 @@ steps:
       folderPath: '$(Pipeline.Workspace)/terraformartifact/src'
       xmlTransformationRules: ''
       enableXmlTransform: false
-      xmlTransformationRules: ''
       jsonTargetFiles: 'appsettings.json'
 
   - task: PowerShell@2
@@ -49,7 +48,6 @@ steps:
       folderPath: '$(Pipeline.Workspace)/ExternalNotificationService/*.zip'
       xmlTransformationRules: ''
       enableXmlTransform: false
-      xmlTransformationRules: ''
       jsonTargetFiles: '**/appsettings.json'
 
   - task: AzureWebApp@1
@@ -93,7 +91,6 @@ steps:
       folderPath: '$(Pipeline.Workspace)/StubWebAPI/*.zip'
       xmlTransformationRules: ''
       enableXmlTransform: false
-      xmlTransformationRules: ''
       jsonTargetFiles: '**/appsettings.json'           
 
   - task: AzureWebApp@1
