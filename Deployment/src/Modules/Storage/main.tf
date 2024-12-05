@@ -26,6 +26,11 @@ resource "azurerm_storage_container" "ens_storage_destination_container" {
   storage_account_name      = azurerm_storage_account.ens_storage.name
 }
 
+resource "azurerm_storage_container" "ens_dummy_test_container" {
+  name                      = "test-do-not-use"
+  storage_account_name      = azurerm_storage_account.ens_storage.name
+}
+
 resource "azurerm_storage_queue" "ens_storage_queue" {
   name                      = "ens-storage-queue"
   storage_account_name      = azurerm_storage_account.ens_storage.name
