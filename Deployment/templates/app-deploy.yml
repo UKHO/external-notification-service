@@ -24,6 +24,8 @@ parameters:
 
 jobs:
   - template: gated-infrastructure-deploy/gated-infrastructure-deploy.yml@UKHOTemplates
+    variables: 
+    - template: var/${{ lower(parameters.ShortName) }}-deploy.yml
     parameters:
       AzDOEnvironmentName: ${{ parameters.AzureEnvironment }}
       TFStateResourceGroupName: $(DeploymentResourceGroupName)
