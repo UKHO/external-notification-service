@@ -4,7 +4,7 @@ parameters:
   - name: ContinueEvenIfResourcesAreGettingDestroyed
     displayName: "Continue even if resources are getting destroyed"
     type: boolean
-    default: true
+    default: false
 
   - name: DisableDependencyCheck
     displayName: "Disable OWASP dependency checking"
@@ -92,6 +92,7 @@ stages:
     dependsOn:
     - DevDeploy
     displayName: "IATDeploy (inc terraform, webapp deploy)"
+    pool: $(DeploymentPool)
     condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
     - template: Deployment/templates/app-deploy.yml
@@ -109,6 +110,7 @@ stages:
     dependsOn:
     - IATDeploy
     displayName: "PreProdDeploy (inc terraform, webapp deploy)"
+    pool: $(DeploymentPool)
     condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
     - template: Deployment/templates/app-deploy.yml
@@ -126,6 +128,7 @@ stages:
     dependsOn:
     - DevDeploy
     displayName: "IATvNextDeploy (inc terraform, webapp deploy)"
+    pool: $(DeploymentPool)
     condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/develop'),startsWith(variables['Build.SourceBranch'], 'refs/heads/dev/')))
     jobs:
     - template: Deployment/templates/app-deploy.yml
@@ -143,6 +146,7 @@ stages:
     dependsOn:
     - IATvNextDeploy
     displayName: E2EvNextDeploy (inc terraform, webapp deploy)
+    pool: $(DeploymentPool)
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
     jobs:
     - template: Deployment/templates/app-deploy.yml
