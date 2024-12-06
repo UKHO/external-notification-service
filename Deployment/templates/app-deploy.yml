@@ -106,6 +106,8 @@ jobs:
       value: $[dependencies.deployInfrastructure.outputs['deployInfrastructure.deployment.web_app_slot_name']]
     - name: WEB_APP_SLOT_HOST_NAME
       value: $[dependencies.deployInfrastructure.outputs['deployInfrastructure.deployment.web_app_slot_default_site_hostname']]
+    - name: EnsApiUrl
+      value: $(SERVICE_DNS_URL)
     strategy:
       runOnce:
         deploy:
