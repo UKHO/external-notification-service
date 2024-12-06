@@ -23,7 +23,50 @@ parameters:
     default: false
 
 jobs:
+  - template: gated-infrastructure-deploy/gated-infrastructure-deploy.yml@UKHOTemplates
+    parameters:
+      AzDOEnvironmentName: ${{ parameters.AzureEnvironment }}
+      TFStateResourceGroupName: $(DeploymentResourceGroupName)
+      TFStateStorageAccountName: $(DeploymentStorageAccountName)
+      TFStateContainerName: "tfstate"
+      TFStateBlobName: "terraform.deployment.tfplan"
+      TerraformWorkspace: $(Environment)
+      TerraformArtifactConfigRelativePath: "/src/"
+      TerraformArtifact: "terraformartifact"
+      TerraformContainer: ${{ parameters.Container }}
+      VariablesTemplateRelativePath: /Deployment/templates/var/${{ lower(parameters.ShortName) }}-deploy.yml
+      TerraformVariableMappings:
+        ARM_CLIENT_ID: $(TERRAFORM-CLIENT-ID)
+        ARM_CLIENT_SECRET: $(TERRAFORM-CLIENT-SECRET)
+        ARM_TENANT_ID: $(TERRAFORM-TENANT-ID)
+        ARM_SUBSCRIPTION_ID: $(TERRAFORM-SUBSCRIPTION-ID)
+        TF_VAR_allowed_ips: $(whiteListedIps)
+        TF_VAR_spoke_rg: $(spokeRG)
+        TF_VAR_spoke_vnet_name: $(spokeVnetName)
+        TF_VAR_spoke_subnet_name: $(spokeSubnetName)
+        TF_VAR_agent_rg: $(agentRG)
+        TF_VAR_agent_vnet_name: $(agentVnetName)
+        TF_VAR_agent_subnet_name: $(agentSubnetName)
+        TF_VAR_agent_subscription_id: $(agentSubscriptionId)
+        TF_VAR_private_endpoint_subnet_name: $(privateEndpointSubnet)
+        TF_VAR_core_services_subscription_id: $(coreServicesSubscriptionId)
+        TF_VAR_core_services_rg: $(coreServicesRG)
+      TerraformOutputVariables:
+        web_app_name
+        event_storage_queue
+        env_name
+        ens_storage_connection_string
+        dead_letter_storage_container
+        stub_webappname
+        ens_stub_web_app_url
+        webapp_rg
+        event_grid_domain_endpoint_url
+        dead_letter_storage_destination_container
+        web_app_slot_name
+        web_app_slot_default_site_hostname
+
   - deployment: ${{ upper(parameters.ShortName) }}DeployApp
+    dependsOn: deployInfrastructure
     displayName: "${{ upper(parameters.ShortName) }} - deploy terraform and dotnet App"
     environment: ${{ parameters.AzureEnvironment }}
     pool: $(DeploymentPool)
@@ -32,7 +75,34 @@ jobs:
       clean: all
     variables: 
     - template: var/${{ lower(parameters.ShortName) }}-deploy.yml
-        
+    - name: WEB_APP_NAME
+      value: $[dependencies.deployInfrastructure.outputs['deployInfrastructure.deployment.web_app_name']]
+    - name: SubscriptionStorageConfiguration.QueueName
+      value: $[dependencies.deployInfrastructure.outputs['deployInfrastructure.deployment.event_storage_queue']]
+    - name: EventHubLoggingConfiguration.Environment
+      value: $[dependencies.deployInfrastructure.outputs['deployInfrastructure.deployment.env_name']]
+    - name: EnsStorageConnectionString
+      value: $[dependencies.deployInfrastructure.outputs['deployInfrastructure.deployment.ens_storage_connection_string']]
+    - name: EnsStorageQueueName
+      value: $[dependencies.deployInfrastructure.outputs['deployInfrastructure.deployment.event_storage_queue']]
+    - name: SubscriptionStorageConfiguration.StorageContainerName
+      value: $[dependencies.deployInfrastructure.outputs['deployInfrastructure.deployment.dead_letter_storage_container']]
+    - name: stubWebAppName
+      value: $[dependencies.deployInfrastructure.outputs['deployInfrastructure.deployment.stub_webappname']]
+    - name: D365ApiStubUri
+      value: $[dependencies.deployInfrastructure.outputs['deployInfrastructure.deployment.ens_stub_web_app_url']]
+    - name: ResourceGroup
+      value: $[dependencies.deployInfrastructure.outputs['deployInfrastructure.deployment.webapp_rg']]
+    # - name: ResourceGroupName
+    #   value: $[dependencies.deployInfrastructure.outputs['deployInfrastructure.deployment.webapp_rg']]
+    - name: EventGridDomainConfiguration.EventGridDomainEndpoint
+      value: $[dependencies.deployInfrastructure.outputs['deployInfrastructure.deployment.event_grid_domain_endpoint_url']]
+    - name: SubscriptionStorageConfiguration.DeadLetterDestinationContainerName
+      value: $[dependencies.deployInfrastructure.outputs['deployInfrastructure.deployment.dead_letter_storage_destination_container']]
+    - name: WEB_APP_SLOT_NAME
+      value: $[dependencies.deployInfrastructure.outputs['deployInfrastructure.deployment.web_app_slot_name']]
+    - name: WEB_APP_SLOT_HOST_NAME
+      value: $[dependencies.deployInfrastructure.outputs['deployInfrastructure.deployment.web_app_slot_default_site_hostname']]
     strategy:
       runOnce:
         deploy:
