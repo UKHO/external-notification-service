@@ -69,7 +69,6 @@ jobs:
     dependsOn: deployInfrastructure
     displayName: "${{ upper(parameters.ShortName) }} - deploy terraform and dotnet App"
     environment: ${{ parameters.AzureEnvironment }}
-    pool: $(DeploymentPool)
     container: ${{parameters.Container}}
     workspace:
       clean: all

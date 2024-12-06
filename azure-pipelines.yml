@@ -75,6 +75,7 @@ stages:
     dependsOn: 
     - BuildTestPublish
     displayName: "Devdeploy (inc terraform, webapp deploy)"
+    pool: $(DeploymentPool)
     jobs:
     - template: Deployment/templates/app-deploy.yml
       parameters:
