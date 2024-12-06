@@ -51,6 +51,10 @@ jobs:
         TF_VAR_private_endpoint_subnet_name: $(privateEndpointSubnet)
         TF_VAR_core_services_subscription_id: $(coreServicesSubscriptionId)
         TF_VAR_core_services_rg: $(coreServicesRG)
+        TF_VAR_elastic_apm_server_url: $(ElasticAPM.ServerURL)
+        TF_VAR_elastic_apm_api_key: $(ElasticAPM.ApiKey)
+        TF_VAR_elastic_apm_environment: "$(ElasticAPM.Environment)"
+        TF_VAR_elastic_apm_service_name: "$(ElasticAPM.WebJobServiceName)"
       TerraformOutputVariables:
         web_app_name
         event_storage_queue
