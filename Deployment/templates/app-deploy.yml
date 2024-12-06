@@ -71,6 +71,7 @@ jobs:
 
   - deployment: ${{ upper(parameters.ShortName) }}DeployApp
     dependsOn: deployInfrastructure
+    condition: succeeded('deployInfrastructure')
     displayName: "${{ upper(parameters.ShortName) }} - deploy terraform and dotnet App"
     environment: ${{ parameters.AzureEnvironment }}
     container: ${{parameters.Container}}
