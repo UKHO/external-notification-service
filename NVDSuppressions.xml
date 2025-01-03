@@ -643,6 +643,36 @@
   <suppress>
     <notes>
       <![CDATA[
+   file name: Microsoft.Azure.WebJobs:Various
+   Applies to Azure VMs. MS says that customers will be notified directly if affected. See https://msrc.microsoft.com/update-guide/vulnerability/CVE-2022-29149
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:nuget/Microsoft\.Azure\.WebJobs@.*$</packageUrl>
+    <cve>CVE-2022-29149</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+   file name: Microsoft.Extensions.Hosting.dll
+   Bug to track the fix - https://dev.azure.com/ukhydro/Abzu/_workitems/edit/192148
+   ]]>
+    </notes>
+    <packageUrl regex="true">^pkg:generic/Microsoft\.Extensions\.Hosting@.*$</packageUrl>
+    <cve>CVE-2020-1147</cve>
+    <cve>CVE-2018-8409</cve>
+    <cve>CVE-2019-0545</cve>
+    <cve>CVE-2019-0980</cve>
+    <cve>CVE-2019-0981</cve>
+    <cve>CVE-2019-1301</cve>
+    <cve>CVE-2020-1108</cve>
+    <cve>CVE-2021-26423</cve>
+    <cve>CVE-2021-1721</cve>
+    <cve>CVE-2019-0657</cve>
+    <cve>CVE-2021-34485</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
    file name: MongoDB.Bson.dll
    MongoDb not used - n/a
    ]]>
