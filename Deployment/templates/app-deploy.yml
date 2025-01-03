@@ -1,0 +1,69 @@
+parameters:
+# If set to true, the pipeline will continue even if resources are getting destroyed. Default is false.
+  - name: ContinueEvenIfResourcesAreGettingDestroyed
+    type: boolean
+# The name of the environment to be used in Azure DevOps.
+  - name: AzureEnvironment
+    type: string
+# The name of the Terraform workspace to use. Will also be used to generate job names and, in lower case, used to select the correct var/x-deploy.yml variable file.
+  - name: ShortName
+    type: string
+# The apim short name
+  - name: ApimShortName
+    type: string
+# The Terraform Azure PowerShell container.
+  - name: Container
+    type: string
+# The Azure Subscription version
+  - name: AzureSubscriptionVersion
+    type: string
+# Run functional tests.
+  - name: RunFunctionalTests
+    type: boolean
+    default: false
+
+jobs:
+  - deployment: ${{ upper(parameters.ShortName) }}DeployApp
+    displayName: "${{ upper(parameters.ShortName) }} - deploy terraform and dotnet App"
+    environment: ${{ parameters.AzureEnvironment }}
+    pool: $(DeploymentPool)
+    container: ${{parameters.Container}}
+    workspace:
+      clean: all
+    variables: 
+    - template: var/${{ lower(parameters.ShortName) }}-deploy.yml
+        
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - template: /Deployment/templates/continuous-deployment.yml
+              parameters:
+                ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+                AzureSubscription: External Notification Service ${{ parameters.AzureSubscriptionVersion }} 
+
+            - template: /Deployment/templates/continuous-deployment-apim.yml
+              parameters:
+                ContinueEvenIfResourcesAreGettingDestroyed: ${{ parameters.ContinueEvenIfResourcesAreGettingDestroyed }}
+                AzureSubscription: UKHO-APIM-SOLAS-${{ parameters.ApimShortName }}
+                TerraformKeyVault: $(APIM_TERRAFORM_KEYVAULT)
+                APIMResourceGroup: $(APIM_RESOURCE_GROUP_NAME)
+                APIMServiceInstance: $(APIM_SERVICE_NAME)
+                tfstateStorageAccountName: $(APIM_TFSTATE_STORAGE_ACCOUNT_NAME)
+
+            - ${{ if eq(parameters.RunFunctionalTests, true) }}:
+              - template: /Deployment/templates/functional-test-process.yml
+                parameters:
+                  TestTitle: "Dev-AutomationTests"
+
+            - ${{ if eq(parameters.RunFunctionalTests, true) }}:
+              - task: AzureCLI@2
+                displayName: "Swap Stub URL"
+                condition: always()
+                inputs:
+                  azureSubscription: External Notification Service ${{ parameters.AzureSubscriptionVersion }}
+                  scriptType: 'pscore'
+                  scriptLocation: 'scriptPath'
+                  scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
+                  arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
+            

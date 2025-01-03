@@ -1,0 +1,21 @@
+variables:
+        - name: "D365AuthConfiguration.TenantId"
+          value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
+        - name: "D365AuthConfiguration.ClientId"
+          value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
+        - name: "D365AuthConfiguration.ClientSecret"
+          value: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
+        - name: "EnsAuthConfiguration.ClientId"
+          value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
+        - name: "EnsAuthConfiguration.TenantId"
+          value: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-TENANT-ID)
+        - name: "ElasticAPM.ApiKey"
+          value: $(elasticAPM-ApiKey)
+        - name: "ElasticAPM.Environment"
+          value: $(elasticAPM-Environment)
+        - name: "ElasticAPM.ServerURL"
+          value: $(elasticAPM-ServerURL)
+        - name: "ElasticAPM.ServiceName"
+          value: $(elasticAPM-ServiceName)
+        - name: "ElasticAPM.WebJobServiceName"
+          value: $(elasticAPM-WebJobServiceName)  

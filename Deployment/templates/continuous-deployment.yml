@@ -7,7 +7,7 @@ parameters:
 
 steps:
   - task: FileTransform@2
-    displayName: "File Transform: Ens Config" #Replace ens instance value from pipeline 
+    displayName: "File Transform: Ens $(Environment) Config"  
     inputs:
       folderPath: '$(Pipeline.Workspace)/terraformartifact/src'
       xmlTransformationRules: ''
@@ -15,7 +15,7 @@ steps:
       jsonTargetFiles: 'appsettings.json'
 
   - task: PowerShell@2
-    displayName: "terraform $(Environment)deploy"
+    displayName: "terraform $(Environment) deploy"
     name: setVariable
     inputs:
       targetType: filePath
