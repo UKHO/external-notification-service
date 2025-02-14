@@ -720,4 +720,13 @@
     <packageUrl regex="true">^pkg:nuget/System\.Text\.Json@.*$</packageUrl>
     <vulnerabilityName>CVE-2024-43485</vulnerabilityName>
   </suppress>
+  <suppress>
+   <notes><![CDATA[
+   file name: Elasticsearch.Net.dll
+   ]]></notes>
+   <packageUrl regex="true">^pkg:generic/Elasticsearch\.Net@.*$</packageUrl>
+   <cve>CVE-2024-23444</cve>
+   <cve>CVE-2024-23450</cve>
+   <cve>CVE-2024-43709</cve>
+</suppress>
 </suppressions>
