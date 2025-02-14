@@ -1,21 +1,12 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using System.Security.Claims;
 using Azure.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Reflection;
-using System.Security.Claims;
+using UKHO.ExternalNotificationService.API.Extensions;
 using UKHO.ExternalNotificationService.API.Filters;
 using UKHO.ExternalNotificationService.API.Services;
 using UKHO.ExternalNotificationService.API.Validation;
@@ -25,7 +16,6 @@ using UKHO.ExternalNotificationService.Common.Helpers;
 using UKHO.ExternalNotificationService.Common.Repository;
 using UKHO.ExternalNotificationService.Common.Storage;
 using UKHO.Logging.EventHubLogProvider;
-using Elastic.Apm.AspNetCore;
 
 namespace UKHO.ExternalNotificationService.API
 {
@@ -69,6 +59,7 @@ namespace UKHO.ExternalNotificationService.API
             services.Configure<FssDataMappingConfiguration>(_configuration.GetSection("FssDataMappingConfiguration"));
             services.Configure<ScsDataMappingConfiguration>(_configuration.GetSection("ScsDataMappingConfiguration"));
             services.Configure<EventProcessorConfiguration>(_configuration.GetSection("EventProcessorConfiguration"));
+            services.Configure<ElasticApmConfiguration>(_configuration.GetSection("ElasticAPM"));
 
             services.AddApplicationInsightsTelemetry();
             services.AddAllElasticApm(); 
@@ -115,6 +106,11 @@ namespace UKHO.ExternalNotificationService.API
                 .AddCheck<AzureBlobStorageHealthCheck>("AzureBlobStorageHealthCheck")
                 .AddCheck<AzureMessageQueueHealthCheck>("AzureMessageQueueHealthCheck")
                 .AddCheck<AzureWebJobHealthCheck>("AzureWebJobsHealthCheck");
+
+
+            services.AddElasticSearchClient(_configuration);
+            services.AddScoped<IAddsMonitoringService, AddsElasticMonitoringService>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
