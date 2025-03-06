@@ -6,12 +6,6 @@ parameters:
     type: boolean
     default: false
 
-  - name: DisableDependencyCheck
-    displayName: "Disable OWASP dependency checking"
-    type: boolean
-    default: false
-
-
 trigger:
   - main
   - release/*
@@ -51,15 +45,6 @@ variables:
   - name: WindowPool
     value: "NautilusBuild"
 
-# Use globally defined retention policy
-resources:
-  repositories:
-  - repository: UKHOTemplates
-    type: github
-    name: UKHO/devops-pipelinetemplates
-    endpoint: UKHO
-    ref: refs/heads/main
-
 stages:
   - stage: BuildTestPublish
     displayName: "Build, test and publish"
@@ -67,9 +52,7 @@ stages:
     jobs:
     - template: Deployment/templates/build-test-publish.yml  
       parameters:
-        DisableDependencyCheck: ${{ parameters.DisableDependencyCheck }}
         DotNetVersion: '8.0.x'
-
 
   - stage: Devdeploy
     dependsOn: 
