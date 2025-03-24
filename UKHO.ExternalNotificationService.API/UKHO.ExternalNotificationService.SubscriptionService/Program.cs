@@ -1,20 +1,20 @@
-﻿using Azure.Identity;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using Azure.Identity;
 using Elastic.Apm;
 using Elastic.Apm.Azure.Storage;
 using Elastic.Apm.DiagnosticSource;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Helpers;
 using UKHO.ExternalNotificationService.SubscriptionService.Configuration;
@@ -90,11 +90,13 @@ namespace UKHO.ExternalNotificationService.SubscriptionService
                  builder.AddConsole();
 
                  //Add Application Insights if needed (if key exists in settings)
-                 string instrumentationKey = s_configurationBuilder["APPINSIGHTS_INSTRUMENTATIONKEY"];
-                 if (!string.IsNullOrEmpty(instrumentationKey))
+                 var connectionString = s_configurationBuilder["APPLICATIONINSIGHTS_CONNECTION_STRING"];
+
+                 if (!string.IsNullOrEmpty(connectionString))
                  {
-                     builder.AddApplicationInsightsWebJobs(o => o.InstrumentationKey = instrumentationKey);
+                     builder.AddApplicationInsightsWebJobs(o => o.ConnectionString = connectionString);
                  }
+
                  EventHubLoggingConfiguration eventHubConfig = s_configurationBuilder.GetSection("EventHubLoggingConfiguration").Get<EventHubLoggingConfiguration>();
 
                  if (!string.IsNullOrWhiteSpace(eventHubConfig.ConnectionString))
