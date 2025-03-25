@@ -37,7 +37,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         {
             _fakeD365PayloadDetails = GetD365Payload();
             _fakeSubscriptionRequest = GetSubscriptionRequest();
-            _fakeNotificationType = [new() { Name = "Data test", TopicName = "testTopic" }];
+            _fakeNotificationType = new List<NotificationType>() { new NotificationType() { Name = "Data test", TopicName = "testTopic" } };
             _fakeHttpContextAccessor = A.Fake<IHttpContextAccessor>();
             _fakeLogger = A.Fake<ILogger<SubscriptionController>>();
             _fakeSubscriptionService = A.Fake<ISubscriptionService>();
@@ -84,7 +84,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         [Test]
         public async Task WhenD365HttpPayloadSizeExceeded_ThenLogError()
         {
-            var defaultHttpContext = new DefaultHttpContext();
+            DefaultHttpContext defaultHttpContext = new();
             defaultHttpContext.Request.Headers.Append(XmsDynamicsMsgSizeExceededHeader, string.Empty);
             A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(defaultHttpContext);
             A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
@@ -119,7 +119,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         [Test]
         public async Task WhenPostValidPayload_ThenReceiveSuccessfulResponse()
         {
-            var defaultHttpContext = new DefaultHttpContext();
+            DefaultHttpContext defaultHttpContext = new();
             defaultHttpContext.Request.Headers.Append(CorrelationIdMiddleware.XCorrelationIdHeaderKey, value: Guid.NewGuid().ToString());
             A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(defaultHttpContext);
 
@@ -136,11 +136,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 
         private static D365Payload GetD365Payload()
         {
-            var d365Payload = new D365Payload
+            var d365Payload = new D365Payload()
             {
                 CorrelationId = "6ea03f10-2672-46fb-92a1-5200f6a4fabc",
-                InputParameters = [],
-                PostEntityImages = [],
+                InputParameters = Array.Empty<InputParameter>(),
+                PostEntityImages = Array.Empty<EntityImage>(),
                 OperationCreatedOn = "/Date(1642149320000+0000)/"
             };
 

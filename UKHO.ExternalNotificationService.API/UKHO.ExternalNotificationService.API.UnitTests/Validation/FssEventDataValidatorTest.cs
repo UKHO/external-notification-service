@@ -26,7 +26,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeFssEventData.BatchId = null;
 
-            var result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
+            TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("BatchId");
 
             Assert.Multiple(() =>
@@ -43,7 +43,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeFssEventData.BusinessUnit = null;
 
-            var result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
+            TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("BusinessUnit");
 
             Assert.Multiple(() =>
@@ -60,7 +60,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeFssEventData.BatchPublishedDate = null;
 
-            var result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
+            TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("BatchPublishedDate");
 
             Assert.Multiple(() =>
@@ -77,7 +77,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeFssEventData.Links = null;
 
-            var result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
+            TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("Links");
 
             Assert.Multiple(() =>
@@ -94,7 +94,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeFssEventData.Links.BatchDetails = null;
 
-            var result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
+            TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("BatchDetails");
 
             Assert.Multiple(() =>
@@ -111,7 +111,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeFssEventData.Links.BatchStatus = null;
 
-            var result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
+            TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("BatchStatus");
 
             Assert.Multiple(() =>
@@ -128,7 +128,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeFssEventData.Links.BatchDetails.Href = null;
 
-            var result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
+            TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("BatchDetailsUri");
 
             Assert.Multiple(() =>
@@ -145,7 +145,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeFssEventData.Links.BatchStatus.Href = null;
 
-            var result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
+            TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("BatchStatusUri");
 
             Assert.Multiple(() =>
@@ -162,7 +162,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeFssEventData.Files.FirstOrDefault().Links = null;
 
-            var result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
+            TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("Links");
 
             Assert.Multiple(() =>
@@ -179,7 +179,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeFssEventData.Files.FirstOrDefault().MIMEType = null;
 
-            var result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
+            TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("MIMEType");
 
             Assert.Multiple(() =>
@@ -196,7 +196,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeFssEventData.Files.FirstOrDefault().Hash = null;
 
-            var result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
+            TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("Hash");
 
             Assert.Multiple(() =>
@@ -213,7 +213,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeFssEventData.Files.FirstOrDefault().FileName = null;
 
-            var result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
+            TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("FileName");
 
             Assert.Multiple(() =>
@@ -230,7 +230,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeFssEventData.Files.FirstOrDefault().FileSize = 0;
 
-            var result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
+            TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("FileSize");
 
             Assert.Multiple(() =>
@@ -245,7 +245,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         [Test]
         public void WhenValidRequest_ThenReceiveSuccessfulResponse()
         {
-            var result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
+            TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
 
             Assert.That(result.Errors, Is.Empty);
         }

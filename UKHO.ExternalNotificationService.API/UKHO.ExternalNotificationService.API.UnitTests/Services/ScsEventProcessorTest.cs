@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging;
 using FakeItEasy;
+using FakeItEasy.Configuration;
 using FluentValidation.Results;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -18,6 +19,7 @@ using UKHO.ExternalNotificationService.Common.Helpers;
 using UKHO.ExternalNotificationService.Common.Models.EventModel;
 using UKHO.ExternalNotificationService.Common.Models.Monitoring;
 using UKHO.ExternalNotificationService.Common.Models.Request;
+using UKHO.ExternalNotificationService.Common.Models.Response;
 
 namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 {
@@ -52,7 +54,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             _fakeEventProcessorConfiguration.Value.ScsEventPublishDelayInSeconds = 0;
 
-            var inMemorySettings = new Dictionary<string, string>
+            Dictionary<string, string> inMemorySettings = new()
             {
                 { "ADDSMonitoringEnabled", bool.FalseString }
             };
@@ -72,7 +74,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [Test]
         public void WhenValidPayloadInRequest_ThenReceiveEventType()
         {
-            var result = _scsEventProcessor.EventType;
+            string result = _scsEventProcessor.EventType;
 
             Assert.That(result, Is.EqualTo(_fakeCustomCloudEvent.Type));
         }
@@ -88,7 +90,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             A.CallTo(() => _fakeScsEventValidationAndMappingService.ValidateScsEventData(A<ScsEventData>.Ignored))
                             .Returns(new ValidationResult(new List<ValidationFailure> { validationMessage }));
 
-            var result = await _scsEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId);
+            ExternalNotificationServiceProcessResponse result = await _scsEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId);
 
             Assert.Multiple(() =>
             {
@@ -104,8 +106,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [Test]
         public async Task WhenValidPayloadInRequest_ThenReceiveSuccessfulResponse()
         {
-            var cancellationToken = CancellationToken.None;
-            var cloudEvent = new CloudEvent("test", "test", new object());
+            CancellationToken cancellationToken = CancellationToken.None;
+            CloudEvent cloudEvent = new("test", "test", new object());
 
             A.CallTo(() => _fakeScsEventValidationAndMappingService.ValidateScsEventData(A<ScsEventData>.Ignored)).Returns(new ValidationResult());
 
@@ -115,7 +117,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken));
 
-            var result = await _scsEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
+            ExternalNotificationServiceProcessResponse result = await _scsEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
 
             Assert.Multiple(() =>
             {
@@ -137,8 +139,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [TestCase(60, 10)]
         public async Task WhenValidPayloadInRequestAndConfiguredDelay_ThenReceiveSuccessfulResponse(int configuredDelay, int expectedDelay)
         {
-            var cancellationToken = CancellationToken.None;
-            var cloudEvent = new CloudEvent("test", "test", new object());
+            CancellationToken cancellationToken = CancellationToken.None;
+            CloudEvent cloudEvent = new("test", "test", new object());
 
             _fakeEventProcessorConfiguration.Value.ScsEventPublishDelayInSeconds = configuredDelay;
 
@@ -148,13 +150,13 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             A.CallTo(() => _fakeAzureEventGridDomainService.ConvertObjectTo<ScsEventData>(A<object>.Ignored)).Returns(_fakeScsEventData);
 
-            var callToPublishEventAsync = A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken));
+            IReturnValueArgumentValidationConfiguration<Task> callToPublishEventAsync = A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken));
 
-            var stopwatch = new Stopwatch();
+            Stopwatch stopwatch = new();
 
             stopwatch.Start();
 
-            var result = await _scsEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
+            ExternalNotificationServiceProcessResponse result = await _scsEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
 
             stopwatch.Stop();
 
@@ -179,7 +181,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         {
             _fakeEventProcessorConfiguration.Value.ScsEventPublishDelayInSeconds = configuredDelay;
 
-            var result = _scsEventProcessor.DelayInMilliseconds;
+            int result = _scsEventProcessor.DelayInMilliseconds;
 
             Assert.That(result, Is.EqualTo(expectedDelay * 1000));
         }
@@ -187,10 +189,10 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [Test]
         public async Task WhenADDSMonitoringEnabled_ThenStopADDSMonitoringProcess()
         {
-            var cancellationToken = CancellationToken.None;
-            var cloudEvent = new CloudEvent("test", "test", new object());
+            CancellationToken cancellationToken = CancellationToken.None;
+            CloudEvent cloudEvent = new("test", "test", new object());
 
-            var inMemorySettings = new Dictionary<string, string>
+            Dictionary<string, string> inMemorySettings = new()
             {
                 { "ADDSMonitoringEnabled", bool.TrueString }
             };
@@ -209,7 +211,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken));
 
-            var result = await _scsEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
+            ExternalNotificationServiceProcessResponse result = await _scsEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
 
             Assert.Multiple(() =>
             {
@@ -225,7 +227,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [Test]
         public async Task WhenInvalidPayloadInRequestAndADDSMonitoringEnabled_ThenDoNotStopADDSMonitoringProcess()
         {
-            var inMemorySettings = new Dictionary<string, string>
+            Dictionary<string, string> inMemorySettings = new()
             {
                 { "ADDSMonitoringEnabled", bool.TrueString }
             };
@@ -243,7 +245,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             A.CallTo(() => _fakeScsEventValidationAndMappingService.ValidateScsEventData(A<ScsEventData>.Ignored))
                 .Returns(new ValidationResult(new List<ValidationFailure> { validationMessage }));
 
-            var result = await _scsEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId);
+            ExternalNotificationServiceProcessResponse result = await _scsEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId);
 
             Assert.Multiple(() =>
             {

@@ -30,7 +30,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         {
             A.CallTo(() => _fakeEventHubLoggingHealthClient.CheckHealthAsync(A<HealthCheckContext>.Ignored, A<CancellationToken>.Ignored)).Returns(new HealthCheckResult(HealthStatus.Healthy));
 
-            var response = await _eventHubLoggingHealthCheck.CheckHealthAsync(new HealthCheckContext());
+            HealthCheckResult response = await _eventHubLoggingHealthCheck.CheckHealthAsync(new HealthCheckContext());
 
             Assert.That(response.Status, Is.EqualTo(HealthStatus.Healthy));
         }
@@ -40,7 +40,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         {
             A.CallTo(() => _fakeEventHubLoggingHealthClient.CheckHealthAsync(A<HealthCheckContext>.Ignored, A<CancellationToken>.Ignored)).Returns(new HealthCheckResult(HealthStatus.Unhealthy, "Event hub is unhealthy", new Exception("Event hub is unhealthy")));
 
-            var response = await _eventHubLoggingHealthCheck.CheckHealthAsync(new HealthCheckContext());
+            HealthCheckResult response = await _eventHubLoggingHealthCheck.CheckHealthAsync(new HealthCheckContext());
 
             Assert.That(response.Status, Is.EqualTo(HealthStatus.Unhealthy));
         }

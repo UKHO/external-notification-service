@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -32,7 +33,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         [SetUp]
         public void Setup()
         {
-            var jsonString = JsonSerializer.Serialize(CustomCloudEventBase.GetCustomCloudEvent());
+            string jsonString = JsonSerializer.Serialize(CustomCloudEventBase.GetCustomCloudEvent());
             _fakeFssEventBodyData = new MemoryStream(Encoding.UTF8.GetBytes(jsonString));
             _fakeLogger = A.Fake<ILogger<WebhookController>>();
             _fakeHttpContextAccessor = A.Fake<IHttpContextAccessor>();
@@ -47,7 +48,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         public void WhenValidHeaderRequestedInNewFilesPublishedOptions_ThenReturnsOkResponse()
         {
             var context = new DefaultHttpContext();
-            var requestHeaderValue = "test.example.com";
+            string requestHeaderValue = "test.example.com";
             context.Request.Headers["WebHook-Request-Origin"] = requestHeaderValue;
 
             A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(context);
@@ -71,7 +72,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         [Test]
         public async Task WhenPostFssNullEventInRequest_ThenReceiveSuccessfulResponse()
         {
-            var jsonString = JsonSerializer.Serialize(new JsonObject());
+            string jsonString = JsonSerializer.Serialize(new JsonObject());
             var requestData = new MemoryStream(Encoding.UTF8.GetBytes(jsonString));
 
             _controller.ControllerContext.HttpContext = new DefaultHttpContext();
@@ -105,7 +106,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             A.CallTo(() => _fakeEventProcessor.Process(A<CustomCloudEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored))
                            .Returns(new ExternalNotificationServiceProcessResponse()
                            {
-                               Errors = [new() { Description = "test", Source = "test" }],
+                               Errors = new List<Error>() { new Error() { Description = "test", Source = "test" } },
                                StatusCode = HttpStatusCode.OK
                            });
 

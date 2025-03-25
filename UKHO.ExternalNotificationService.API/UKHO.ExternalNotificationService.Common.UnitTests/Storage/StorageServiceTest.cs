@@ -37,7 +37,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.Storage
         public void WhenValidStorageConfiguration_ThenValidStorageAccountConnectionStringRequest()
         {
             _fakeSubscriptionStorageConfiguration.Value.StorageAccountKey = "Test";
-            var response = _storageService.GetStorageAccountConnectionString();
+            string response = _storageService.GetStorageAccountConnectionString();
 
             Assert.That(response, Is.Not.Null);
             Assert.That(response, Is.EqualTo("DefaultEndpointsProtocol=https;AccountName=test;AccountKey=Test;EndpointSuffix=core.windows.net"));

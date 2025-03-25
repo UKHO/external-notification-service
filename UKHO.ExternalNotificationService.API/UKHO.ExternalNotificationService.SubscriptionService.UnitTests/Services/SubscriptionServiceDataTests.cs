@@ -29,10 +29,10 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
         [Test]
         public async Task WhenCreateOrUpdateSubscriptionThenCreateSubscription()
         {
-            var cancellationToken = CancellationToken.None;
-            var subscriptionRequestMessage = GetSubscriptionRequestMessage();
+            CancellationToken cancellationToken = CancellationToken.None;
+            SubscriptionRequestMessage subscriptionRequestMessage = GetSubscriptionRequestMessage();
 
-            var response = await _subscriptionServiceData.CreateOrUpdateSubscription(subscriptionRequestMessage, cancellationToken);
+            DomainTopicEventSubscriptionResource response = await _subscriptionServiceData.CreateOrUpdateSubscription(subscriptionRequestMessage, cancellationToken);
 
             A.CallTo(() => _fakeAzureEventGridDomainService.CreateOrUpdateSubscription(subscriptionRequestMessage, cancellationToken)).MustHaveHappenedOnceExactly();
             Assert.That(response, Is.InstanceOf<DomainTopicEventSubscriptionResource>());
@@ -41,8 +41,8 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
         [Test]
         public async Task WhenDeleteSubscriptionEventCalledThenDeleteSubscription()
         {
-            var cancellationToken = CancellationToken.None;
-            var subscriptionRequestMessage = GetSubscriptionRequestMessage();
+            CancellationToken cancellationToken = CancellationToken.None;
+            SubscriptionRequestMessage subscriptionRequestMessage = GetSubscriptionRequestMessage();
 
             await _subscriptionServiceData.DeleteSubscription(subscriptionRequestMessage, cancellationToken);
 

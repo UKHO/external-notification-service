@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -30,27 +31,26 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             TestConfig = new TestConfiguration();
             EnsApiClient = new EnsApiClient(TestConfig.EnsApiBaseUrl);
 
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), TestConfig.PayloadFolder, TestConfig.FssAvcsPayloadFileName);
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), TestConfig.PayloadFolder, TestConfig.FssAvcsPayloadFileName);
             D365Payload = JsonSerializer.Deserialize<D365Payload>(await File.ReadAllTextAsync(filePath), JOptions);
             D365Payload.InputParameters[0].Value.Attributes[9].Value = string.Concat(TestConfig.StubBaseUri, TestConfig.WebhookUrlExtension);
 
             ADAuthTokenProvider adAuthTokenProvider = new();
             EnsToken = await adAuthTokenProvider.GetEnsAuthToken();
-
         }
 
         [Test]
         public async Task WhenICallTheEnsSubscriptionApiWithAValidSubscriptionId_ThenSuccessStatusResponseIsReturned()
         {
             //Get the subscriptionId from D365 payload            
-            var subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
+            string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
 
             //Clear return status
-            var apiStubResponse = await EnsApiClient.PostStubCommandToFailAsync(TestConfig.StubBaseUri, subscriptionId, null);
+            HttpResponseMessage apiStubResponse = await EnsApiClient.PostStubCommandToFailAsync(TestConfig.StubBaseUri, subscriptionId, null);
             Assert.That((int)apiStubResponse.StatusCode, Is.EqualTo(200), $"Incorrect status code {apiStubResponse.StatusCode}  is  returned, instead of the expected 200.");
 
-            var requestTime = DateTime.UtcNow;
-            var apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
+            DateTime requestTime = DateTime.UtcNow;
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
             Assert.That((int)apiResponse.StatusCode, Is.EqualTo(202), $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
 
             while (DateTime.UtcNow - requestTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
@@ -58,12 +58,12 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
                 await Task.Delay(1000);
             }
 
-            var callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, subscriptionId);
+            HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, subscriptionId);
             Assert.That((int)callBackResponse.StatusCode, Is.EqualTo(200), $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected 200.");
 
-            var callBackResponseBody = JsonSerializer.Deserialize<IEnumerable<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result, JOptions);
+            IEnumerable<EnsCallbackResponseModel> callBackResponseBody = JsonSerializer.Deserialize<IEnumerable<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result, JOptions);
 
-            var callBackResponseLatest = callBackResponseBody.Where(x => x.TimeStamp >= requestTime).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
+            EnsCallbackResponseModel callBackResponseLatest = callBackResponseBody.Where(x => x.TimeStamp >= requestTime).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
 
             Assert.Multiple(() =>
             {
@@ -76,14 +76,14 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [Test]
         public async Task WhenICallTheEnsSubscriptionApiWithAInValidSubscriptionId_ThenNotFoundStatusResponseIsReturned()
         {
-            var subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
+            string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
 
-            var newSubscriptionId = subscriptionId.Remove(subscriptionId.Length - 2).Insert(subscriptionId.Length - 2, "AA");
+            string newSubscriptionId = subscriptionId.Remove(subscriptionId.Length - 2).Insert(subscriptionId.Length - 2, "AA");
 
-            var apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
             Assert.That((int)apiResponse.StatusCode, Is.EqualTo(202), $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
 
-            var callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, newSubscriptionId);
+            HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, newSubscriptionId);
             Assert.That((int)callBackResponse.StatusCode, Is.EqualTo(404), $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected 200.");
         }
 
@@ -92,12 +92,12 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         {
             D365Payload.InputParameters[0].Value.Attributes[9].Value = D365Payload.InputParameters[0].Value.Attributes[9].Value + "Failed";
             // Get the new subscriptionId for D365 payload
-            var subscriptionId = Guid.NewGuid().ToString();
+            string subscriptionId = Guid.NewGuid().ToString();
             D365Payload.PostEntityImages[0].Value.Attributes[0].Value = subscriptionId;
             D365Payload.InputParameters[0].Value.Attributes[10].Value = subscriptionId;
-            var requestTime = DateTime.UtcNow;
+            DateTime requestTime = DateTime.UtcNow;
 
-            var apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
             Assert.That((int)apiResponse.StatusCode, Is.EqualTo(202), $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
 
             while (DateTime.UtcNow - requestTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
@@ -105,12 +105,12 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
                 await Task.Delay(1000);
             }
 
-            var callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, subscriptionId);
+            HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, subscriptionId);
             Assert.That((int)callBackResponse.StatusCode, Is.EqualTo(200), $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected 200.");
 
-            var callBackResponseBody = JsonSerializer.Deserialize<IEnumerable<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result, JOptions);
+            IEnumerable<EnsCallbackResponseModel> callBackResponseBody = JsonSerializer.Deserialize<IEnumerable<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result, JOptions);
 
-            var callBackResponseLatest = callBackResponseBody.Where(x => x.TimeStamp >= requestTime).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
+            EnsCallbackResponseModel callBackResponseLatest = callBackResponseBody.Where(x => x.TimeStamp >= requestTime).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
 
             Assert.Multiple(() =>
             {
@@ -124,13 +124,13 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         public async Task WhenICallTheCallBackStubUrlToFailWithValidSubscriptionId_ThenValidResponseIsReturned(int statusCode)
         {
             //Get the subscriptionId from D365 payload            
-            var subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
+            string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
 
-            var apiStubResponse = await EnsApiClient.PostStubCommandToFailAsync(TestConfig.StubBaseUri, subscriptionId, statusCode);
+            HttpResponseMessage apiStubResponse = await EnsApiClient.PostStubCommandToFailAsync(TestConfig.StubBaseUri, subscriptionId, statusCode);
             Assert.That((int)apiStubResponse.StatusCode, Is.EqualTo(200), $"Incorrect status code {apiStubResponse.StatusCode}  is  returned, instead of the expected 200.");
 
-            var requestTime = DateTime.UtcNow;
-            var apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
+            DateTime requestTime = DateTime.UtcNow;
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
             Assert.That((int)apiResponse.StatusCode, Is.EqualTo(202), $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
 
             while (DateTime.UtcNow - requestTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
@@ -138,12 +138,12 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
                 await Task.Delay(1000);
             }
 
-            var callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, subscriptionId);
+            HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, subscriptionId);
             Assert.That((int)callBackResponse.StatusCode, Is.EqualTo(200), $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected 200.");
 
-            var callBackResponseBody = JsonSerializer.Deserialize<IEnumerable<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result, JOptions);
+            IEnumerable<EnsCallbackResponseModel> callBackResponseBody = JsonSerializer.Deserialize<IEnumerable<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result, JOptions);
 
-            var callBackResponseLatest = callBackResponseBody.Where(x => x.TimeStamp >= requestTime).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
+            EnsCallbackResponseModel callBackResponseLatest = callBackResponseBody.Where(x => x.TimeStamp >= requestTime).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
 
             Assert.Multiple(() =>
             {
@@ -156,13 +156,13 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         public async Task WhenICallTheCallBackStubUrlToFailWithValidSubscriptionId_ThenValidResponseIsReturnedWithRetryCount(int statusCode)
         {
             //Get the subscriptionId from D365 payload            
-            var subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
+            string subscriptionId = D365Payload.PostEntityImages[0].Value.Attributes[0].Value.ToString();
 
-            var apiStubResponse = await EnsApiClient.PostStubCommandToFailAsync(TestConfig.StubBaseUri, subscriptionId, statusCode);
+            HttpResponseMessage apiStubResponse = await EnsApiClient.PostStubCommandToFailAsync(TestConfig.StubBaseUri, subscriptionId, statusCode);
             Assert.That((int)apiStubResponse.StatusCode, Is.EqualTo(200), $"Incorrect status code {apiStubResponse.StatusCode}  is  returned, instead of the expected 200.");
 
-            var requestTime = DateTime.UtcNow;
-            var apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
+            DateTime requestTime = DateTime.UtcNow;
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365Payload, EnsToken);
             Assert.That((int)apiResponse.StatusCode, Is.EqualTo(202), $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
 
             while (DateTime.UtcNow - requestTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
@@ -170,17 +170,17 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
                 await Task.Delay(1000);
             }
 
-            var callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, subscriptionId);
+            HttpResponseMessage callBackResponse = await EnsApiClient.GetEnsCallBackAsync(TestConfig.StubBaseUri, subscriptionId);
             Assert.That((int)callBackResponse.StatusCode, Is.EqualTo(200), $"Incorrect status code {callBackResponse.StatusCode}  is  returned, instead of the expected 200.");
 
-            var callBackResponseBody = JsonSerializer.Deserialize<IEnumerable<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result, JOptions);
+            IEnumerable<EnsCallbackResponseModel> callBackResponseBody = JsonSerializer.Deserialize<IEnumerable<EnsCallbackResponseModel>>(callBackResponse.Content.ReadAsStringAsync().Result, JOptions);
 
-            var callBackResponseFailure = callBackResponseBody.Where(x => x.TimeStamp >= requestTime).OrderByDescending(a => a.TimeStamp);
+            IEnumerable<EnsCallbackResponseModel> callBackResponseFailure = callBackResponseBody.Where(x => x.TimeStamp >= requestTime).OrderByDescending(a => a.TimeStamp);
 
             //Verify Retry Count
             Assert.That(callBackResponseFailure.Count(), Is.GreaterThan(1));
 
-            var callBackResponseLatest = callBackResponseBody.Where(x => x.TimeStamp >= requestTime).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
+            EnsCallbackResponseModel callBackResponseLatest = callBackResponseBody.Where(x => x.TimeStamp >= requestTime).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
 
             Assert.Multiple(() =>
             {

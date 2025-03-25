@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FakeItEasy;
@@ -48,9 +49,9 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         public async Task WhenInvalidPayloadWithNullInputParameters_ThenReceiveBadrequest()
         {
             A.CallTo(() => _fakeD365PayloadValidator.Validate(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>
-                    { new("InputParameters", "D365Payload InputParameters cannot be blank or null.") }));
+                    { new ValidationFailure("InputParameters", "D365Payload InputParameters cannot be blank or null.") }));
 
-            var result = await _subscriptionService.ValidateD365PayloadRequest(new D365Payload());
+            ValidationResult result = await _subscriptionService.ValidateD365PayloadRequest(new D365Payload());
 
             Assert.Multiple(() =>
             {
@@ -64,7 +65,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         {
             A.CallTo(() => _fakeD365PayloadValidator.Validate(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
 
-            var result = await _subscriptionService.ValidateD365PayloadRequest(_d365PayloadDetails);
+            ValidationResult result = await _subscriptionService.ValidateD365PayloadRequest(_d365PayloadDetails);
 
             Assert.That(result.IsValid);
         }
@@ -75,10 +76,12 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [Test]
         public void WhenInvalidPayloadWithoutStateCodeKey_ThenReceiveSubscriptionRequestWithFalseIsActive()
         {
-            _d365PayloadDetails.InputParameters[0].Value.FormattedValues = [new FormattedValue { Key = D365PayloadKeyConstant.NotificationTypeKey, Value = "Data test" }];
-            _d365PayloadDetails.PostEntityImages = [];
+            _d365PayloadDetails.InputParameters[0].Value.FormattedValues = new FormattedValue[]
+                                                                            { new FormattedValue { Key = D365PayloadKeyConstant.NotificationTypeKey,
+                                                                                                   Value = "Data test" }};
+            _d365PayloadDetails.PostEntityImages = Array.Empty<EntityImage>();
 
-            var result = _subscriptionService.ConvertToSubscriptionRequestModel(_d365PayloadDetails);
+            SubscriptionRequest result = _subscriptionService.ConvertToSubscriptionRequestModel(_d365PayloadDetails);
 
             Assert.Multiple(() =>
             {
@@ -91,8 +94,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [Test]
         public void WhenValidPayloadWithNullPostEntityImages_ThenReceiveSuccessfulSubscriptionRequest()
         {
-            _d365PayloadDetails.PostEntityImages = [];
-            var result = _subscriptionService.ConvertToSubscriptionRequestModel(_d365PayloadDetails);
+            _d365PayloadDetails.PostEntityImages = Array.Empty<EntityImage>();
+            SubscriptionRequest result = _subscriptionService.ConvertToSubscriptionRequestModel(_d365PayloadDetails);
 
             Assert.That(result, Is.InstanceOf<SubscriptionRequest>());
             Assert.Multiple(() =>
@@ -106,7 +109,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         public void WhenValidPayloadWithNullPostEntityImagesValue_ThenReceiveSuccessfulSubscriptionRequest()
         {
             _d365PayloadDetails.PostEntityImages[0].Value = null;
-            var result = _subscriptionService.ConvertToSubscriptionRequestModel(_d365PayloadDetails);
+            SubscriptionRequest result = _subscriptionService.ConvertToSubscriptionRequestModel(_d365PayloadDetails);
 
             Assert.That(result, Is.InstanceOf<SubscriptionRequest>());
             Assert.Multiple(() =>
@@ -119,7 +122,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [Test]
         public void WhenValidPayloadInRequest_ThenReceiveSubscriptionRequest()
         {
-            var result = _subscriptionService.ConvertToSubscriptionRequestModel(_d365PayloadDetails);
+            SubscriptionRequest result = _subscriptionService.ConvertToSubscriptionRequestModel(_d365PayloadDetails);
 
             Assert.That(result, Is.InstanceOf<SubscriptionRequest>());
             Assert.Multiple(() =>
@@ -137,7 +140,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         {
             const string correlationId = "6ea03f10-2672-46fb-92a1-5200f6a4faaa";
 
-            var result = _subscriptionService.AddSubscriptionRequest(_subscriptionRequest, _notificationType, correlationId);
+            Task result = _subscriptionService.AddSubscriptionRequest(_subscriptionRequest, _notificationType, correlationId);
 
             A.CallTo(() => _fakeAzureMessageQueueHelper.AddQueueMessage(_fakeEnsStorageConfiguration.Value, A<SubscriptionRequestMessage>.Ignored)).MustHaveHappenedOnceExactly();
             Assert.That(result.IsCompleted);
@@ -148,19 +151,19 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             var d365Payload = new D365Payload()
             {
                 CorrelationId = "6ea03f10-2672-46fb-92a1-5200f6a4faaa",
-                InputParameters = [new() {
-                                   Value = new InputParameterValue {
-                                               Attributes = [new() { Key = D365PayloadKeyConstant.WebhookUrlKey, Value = "https://abc.com" },
-                                                             new() { Key = D365PayloadKeyConstant.SubscriptionIdKey, Value = "246d71e7-1475-ec11-8943-002248818222" }],
-                                               FormattedValues = [new() { Key = D365PayloadKeyConstant.NotificationTypeKey, Value = "Data test" },
-                                                                  new() { Key =  D365PayloadKeyConstant.IsActiveKey, Value = "Active" }]}}],
-                PostEntityImages = [new() {
+                InputParameters = new InputParameter[] { new InputParameter {
+                                    Value = new InputParameterValue {
+                                                Attributes = new D365Attribute[] {  new D365Attribute { Key = D365PayloadKeyConstant.WebhookUrlKey, Value = "https://abc.com" },
+                                                                                    new D365Attribute { Key = D365PayloadKeyConstant.SubscriptionIdKey, Value = "246d71e7-1475-ec11-8943-002248818222" } },
+                                                FormattedValues = new FormattedValue[] {new FormattedValue { Key = D365PayloadKeyConstant.NotificationTypeKey, Value = "Data test" },
+                                                                                        new FormattedValue { Key =  D365PayloadKeyConstant.IsActiveKey, Value = "Active" }}}}},
+                PostEntityImages = new EntityImage[] { new EntityImage {
                                     Key= D365PayloadKeyConstant.PostEntityImageKey,
                                     Value = new EntityImageValue {
-                                                Attributes = [new() { Key = D365PayloadKeyConstant.WebhookUrlKey, Value = "https://abc.com" },
-                                                              new() { Key = D365PayloadKeyConstant.SubscriptionIdKey, Value = "246d71e7-1475-ec11-8943-002248818222" }],
-                                                FormattedValues = [new() { Key = D365PayloadKeyConstant.NotificationTypeKey, Value = "Data test" },
-                                                                   new() { Key =  D365PayloadKeyConstant.IsActiveKey, Value = "Active" }]}}],
+                                        Attributes = new D365Attribute[] { new D365Attribute { Key = D365PayloadKeyConstant.WebhookUrlKey, Value = "https://abc.com" },
+                                                                           new D365Attribute { Key = D365PayloadKeyConstant.SubscriptionIdKey, Value = "246d71e7-1475-ec11-8943-002248818222" } },
+                                        FormattedValues = new FormattedValue[] { new FormattedValue { Key = D365PayloadKeyConstant.NotificationTypeKey, Value = "Data test" },
+                                                                                 new FormattedValue { Key =  D365PayloadKeyConstant.IsActiveKey, Value = "Active" }}}}},
                 OperationCreatedOn = "/Date(1642149320000+0000)/"
             };
 

@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading.Tasks;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -32,7 +33,8 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
             _fakeEnsStorageConfiguration = A.Fake<IOptions<SubscriptionStorageConfiguration>>();
             _fakeD365CallbackConfiguration = A.Fake<IOptions<D365CallbackConfiguration>>();
 
-            _handleDeadLetterService = new HandleDeadLetterService(_fakeCallbackService, _fakeAzureMessageQueueHelper, _fakeEnsStorageConfiguration, _fakeLogger, _fakeD365CallbackConfiguration);
+            _handleDeadLetterService = new HandleDeadLetterService(_fakeCallbackService, _fakeAzureMessageQueueHelper, _fakeEnsStorageConfiguration,
+                                                                   _fakeLogger, _fakeD365CallbackConfiguration);
         }
 
         [Test]
@@ -42,7 +44,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
 
             A.CallTo(() => _fakeCallbackService.CallbackToD365UsingDataverse(A<string>.Ignored, A<object>.Ignored, A<SubscriptionRequestMessage>.Ignored)).Returns(new HttpResponseMessage());
 
-            var response = _handleDeadLetterService.ProcessDeadLetter(FilePath, subscriptionId, new SubscriptionRequestMessage(), FileName);
+            Task response = _handleDeadLetterService.ProcessDeadLetter(FilePath, subscriptionId, new SubscriptionRequestMessage(), FileName);
 
             A.CallTo(() => _fakeAzureMessageQueueHelper.CopyDeadLetterBlob(A<SubscriptionStorageConfiguration>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
 

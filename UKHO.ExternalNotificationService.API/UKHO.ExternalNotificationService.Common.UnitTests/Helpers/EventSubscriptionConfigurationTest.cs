@@ -40,7 +40,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.Helpers
         [Test]
         public void WhenCallSetEventSubscription_ThenReturnEventSubscription()
         {
-            var subscriptionRequestMessage = new SubscriptionRequestMessage
+            SubscriptionRequestMessage subscriptionRequestMessage = new()
             {
                 CorrelationId = Guid.NewGuid().ToString(),
                 D365CorrelationId = Guid.NewGuid().ToString(),
@@ -51,7 +51,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.Helpers
                 WebhookUrl = WebhookUrl
             };
 
-            var result = _eventSubscriptionConfiguration.SetEventSubscription(subscriptionRequestMessage);
+            EventGridSubscriptionData result = _eventSubscriptionConfiguration.SetEventSubscription(subscriptionRequestMessage);
             Assert.That(result, Is.Not.Null);
             Assert.That(result, Is.InstanceOf<EventGridSubscriptionData>());
             Assert.Multiple(() =>

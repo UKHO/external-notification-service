@@ -14,6 +14,7 @@ using UKHO.ExternalNotificationService.Common.Exceptions;
 using UKHO.ExternalNotificationService.Common.Helpers;
 using UKHO.ExternalNotificationService.Common.Models.EventModel;
 using UKHO.ExternalNotificationService.Common.Models.Request;
+using UKHO.ExternalNotificationService.Common.Models.Response;
 
 namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 {
@@ -44,7 +45,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [Test]
         public void WhenValidInRequest_ThenReceiveEventType()
         {
-            var result = _fssEventProcessor.EventType;
+            string result = _fssEventProcessor.EventType;
 
             Assert.That(result, Is.EqualTo(_fakeCustomCloudEvent.Type));
         }
@@ -60,7 +61,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             A.CallTo(() => _fakeFssEventValidationAndMappingService.ValidateFssEventData(A<FssEventData>.Ignored))
                             .Returns(new ValidationResult(new List<ValidationFailure> { validationMessage }));
 
-            var result = await _fssEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId);
+            ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId);
 
             Assert.Multiple(() =>
             {
@@ -72,8 +73,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [Test]
         public async Task WhenDiscardedBusinessUnitInRequest_ThenReceiveSuccessfulResponse()
         {
-            var cancellationToken = CancellationToken.None;
-            var cloudEvent = new CloudEvent("test", "test", new object());
+            CancellationToken cancellationToken = CancellationToken.None;
+            CloudEvent cloudEvent = new("test", "test", new object());
             _fakeFssEventData.BusinessUnit = "test";
 
             A.CallTo(() => _fakeFssEventValidationAndMappingService.ValidateFssEventData(A<FssEventData>.Ignored)).Returns(new ValidationResult());
@@ -84,7 +85,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(A<CloudEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored));
 
-            var result = await _fssEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
+            ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
 
             Assert.Multiple(() =>
             {
@@ -97,7 +98,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [Test]
         public async Task WhenUnconfiguredBusinessUnitInRequest_ThenReceiveSuccessfulResponse()
         {
-            var cancellationToken = CancellationToken.None;
+            CancellationToken cancellationToken = CancellationToken.None;
 
             A.CallTo(() => _fakeAzureEventGridDomainService.ConvertObjectTo<FssEventData>(_fakeCustomCloudEvent.Data)).Returns(_fakeFssEventData);
 
@@ -105,7 +106,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             A.CallTo(() => _fakeFssEventValidationAndMappingService.MapToCloudEvent(A<CloudEventCandidate<FssEventData>>.Ignored)).Throws<ConfigurationMissingException>();
 
-            var result = await _fssEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
+            ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
 
             Assert.Multiple(() =>
             {
@@ -125,10 +126,10 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [TestCase("MaritimeSafetyInformation")]
         public async Task WhenValidPayloadInRequest_ThenReceiveSuccessfulResponse(string businessUnit)
         {
-            var cancellationToken = CancellationToken.None;
-            var cloudEvent = new CloudEvent("test", "test", new object());
-            var customCloudEvent = CustomCloudEventBase.GetCustomCloudEvent(businessUnit);
-            var fssEventData = CustomCloudEventBase.GetFssEventData(businessUnit);
+            CancellationToken cancellationToken = CancellationToken.None;
+            CloudEvent cloudEvent = new("test", "test", new object());
+            CustomCloudEvent customCloudEvent = CustomCloudEventBase.GetCustomCloudEvent(businessUnit);
+            FssEventData fssEventData = CustomCloudEventBase.GetFssEventData(businessUnit);
 
             A.CallTo(() => _fakeFssEventValidationAndMappingService.ValidateFssEventData(A<FssEventData>.Ignored)).Returns(new ValidationResult());
 
@@ -138,7 +139,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(A<CloudEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored));
 
-            var result = await _fssEventProcessor.Process(customCloudEvent, CorrelationId, cancellationToken);
+            ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(customCloudEvent, CorrelationId, cancellationToken);
 
             Assert.Multiple(() =>
             {

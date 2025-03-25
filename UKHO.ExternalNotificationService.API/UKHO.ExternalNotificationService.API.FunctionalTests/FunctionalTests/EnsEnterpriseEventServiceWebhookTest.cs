@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
@@ -41,7 +42,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [Test]
         public async Task WhenICallTheEnsWebhookApiWithAValidOptionHeaderWithoutAuthToken_ThenAnUnauthorisedResponseIsReturned()
         {
-            var apiResponse = await EnsApiClient.OptionEnsApiSubscriptionAsync("WebHook-Request-Origin", "eventemitter.example.com");
+            HttpResponseMessage apiResponse = await EnsApiClient.OptionEnsApiSubscriptionAsync("WebHook-Request-Origin", "eventemitter.example.com");
 
             Assert.That((int)apiResponse.StatusCode, Is.EqualTo(401), $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 401.");
         }
@@ -49,8 +50,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [Test]
         public async Task WhenICallTheEnsWebhookApiWithAValidOptionHeaderWithInvalidAuthToken_ThenAnUnauthorisedResponseIsReturned()
         {
-            var invalidToken = EnsToken.Remove(EnsToken.Length - 4).Insert(EnsToken.Length - 4, "ABAA");
-            var apiResponse = await EnsApiClient.OptionEnsApiSubscriptionAsync("WebHook-Request-Origin", "eventemitter.example.com", invalidToken);
+            string invalidToken = EnsToken.Remove(EnsToken.Length - 4).Insert(EnsToken.Length - 4, "ABAA");
+            HttpResponseMessage apiResponse = await EnsApiClient.OptionEnsApiSubscriptionAsync("WebHook-Request-Origin", "eventemitter.example.com", invalidToken);
 
             Assert.That((int)apiResponse.StatusCode, Is.EqualTo(401), $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 401.");
         }
@@ -58,9 +59,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [Test]
         public async Task WhenICallTheEnsWebhookApiWithAValidOptionHeader_ThenOkStatusIsReturnedWithResponseHeader()
         {
-            var requestHeader = "WebHook-Request-Origin";
-            var requestHeaderValue = "eventemitter.example.com";
-            var apiResponse = await EnsApiClient.OptionEnsApiSubscriptionAsync(requestHeader, requestHeaderValue, EnsToken);
+            string requestHeader = "WebHook-Request-Origin";
+            string requestHeaderValue = "eventemitter.example.com";
+            HttpResponseMessage apiResponse = await EnsApiClient.OptionEnsApiSubscriptionAsync(requestHeader, requestHeaderValue, EnsToken);
 
             Assert.Multiple(() =>
             {
@@ -73,9 +74,9 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [Test]
         public async Task WhenICallTheEnsWebhookApiWithAValidFssJObjectBodyWithoutAuthToken_ThenAnUnauthorisedResponseIsReturned()
         {
-            var ensWebhookJson = FssEventBody;
+            JsonObject ensWebhookJson = FssEventBody;
 
-            var apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson);
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson);
 
             Assert.That((int)apiResponse.StatusCode, Is.EqualTo(401), $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 401.");
         }
@@ -83,10 +84,10 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [Test]
         public async Task WhenICallTheEnsWebhookApiWithAValidFssJObjectBodyWithInvalidAuthToken_ThenAnUnauthorisedResponseIsReturned()
         {
-            var invalidToken = EnsToken.Remove(EnsToken.Length - 4).Insert(EnsToken.Length - 4, "ABAA");
-            var ensWebhookJson = FssEventBody;
+            string invalidToken = EnsToken.Remove(EnsToken.Length - 4).Insert(EnsToken.Length - 4, "ABAA");
+            JsonObject ensWebhookJson = FssEventBody;
 
-            var apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, invalidToken);
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, invalidToken);
 
             Assert.That((int)apiResponse.StatusCode, Is.EqualTo(401), $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 401.");
         }
@@ -98,14 +99,14 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             const string subject = "83d08093-7a67-4b3a-b431-92ba42feaea0";
             const string addHttps = "https://";
 
-            var ensWebhookJson = FssEventDataBase.GetFssEventBodyData(TestConfig, businessUnit);
+            JsonObject ensWebhookJson = FssEventDataBase.GetFssEventBodyData(TestConfig, businessUnit);
 
-            var publishDataFromFss = FssEventDataBase.GetFssEventData(TestConfig, businessUnit);
+            FssEventData publishDataFromFss = FssEventDataBase.GetFssEventData(TestConfig, businessUnit);
 
             await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, null);
 
-            var startTime = DateTime.UtcNow;
-            var apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
+            DateTime startTime = DateTime.UtcNow;
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
 
             while (DateTime.UtcNow - startTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
             {
@@ -114,11 +115,11 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             Assert.That((int)apiResponse.StatusCode, Is.EqualTo(200), $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 200.");
 
-            var stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
+            HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
             Assert.That(stubResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-            var customerJsonString = await stubResponse.Content.ReadAsStringAsync();
-            var deserialized = JsonSerializer.Deserialize<IEnumerable<DistributorRequest>>(custome‌​rJsonString, JOptions);
-            var getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.StatusCode is HttpStatusCode.OK && x.CloudEvent.Source == source)
+            string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
+            IEnumerable<DistributorRequest> deserialized = JsonSerializer.Deserialize<IEnumerable<DistributorRequest>>(custome‌​rJsonString, JOptions);
+            DistributorRequest getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.StatusCode is HttpStatusCode.OK && x.CloudEvent.Source == source)
                 .OrderByDescending(a => a.TimeStamp)
                 .FirstOrDefault();
             Assert.That(getMatchingData, Is.Not.Null);
@@ -136,12 +137,12 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
                 // Validating Event Type
                 Assert.That(getMatchingData.CloudEvent.Type, Is.EqualTo("uk.co.admiralty.fss.filesPublished.v1"));
             });
-            var filesLinkHref = new Uri(publishDataFromFss.Files.FirstOrDefault().Links.Get.Href);
-            var data = JsonSerializer.Serialize(getMatchingData.CloudEvent.Data);
-            var fssEventData = JsonSerializer.Deserialize<FssEventData>(data, JOptions);
+            Uri filesLinkHref = new(publishDataFromFss.Files.FirstOrDefault().Links.Get.Href);
+            string data = JsonSerializer.Serialize(getMatchingData.CloudEvent.Data);
+            FssEventData fssEventData = JsonSerializer.Deserialize<FssEventData>(data, JOptions);
 
             // Validating Files Link Href
-            var filesLinkHrefReplace = new Uri(addHttps + TestConfig.FssPublishHostName + filesLinkHref.AbsolutePath);
+            Uri filesLinkHrefReplace = new(addHttps + TestConfig.FssPublishHostName + filesLinkHref.AbsolutePath);
             Assert.That(filesLinkHrefReplace.ToString(), Is.Not.Null);
             Assert.That(filesLinkHrefReplace.ToString(), Is.EqualTo(fssEventData.Files.FirstOrDefault().Links.Get.Href));
 
@@ -152,8 +153,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             Assert.That(filesBatchStatusHrefReplace.ToString(), Is.EqualTo(fssEventData.Links.BatchStatus.Href));
 
             // Validating Files Batch Detail Href
-            var filesBatchDetailHref = new Uri(publishDataFromFss.Links.BatchDetails.Href);
-            var filesBatchDetailHrefReplace = new Uri(addHttps + TestConfig.FssPublishHostName + filesBatchDetailHref.AbsolutePath);
+            Uri filesBatchDetailHref = new(publishDataFromFss.Links.BatchDetails.Href);
+            Uri filesBatchDetailHrefReplace = new(addHttps + TestConfig.FssPublishHostName + filesBatchDetailHref.AbsolutePath);
             Assert.That(filesBatchDetailHrefReplace.ToString(), Is.Not.Null);
             Assert.That(filesBatchDetailHrefReplace.ToString(), Is.EqualTo(fssEventData.Links.BatchDetails.Href));
         }
@@ -163,10 +164,10 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [TestCase("83d08093-7a67-4b3a-b431-92ba42feaea0", HttpStatusCode.NotFound, TestName = "NotFound for WebHook")]
         public async Task WhenICallTheEnsWebhookApiWithAValidFssJObjectBody_ThenNonOkStatusIsReturned(string subject, HttpStatusCode statusCode)
         {
-            var ensWebhookJson = FssEventBody;
+            JsonObject ensWebhookJson = FssEventBody;
             await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, statusCode);
-            var apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
-            var startTime = DateTime.UtcNow;
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
+            DateTime startTime = DateTime.UtcNow;
 
             while (DateTime.UtcNow - startTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
             {
@@ -174,13 +175,13 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             }
 
             Assert.That((int)apiResponse.StatusCode, Is.EqualTo(200), $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 200.");
-            var stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
+            HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
             Assert.That(stubResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
             // Get the response
-            var customerJsonString = await stubResponse.Content.ReadAsStringAsync();
+            string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
 
-            var deserialized = JsonSerializer.Deserialize<IEnumerable<DistributorRequest>>(custome‌​rJsonString, JOptions);
-            var getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.StatusCode.HasValue && x.StatusCode.Value == statusCode).OrderByDescending(a => a.TimeStamp);
+            IEnumerable<DistributorRequest> deserialized = JsonSerializer.Deserialize<IEnumerable<DistributorRequest>>(custome‌​rJsonString, JOptions);
+            IEnumerable<DistributorRequest> getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.StatusCode.HasValue && x.StatusCode.Value == statusCode).OrderByDescending(a => a.TimeStamp);
             Assert.That(getMatchingData, Is.Not.Null);
             Assert.That(getMatchingData.Count(), Is.GreaterThan(1));
         }
@@ -189,10 +190,10 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         public async Task WhenICallTheEnsWebhookApiWithAValidScsJObjectBody_ThenOkStatusIsReturned()
         {
             const string subject = "GB53496A";
-            var ensWebhookJson = ScsEventBody;
+            JsonObject ensWebhookJson = ScsEventBody;
             await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, null);
-            var startTime = DateTime.UtcNow;
-            var apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
+            DateTime startTime = DateTime.UtcNow;
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
 
             while (DateTime.UtcNow - startTime < TimeSpan.FromSeconds(TestConfig.WaitingTimeForQueueInSeconds))
             {
@@ -200,13 +201,13 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             }
 
             Assert.That((int)apiResponse.StatusCode, Is.EqualTo(200), $"Incorrect status code {apiResponse.StatusCode} is returned, instead of the expected 200.");
-            var stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
+            HttpResponseMessage stubResponse = await StubApiClient.GetStubApiCacheReturnStatusAsync(subject, EnsToken);
             Assert.That(stubResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-            var customerJsonString = await stubResponse.Content.ReadAsStringAsync();
+            string customerJsonString = await stubResponse.Content.ReadAsStringAsync();
 
-            var deserialized = JsonSerializer.Deserialize<IEnumerable<DistributorRequest>>(custome‌​rJsonString, JOptions);
+            IEnumerable<DistributorRequest> deserialized = JsonSerializer.Deserialize<IEnumerable<DistributorRequest>>(custome‌​rJsonString, JOptions);
 
-            var getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.StatusCode.HasValue && x.StatusCode.Value == HttpStatusCode.OK).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
+            DistributorRequest getMatchingData = deserialized.Where(x => x.TimeStamp >= startTime && x.StatusCode.HasValue && x.StatusCode.Value == HttpStatusCode.OK).OrderByDescending(a => a.TimeStamp).FirstOrDefault();
             Assert.That(getMatchingData, Is.Not.Null);
             Assert.Multiple(() =>
             {

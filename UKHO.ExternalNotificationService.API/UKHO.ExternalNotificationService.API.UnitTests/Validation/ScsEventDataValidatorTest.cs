@@ -26,7 +26,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeScsEventData.ProductType = null;
 
-            var result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
+            TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("ProductType");
 
             Assert.Multiple(() =>
@@ -41,7 +41,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeScsEventData.ProductName = null;
 
-            var result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
+            TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("ProductName");
 
             Assert.Multiple(() =>
@@ -56,7 +56,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeScsEventData.EditionNumber = -1;
 
-            var result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
+            TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("EditionNumber");
 
             Assert.Multiple(() =>
@@ -71,7 +71,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeScsEventData.UpdateNumber = -1;
 
-            var result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
+            TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("UpdateNumber");
 
             Assert.Multiple(() =>
@@ -86,7 +86,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeScsEventData.FileSize = -1;
 
-            var result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
+            TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("FileSize");
 
             Assert.Multiple(() =>
@@ -101,7 +101,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeScsEventData.BoundingBox = null;
 
-            var result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
+            TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("BoundingBox");
 
             Assert.Multiple(() =>
@@ -120,7 +120,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeScsEventData.BoundingBox.NorthLimit = value;
 
-            var result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
+            TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
 
             CheckLatLongResult(nameof(ProductBoundingBox.NorthLimit), 90, result, shouldBeValid);
         }
@@ -134,7 +134,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeScsEventData.BoundingBox.SouthLimit = value;
 
-            var result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
+            TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
 
             CheckLatLongResult(nameof(ProductBoundingBox.SouthLimit), 90, result, shouldBeValid);
         }
@@ -148,7 +148,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeScsEventData.BoundingBox.EastLimit = value;
 
-            var result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
+            TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
 
             CheckLatLongResult(nameof(ProductBoundingBox.EastLimit), 180, result, shouldBeValid);
         }
@@ -162,7 +162,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeScsEventData.BoundingBox.WestLimit = value;
 
-            var result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
+            TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
 
             CheckLatLongResult(nameof(ProductBoundingBox.WestLimit), 180, result, shouldBeValid);
         }
@@ -172,7 +172,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeScsEventData.Status = null;
 
-            var result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
+            TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("Status");
 
             Assert.Multiple(() =>
@@ -187,7 +187,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeScsEventData.Status.StatusDate = null;
 
-            var result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
+            TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("StatusDate");
 
             Assert.Multiple(() =>
@@ -202,7 +202,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeScsEventData.Status.StatusName = null;
 
-            var result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
+            TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("StatusName");
 
             Assert.Multiple(() =>
@@ -215,7 +215,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         [Test]
         public void WhenValidRequest_ThenReceiveSuccessfulResponse()
         {
-            var result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
+            TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
 
             Assert.That(result.Errors, Is.Empty);
         }

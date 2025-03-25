@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging;
 using FakeItEasy;
+using FakeItEasy.Configuration;
 using NUnit.Framework;
 using UKHO.ExternalNotificationService.Common.BaseClass;
 using UKHO.ExternalNotificationService.Common.Helpers;
@@ -31,9 +32,9 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.BaseClass
         public void WhenPostFssValidEventRequest_ThenReturnsFssEventData()
         {
             A.CallTo(() => _fakeAzureEventGridDomainService.ConvertObjectTo<FssEventData>(A<object>.Ignored)).Returns(_fssEventData);
-            var data = (object)_fssEventData;
+            object data = (object)_fssEventData;
 
-            var response = _eventProcessorBase.GetEventData<FssEventData>(data);
+            FssEventData response = _eventProcessorBase.GetEventData<FssEventData>(data);
 
             Assert.Multiple(() =>
             {
@@ -45,12 +46,12 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.BaseClass
         [Test]
         public void WhenPostFssValidEventRequest_ThenEventPublishedSuccessfully()
         {
-            var cancellationToken = CancellationToken.None;
-            var cloudEvent = new CloudEvent("test", "test", new object());
+            CancellationToken cancellationToken = CancellationToken.None;
+            CloudEvent cloudEvent = new("test", "test", new object());
 
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken));
 
-            var response = _eventProcessorBase.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken);
+            Task response = _eventProcessorBase.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken);
 
             Assert.That(response.IsCompleted);
         }
@@ -64,10 +65,10 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.BaseClass
         [Parallelizable(ParallelScope.All)]
         public async Task WhenPublishEventWithDelayAsync_ThenEventPublishedSuccessfullyWithDelay(int millisecondsDelay)
         {
-            var cancellationToken = CancellationToken.None;
-            var cloudEvent = new CloudEvent("test", "test", new object());
-            var stopwatch = new Stopwatch();
-            var callToPublishEventAsync = A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken));
+            CancellationToken cancellationToken = CancellationToken.None;
+            CloudEvent cloudEvent = new CloudEvent("test", "test", new object());
+            Stopwatch stopwatch = new();
+            IReturnValueArgumentValidationConfiguration<Task> callToPublishEventAsync = A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken));
 
             stopwatch.Start();
 

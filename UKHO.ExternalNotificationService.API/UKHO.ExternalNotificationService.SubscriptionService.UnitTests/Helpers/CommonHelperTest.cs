@@ -38,9 +38,9 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
                 .AddPolicyHandler(CommonHelper.GetRetryPolicy(_fakeLogger, _retryCount, SleepDuration))
                 .AddHttpMessageHandler(() => new ServiceUnavailableDelegatingHandler());
 
-            var configuredClient = CreateClient(services);
+            HttpClient configuredClient = CreateClient(services);
 
-            var result = await configuredClient.GetAsync("https://testretry.com");
+            HttpResponseMessage result = await configuredClient.GetAsync("https://testretry.com");
 
             Assert.Multiple(() =>
             {
@@ -60,9 +60,9 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
                 .AddPolicyHandler(CommonHelper.GetRetryPolicy(_fakeLogger, _retryCount, SleepDuration))
                 .AddHttpMessageHandler(() => new InternalServerDelegatingHandler());
 
-            var configuredClient = CreateClient(services);
+            HttpClient configuredClient = CreateClient(services);
 
-            var result = await configuredClient.GetAsync("https://testretry.com");
+            HttpResponseMessage result = await configuredClient.GetAsync("https://testretry.com");
 
             Assert.Multiple(() =>
             {
@@ -74,22 +74,22 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
         [Test]
         public void WhenValidGetExternalNotificationEntityEventThenReturnSuccessResponse()
         {
-            var subscriptionRequestResult = GetSubscriptionSuccessRequestResult();
+            SubscriptionRequestResult subscriptionRequestResult = GetSubscriptionSuccessRequestResult();
             const bool isActive = true;
             const int successStatusCode = 1000001;
 
-            var response = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, isActive, successStatusCode);
+            ExternalNotificationEntity response = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, isActive, successStatusCode);
             Assert.That(response, Is.Not.Null);
         }
 
         [Test]
         public void WhenInvalidGetExternalNotificationEntityEventThenReturnFailResponse()
         {
-            var subscriptionRequestResult = GetSubscriptionFailureRequestResult();
+            SubscriptionRequestResult subscriptionRequestResult = GetSubscriptionFailureRequestResult();
             const bool isActive = false;
             const int failureStatusCode = 1000002;
 
-            var response = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, isActive, failureStatusCode);
+            ExternalNotificationEntity response = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, isActive, failureStatusCode);
             Assert.That(response, Is.Not.Null);
         }
 

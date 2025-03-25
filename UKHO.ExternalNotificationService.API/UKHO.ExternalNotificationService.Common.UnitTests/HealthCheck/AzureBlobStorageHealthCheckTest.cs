@@ -36,7 +36,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         {
             A.CallTo(() => _fakeAzureBlobStorageHelper.CheckBlobContainerHealth(A<string>.Ignored, A<string>.Ignored)).Returns(new HealthCheckResult(HealthStatus.Healthy));
 
-            var response = await _azureBlobStorageHealthCheck.CheckHealthAsync(new HealthCheckContext());
+            HealthCheckResult response = await _azureBlobStorageHealthCheck.CheckHealthAsync(new HealthCheckContext());
 
             Assert.That(response.Status, Is.EqualTo(HealthStatus.Healthy));
         }
@@ -46,7 +46,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         {
             A.CallTo(() => _fakeAzureBlobStorageHelper.CheckBlobContainerHealth(A<string>.Ignored, A<string>.Ignored)).Returns(new HealthCheckResult(HealthStatus.Unhealthy));
 
-            var response = await _azureBlobStorageHealthCheck.CheckHealthAsync(new HealthCheckContext());
+            HealthCheckResult response = await _azureBlobStorageHealthCheck.CheckHealthAsync(new HealthCheckContext());
 
             Assert.That(response.Status, Is.EqualTo(HealthStatus.Unhealthy));
         }
@@ -57,7 +57,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         {
             A.CallTo(() => _fakeAzureBlobStorageHelper.CheckBlobContainerHealth(A<string>.Ignored, A<string>.Ignored)).Throws(new Exception());
 
-            var response = await _azureBlobStorageHealthCheck.CheckHealthAsync(new HealthCheckContext());
+            HealthCheckResult response = await _azureBlobStorageHealthCheck.CheckHealthAsync(new HealthCheckContext());
 
             Assert.That(response.Status, Is.EqualTo(HealthStatus.Unhealthy));
         }

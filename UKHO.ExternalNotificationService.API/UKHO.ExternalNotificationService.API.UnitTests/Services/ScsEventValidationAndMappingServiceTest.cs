@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Azure.Messaging;
 using FakeItEasy;
 using FluentValidation.Results;
 using Microsoft.Extensions.Options;
@@ -45,9 +46,9 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         public async Task WhenNullBatchIdInRequest_ThenReceiveSuccessfulResponse()
         {
             A.CallTo(() => _fakeScsEventDataValidator.Validate(A<ScsEventData>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>
-                    { new("ProductType", "ProductType cannot be blank or null.") }));
+                    { new ValidationFailure("ProductType", "ProductType cannot be blank or null.") }));
 
-            var result = await _scsEventValidationAndMappingService.ValidateScsEventData(new ScsEventData());
+            ValidationResult result = await _scsEventValidationAndMappingService.ValidateScsEventData(new ScsEventData());
 
             Assert.Multiple(() =>
             {
@@ -61,7 +62,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         {
             A.CallTo(() => _fakeScsEventDataValidator.Validate(A<ScsEventData>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
 
-            var result = await _scsEventValidationAndMappingService.ValidateScsEventData(_fakeScsEventData);
+            ValidationResult result = await _scsEventValidationAndMappingService.ValidateScsEventData(_fakeScsEventData);
 
             Assert.That(result.IsValid);
         }
@@ -71,10 +72,10 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [Test]
         public void WhenValidScsEventDataMappingRequest_ThenReturnCloudEvent()
         {
-            var result = _scsEventValidationAndMappingService.MapToCloudEvent(_fakeCloudEventCandidate);
+            CloudEvent result = _scsEventValidationAndMappingService.MapToCloudEvent(_fakeCloudEventCandidate);
 
-            var data = Encoding.ASCII.GetString(result.Data);
-            var cloudEventData = JsonSerializer.Deserialize<ScsEventData>(data);
+            string data = Encoding.ASCII.GetString(result.Data);
+            ScsEventData cloudEventData = JsonSerializer.Deserialize<ScsEventData>(data);
 
             Assert.Multiple(() =>
             {

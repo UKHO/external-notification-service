@@ -30,7 +30,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
             A.CallTo(() => _fakeAzureWebJobHelper.CheckWebJobsHealth(A<WebJobDetails>.Ignored))
                 .Returns(new HealthCheckResult(HealthStatus.Unhealthy, "Azure webjob is unhealthy"));
 
-            var response = await _azureWebJobHealthCheckService.CheckHealthAsync();
+            HealthCheckResult response = await _azureWebJobHealthCheckService.CheckHealthAsync();
 
             Assert.That(response.Status, Is.EqualTo(HealthStatus.Unhealthy));
         }
@@ -41,7 +41,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
             A.CallTo(() => _fakeAzureWebJobHelper.CheckWebJobsHealth(A<WebJobDetails>.Ignored))
                 .Returns(new HealthCheckResult(HealthStatus.Healthy, "Azure webjob is healthy"));
 
-            var response = await _azureWebJobHealthCheckService.CheckHealthAsync();
+            HealthCheckResult response = await _azureWebJobHealthCheckService.CheckHealthAsync();
 
             Assert.That(response.Status, Is.EqualTo(HealthStatus.Healthy));
         }

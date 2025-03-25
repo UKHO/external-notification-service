@@ -41,7 +41,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
         {
             A.CallTo(() => _fakeAuthTokenProvider.GetADAccessToken(A<SubscriptionRequestMessage>.Ignored)).Returns(string.Empty);
 
-            var response = await _callbackService.CallbackToD365UsingDataverse(FakeExternalEntityPath, GetExternalNotificationEntity(), GetSubscriptionRequestMessage());
+            HttpResponseMessage response = await _callbackService.CallbackToD365UsingDataverse(FakeExternalEntityPath, GetExternalNotificationEntity(), GetSubscriptionRequestMessage());
             Assert.Multiple(() =>
             {
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
@@ -52,11 +52,11 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
         [Test]
         public async Task WhenInvalidCallbackToD365UsingDataverseRequest_ThenReturnsBadRequest()
         {
-            var httpResponse = new HttpResponseMessage { StatusCode = HttpStatusCode.BadRequest, RequestMessage = new HttpRequestMessage { Method = HttpMethod.Patch, RequestUri = new Uri("http://test.com") }, Content = new StreamContent(new MemoryStream(Encoding.UTF8.GetBytes("Bad Request"))) };
+            var httpResponse = new HttpResponseMessage() { StatusCode = HttpStatusCode.BadRequest, RequestMessage = new HttpRequestMessage { Method = HttpMethod.Patch, RequestUri = new Uri("http://test.com") }, Content = new StreamContent(new MemoryStream(Encoding.UTF8.GetBytes("Bad Request"))) };
             A.CallTo(() => _fakeAuthTokenProvider.GetADAccessToken(A<SubscriptionRequestMessage>.Ignored)).Returns(FakeAccessToken);
             A.CallTo(() => _fakeCallbackClient.GetCallbackD365Client(A<string>.Ignored, A<string>.Ignored, A<object>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored)).Returns(httpResponse);
 
-            var response = await _callbackService.CallbackToD365UsingDataverse(FakeExternalEntityPath, GetExternalNotificationEntity(), GetSubscriptionRequestMessage());
+            HttpResponseMessage response = await _callbackService.CallbackToD365UsingDataverse(FakeExternalEntityPath, GetExternalNotificationEntity(), GetSubscriptionRequestMessage());
             Assert.Multiple(() =>
             {
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
@@ -67,13 +67,13 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
         [Test]
         public async Task WhenValidCallbackToD365UsingDataverseRequest_ThenReturnsNoContent()
         {
-            var getExternalNotificationEntry = GetExternalNotificationEntity();
-            var jsonString = JsonSerializer.Serialize(getExternalNotificationEntry);
-            var httpResponse = new HttpResponseMessage { StatusCode = HttpStatusCode.NoContent, RequestMessage = new HttpRequestMessage { Method = HttpMethod.Patch, RequestUri = new Uri("http://test.com") }, Content = new StreamContent(new MemoryStream(Encoding.UTF8.GetBytes(jsonString))) };
+            ExternalNotificationEntity getExternalNotificationEntry = GetExternalNotificationEntity();
+            string jsonString = JsonSerializer.Serialize(getExternalNotificationEntry);
+            var httpResponse = new HttpResponseMessage() { StatusCode = HttpStatusCode.NoContent, RequestMessage = new HttpRequestMessage { Method = HttpMethod.Patch, RequestUri = new Uri("http://test.com") }, Content = new StreamContent(new MemoryStream(Encoding.UTF8.GetBytes(jsonString))) };
             A.CallTo(() => _fakeAuthTokenProvider.GetADAccessToken(A<SubscriptionRequestMessage>.Ignored)).Returns(FakeAccessToken);
             A.CallTo(() => _fakeCallbackClient.GetCallbackD365Client(A<string>.Ignored, A<string>.Ignored, A<object>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored)).Returns(httpResponse);
 
-            var response = await _callbackService.CallbackToD365UsingDataverse(FakeExternalEntityPath, getExternalNotificationEntry, GetSubscriptionRequestMessage());
+            HttpResponseMessage response = await _callbackService.CallbackToD365UsingDataverse(FakeExternalEntityPath, getExternalNotificationEntry, GetSubscriptionRequestMessage());
             Assert.Multiple(() =>
             {
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NoContent));
@@ -86,7 +86,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
         {
             A.CallTo(() => _fakeAuthTokenProvider.GetADAccessToken(A<SubscriptionRequestMessage>.Ignored)).Returns(string.Empty);
 
-            var response = await _callbackService.DeadLetterCallbackToD365UsingDataverse(FakeExternalEntityPath, GetExternalNotificationEntity(), GetSubscriptionRequestMessage());
+            HttpResponseMessage response = await _callbackService.DeadLetterCallbackToD365UsingDataverse(FakeExternalEntityPath, GetExternalNotificationEntity(), GetSubscriptionRequestMessage());
             Assert.Multiple(() =>
             {
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
@@ -97,11 +97,11 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
         [Test]
         public async Task WhenInvalidDeadLetterCallbackToD365UsingDataverseRequest_ThenReturnsBadRequest()
         {
-            var httpResponse = new HttpResponseMessage { StatusCode = HttpStatusCode.BadRequest, RequestMessage = new HttpRequestMessage { Method = HttpMethod.Patch, RequestUri = new Uri("http://test.com") }, Content = new StreamContent(new MemoryStream(Encoding.UTF8.GetBytes("Bad Request"))) };
+            var httpResponse = new HttpResponseMessage() { StatusCode = HttpStatusCode.BadRequest, RequestMessage = new HttpRequestMessage { Method = HttpMethod.Patch, RequestUri = new Uri("http://test.com") }, Content = new StreamContent(new MemoryStream(Encoding.UTF8.GetBytes("Bad Request"))) };
             A.CallTo(() => _fakeAuthTokenProvider.GetADAccessToken(A<SubscriptionRequestMessage>.Ignored)).Returns(FakeAccessToken);
             A.CallTo(() => _fakeCallbackClient.GetCallbackD365Client(A<string>.Ignored, A<string>.Ignored, A<object>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored)).Returns(httpResponse);
 
-            var response = await _callbackService.DeadLetterCallbackToD365UsingDataverse(FakeExternalEntityPath, GetExternalNotificationEntity(), GetSubscriptionRequestMessage());
+            HttpResponseMessage response = await _callbackService.DeadLetterCallbackToD365UsingDataverse(FakeExternalEntityPath, GetExternalNotificationEntity(), GetSubscriptionRequestMessage());
             Assert.Multiple(() =>
             {
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
@@ -112,13 +112,13 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
         [Test]
         public async Task WhenValidDeadLetterCallbackToD365UsingDataverseRequest_ThenReturnsNoContent()
         {
-            var getExternalNotificationEntry = GetExternalNotificationEntity();
-            var jsonString = JsonSerializer.Serialize(getExternalNotificationEntry);
-            var httpResponse = new HttpResponseMessage { StatusCode = HttpStatusCode.NoContent, RequestMessage = new HttpRequestMessage { Method = HttpMethod.Patch, RequestUri = new Uri("http://test.com") }, Content = new StreamContent(new MemoryStream(Encoding.UTF8.GetBytes(jsonString))) };
+            ExternalNotificationEntity getExternalNotificationEntry = GetExternalNotificationEntity();
+            string jsonString = JsonSerializer.Serialize(getExternalNotificationEntry);
+            var httpResponse = new HttpResponseMessage() { StatusCode = HttpStatusCode.NoContent, RequestMessage = new HttpRequestMessage { Method = HttpMethod.Patch, RequestUri = new Uri("http://test.com") }, Content = new StreamContent(new MemoryStream(Encoding.UTF8.GetBytes(jsonString))) };
             A.CallTo(() => _fakeAuthTokenProvider.GetADAccessToken(A<SubscriptionRequestMessage>.Ignored)).Returns(FakeAccessToken);
             A.CallTo(() => _fakeCallbackClient.GetCallbackD365Client(A<string>.Ignored, A<string>.Ignored, A<object>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored)).Returns(httpResponse);
 
-            var response = await _callbackService.DeadLetterCallbackToD365UsingDataverse(FakeExternalEntityPath, getExternalNotificationEntry, GetSubscriptionRequestMessage());
+            HttpResponseMessage response = await _callbackService.DeadLetterCallbackToD365UsingDataverse(FakeExternalEntityPath, getExternalNotificationEntry, GetSubscriptionRequestMessage());
             Assert.Multiple(() =>
             {
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NoContent));

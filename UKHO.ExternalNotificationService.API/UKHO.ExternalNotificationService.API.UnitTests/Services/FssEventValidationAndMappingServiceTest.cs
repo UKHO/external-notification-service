@@ -48,7 +48,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         {
             A.CallTo(() => _fakeFssEventDataValidator.Validate(A<FssEventData>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure> { new("BatchId", "BatchId cannot be blank or null.") }));
 
-            var result = await _fssEventValidationAndMappingService.ValidateFssEventData(new FssEventData());
+            ValidationResult result = await _fssEventValidationAndMappingService.ValidateFssEventData(new FssEventData());
 
             Assert.Multiple(() =>
             {
@@ -62,7 +62,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         {
             A.CallTo(() => _fakeFssEventDataValidator.Validate(A<FssEventData>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>()));
 
-            var result = await _fssEventValidationAndMappingService.ValidateFssEventData(_fakeFssEventData);
+            ValidationResult result = await _fssEventValidationAndMappingService.ValidateFssEventData(_fakeFssEventData);
 
             Assert.That(result.IsValid);
         }
@@ -73,12 +73,12 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         {
             const string batchDetailsUri = "https://test/fss/batch/83d08093-7a67-4b3a-b431-92ba42feaea0";
 
-            var customCloudEvent = CustomCloudEventBase.GetCustomCloudEvent(businessUnit);
-            var candidate = CustomCloudEventBase.GetCloudEventCandidate<FssEventData>(customCloudEvent);
-            var result = _fssEventValidationAndMappingService.MapToCloudEvent(candidate);
+            CustomCloudEvent customCloudEvent = CustomCloudEventBase.GetCustomCloudEvent(businessUnit);
+            CloudEventCandidate<FssEventData> candidate = CustomCloudEventBase.GetCloudEventCandidate<FssEventData>(customCloudEvent);
+            CloudEvent result = _fssEventValidationAndMappingService.MapToCloudEvent(candidate);
 
-            var data = Encoding.ASCII.GetString(result.Data);
-            var cloudEventData = JsonSerializer.Deserialize<FssEventData>(data);
+            string data = Encoding.ASCII.GetString(result.Data);
+            FssEventData cloudEventData = JsonSerializer.Deserialize<FssEventData>(data);
 
             Assert.Multiple(() =>
             {
@@ -94,8 +94,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         public void WhenFssEventDataMappingRequestForUnconfiguredBusinessUnit_ThenThrowConfigurationMissingException()
         {
             const string businessUnit = "UnconfiguredBusinessUnit";
-            var customCloudEvent = CustomCloudEventBase.GetCustomCloudEvent(businessUnit);
-            var candidate = CustomCloudEventBase.GetCloudEventCandidate<FssEventData>(customCloudEvent);
+            CustomCloudEvent customCloudEvent = CustomCloudEventBase.GetCustomCloudEvent(businessUnit);
+            CloudEventCandidate<FssEventData> candidate = CustomCloudEventBase.GetCloudEventCandidate<FssEventData>(customCloudEvent);
 
             Assert.Throws(Is.TypeOf<ConfigurationMissingException>().And.Message.EqualTo($"Missing FssDataMappingConfiguration configuration for {businessUnit} business unit"),
                 delegate
