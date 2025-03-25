@@ -18,7 +18,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.Repository
         [SetUp]
         public void Setup()
         {
-            _fakeNotificationType = new List<NotificationType>() { new NotificationType() { Name = "Data test", TopicName = "test" } };
+            _fakeNotificationType = [new() { Name = "Data test", TopicName = "test" }];
 
             _fakeEnsConfiguration = A.Fake<IOptions<EnsConfiguration>>();
             _fakeEnsConfiguration.Value.NotificationTypes = _fakeNotificationType;
@@ -29,9 +29,9 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.Repository
         [Test]
         public void WhenPostValidNotificationTypes_ThenReturnsNotificationTypeInResponse()
         {
-            NotificationType notificationType = _notificationRepository.GetAllNotificationTypes().FirstOrDefault(x => x.Name == "Data test");
+            var notificationType = _notificationRepository.GetAllNotificationTypes().FirstOrDefault(x => x.Name == "Data test");
 
-            Assert.That(_fakeNotificationType.FirstOrDefault(x => x.Name == "Data test").Name, Is.EqualTo(notificationType.Name));
+            Assert.That(notificationType.Name, Is.EqualTo(_fakeNotificationType.FirstOrDefault(x => x.Name == "Data test").Name));
         }
     }
 }

@@ -36,9 +36,9 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         {
             A.CallTo(() => _fakeAzureMessageQueueHelper.CheckMessageQueueHealth(A<string>.Ignored, A<string>.Ignored)).Returns(new HealthCheckResult(HealthStatus.Healthy));
 
-            HealthCheckResult response = await _azureMessageQueueHealthCheck.CheckHealthAsync(new HealthCheckContext());
+            var response = await _azureMessageQueueHealthCheck.CheckHealthAsync(new HealthCheckContext());
 
-            Assert.That(HealthStatus.Healthy, Is.EqualTo(response.Status));
+            Assert.That(response.Status, Is.EqualTo(HealthStatus.Healthy));
         }
 
         [Test]
@@ -46,9 +46,9 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         {
             A.CallTo(() => _fakeAzureMessageQueueHelper.CheckMessageQueueHealth(A<string>.Ignored, A<string>.Ignored)).Returns(new HealthCheckResult(HealthStatus.Unhealthy));
 
-            HealthCheckResult response = await _azureMessageQueueHealthCheck.CheckHealthAsync(new HealthCheckContext());
+            var response = await _azureMessageQueueHealthCheck.CheckHealthAsync(new HealthCheckContext());
 
-            Assert.That(HealthStatus.Unhealthy, Is.EqualTo(response.Status));
+            Assert.That(response.Status, Is.EqualTo(HealthStatus.Unhealthy));
         }
 
         [Test]
@@ -56,9 +56,9 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         {
             A.CallTo(() => _fakeAzureMessageQueueHelper.CheckMessageQueueHealth(A<string>.Ignored, A<string>.Ignored)).Throws(new Exception());
 
-            HealthCheckResult response = await _azureMessageQueueHealthCheck.CheckHealthAsync(new HealthCheckContext());
+            var response = await _azureMessageQueueHealthCheck.CheckHealthAsync(new HealthCheckContext());
 
-            Assert.That(HealthStatus.Unhealthy, Is.EqualTo(response.Status));
+            Assert.That(response.Status, Is.EqualTo(HealthStatus.Unhealthy));
         }
     }
 }

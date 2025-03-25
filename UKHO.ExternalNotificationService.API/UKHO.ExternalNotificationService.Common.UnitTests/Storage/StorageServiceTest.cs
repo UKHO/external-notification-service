@@ -26,7 +26,6 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.Storage
             _storageService = new StorageService(_fakeSubscriptionStorageConfiguration);
         }
 
-
         [Test]
         public void WhenInValidStorageConfiguration_ThenKeyNotFoundException()
         {
@@ -38,10 +37,10 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.Storage
         public void WhenValidStorageConfiguration_ThenValidStorageAccountConnectionStringRequest()
         {
             _fakeSubscriptionStorageConfiguration.Value.StorageAccountKey = "Test";
-            string response = _storageService.GetStorageAccountConnectionString();
+            var response = _storageService.GetStorageAccountConnectionString();
 
             Assert.That(response, Is.Not.Null);
-            Assert.That("DefaultEndpointsProtocol=https;AccountName=test;AccountKey=Test;EndpointSuffix=core.windows.net", Is.EqualTo(response));
+            Assert.That(response, Is.EqualTo("DefaultEndpointsProtocol=https;AccountName=test;AccountKey=Test;EndpointSuffix=core.windows.net"));
         }
     }
 }

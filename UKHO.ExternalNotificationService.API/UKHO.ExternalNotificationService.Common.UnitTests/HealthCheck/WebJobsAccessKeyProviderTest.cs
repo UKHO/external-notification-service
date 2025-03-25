@@ -28,15 +28,15 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         [Test]
         public void GetWebJobAccessKey_ReturnsCorrectKeyWhenExists()
         {
-            string webJobsAccessKey = _webJobsAccessKeyProvider.GetWebJobsAccessKey("webjob1key");
-            string expectedAccessKey = _configuration.GetValue<string>("webjob1key");
-            Assert.That(expectedAccessKey, Is.EqualTo(webJobsAccessKey));
+            var actualAccessKey = _webJobsAccessKeyProvider.GetWebJobsAccessKey("webjob1key");
+            var expectedAccessKey = _configuration.GetValue<string>("webjob1key");
+            Assert.That(actualAccessKey, Is.EqualTo(expectedAccessKey));
         }
 
         [Test]
         public void GetWebJobAccessKey_ReturnsNullWhenNotExists()
         {
-            string actualAccessKey = _webJobsAccessKeyProvider.GetWebJobsAccessKey("nonexistingkey");
+            var actualAccessKey = _webJobsAccessKeyProvider.GetWebJobsAccessKey("nonexistingkey");
             Assert.That(actualAccessKey, Is.Null);
         }
     }

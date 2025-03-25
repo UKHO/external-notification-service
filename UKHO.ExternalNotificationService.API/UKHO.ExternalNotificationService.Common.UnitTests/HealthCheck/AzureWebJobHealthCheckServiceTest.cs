@@ -12,7 +12,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         private IWebJobAccessKeyProvider _fakeWebJobAccessKeyProvider;
         private IWebHostEnvironment _fakeWebHostEnvironment;
         private IAzureWebJobHelper _fakeAzureWebJobHelper;
-        private IAzureWebJobHealthCheckService _azureWebJobHealthCheckService;
+        private AzureWebJobHealthCheckService _azureWebJobHealthCheckService;
 
         [SetUp]
         public void Setup()
@@ -28,22 +28,22 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
         public async Task WhenAzureWebJobStatusIsNotRunning_ThenReturnUnhealthy()
         {
             A.CallTo(() => _fakeAzureWebJobHelper.CheckWebJobsHealth(A<WebJobDetails>.Ignored))
-               .Returns(new HealthCheckResult(HealthStatus.Unhealthy, "Azure webjob is unhealthy"));
+                .Returns(new HealthCheckResult(HealthStatus.Unhealthy, "Azure webjob is unhealthy"));
 
-            HealthCheckResult response = await _azureWebJobHealthCheckService.CheckHealthAsync();
+            var response = await _azureWebJobHealthCheckService.CheckHealthAsync();
 
-            Assert.That(HealthStatus.Unhealthy, Is.EqualTo(response.Status));
+            Assert.That(response.Status, Is.EqualTo(HealthStatus.Unhealthy));
         }
 
         [Test]
         public async Task WhenAzureWebJobStatusIsRunning_ThenReturnHealthy()
         {
             A.CallTo(() => _fakeAzureWebJobHelper.CheckWebJobsHealth(A<WebJobDetails>.Ignored))
-               .Returns(new HealthCheckResult(HealthStatus.Healthy, "Azure webjob is healthy"));
+                .Returns(new HealthCheckResult(HealthStatus.Healthy, "Azure webjob is healthy"));
 
-            HealthCheckResult response = await _azureWebJobHealthCheckService.CheckHealthAsync();
+            var response = await _azureWebJobHealthCheckService.CheckHealthAsync();
 
-            Assert.That(HealthStatus.Healthy, Is.EqualTo(response.Status));
+            Assert.That(response.Status, Is.EqualTo(HealthStatus.Healthy));
         }
     }
 }
