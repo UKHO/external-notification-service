@@ -37,11 +37,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         {
             _fakeD365PayloadDetails = GetD365Payload();
             _fakeSubscriptionRequest = GetSubscriptionRequest();
-            _fakeNotificationType = new List<NotificationType>() { new NotificationType() { Name = "Data test", TopicName = "testTopic" } };
+            _fakeNotificationType = [new() { Name = "Data test", TopicName = "testTopic" }];
             _fakeHttpContextAccessor = A.Fake<IHttpContextAccessor>();
             _fakeLogger = A.Fake<ILogger<SubscriptionController>>();
             _fakeSubscriptionService = A.Fake<ISubscriptionService>();
-            
+
             A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(new DefaultHttpContext());
             _fakeSubscriptionService = A.Fake<ISubscriptionService>();
             _fakeNotificationRepository = A.Fake<INotificationRepository>();
@@ -55,8 +55,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             var result = (BadRequestObjectResult)await _controller.Post(null);
             var errors = (ErrorDescription)result.Value;
 
-            Assert.That(400, Is.EqualTo(result.StatusCode));
-            Assert.That("Either body is null or malformed.", Is.EqualTo(errors.Errors.Single().Description));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.StatusCode, Is.EqualTo(400));
+                Assert.That(errors.Errors.Single().Description, Is.EqualTo("Either body is null or malformed."));
+            });
         }
 
         [Test]
@@ -71,14 +74,17 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 
             var result = (BadRequestObjectResult)await _controller.Post(_fakeD365PayloadDetails);
             var errors = (ErrorDescription)result.Value;
-            Assert.That(400, Is.EqualTo(result.StatusCode));
-            Assert.That("D365Payload InputParameters cannot be blank or null.", Is.EqualTo(errors.Errors.Single().Description));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.StatusCode, Is.EqualTo(400));
+                Assert.That(errors.Errors.Single().Description, Is.EqualTo("D365Payload InputParameters cannot be blank or null."));
+            });
         }
 
         [Test]
         public async Task WhenD365HttpPayloadSizeExceeded_ThenLogError()
         {
-            DefaultHttpContext defaultHttpContext = new();
+            var defaultHttpContext = new DefaultHttpContext();
             defaultHttpContext.Request.Headers.Append(XmsDynamicsMsgSizeExceededHeader, string.Empty);
             A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(defaultHttpContext);
             A.CallTo(() => _fakeSubscriptionService.ConvertToSubscriptionRequestModel(A<D365Payload>.Ignored)).Returns(_fakeSubscriptionRequest);
@@ -88,7 +94,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             var result = (StatusCodeResult)await _controller.Post(_fakeD365PayloadDetails);
 
             A.CallTo(_fakeLogger).Where(call => call.GetArgument<LogLevel>(0) == LogLevel.Error).MustHaveHappened();
-            Assert.That(StatusCodes.Status202Accepted, Is.EqualTo(result.StatusCode));
+            Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status202Accepted));
         }
 
         [Test]
@@ -103,14 +109,17 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             var result = (BadRequestObjectResult)await _controller.Post(_fakeD365PayloadDetails);
             var errors = (ErrorDescription)result.Value;
 
-            Assert.That(400, Is.EqualTo(result.StatusCode));
-            Assert.That("Invalid Notification Type 'Data test'", Is.EqualTo(errors.Errors.Single().Description));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.StatusCode, Is.EqualTo(400));
+                Assert.That(errors.Errors.Single().Description, Is.EqualTo("Invalid Notification Type 'Data test'"));
+            });
         }
 
         [Test]
         public async Task WhenPostValidPayload_ThenReceiveSuccessfulResponse()
         {
-            DefaultHttpContext defaultHttpContext = new();
+            var defaultHttpContext = new DefaultHttpContext();
             defaultHttpContext.Request.Headers.Append(CorrelationIdMiddleware.XCorrelationIdHeaderKey, value: Guid.NewGuid().ToString());
             A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(defaultHttpContext);
 
@@ -122,16 +131,16 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 
             A.CallTo(_fakeLogger).Where(call => call.GetArgument<LogLevel>(0) == LogLevel.Error).MustNotHaveHappened();
             A.CallTo(() => _fakeSubscriptionService.AddSubscriptionRequest(_fakeSubscriptionRequest, _fakeNotificationType.FirstOrDefault(), A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            Assert.That(StatusCodes.Status202Accepted, Is.EqualTo(result.StatusCode));
+            Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status202Accepted));
         }
 
         private static D365Payload GetD365Payload()
         {
-            var d365Payload = new D365Payload()
+            var d365Payload = new D365Payload
             {
                 CorrelationId = "6ea03f10-2672-46fb-92a1-5200f6a4fabc",
-                InputParameters = Array.Empty<InputParameter>(),
-                PostEntityImages = Array.Empty<EntityImage>(),
+                InputParameters = [],
+                PostEntityImages = [],
                 OperationCreatedOn = "/Date(1642149320000+0000)/"
             };
 

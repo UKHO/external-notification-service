@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using FluentValidation.TestHelper;
 using NUnit.Framework;
 using UKHO.ExternalNotificationService.API.Validation;
@@ -27,7 +26,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeD365Payload.CorrelationId = null;
 
-            TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
+            var result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("CorrelationId");
 
             Assert.That(result.Errors.Any(x => x.ErrorMessage == "D365Payload CorrelationId cannot be blank or null."));
@@ -38,7 +37,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeD365Payload.CorrelationId = string.Empty;
 
-            TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
+            var result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("CorrelationId");
 
             Assert.That(result.Errors.Any(x => x.ErrorMessage == "D365Payload CorrelationId cannot be blank or null."));
@@ -51,7 +50,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeD365Payload.InputParameters = null;
 
-            TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
+            var result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("InputParameters");
 
             Assert.That(result.Errors.Any(x => x.ErrorMessage == "D365Payload InputParameters cannot be blank or null."));
@@ -62,7 +61,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeD365Payload.PostEntityImages = null;
 
-            TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
+            var result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("PostEntityImages");
 
             Assert.That(result.Errors.Any(x => x.ErrorMessage == "D365Payload PostEntityImages cannot be blank or null."));
@@ -73,12 +72,10 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         [Test]
         public void WhenRequestWithoutSubscriptionIdKey_ThenReceiveBadRequest()
         {
-            _fakeD365Payload.InputParameters[0].Value.Attributes = new D365Attribute[]
-                                                                    { new D365Attribute {Key = D365PayloadKeyConstant.WebhookUrlKey,
-                                                                                         Value = "https://input.com" } };
+            _fakeD365Payload.InputParameters[0].Value.Attributes = [new() { Key = D365PayloadKeyConstant.WebhookUrlKey, Value = "https://input.com" }];
             _fakeD365Payload.PostEntityImages[0].Value.Attributes = null;
 
-            TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
+            var result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("SubscriptionId");
 
             Assert.That(result.Errors.Any(x => x.ErrorMessage == "SubscriptionId cannot be blank or null."));
@@ -89,7 +86,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeD365Payload.InputParameters[0].Value.Attributes[1].Value = null;
 
-            TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
+            var result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("SubscriptionId");
 
             Assert.That(result.Errors.Any(x => x.ErrorMessage == "SubscriptionId cannot be blank or null."));
@@ -101,12 +98,10 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         [Test]
         public void WhenRequestWithoutNotificationTypeKey_ThenReceiveBadRequest()
         {
-            _fakeD365Payload.InputParameters[0].Value.FormattedValues = new FormattedValue[]
-                                                                        { new FormattedValue { Key = D365PayloadKeyConstant.IsActiveKey,
-                                                                                               Value = "Active" } };
+            _fakeD365Payload.InputParameters[0].Value.FormattedValues = [new() { Key = D365PayloadKeyConstant.IsActiveKey, Value = "Active" }];
             _fakeD365Payload.PostEntityImages[0].Value.FormattedValues = null;
 
-            TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
+            var result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("NotificationType");
 
             Assert.That(result.Errors.Any(x => x.ErrorMessage == "NotificationType cannot be blank or null."));
@@ -117,7 +112,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeD365Payload.InputParameters[0].Value.FormattedValues[0].Value = null;
 
-            TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
+            var result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("NotificationType");
 
             Assert.That(result.Errors.Any(x => x.ErrorMessage == "NotificationType cannot be blank or null."));
@@ -128,12 +123,10 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         [Test]
         public void WhenRequestWithoutWebhookUrlKey_ThenReceiveBadRequest()
         {
-            _fakeD365Payload.InputParameters[0].Value.Attributes = new D365Attribute[]
-                                                                    { new D365Attribute { Key = D365PayloadKeyConstant.SubscriptionIdKey,
-                                                                                          Value = "246d71e7-1475-ec11-8943-002248818222" } };
+            _fakeD365Payload.InputParameters[0].Value.Attributes = [new() { Key = D365PayloadKeyConstant.SubscriptionIdKey, Value = "246d71e7-1475-ec11-8943-002248818222" }];
             _fakeD365Payload.PostEntityImages[0].Value.Attributes = null;
 
-            TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
+            var result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("WebhookUrl");
 
             Assert.That(result.Errors.Any(x => x.ErrorMessage == "WebhookUrl cannot be blank or null."));
@@ -144,7 +137,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeD365Payload.InputParameters[0].Value.Attributes[0].Value = null;
 
-            TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
+            var result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("WebhookUrl");
 
             Assert.That(result.Errors.Any(x => x.ErrorMessage == "WebhookUrl cannot be blank or null."));
@@ -155,12 +148,10 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         [Test]
         public void WhenRequestWithoutStateCodeKey_ThenReceiveBadRequest()
         {
-            _fakeD365Payload.InputParameters[0].Value.FormattedValues = new FormattedValue[]
-                                                                        { new FormattedValue { Key = D365PayloadKeyConstant.NotificationTypeKey,
-                                                                                               Value = "Data test" } };
+            _fakeD365Payload.InputParameters[0].Value.FormattedValues = [new() { Key = D365PayloadKeyConstant.NotificationTypeKey, Value = "Data test" }];
             _fakeD365Payload.PostEntityImages[0].Value.FormattedValues = null;
 
-            TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
+            var result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("StateCode");
 
             Assert.That(result.Errors.Any(x => x.ErrorMessage == "StateCode cannot be blank or null."));
@@ -171,7 +162,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeD365Payload.InputParameters[0].Value.FormattedValues[1].Value = null;
 
-            TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
+            var result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
             result.ShouldHaveValidationErrorFor("StateCode");
 
             Assert.That(result.Errors.Any(x => x.ErrorMessage == "StateCode cannot be blank or null."));
@@ -182,18 +173,18 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         [Test]
         public void WhenValidRequestD365Payload_ThenReceiveSuccessfulResponse()
         {
-            TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
+            var result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
 
-            Assert.That(0, Is.EqualTo(result.Errors.Count));
+            Assert.That(result.Errors, Is.Empty);
         }
 
         [Test]
         public void WhenValidRequestWithNullPostEntityImages_ThenReceiveSuccessfulResponse()
         {
-            _fakeD365Payload.PostEntityImages = Array.Empty<EntityImage>();
-            TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
+            _fakeD365Payload.PostEntityImages = [];
+            var result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
 
-            Assert.That(0, Is.EqualTo(result.Errors.Count));
+            Assert.That(result.Errors, Is.Empty);
         }
 
         [Test]
@@ -201,9 +192,9 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             _fakeD365Payload.PostEntityImages[0].Value = null;
 
-            TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
+            var result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
 
-            Assert.That(0, Is.EqualTo(result.Errors.Count));
+            Assert.That(result.Errors, Is.Empty);
         }
         #endregion
 
@@ -212,19 +203,19 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             var d365Payload = new D365Payload()
             {
                 CorrelationId = "6ea03f10-2672-46fb-92a1-5200f6a4faaa",
-                InputParameters = new InputParameter[] { new InputParameter {
-                                    Value = new InputParameterValue {
-                                                Attributes = new D365Attribute[] {  new D365Attribute { Key = D365PayloadKeyConstant.WebhookUrlKey, Value = "https://abc.com" },
-                                                                                    new D365Attribute { Key = D365PayloadKeyConstant.SubscriptionIdKey, Value = "246d71e7-1475-ec11-8943-002248818222" } },
-                                                FormattedValues = new FormattedValue[] {new FormattedValue { Key = D365PayloadKeyConstant.NotificationTypeKey, Value = "Data test" },
-                                                                                        new FormattedValue { Key =  D365PayloadKeyConstant.IsActiveKey, Value = "Active" }}}}},
-                PostEntityImages = new EntityImage[] { new EntityImage {
-                                    Key= D365PayloadKeyConstant.PostEntityImageKey,
+                InputParameters = [new() {
+                                   Value = new InputParameterValue {
+                                               Attributes = [new() { Key = D365PayloadKeyConstant.WebhookUrlKey, Value = "https://abc.com" },
+                                                             new() { Key = D365PayloadKeyConstant.SubscriptionIdKey, Value = "246d71e7-1475-ec11-8943-002248818222" }],
+                                               FormattedValues = [new() { Key = D365PayloadKeyConstant.NotificationTypeKey, Value = "Data test" },
+                                                                  new() { Key =  D365PayloadKeyConstant.IsActiveKey, Value = "Active" }]}}],
+                PostEntityImages = [new() {
+                                    Key = D365PayloadKeyConstant.PostEntityImageKey,
                                     Value = new EntityImageValue {
-                                        Attributes = new D365Attribute[] { new D365Attribute { Key = D365PayloadKeyConstant.WebhookUrlKey, Value = "https://abc.com" },
-                                                                           new D365Attribute { Key = D365PayloadKeyConstant.SubscriptionIdKey, Value = "246d71e7-1475-ec11-8943-002248818222" } },
-                                        FormattedValues = new FormattedValue[] { new FormattedValue { Key = D365PayloadKeyConstant.NotificationTypeKey, Value = "Data test" },
-                                                                                 new FormattedValue { Key =  D365PayloadKeyConstant.IsActiveKey, Value = "Active" }}}}},
+                                                Attributes = [new() { Key = D365PayloadKeyConstant.WebhookUrlKey, Value = "https://abc.com" },
+                                                              new() { Key = D365PayloadKeyConstant.SubscriptionIdKey, Value = "246d71e7-1475-ec11-8943-002248818222" }],
+                                                FormattedValues = [new() { Key = D365PayloadKeyConstant.NotificationTypeKey, Value = "Data test" },
+                                                                   new() { Key =  D365PayloadKeyConstant.IsActiveKey, Value = "Active" }]}}],
                 OperationCreatedOn = "/Date(1642149320000+0000)/"
             };
 

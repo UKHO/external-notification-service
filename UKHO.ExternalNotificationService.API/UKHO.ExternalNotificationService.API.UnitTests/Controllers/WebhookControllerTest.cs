@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -33,10 +32,8 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         [SetUp]
         public void Setup()
         {
-            string jsonString = JsonSerializer.Serialize(CustomCloudEventBase.GetCustomCloudEvent());
-            MemoryStream FssEventBodyData = new(Encoding.UTF8.GetBytes(jsonString));
-            _fakeFssEventBodyData = FssEventBodyData;
-
+            var jsonString = JsonSerializer.Serialize(CustomCloudEventBase.GetCustomCloudEvent());
+            _fakeFssEventBodyData = new MemoryStream(Encoding.UTF8.GetBytes(jsonString));
             _fakeLogger = A.Fake<ILogger<WebhookController>>();
             _fakeHttpContextAccessor = A.Fake<IHttpContextAccessor>();
             _fakeEventProcessorFactory = A.Fake<IEventProcessorFactory>();
@@ -50,7 +47,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         public void WhenValidHeaderRequestedInNewFilesPublishedOptions_ThenReturnsOkResponse()
         {
             var context = new DefaultHttpContext();
-            string requestHeaderValue = "test.example.com";
+            var requestHeaderValue = "test.example.com";
             context.Request.Headers["WebHook-Request-Origin"] = requestHeaderValue;
 
             A.CallTo(() => _fakeHttpContextAccessor.HttpContext).Returns(context);
@@ -61,9 +58,12 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             };
 
             var result = (StatusCodeResult)_controller.Options();
-            Assert.That(StatusCodes.Status200OK, Is.EqualTo(result.StatusCode));
-            Assert.That("*", Is.EqualTo(_controller.HttpContext.Response.Headers.Where(a => a.Key == "WebHook-Allowed-Rate").Select(b => b.Value).FirstOrDefault()));
-            Assert.That(requestHeaderValue, Is.EqualTo(_controller.HttpContext.Response.Headers.Where(a => a.Key == "WebHook-Allowed-Origin").Select(b => b.Value).FirstOrDefault()));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status200OK));
+                Assert.That(_controller.HttpContext.Response.Headers.Where(a => a.Key == "WebHook-Allowed-Rate").Select(b => b.Value).FirstOrDefault(), Is.EqualTo("*"));
+                Assert.That(_controller.HttpContext.Response.Headers.Where(a => a.Key == "WebHook-Allowed-Origin").Select(b => b.Value).FirstOrDefault(), Is.EqualTo(requestHeaderValue));
+            });
         }
         #endregion
 
@@ -71,7 +71,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         [Test]
         public async Task WhenPostFssNullEventInRequest_ThenReceiveSuccessfulResponse()
         {
-            string jsonString = JsonSerializer.Serialize(new JsonObject());
+            var jsonString = JsonSerializer.Serialize(new JsonObject());
             var requestData = new MemoryStream(Encoding.UTF8.GetBytes(jsonString));
 
             _controller.ControllerContext.HttpContext = new DefaultHttpContext();
@@ -79,7 +79,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 
             var result = (StatusCodeResult)await _controller.Post();
 
-            Assert.That(StatusCodes.Status200OK, Is.EqualTo(result.StatusCode));
+            Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status200OK));
         }
 
         [Test]
@@ -92,7 +92,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 
             var result = (StatusCodeResult)await _controller.Post();
 
-            Assert.That(StatusCodes.Status200OK, Is.EqualTo(result.StatusCode));
+            Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status200OK));
         }
 
         [Test]
@@ -105,13 +105,13 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             A.CallTo(() => _fakeEventProcessor.Process(A<CustomCloudEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored))
                            .Returns(new ExternalNotificationServiceProcessResponse()
                            {
-                               Errors = new List<Error>() { new Error() { Description = "test", Source = "test" } },
+                               Errors = [new() { Description = "test", Source = "test" }],
                                StatusCode = HttpStatusCode.OK
                            });
 
             var result = (OkObjectResult)await _controller.Post();
 
-            Assert.That(StatusCodes.Status200OK, Is.EqualTo(result.StatusCode));
+            Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status200OK));
         }
 
         [Test]
@@ -126,7 +126,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 
             var result = (StatusCodeResult)await _controller.Post();
 
-            Assert.That(StatusCodes.Status200OK, Is.EqualTo(result.StatusCode));
+            Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status200OK));
         }
         #endregion
     }
