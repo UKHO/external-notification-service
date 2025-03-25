@@ -29,10 +29,10 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
         [Test]
         public async Task WhenCreateOrUpdateSubscriptionThenCreateSubscription()
         {
-            CancellationToken cancellationToken = CancellationToken.None;
-            SubscriptionRequestMessage subscriptionRequestMessage = GetSubscriptionRequestMessage();
+            var cancellationToken = CancellationToken.None;
+            var subscriptionRequestMessage = GetSubscriptionRequestMessage();
 
-            DomainTopicEventSubscriptionResource response = await _subscriptionServiceData.CreateOrUpdateSubscription(subscriptionRequestMessage, cancellationToken);
+            var response = await _subscriptionServiceData.CreateOrUpdateSubscription(subscriptionRequestMessage, cancellationToken);
 
             A.CallTo(() => _fakeAzureEventGridDomainService.CreateOrUpdateSubscription(subscriptionRequestMessage, cancellationToken)).MustHaveHappenedOnceExactly();
             Assert.That(response, Is.InstanceOf<DomainTopicEventSubscriptionResource>());
@@ -41,8 +41,8 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
         [Test]
         public async Task WhenDeleteSubscriptionEventCalledThenDeleteSubscription()
         {
-            CancellationToken cancellationToken = CancellationToken.None;
-            SubscriptionRequestMessage subscriptionRequestMessage = GetSubscriptionRequestMessage();
+            var cancellationToken = CancellationToken.None;
+            var subscriptionRequestMessage = GetSubscriptionRequestMessage();
 
             await _subscriptionServiceData.DeleteSubscription(subscriptionRequestMessage, cancellationToken);
 
@@ -59,7 +59,6 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
                 NotificationTypeTopicName = "test-Topic-type",
                 SubscriptionId = "246d71e7-1475-ec11-8943-002248818222",
                 WebhookUrl = "https://testurl.com"
-
             };
         }
     }
