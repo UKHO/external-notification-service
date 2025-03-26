@@ -34,10 +34,13 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.BaseClass
             A.CallTo(() => _fakeAzureEventGridDomainService.ConvertObjectTo<FssEventData>(A<object>.Ignored)).Returns(_fssEventData);
             object data = (object)_fssEventData;
 
-            FssEventData response =  _eventProcessorBase.GetEventData<FssEventData>(data);
+            FssEventData response = _eventProcessorBase.GetEventData<FssEventData>(data);
 
-            Assert.That(_fssEventData.BatchId, Is.EqualTo(response.BatchId));
-            Assert.That(_fssEventData.Links.BatchDetails, Is.EqualTo(response.Links.BatchDetails));
+            Assert.Multiple(() =>
+            {
+                Assert.That(response.BatchId, Is.EqualTo(_fssEventData.BatchId));
+                Assert.That(response.Links.BatchDetails, Is.EqualTo(_fssEventData.Links.BatchDetails));
+            });
         }
 
         [Test]
@@ -64,12 +67,8 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.BaseClass
         {
             CancellationToken cancellationToken = CancellationToken.None;
             CloudEvent cloudEvent = new CloudEvent("test", "test", new object());
-
             Stopwatch stopwatch = new();
-
-            IReturnValueArgumentValidationConfiguration<Task> callToPublishEventAsync  =
-                A.CallTo(() =>
-                    _fakeAzureEventGridDomainService.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken));
+            IReturnValueArgumentValidationConfiguration<Task> callToPublishEventAsync = A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken));
 
             stopwatch.Start();
 
@@ -78,7 +77,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.BaseClass
             stopwatch.Stop();
 
             callToPublishEventAsync.MustHaveHappened();
-            
+
             Assert.That(stopwatch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(millisecondsDelay < 0 ? 0 : millisecondsDelay));
         }
     }

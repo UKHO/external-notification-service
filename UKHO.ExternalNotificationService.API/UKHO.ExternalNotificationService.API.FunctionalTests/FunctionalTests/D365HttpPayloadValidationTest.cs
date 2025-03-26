@@ -9,7 +9,8 @@ using UKHO.ExternalNotificationService.API.FunctionalTests.Model;
 
 namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 {
-    class D365HttpPayloadValidationTest
+    [TestFixture]
+    public class D365HttpPayloadValidationTest
     {
         private EnsApiClient EnsApiClient { get; set; }
         private TestConfiguration TestConfig { get; set; }
@@ -49,7 +50,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         public async Task WhenICallTheEnsSubscriptionApiWithAValidD365PayloadWithoutAuthToken_ThenAnUnauthorisedResponseIsReturned()
         {
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365FssAvcsPayload);
-            Assert.That(401, Is.EqualTo((int)apiResponse.StatusCode), $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 401.");
+            Assert.That((int)apiResponse.StatusCode, Is.EqualTo(401), $"Incorrect status code {apiResponse.StatusCode} is  returned, instead of the expected 401.");
         }
 
         [Test]
@@ -57,40 +58,43 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         {
             string invalidToken = EnsToken.Remove(EnsToken.Length - 4).Insert(EnsToken.Length - 4, "ABAA");
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365FssAvcsPayload, invalidToken);
-            Assert.That(401, Is.EqualTo((int)apiResponse.StatusCode), $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 401.");
+            Assert.That((int)apiResponse.StatusCode, Is.EqualTo(401), $"Incorrect status code {apiResponse.StatusCode} is  returned, instead of the expected 401.");
         }
 
         [Test]
         public async Task WhenICallTheEnsSubscriptionApiWithAValidD365FssAvcsPayload_ThenAcceptedStatusIsReturned()
         {
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365FssAvcsPayload, EnsToken);
-            Assert.That(202, Is.EqualTo((int)apiResponse.StatusCode), $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
+            Assert.That((int)apiResponse.StatusCode, Is.EqualTo(202), $"Incorrect status code {apiResponse.StatusCode} is  returned, instead of the expected 202.");
         }
 
         [Test]
         public async Task WhenICallTheEnsSubscriptionApiWithAValidD365FssMsiPayload_ThenAcceptedStatusIsReturned()
         {
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365FssMsiPayload, EnsToken);
-            Assert.That(202, Is.EqualTo((int)apiResponse.StatusCode), $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
+            Assert.That((int)apiResponse.StatusCode, Is.EqualTo(202), $"Incorrect status code {apiResponse.StatusCode} is  returned, instead of the expected 202.");
         }
 
         [Test]
         public async Task WhenICallTheEnsSubscriptionApiWithAValidD365ScsPayload_ThenAcceptedStatusIsReturned()
         {
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365ScsPayload, EnsToken);
-            Assert.That(202, Is.EqualTo((int)apiResponse.StatusCode), $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 202.");
+            Assert.That((int)apiResponse.StatusCode, Is.EqualTo(202), $"Incorrect status code {apiResponse.StatusCode} is  returned, instead of the expected 202.");
         }
 
         [Test]
         public async Task WhenICallTheEnsSubscriptionApiWithEmptyD365Payload_ThenABadRequestStatusIsReturned()
         {
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(null, EnsToken);
-            Assert.That(400, Is.EqualTo((int)apiResponse.StatusCode), $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 400.");
+            Assert.That((int)apiResponse.StatusCode, Is.EqualTo(400), $"Incorrect status code {apiResponse.StatusCode} is  returned, instead of the expected 400.");
 
             ErrorDescriptionModel errorMessage = await apiResponse.ReadAsTypeAsync<ErrorDescriptionModel>();
 
-            Assert.That(errorMessage.Errors.Any(e => e.Source == "requestBody"));
-            Assert.That(errorMessage.Errors.Any(e => e.Description == "Either body is null or malformed."));
+            Assert.Multiple(() =>
+            {
+                Assert.That(errorMessage.Errors.Any(e => e.Source == "requestBody"));
+                Assert.That(errorMessage.Errors.Any(e => e.Description == "Either body is null or malformed."));
+            });
         }
 
         [Test]
@@ -99,12 +103,15 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             D365FssAvcsPayload.InputParameters = null;
 
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365FssAvcsPayload, EnsToken);
-            Assert.That(400, Is.EqualTo((int)apiResponse.StatusCode), $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 400.");
+            Assert.That((int)apiResponse.StatusCode, Is.EqualTo(400), $"Incorrect status code {apiResponse.StatusCode} is  returned, instead of the expected 400.");
 
             ErrorDescriptionModel errorMessage = await apiResponse.ReadAsTypeAsync<ErrorDescriptionModel>();
 
-            Assert.That(errorMessage.Errors.Any(e => e.Source == "inputParameters"));
-            Assert.That(errorMessage.Errors.Any(e => e.Description == "D365Payload InputParameters cannot be blank or null."));
+            Assert.Multiple(() =>
+            {
+                Assert.That(errorMessage.Errors.Any(e => e.Source == "inputParameters"));
+                Assert.That(errorMessage.Errors.Any(e => e.Description == "D365Payload InputParameters cannot be blank or null."));
+            });
         }
 
         [Test]
@@ -113,12 +120,15 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             D365FssAvcsPayload.PostEntityImages = null;
 
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365FssAvcsPayload, EnsToken);
-            Assert.That(400, Is.EqualTo((int)apiResponse.StatusCode), $"Incorrect status code {apiResponse.StatusCode}  is  returned, instead of the expected 400.");
+            Assert.That((int)apiResponse.StatusCode, Is.EqualTo(400), $"Incorrect status code {apiResponse.StatusCode} is  returned, instead of the expected 400.");
 
             ErrorDescriptionModel errorMessage = await apiResponse.ReadAsTypeAsync<ErrorDescriptionModel>();
 
-            Assert.That(errorMessage.Errors.Any(e => e.Source == "postEntityImages"));
-            Assert.That(errorMessage.Errors.Any(e => e.Description == "D365Payload PostEntityImages cannot be blank or null."));
+            Assert.Multiple(() =>
+            {
+                Assert.That(errorMessage.Errors.Any(e => e.Source == "postEntityImages"));
+                Assert.That(errorMessage.Errors.Any(e => e.Description == "D365Payload PostEntityImages cannot be blank or null."));
+            });
         }
     }
 }

@@ -29,8 +29,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("ProductType");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "ProductType cannot be blank or null."));
-            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Any(x => x.ErrorMessage == "ProductType cannot be blank or null."));
+                Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            });
         }
 
         [Test]
@@ -41,8 +44,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("ProductName");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "ProductName cannot be blank or null."));
-            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Any(x => x.ErrorMessage == "ProductName cannot be blank or null."));
+                Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            });
         }
 
         [Test]
@@ -53,8 +59,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("EditionNumber");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "EditionNumber cannot be less than zero or blank."));
-            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Any(x => x.ErrorMessage == "EditionNumber cannot be less than zero or blank."));
+                Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            });
         }
 
         [Test]
@@ -65,8 +74,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("UpdateNumber");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "UpdateNumber cannot be less than zero or blank."));
-            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Any(x => x.ErrorMessage == "UpdateNumber cannot be less than zero or blank."));
+                Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            });
         }
 
         [Test]
@@ -77,8 +89,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("FileSize");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "FileSize cannot be less than zero or blank."));
-            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Any(x => x.ErrorMessage == "FileSize cannot be less than zero or blank."));
+                Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            });
         }
 
         [Test]
@@ -89,8 +104,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("BoundingBox");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "BoundingBox cannot be blank or null."));
-            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Any(x => x.ErrorMessage == "BoundingBox cannot be blank or null."));
+                Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            });
         }
 
         [TestCase(-90.1, false)]
@@ -157,8 +175,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("Status");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "Status cannot be blank or null."));
-            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Any(x => x.ErrorMessage == "Status cannot be blank or null."));
+                Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            });
         }
 
         [Test]
@@ -169,8 +190,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("StatusDate");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "StatusDate cannot be blank or null."));
-            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Any(x => x.ErrorMessage == "StatusDate cannot be blank or null."));
+                Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            });
         }
 
         [Test]
@@ -181,8 +205,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
             result.ShouldHaveValidationErrorFor("StatusName");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "StatusName cannot be blank or null."));
-            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Any(x => x.ErrorMessage == "StatusName cannot be blank or null."));
+                Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            });
         }
 
         [Test]
@@ -190,22 +217,28 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             TestValidationResult<ScsEventData> result = _scsEventDataValidator.TestValidate(_fakeScsEventData);
 
-            Assert.That(0, Is.EqualTo(result.Errors.Count));
+            Assert.That(result.Errors, Is.Empty);
         }
 
         private static void CheckLatLongResult(string property, int limit, TestValidationResult<ScsEventData> result, bool shouldBeValid)
         {
             if (shouldBeValid)
             {
-                Assert.That(result.IsValid);
-                Assert.That(0, Is.EqualTo(result.Errors.Count));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(result.IsValid);
+                    Assert.That(result.Errors, Is.Empty);
+                });
             }
             else
             {
-                Assert.That(1, Is.EqualTo(result.Errors.Count));
+                Assert.That(result.Errors, Has.Count.EqualTo(1));
                 result.ShouldHaveValidationErrorFor(property);
-                Assert.That(result.Errors.Any(x => x.ErrorMessage == $"{property} should be in the range -{limit}.0 to +{limit}.0."));
-                Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(result.Errors.Any(x => x.ErrorMessage == $"{property} should be in the range -{limit}.0 to +{limit}.0."));
+                    Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+                });
             }
         }
     }

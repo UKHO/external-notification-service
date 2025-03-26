@@ -42,8 +42,11 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
 
             HttpResponseMessage result = await configuredClient.GetAsync("https://testretry.com");
 
-            Assert.That(_isRetryCalled, Is.False);
-            Assert.That(HttpStatusCode.ServiceUnavailable, Is.EqualTo(result.StatusCode));
+            Assert.Multiple(() =>
+            {
+                Assert.That(_isRetryCalled, Is.False);
+                Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.ServiceUnavailable));
+            });
         }
 
         [Test]
@@ -61,8 +64,11 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
 
             HttpResponseMessage result = await configuredClient.GetAsync("https://testretry.com");
 
-            Assert.That(_isRetryCalled, Is.False);
-            Assert.That(HttpStatusCode.InternalServerError, Is.EqualTo(result.StatusCode));
+            Assert.Multiple(() =>
+            {
+                Assert.That(_isRetryCalled, Is.False);
+                Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
+            });
         }
 
         [Test]
@@ -71,6 +77,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
             SubscriptionRequestResult subscriptionRequestResult = GetSubscriptionSuccessRequestResult();
             const bool isActive = true;
             const int successStatusCode = 1000001;
+
             ExternalNotificationEntity response = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, isActive, successStatusCode);
             Assert.That(response, Is.Not.Null);
         }
@@ -81,6 +88,7 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Helpers
             SubscriptionRequestResult subscriptionRequestResult = GetSubscriptionFailureRequestResult();
             const bool isActive = false;
             const int failureStatusCode = 1000002;
+
             ExternalNotificationEntity response = CommonHelper.GetExternalNotificationEntity(subscriptionRequestResult, isActive, failureStatusCode);
             Assert.That(response, Is.Not.Null);
         }

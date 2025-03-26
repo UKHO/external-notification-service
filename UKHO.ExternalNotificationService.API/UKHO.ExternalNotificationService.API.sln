@@ -26,7 +26,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pipeline", "Pipeline", "{E8
 		..\azure-pipelines.yml = ..\azure-pipelines.yml
 		..\BuildNuget.config = ..\BuildNuget.config
 		..\external-notification-service.openApi.yaml = ..\external-notification-service.openApi.yaml
-		..\NVDSuppressions.xml = ..\NVDSuppressions.xml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", "{97C6916B-C219-4447-BFD1-C943E3DFCBDA}"

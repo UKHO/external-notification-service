@@ -1,11 +1,8 @@
-﻿
-using NUnit.Framework;
-using NUnit.Framework.Legacy;
+﻿using NUnit.Framework;
 using UKHO.D365CallbackDistributorStub.API.Services.Data;
 
 namespace UKHO.D365CallbackDistributorStub.API.Tests.Services.Queues
 {
-
     public class ExpirationListTests
     {
         [Test]
@@ -35,9 +32,9 @@ namespace UKHO.D365CallbackDistributorStub.API.Tests.Services.Queues
             expirationList.Add(message1);
             expirationList.Add(message2);
 
-            CollectionAssert.Contains(expirationList, message0);
-            CollectionAssert.Contains(expirationList, message1);
-            CollectionAssert.Contains(expirationList, message2);
+            Assert.That(expirationList, Has.Member(message0));
+            Assert.That(expirationList, Has.Member(message1));
+            Assert.That(expirationList, Has.Member(message2));
         }
 
         [Test]
@@ -55,7 +52,7 @@ namespace UKHO.D365CallbackDistributorStub.API.Tests.Services.Queues
 
             Thread.Sleep(TimeSpan.FromSeconds(3));
 
-            CollectionAssert.IsEmpty(expirationList);
+            Assert.That(expirationList, Is.Empty);
         }
 
         [Test]
@@ -73,9 +70,9 @@ namespace UKHO.D365CallbackDistributorStub.API.Tests.Services.Queues
 
             expirationList.Remove(message1);
 
-            CollectionAssert.Contains(expirationList, message0);
-            CollectionAssert.DoesNotContain(expirationList, message1);
-            CollectionAssert.Contains(expirationList, message2);
+            Assert.That(expirationList, Has.Member(message0));
+            Assert.That(expirationList, Has.No.Member(message1));
+            Assert.That(expirationList, Has.Member(message2));
         }
     }
 }

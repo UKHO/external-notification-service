@@ -31,7 +31,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
 
             HealthCheckResult response = await _azureWebJobHealthCheck.CheckHealthAsync(new HealthCheckContext());
 
-            Assert.That(HealthStatus.Healthy, Is.EqualTo(response.Status));
+            Assert.That(response.Status, Is.EqualTo(HealthStatus.Healthy));
         }
 
         [Test]
@@ -41,7 +41,7 @@ namespace UKHO.ExternalNotificationService.Common.UnitTests.HealthCheck
 
             HealthCheckResult response = await _azureWebJobHealthCheck.CheckHealthAsync(new HealthCheckContext());
 
-            Assert.That(HealthStatus.Unhealthy, Is.EqualTo(response.Status));
+            Assert.That(response.Status, Is.EqualTo(HealthStatus.Unhealthy));
         }
     }
 }
