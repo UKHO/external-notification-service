@@ -29,8 +29,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("BatchId");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "BatchId cannot be blank or null."));
-            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Any(x => x.ErrorMessage == "BatchId cannot be blank or null."));
+                Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            });
         }
         #endregion
 
@@ -43,8 +46,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("BusinessUnit");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "Business unit cannot be blank or null."));
-            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Any(x => x.ErrorMessage == "Business unit cannot be blank or null."));
+                Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            });
         }
         #endregion
 
@@ -57,8 +63,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("BatchPublishedDate");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "Batch published date cannot be blank or null."));
-            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Any(x => x.ErrorMessage == "Batch published date cannot be blank or null."));
+                Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            });
         }
         #endregion
 
@@ -71,8 +80,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("Links");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "Links detail cannot be blank or null."));
-            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Any(x => x.ErrorMessage == "Links detail cannot be blank or null."));
+                Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            });
         }
         #endregion
 
@@ -85,8 +97,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("BatchDetails");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "Links batch detail cannot be blank or null."));
-            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Any(x => x.ErrorMessage == "Links batch detail cannot be blank or null."));
+                Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            });
         }
         #endregion
 
@@ -99,8 +114,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("BatchStatus");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "Links batch status cannot be blank or null."));
-            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Any(x => x.ErrorMessage == "Links batch status cannot be blank or null."));
+                Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            });
         }
         #endregion
 
@@ -113,8 +131,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("BatchDetailsUri");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "Links batch detail uri cannot be blank or null."));
-            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Any(x => x.ErrorMessage == "Links batch detail uri cannot be blank or null."));
+                Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            });
         }
         #endregion
 
@@ -127,8 +148,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("BatchStatusUri");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "Links batch status uri cannot be blank or null."));
-            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Any(x => x.ErrorMessage == "Links batch status uri cannot be blank or null."));
+                Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            });
         }
         #endregion
 
@@ -141,8 +165,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("Links");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "File links cannot be blank or null."));
-            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Any(x => x.ErrorMessage == "File links cannot be blank or null."));
+                Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            });
         }
         #endregion
 
@@ -155,8 +182,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("MIMEType");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "File MIME type cannot be null."));
-            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Any(x => x.ErrorMessage == "File MIME type cannot be null."));
+                Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            });
         }
         #endregion
 
@@ -169,8 +199,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("Hash");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "File hash cannot be null."));
-            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Any(x => x.ErrorMessage == "File hash cannot be null."));
+                Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            });
         }
         #endregion
 
@@ -183,8 +216,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("FileName");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "File name cannot be null."));
-            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Any(x => x.ErrorMessage == "File name cannot be null."));
+                Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            });
         }
         #endregion
 
@@ -197,8 +233,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
             result.ShouldHaveValidationErrorFor("FileSize");
 
-            Assert.That(result.Errors.Any(x => x.ErrorMessage == "File size cannot be null."));
-            Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Any(x => x.ErrorMessage == "File size cannot be null."));
+                Assert.That(result.Errors.Any(x => x.ErrorCode == "OK"));
+            });
         }
         #endregion
 
@@ -208,7 +247,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             TestValidationResult<FssEventData> result = _fssEventDataValidator.TestValidate(_fakeFssEventData);
 
-            Assert.That(0, Is.EqualTo(result.Errors.Count));
+            Assert.That(result.Errors, Is.Empty);
         }
         #endregion
     }

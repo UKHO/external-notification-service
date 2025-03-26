@@ -1,15 +1,7 @@
 ﻿namespace UKHO.D365CallbackDistributorStub.API.Tests.Services.Queues
 {
-
-    public class Message
+    public class Message(string data)
     {
-        private readonly string _data;
-
-        public Message(string data)
-        {
-            _data = data;
-        }
-
-        public string Data => _data;
+        public string Data { get; } = data;
     }
 }

@@ -59,7 +59,6 @@ namespace UKHO.ExternalNotificationService.Webjob.UnitTests.Services
                 NotificationTypeTopicName = "test-Topic-type",
                 SubscriptionId = "246d71e7-1475-ec11-8943-002248818222",
                 WebhookUrl = "https://testurl.com"
-
             };
         }
     }

@@ -22,7 +22,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         private D365Payload _d365PayloadDetails;
         private SubscriptionRequest _subscriptionRequest;
         private NotificationType _notificationType;
-        private ISubscriptionService _subscriptionService;
+        private SubscriptionService _subscriptionService;
         private IAzureMessageQueueHelper _fakeAzureMessageQueueHelper;
         private IOptions<SubscriptionStorageConfiguration> _fakeEnsStorageConfiguration;
         private ILogger<SubscriptionService> _fakeLogger;
@@ -49,12 +49,15 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         public async Task WhenInvalidPayloadWithNullInputParameters_ThenReceiveBadrequest()
         {
             A.CallTo(() => _fakeD365PayloadValidator.Validate(A<D365Payload>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>
-                    {new ValidationFailure("InputParameters", "D365Payload InputParameters cannot be blank or null.")}));
+                    { new ValidationFailure("InputParameters", "D365Payload InputParameters cannot be blank or null.") }));
 
             ValidationResult result = await _subscriptionService.ValidateD365PayloadRequest(new D365Payload());
 
-            Assert.That(result.IsValid, Is.False);
-            Assert.That("D365Payload InputParameters cannot be blank or null.", Is.EqualTo(result.Errors.Single().ErrorMessage));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.IsValid, Is.False);
+                Assert.That(result.Errors.Single().ErrorMessage, Is.EqualTo("D365Payload InputParameters cannot be blank or null."));
+            });
         }
 
         [Test]
@@ -80,9 +83,12 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             SubscriptionRequest result = _subscriptionService.ConvertToSubscriptionRequestModel(_d365PayloadDetails);
 
-            Assert.That(result.IsActive, Is.False);
-            Assert.That(result, Is.InstanceOf<SubscriptionRequest>());
-            Assert.That(_subscriptionRequest.SubscriptionId, Is.EqualTo(result.SubscriptionId));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.IsActive, Is.False);
+                Assert.That(result, Is.InstanceOf<SubscriptionRequest>());
+            });
+            Assert.That(result.SubscriptionId, Is.EqualTo(_subscriptionRequest.SubscriptionId));
         }
 
         [Test]
@@ -92,8 +98,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             SubscriptionRequest result = _subscriptionService.ConvertToSubscriptionRequestModel(_d365PayloadDetails);
 
             Assert.That(result, Is.InstanceOf<SubscriptionRequest>());
-            Assert.That(_subscriptionRequest.SubscriptionId, Is.EqualTo(result.SubscriptionId));
-            Assert.That(_subscriptionRequest.NotificationType, Is.EqualTo(result.NotificationType));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.SubscriptionId, Is.EqualTo(_subscriptionRequest.SubscriptionId));
+                Assert.That(result.NotificationType, Is.EqualTo(_subscriptionRequest.NotificationType));
+            });
         }
 
         [Test]
@@ -103,8 +112,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             SubscriptionRequest result = _subscriptionService.ConvertToSubscriptionRequestModel(_d365PayloadDetails);
 
             Assert.That(result, Is.InstanceOf<SubscriptionRequest>());
-            Assert.That(_subscriptionRequest.SubscriptionId, Is.EqualTo(result.SubscriptionId));
-            Assert.That(_subscriptionRequest.NotificationType, Is.EqualTo(result.NotificationType));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.SubscriptionId, Is.EqualTo(_subscriptionRequest.SubscriptionId));
+                Assert.That(result.NotificationType, Is.EqualTo(_subscriptionRequest.NotificationType));
+            });
         }
 
         [Test]
@@ -113,10 +125,13 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             SubscriptionRequest result = _subscriptionService.ConvertToSubscriptionRequestModel(_d365PayloadDetails);
 
             Assert.That(result, Is.InstanceOf<SubscriptionRequest>());
-            Assert.That(_subscriptionRequest.SubscriptionId, Is.EqualTo(result.SubscriptionId));
-            Assert.That(_subscriptionRequest.NotificationType, Is.EqualTo(result.NotificationType));
-            Assert.That(_subscriptionRequest.IsActive, Is.EqualTo(result.IsActive));
-            Assert.That(_subscriptionRequest.WebhookUrl, Is.EqualTo(result.WebhookUrl));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.SubscriptionId, Is.EqualTo(_subscriptionRequest.SubscriptionId));
+                Assert.That(result.NotificationType, Is.EqualTo(_subscriptionRequest.NotificationType));
+                Assert.That(result.IsActive, Is.EqualTo(_subscriptionRequest.IsActive));
+                Assert.That(result.WebhookUrl, Is.EqualTo(_subscriptionRequest.WebhookUrl));
+            });
         }
         #endregion
 

@@ -184,7 +184,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
         {
             TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
 
-            Assert.That(0, Is.EqualTo(result.Errors.Count));
+            Assert.That(result.Errors, Is.Empty);
         }
 
         [Test]
@@ -193,7 +193,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
             _fakeD365Payload.PostEntityImages = Array.Empty<EntityImage>();
             TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
 
-            Assert.That(0, Is.EqualTo(result.Errors.Count));
+            Assert.That(result.Errors, Is.Empty);
         }
 
         [Test]
@@ -203,7 +203,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Validation
 
             TestValidationResult<D365Payload> result = _d365PayloadValidator.TestValidate(_fakeD365Payload);
 
-            Assert.That(0, Is.EqualTo(result.Errors.Count));
+            Assert.That(result.Errors, Is.Empty);
         }
         #endregion
 
