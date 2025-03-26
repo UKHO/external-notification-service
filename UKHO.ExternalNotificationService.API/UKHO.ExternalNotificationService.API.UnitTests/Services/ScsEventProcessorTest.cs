@@ -49,14 +49,14 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             _fakeLogger = A.Fake<ILogger<ScsEventProcessor>>();
             _fakeAzureEventGridDomainService = A.Fake<IAzureEventGridDomainService>();
             _fakeEventProcessorConfiguration = A.Fake<IOptions<EventProcessorConfiguration>>();
-            
-            _fakeAddsMonitoringService = A.Fake<IAddsMonitoringService>();  
+
+            _fakeAddsMonitoringService = A.Fake<IAddsMonitoringService>();
 
             _fakeEventProcessorConfiguration.Value.ScsEventPublishDelayInSeconds = 0;
 
             Dictionary<string, string> inMemorySettings = new()
             {
-                {"ADDSMonitoringEnabled", bool.FalseString}
+                { "ADDSMonitoringEnabled", bool.FalseString }
             };
 
             _configuration = new ConfigurationBuilder()
@@ -67,7 +67,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         }
 
         private ScsEventProcessor CreateScsEventProcessor(IConfiguration configuration) =>
-            new (_fakeScsEventValidationAndMappingService,
+            new(_fakeScsEventValidationAndMappingService,
                 _fakeLogger, _fakeAzureEventGridDomainService, _fakeEventProcessorConfiguration,
                 configuration, _fakeAddsMonitoringService);
 
@@ -76,7 +76,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         {
             string result = _scsEventProcessor.EventType;
 
-            Assert.That(_fakeCustomCloudEvent.Type, Is.EqualTo(result));
+            Assert.That(result, Is.EqualTo(_fakeCustomCloudEvent.Type));
         }
 
         [Test]
@@ -92,8 +92,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             ExternalNotificationServiceProcessResponse result = await _scsEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId);
 
-            Assert.That("ProductType cannot be blank or null.", Is.EqualTo(result.Errors.Single().Description));
-            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Single().Description, Is.EqualTo("ProductType cannot be blank or null."));
+                Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            });
 
             A.CallTo(() =>
                     _fakeAddsMonitoringService.StopProcessAsync(A<AddsData>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored))
@@ -101,13 +104,13 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         }
 
         [Test]
-       public async Task WhenValidPayloadInRequest_ThenReceiveSuccessfulResponse()
+        public async Task WhenValidPayloadInRequest_ThenReceiveSuccessfulResponse()
         {
             CancellationToken cancellationToken = CancellationToken.None;
             CloudEvent cloudEvent = new("test", "test", new object());
 
             A.CallTo(() => _fakeScsEventValidationAndMappingService.ValidateScsEventData(A<ScsEventData>.Ignored)).Returns(new ValidationResult());
-            
+
             A.CallTo(() => _fakeScsEventValidationAndMappingService.MapToCloudEvent(A<CloudEventCandidate<ScsEventData>>.Ignored)).Returns(cloudEvent);
 
             A.CallTo(() => _fakeAzureEventGridDomainService.ConvertObjectTo<ScsEventData>(A<object>.Ignored)).Returns(_fakeScsEventData);
@@ -116,8 +119,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             ExternalNotificationServiceProcessResponse result = await _scsEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
 
-            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
-            Assert.That(result.Errors, Is.Empty);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+                Assert.That(result.Errors, Is.Empty);
+            });
 
             A.CallTo(() =>
                     _fakeAddsMonitoringService.StopProcessAsync(A<AddsData>.Ignored, CorrelationId, cancellationToken))
@@ -136,7 +142,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             CancellationToken cancellationToken = CancellationToken.None;
             CloudEvent cloudEvent = new("test", "test", new object());
 
-            _fakeEventProcessorConfiguration.Value.ScsEventPublishDelayInSeconds = configuredDelay; 
+            _fakeEventProcessorConfiguration.Value.ScsEventPublishDelayInSeconds = configuredDelay;
 
             A.CallTo(() => _fakeScsEventValidationAndMappingService.ValidateScsEventData(A<ScsEventData>.Ignored)).Returns(new ValidationResult());
 
@@ -156,10 +162,12 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             callToPublishEventAsync.MustHaveHappened();
 
-            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
-            Assert.That(result.Errors, Is.Empty);
-
-            Assert.That(stopwatch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(expectedDelay * 1000));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+                Assert.That(result.Errors, Is.Empty);
+                Assert.That(stopwatch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(expectedDelay * 1000));
+            });
         }
 
         [Test]
@@ -175,7 +183,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             int result = _scsEventProcessor.DelayInMilliseconds;
 
-            Assert.That(expectedDelay * 1000, Is.EqualTo(result));
+            Assert.That(result, Is.EqualTo(expectedDelay * 1000));
         }
 
         [Test]
@@ -186,7 +194,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             Dictionary<string, string> inMemorySettings = new()
             {
-                {"ADDSMonitoringEnabled", bool.TrueString}
+                { "ADDSMonitoringEnabled", bool.TrueString }
             };
 
             _configuration = new ConfigurationBuilder()
@@ -202,11 +210,14 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             A.CallTo(() => _fakeAzureEventGridDomainService.ConvertObjectTo<ScsEventData>(A<object>.Ignored)).Returns(_fakeScsEventData);
 
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(cloudEvent, CorrelationId, cancellationToken));
-            
+
             ExternalNotificationServiceProcessResponse result = await _scsEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
 
-            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
-            Assert.That(result.Errors, Is.Empty);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+                Assert.That(result.Errors, Is.Empty);
+            });
 
             A.CallTo(() =>
                     _fakeAddsMonitoringService.StopProcessAsync(A<AddsData>.Ignored, CorrelationId, cancellationToken))
@@ -218,7 +229,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         {
             Dictionary<string, string> inMemorySettings = new()
             {
-                {"ADDSMonitoringEnabled", bool.TrueString}
+                { "ADDSMonitoringEnabled", bool.TrueString }
             };
 
             _configuration = new ConfigurationBuilder()
@@ -236,13 +247,15 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             ExternalNotificationServiceProcessResponse result = await _scsEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId);
 
-            Assert.That("ProductType cannot be blank or null.", Is.EqualTo(result.Errors.Single().Description));
-            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Single().Description, Is.EqualTo("ProductType cannot be blank or null."));
+                Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            });
 
             A.CallTo(() =>
                     _fakeAddsMonitoringService.StopProcessAsync(A<AddsData>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored))
                 .MustNotHaveHappened();
         }
-
     }
 }

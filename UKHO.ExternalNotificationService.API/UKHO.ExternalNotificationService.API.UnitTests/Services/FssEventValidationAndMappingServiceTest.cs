@@ -25,21 +25,18 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         private IOptions<FssDataMappingConfiguration> _fakeFssDataMappingConfiguration;
         private FssEventValidationAndMappingService _fssEventValidationAndMappingService;
         private FssEventData _fakeFssEventData;
-        private CustomCloudEvent _fakeCustomCloudEvent;
 
         [SetUp]
         public void Setup()
         {
             _fakeFssEventData = CustomCloudEventBase.GetFssEventData();
-            _fakeCustomCloudEvent = CustomCloudEventBase.GetCustomCloudEvent();
             _fakeFssEventDataValidator = A.Fake<IFssEventDataValidator>();
             _fakeFssDataMappingConfiguration = A.Fake<IOptions<FssDataMappingConfiguration>>();
             _fakeFssDataMappingConfiguration.Value.Sources =
-                new List<FssDataMappingConfiguration.SourceConfiguration>
-                {
+                [
                     new() {BusinessUnit = "AVCSData", Source = "fss-AVCSData"},
                     new() {BusinessUnit = "MaritimeSafetyInformation", Source = "fss-MaritimeSafetyInformation"},
-                };
+                ];
             _fakeFssDataMappingConfiguration.Value.EventHostName = "files.admiralty.co.uk";
             _fakeFssDataMappingConfiguration.Value.PublishHostName = "test/fss";
 
@@ -49,13 +46,15 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         [Test]
         public async Task WhenNullBatchIdInRequest_ThenReceiveSuccessfulResponse()
         {
-            A.CallTo(() => _fakeFssEventDataValidator.Validate(A<FssEventData>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure>
-                    {new ValidationFailure("BatchId", "BatchId cannot be blank or null.")}));
+            A.CallTo(() => _fakeFssEventDataValidator.Validate(A<FssEventData>.Ignored)).Returns(new ValidationResult(new List<ValidationFailure> { new("BatchId", "BatchId cannot be blank or null.") }));
 
             ValidationResult result = await _fssEventValidationAndMappingService.ValidateFssEventData(new FssEventData());
 
-            Assert.That(result.IsValid, Is.False);
-            Assert.That("BatchId cannot be blank or null.", Is.EqualTo(result.Errors.Single().ErrorMessage));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.IsValid, Is.False);
+                Assert.That(result.Errors.Single().ErrorMessage, Is.EqualTo("BatchId cannot be blank or null."));
+            });
         }
 
         [Test]
@@ -81,11 +80,14 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             string data = Encoding.ASCII.GetString(result.Data);
             FssEventData cloudEventData = JsonSerializer.Deserialize<FssEventData>(data);
 
-            Assert.That(FssDataMappingValueConstant.Type, Is.EqualTo(result.Type));
-            Assert.That(_fakeFssDataMappingConfiguration.Value.Sources.Single(x => x.BusinessUnit == businessUnit).Source, Is.EqualTo(result.Source));
-            Assert.That(batchDetailsUri, Is.EqualTo(cloudEventData.Links.BatchDetails.Href));
-            Assert.That(batchDetailsUri + "/status", Is.EqualTo(cloudEventData.Links.BatchStatus.Href));
-            Assert.That(batchDetailsUri + "/files/AVCS_S631-1_Update_Wk45_21_Only.zip", Is.EqualTo(cloudEventData.Files.FirstOrDefault().Links.Get.Href));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Type, Is.EqualTo(FssDataMappingValueConstant.Type));
+                Assert.That(result.Source, Is.EqualTo(_fakeFssDataMappingConfiguration.Value.Sources.Single(x => x.BusinessUnit == businessUnit).Source));
+                Assert.That(cloudEventData.Links.BatchDetails.Href, Is.EqualTo(batchDetailsUri));
+                Assert.That(cloudEventData.Links.BatchStatus.Href, Is.EqualTo(batchDetailsUri + "/status"));
+                Assert.That(cloudEventData.Files.FirstOrDefault().Links.Get.Href, Is.EqualTo(batchDetailsUri + "/files/AVCS_S631-1_Update_Wk45_21_Only.zip"));
+            });
         }
 
         [Test]

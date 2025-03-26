@@ -47,7 +47,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
         {
             string result = _fssEventProcessor.EventType;
 
-            Assert.That(_fakeCustomCloudEvent.Type, Is.EqualTo(result));
+            Assert.That(result, Is.EqualTo(_fakeCustomCloudEvent.Type));
         }
 
         [Test]
@@ -63,8 +63,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId);
 
-            Assert.That("BatchId cannot be blank or null.", Is.EqualTo(result.Errors.Single().Description));
-            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Errors.Single().Description, Is.EqualTo("BatchId cannot be blank or null."));
+                Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            });
         }
 
         [Test]
@@ -84,8 +87,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
 
-            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
-            Assert.That(result.Errors, Is.Empty);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+                Assert.That(result.Errors, Is.Empty);
+            });
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(A<CloudEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();
         }
 
@@ -97,13 +103,16 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
             A.CallTo(() => _fakeAzureEventGridDomainService.ConvertObjectTo<FssEventData>(_fakeCustomCloudEvent.Data)).Returns(_fakeFssEventData);
 
             A.CallTo(() => _fakeFssEventValidationAndMappingService.ValidateFssEventData(_fakeFssEventData)).Returns(new ValidationResult());
-            
+
             A.CallTo(() => _fakeFssEventValidationAndMappingService.MapToCloudEvent(A<CloudEventCandidate<FssEventData>>.Ignored)).Throws<ConfigurationMissingException>();
 
             ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(_fakeCustomCloudEvent, CorrelationId, cancellationToken);
 
-            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
-            Assert.That(result.Errors, Is.Empty);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+                Assert.That(result.Errors, Is.Empty);
+            });
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(A<CloudEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();
             A.CallTo(_fakeLogger).Where(call =>
                 call.Method.Name == "Log"
@@ -124,8 +133,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             A.CallTo(() => _fakeFssEventValidationAndMappingService.ValidateFssEventData(A<FssEventData>.Ignored)).Returns(new ValidationResult());
 
-            A.CallTo(() => _fakeFssEventValidationAndMappingService.MapToCloudEvent(A<CloudEventCandidate<FssEventData>>.Ignored)).Returns(cloudEvent); 
-
+            A.CallTo(() => _fakeFssEventValidationAndMappingService.MapToCloudEvent(A<CloudEventCandidate<FssEventData>>.Ignored)).Returns(cloudEvent);
 
             A.CallTo(() => _fakeAzureEventGridDomainService.ConvertObjectTo<FssEventData>(A<object>.Ignored)).Returns(fssEventData);
 
@@ -133,8 +141,11 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Services
 
             ExternalNotificationServiceProcessResponse result = await _fssEventProcessor.Process(customCloudEvent, CorrelationId, cancellationToken);
 
-            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
-            Assert.That(result.Errors, Is.Empty);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+                Assert.That(result.Errors, Is.Empty);
+            });
             A.CallTo(() => _fakeAzureEventGridDomainService.PublishEventAsync(A<CloudEvent>.Ignored, A<string>.Ignored, A<CancellationToken>.Ignored)).MustHaveHappenedOnceExactly();
         }
     }

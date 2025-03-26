@@ -34,9 +34,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
         public void Setup()
         {
             string jsonString = JsonSerializer.Serialize(CustomCloudEventBase.GetCustomCloudEvent());
-            MemoryStream FssEventBodyData = new(Encoding.UTF8.GetBytes(jsonString));
-            _fakeFssEventBodyData = FssEventBodyData;
-
+            _fakeFssEventBodyData = new MemoryStream(Encoding.UTF8.GetBytes(jsonString));
             _fakeLogger = A.Fake<ILogger<WebhookController>>();
             _fakeHttpContextAccessor = A.Fake<IHttpContextAccessor>();
             _fakeEventProcessorFactory = A.Fake<IEventProcessorFactory>();
@@ -61,9 +59,12 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
             };
 
             var result = (StatusCodeResult)_controller.Options();
-            Assert.That(StatusCodes.Status200OK, Is.EqualTo(result.StatusCode));
-            Assert.That("*", Is.EqualTo(_controller.HttpContext.Response.Headers.Where(a => a.Key == "WebHook-Allowed-Rate").Select(b => b.Value).FirstOrDefault()));
-            Assert.That(requestHeaderValue, Is.EqualTo(_controller.HttpContext.Response.Headers.Where(a => a.Key == "WebHook-Allowed-Origin").Select(b => b.Value).FirstOrDefault()));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status200OK));
+                Assert.That(_controller.HttpContext.Response.Headers.Where(a => a.Key == "WebHook-Allowed-Rate").Select(b => b.Value).FirstOrDefault(), Is.EqualTo("*"));
+                Assert.That(_controller.HttpContext.Response.Headers.Where(a => a.Key == "WebHook-Allowed-Origin").Select(b => b.Value).FirstOrDefault(), Is.EqualTo(requestHeaderValue));
+            });
         }
         #endregion
 
@@ -79,7 +80,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 
             var result = (StatusCodeResult)await _controller.Post();
 
-            Assert.That(StatusCodes.Status200OK, Is.EqualTo(result.StatusCode));
+            Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status200OK));
         }
 
         [Test]
@@ -92,7 +93,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 
             var result = (StatusCodeResult)await _controller.Post();
 
-            Assert.That(StatusCodes.Status200OK, Is.EqualTo(result.StatusCode));
+            Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status200OK));
         }
 
         [Test]
@@ -111,7 +112,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 
             var result = (OkObjectResult)await _controller.Post();
 
-            Assert.That(StatusCodes.Status200OK, Is.EqualTo(result.StatusCode));
+            Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status200OK));
         }
 
         [Test]
@@ -126,7 +127,7 @@ namespace UKHO.ExternalNotificationService.API.UnitTests.Controllers
 
             var result = (StatusCodeResult)await _controller.Post();
 
-            Assert.That(StatusCodes.Status200OK, Is.EqualTo(result.StatusCode));
+            Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status200OK));
         }
         #endregion
     }
