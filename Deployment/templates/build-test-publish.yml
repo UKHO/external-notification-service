@@ -20,7 +20,7 @@ jobs:
     displayName: ".Net Core - NuGet restore test projects only"
     inputs:
       command: "restore"
-      projects: "**/*Tests.csproj"
+      projects: "**/*UnitTests.csproj"
       feedsToUse: config
       noCache: true
       nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
@@ -32,7 +32,7 @@ jobs:
     inputs:
       command: "test"
       projects: "**/*UnitTests.csproj"
-      arguments: '--configuration $(BuildConfiguration) --settings "$(Build.SourcesDirectory)\test.runsettings" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
+      arguments: '--configuration $(BuildConfiguration) --settings "$(Build.SourcesDirectory)\test.runsettings" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --no-restore'
       publishTestResults: true
       testRunTitle: "UnitTests"
 
@@ -84,7 +84,7 @@ jobs:
     inputs:
       command: "build"
       projects: "**/*.csproj"
-      arguments: '--configuration $(BuildConfiguration) --output $(Build.BinariesDirectory)'
+      arguments: '--configuration $(BuildConfiguration) --output $(Build.BinariesDirectory) --no-restore'
 
   - task: DotNetCoreCLI@2
     displayName: "Publish WebAPI"
@@ -92,7 +92,7 @@ jobs:
       command: "publish"
       publishWebProjects: false
       projects: '**/*UKHO.ExternalNotificationService.API.csproj'
-      arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\ExternalNotificationServiceWebAPI'
+      arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\ExternalNotificationServiceWebAPI --no-restore'
       zipAfterPublish: false
       modifyOutputPath: false
 
@@ -102,7 +102,7 @@ jobs:
       command: "publish"
       publishWebProjects: false
       projects: "**/*UKHO.ExternalNotificationService.SubscriptionService.csproj"
-      arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\ExternalNotificationServiceWebAPI\App_Data\jobs\continuous\SubscriptionServiceWebJob'
+      arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\ExternalNotificationServiceWebAPI\App_Data\jobs\continuous\SubscriptionServiceWebJob --no-restore'
       zipAfterPublish: false
       modifyOutputPath: false
 
@@ -137,8 +137,7 @@ jobs:
     displayName: ".Net Core - NuGet restore"
     inputs:
       command: restore
-      projects: |
-        **/*.csproj
+      projects: "**/*UKHO.ExternalNotificationService.API.FunctionalTests.csproj"
       feedsToUse: config
       noCache: true
       nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
@@ -150,7 +149,7 @@ jobs:
       command: "publish"
       publishWebProjects: false
       projects: "**/*UKHO.ExternalNotificationService.API.FunctionalTests.csproj"
-      arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\UKHO.ExternalNotificationService.API.FunctionalTests'
+      arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\UKHO.ExternalNotificationService.API.FunctionalTests --no-restore'
       zipAfterPublish: false
 
   - task: PublishBuildArtifacts@1
@@ -209,8 +208,7 @@ jobs:
     displayName: ".Net Core - NuGet restore"
     inputs:
       command: restore
-      projects: |
-        **/*.csproj
+      projects: "**/*UKHO.D365CallbackDistributorStub.API.csproj"
       feedsToUse: config
       noCache: true
       nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
@@ -221,7 +219,7 @@ jobs:
     inputs:
       command: "build"
       projects: "**/*UKHO.D365CallbackDistributorStub.API.csproj"
-      arguments: '--configuration $(BuildConfiguration) --output $(Build.BinariesDirectory)'
+      arguments: '--configuration $(BuildConfiguration) --output $(Build.BinariesDirectory) --no-restore'
       workingDirectory: '$(Build.SourcesDirectory)\UKHO.D365CallbackDistributorStub.API'
 
   - task: DotNetCoreCLI@2
@@ -230,7 +228,7 @@ jobs:
       command: "publish"
       publishWebProjects: false
       projects: '**/*UKHO.D365CallbackDistributorStub.API.csproj'
-      arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\StubWebAPI'
+      arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)\StubWebAPI --no-restore'
       zipAfterPublish: true
       modifyOutputPath: true
 
