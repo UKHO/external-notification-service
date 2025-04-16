@@ -24,9 +24,9 @@ parameters:
 # Run ADDS tests by specifying the environment to run the tests in. Leave as the default value if you don't want to run them.
   - name: RunAddsTests
     type: string
-    default: ''
+    default: 'skip'
     values:
-    - ''
+    - 'skip'
     - 'vNextIAT'
     - 'IAT'
 
