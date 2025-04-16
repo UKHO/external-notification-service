@@ -75,7 +75,7 @@ jobs:
                   scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
                   arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
             
-  - ${{ if ne(parameters.RunAddsTests, '') }}:
+  - ${{ if ne(parameters.RunAddsTests, 'skip') }}:
     - template:  template.yml@TriggerADDSAutoTestsPipeline
       parameters:
         serviceConnection: 'addse2eauto Test - A.011.13'
