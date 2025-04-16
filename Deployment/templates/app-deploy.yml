@@ -21,6 +21,14 @@ parameters:
   - name: RunFunctionalTests
     type: boolean
     default: false
+# Run ADDS tests by specifying the environment to run the tests in. Leave as the default value if you don't want to run them.
+  - name: RunAddsTests
+    type: string
+    default: ''
+    values:
+    - ''
+    - 'vNextIAT'
+    - 'IAT'
 
 jobs:
   - deployment: ${{ upper(parameters.ShortName) }}DeployApp
@@ -67,3 +75,8 @@ jobs:
                   scriptPath: '$(Pipeline.Workspace)/terraformartifact/set_stub_url.ps1'
                   arguments: '-d365uri $(D365EnvApiUri) -resourceGroup $(ResourceGroup) -webappName $(WEB_APP_NAME)'
             
+  - ${{ if ne(parameters.RunAddsTests, '') }}:
+    - template:  template.yml@TriggerADDSAutoTestsPipeline
+      parameters:
+        serviceConnection: 'addse2eauto Test - A.011.13'
+        environment: ${{ parameters.RunAddsTests }}
