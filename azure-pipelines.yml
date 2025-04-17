@@ -13,7 +13,7 @@ trigger:
 
 schedules:
 - cron: "0 4 * * 1"
-  displayName: "Weekly NVD Check Build"
+  displayName: "Weekly Build Check"
   branches:
     include:
     - main
@@ -21,7 +21,9 @@ schedules:
 
 pool: 
     name: NautilusBuild
-    demands: vs_16 -equals 1 #exclude agents 13 and 14 as code coverage report fails
+    demands:
+    - vs_16 -equals 1 #exclude agents 13 and 14 as code coverage report fails
+    - docker
 
 variables:
   - name: BuildConfiguration
