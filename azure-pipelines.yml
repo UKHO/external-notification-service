@@ -21,9 +21,7 @@ schedules:
 
 pool: 
     name: NautilusBuild
-    demands:
-    - vs_16 -equals 1 #exclude agents 13 and 14 as code coverage report fails
-    - docker
+    demands: vs_16 -equals 1 #exclude agents 13 and 14 as code coverage report fails
 
 variables:
   - name: BuildConfiguration
@@ -68,6 +66,7 @@ stages:
     dependsOn: 
     - BuildTestPublish
     displayName: "Devdeploy (inc terraform, webapp deploy)"
+    pool: $(DeploymentPool)
     jobs:
     - template: Deployment/templates/app-deploy.yml
       parameters:
@@ -84,6 +83,7 @@ stages:
     dependsOn:
     - DevDeploy
     displayName: "IATDeploy (inc terraform, webapp deploy)"
+    pool: $(DeploymentPool)
     #condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
     - template: Deployment/templates/app-deploy.yml
