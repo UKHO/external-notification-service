@@ -6,7 +6,7 @@ public class ElasticLogDocument
 {
     [JsonPropertyName("@timestamp")]
     public DateTime Timestamp { get; set; }
-    public string Id { get; set; }
+    public string Id { get; set; } = string.Empty;
     public string ProductName { get; set; } = string.Empty;
     public int? EditionNumber { get; set; }
     public int UpdateNumber { get; set; }
