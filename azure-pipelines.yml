@@ -13,7 +13,7 @@ trigger:
 
 schedules:
 - cron: "0 4 * * 1"
-  displayName: "Weekly NVD Check Build"
+  displayName: "Weekly Build Check"
   branches:
     include:
     - main
@@ -44,6 +44,14 @@ variables:
     value: "Mare Nectaris"
   - name: WindowPool
     value: "NautilusBuild"
+
+resources:
+  repositories:
+  - repository: TriggerADDSAutoTestsPipeline
+    type: github
+    endpoint: ukho
+    name: ukho/devops-trigger-adds-autotest-pipeline
+    ref: refs/heads/main 
 
 stages:
   - stage: BuildTestPublish
@@ -85,6 +93,7 @@ stages:
         AzureSubscriptionVersion: "IAT - A.011.08"
         RunFunctionalTests: false
         Container: ${{variables.Container}}
+        RunAddsTests: 'IAT'
 
 
   - stage: PreProdDeploy
@@ -119,6 +128,7 @@ stages:
         AzureSubscriptionVersion: "vNext IAT - A.011.08"
         RunFunctionalTests: false
         Container: ${{variables.Container}}
+        RunAddsTests: 'vNextIAT'
 
   
   - stage: E2EvNextDeploy
