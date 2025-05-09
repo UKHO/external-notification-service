@@ -34,7 +34,7 @@ jobs:
   - deployment: ${{ upper(parameters.ShortName) }}DeployApp
     displayName: "${{ upper(parameters.ShortName) }} - deploy terraform and dotnet App"
     environment: ${{ parameters.AzureEnvironment }}
-    #pool: $(DeploymentPool)
+    pool: $(DeploymentPool)
     container: ${{parameters.Container}}
     workspace:
       clean: all
@@ -80,3 +80,5 @@ jobs:
       parameters:
         serviceConnection: 'addse2eauto Test - A.011.13'
         environment: ${{ parameters.RunAddsTests }}
+        dependsOn:
+        - ${{ upper(parameters.ShortName) }}DeployApp
