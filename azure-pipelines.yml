@@ -82,7 +82,7 @@ stages:
     dependsOn:
     - DevDeploy
     displayName: "IATDeploy (inc terraform, webapp deploy)"
-    #condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
+    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
     - template: Deployment/templates/app-deploy.yml
       parameters:
