@@ -1,14 +1,10 @@
 ﻿
+using Azure.Storage.Blobs;
 using Azure.Storage.Queues;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
-using Microsoft.WindowsAzure.Storage.Queue;
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using System.Threading.Tasks;
 using UKHO.ExternalNotificationService.Common.Configuration;
 using UKHO.ExternalNotificationService.Common.Logging;
 using UKHO.ExternalNotificationService.Common.Models.Request;
@@ -45,39 +41,24 @@ namespace UKHO.ExternalNotificationService.Common.Helpers
 
         public async Task<HealthCheckResult> CheckMessageQueueHealth(string storageAccountConnectionString, string queueName)
         {
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageAccountConnectionString);
-            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
-            CloudQueue queue = queueClient.GetQueueReference(queueName);
-            bool queueExists = await queue.ExistsAsync();
-            if (queueExists)
-                return HealthCheckResult.Healthy("Azure message queue is healthy");
-            else
-                return HealthCheckResult.Unhealthy("Azure message queue is unhealthy", new Exception($"Azure message queue {queueName} does not exists"));
+            var queueClient = new QueueClient(storageAccountConnectionString, queueName);
+            return await queueClient.ExistsAsync()
+                ? HealthCheckResult.Healthy("Azure message queue is healthy")
+                : HealthCheckResult.Unhealthy("Azure message queue is unhealthy", new Exception($"Azure message queue {queueName} does not exists"));
         }
 
         public async Task CopyDeadLetterBlob(SubscriptionStorageConfiguration ensStorageConfiguration, string path)
         {
             string storageAccountConnectionString = $"DefaultEndpointsProtocol=https;AccountName={ensStorageConfiguration.StorageAccountName};AccountKey={ensStorageConfiguration.StorageAccountKey};EndpointSuffix=core.windows.net";
 
-            CloudStorageAccount sourceStorageConnectionString = CloudStorageAccount.Parse(storageAccountConnectionString);
-            CloudStorageAccount destinationStorageConnectionString = CloudStorageAccount.Parse(storageAccountConnectionString);
-
-            CloudBlobClient sourceCloudBlobClient = sourceStorageConnectionString.CreateCloudBlobClient();
-            CloudBlobClient targetCloudBlobClient = destinationStorageConnectionString.CreateCloudBlobClient();
-            CloudBlobContainer sourceContainer = sourceCloudBlobClient.GetContainerReference(ensStorageConfiguration.StorageContainerName);
-            CloudBlobContainer destinationContainer = targetCloudBlobClient.GetContainerReference(ensStorageConfiguration.DeadLetterDestinationContainerName);
-
-            await destinationContainer.CreateIfNotExistsAsync();
-
-            CloudBlockBlob sourceBlob = sourceContainer.GetBlockBlobReference(path);
-            CloudBlockBlob targetBlob = destinationContainer.GetBlockBlobReference(path);
-
-            await targetBlob.StartCopyAsync(sourceBlob);
-
+            var sourceBlob = new BlobClient(storageAccountConnectionString, ensStorageConfiguration.StorageContainerName, path);
+            var targetBlob = new BlobClient(storageAccountConnectionString, ensStorageConfiguration.DeadLetterDestinationContainerName, path);
+            await targetBlob.StartCopyFromUriAsync(sourceBlob.Uri);
             if (await targetBlob.ExistsAsync())
             {
                 await sourceBlob.DeleteIfExistsAsync();
             }
         }
+
     }
 }
