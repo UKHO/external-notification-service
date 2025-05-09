@@ -9,14 +9,13 @@
   <ItemGroup>
     <PackageReference Include="Azure.Identity" Version="1.13.2" />
     <PackageReference Include="Azure.Messaging.EventGrid" Version="4.30.0" />
-    <PackageReference Include="Azure.Messaging.EventHubs" Version="5.11.6" />
+    <PackageReference Include="Azure.Messaging.EventHubs" Version="5.12.1" />
     <PackageReference Include="Azure.ResourceManager.EventGrid" Version="1.1.0" />
     <PackageReference Include="Azure.Storage.Queues" Version="12.22.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.24.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="8.0.14" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="8.0.15" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
-    <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="UKHO.Logging.EventHubLogProvider" Version="1.24163.8" />
   </ItemGroup>
