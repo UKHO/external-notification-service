@@ -44,6 +44,12 @@ variables:
     value: "Mare Nectaris"
   - name: WindowPool
     value: "NautilusBuild"
+  - name: WindowsPool
+    value: "Mare Nubium"
+  - name: snykAbzuOrganizationId
+    value: aeb7543b-8394-457c-8334-a31493d8910d
+  - name: DotNetSdkVersion
+    value: "8.0.x"
 
 resources:
   repositories:
@@ -54,16 +60,23 @@ resources:
     ref: refs/heads/main 
 
 stages:
+  - stage: VulnerabilityChecks
+    displayName: Snyk checks
+    dependsOn: []
+    jobs:
+    - template: Deployment/templates/vulnerability-checks.yml
+  
   - stage: BuildTestPublish
     displayName: "Build, test and publish"
     dependsOn: []
     jobs:
     - template: Deployment/templates/build-test-publish.yml  
       parameters:
-        DotNetVersion: '8.0.x'
+        DotNetVersion: $(DotNetSdkVersion)
 
   - stage: Devdeploy
-    dependsOn: 
+    dependsOn:
+    - VulnerabilityChecks
     - BuildTestPublish
     displayName: "Devdeploy (inc terraform, webapp deploy)"
     jobs:
