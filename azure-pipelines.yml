@@ -5,6 +5,14 @@ parameters:
     displayName: "Continue even if resources are getting destroyed"
     type: boolean
     default: false
+  - name: SnykOnlyFailIfFixable
+    displayName: "Snyk - fail only if an issue has an available fix"
+    type: boolean
+    default: false
+  - name: SnykPassOnIssues
+    displayName: "Snyk - don't fail if issues found"
+    type: boolean
+    default: false
 
 trigger:
   - main
@@ -42,9 +50,9 @@ variables:
     value: "ukhydrographicoffice/terraform-azure-powershell-unzip:1.9.6"
   - name: DeploymentPool
     value: "Mare Nectaris"
-  - name: WindowPool
+  - name: WindowsPool1
     value: "NautilusBuild"
-  - name: WindowsPool
+  - name: WindowsPool2
     value: "Mare Nubium"
   - name: snykAbzuOrganizationId
     value: aeb7543b-8394-457c-8334-a31493d8910d
@@ -65,6 +73,9 @@ stages:
     dependsOn: []
     jobs:
     - template: Deployment/templates/vulnerability-checks.yml
+    parameters:
+      SnykOnlyFailIfFixable: ${{ parameters.SnykOnlyFailIfFixable }}
+      SnykPassOnIssues: ${{ parameters.SnykPassOnIssues }}
   
   - stage: BuildTestPublish
     displayName: "Build, test and publish"
@@ -357,7 +368,7 @@ stages:
       - job: PostDeploymentActions
         dependsOn:
         - LiveDeployApp
-        pool: $(WindowPool)
+        pool: $(WindowsPool1)
         displayName: Post Deployment Actions
         steps:
           - template: Deployment/templates/retain-pipeline.yml
