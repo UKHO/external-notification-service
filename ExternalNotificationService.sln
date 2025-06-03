@@ -142,6 +142,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "templates", "templates", "{
 		Deployment\templates\continuous-deployment.yml = Deployment\templates\continuous-deployment.yml
 		Deployment\templates\functional-test-process.yml = Deployment\templates\functional-test-process.yml
 		Deployment\templates\retain-pipeline.yml = Deployment\templates\retain-pipeline.yml
+		Deployment\templates\vulnerability-checks.yml = Deployment\templates\vulnerability-checks.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "var", "var", "{4CF0D076-92E5-44D3-A9B2-A6FEB4C38C87}"
