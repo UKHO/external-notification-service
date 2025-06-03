@@ -73,9 +73,9 @@ stages:
     dependsOn: []
     jobs:
     - template: Deployment/templates/vulnerability-checks.yml
-    parameters:
-      SnykOnlyFailIfFixable: ${{ parameters.SnykOnlyFailIfFixable }}
-      SnykPassOnIssues: ${{ parameters.SnykPassOnIssues }}
+      parameters:
+        SnykOnlyFailIfFixable: ${{ parameters.SnykOnlyFailIfFixable }}
+        SnykPassOnIssues: ${{ parameters.SnykPassOnIssues }}
   
   - stage: BuildTestPublish
     displayName: "Build, test and publish"
