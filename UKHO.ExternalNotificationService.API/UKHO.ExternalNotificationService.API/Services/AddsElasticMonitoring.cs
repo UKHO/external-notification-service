@@ -37,6 +37,7 @@ public class AddsElasticMonitoringService : IAddsMonitoringService
             EditionNumber = addsData.EditionNumber,
             UpdateNumber = addsData.UpdateNumber,
             StatusName = addsData.StatusName,
+            StatusDate = string.Empty,
             EventType = addsData.Type,
             StartTimestamp = null,
             StopTimestamp = DateTime.UtcNow,
@@ -65,6 +66,7 @@ public class AddsElasticMonitoringService : IAddsMonitoringService
                     document.Duration = (int?)duration.TotalSeconds;
                 }
                 document.Timestamp = startProcess.Source.Timestamp;
+                document.StatusDate = startProcess.Source.StatusDate;
                 document.IsComplete = true;
                 document.IsAbnormal = false;
                 document.ImmediateRelease = startProcess.Source.ImmediateRelease;
