@@ -5,6 +5,14 @@ parameters:
     displayName: "Continue even if resources are getting destroyed"
     type: boolean
     default: false
+  - name: SnykOnlyFailIfFixable
+    displayName: "Snyk - fail only if an issue has an available fix"
+    type: boolean
+    default: false
+  - name: SnykPassOnIssues
+    displayName: "Snyk - don't fail if issues found"
+    type: boolean
+    default: false
 
 trigger:
   - main
@@ -42,8 +50,14 @@ variables:
     value: "ukhydrographicoffice/terraform-azure-powershell-unzip:1.9.6"
   - name: DeploymentPool
     value: "Mare Nectaris"
-  - name: WindowPool
+  - name: WindowsPool1
     value: "NautilusBuild"
+  - name: WindowsPool2
+    value: "Mare Nubium"
+  - name: snykAbzuOrganizationId
+    value: aeb7543b-8394-457c-8334-a31493d8910d
+  - name: DotNetSdkVersion
+    value: "8.0.x"
 
 resources:
   repositories:
@@ -54,16 +68,26 @@ resources:
     ref: refs/heads/main 
 
 stages:
+  - stage: VulnerabilityChecks
+    displayName: Snyk checks
+    dependsOn: []
+    jobs:
+    - template: Deployment/templates/vulnerability-checks.yml
+      parameters:
+        SnykOnlyFailIfFixable: ${{ parameters.SnykOnlyFailIfFixable }}
+        SnykPassOnIssues: ${{ parameters.SnykPassOnIssues }}
+  
   - stage: BuildTestPublish
     displayName: "Build, test and publish"
     dependsOn: []
     jobs:
     - template: Deployment/templates/build-test-publish.yml  
       parameters:
-        DotNetVersion: '8.0.x'
+        DotNetVersion: $(DotNetSdkVersion)
 
   - stage: Devdeploy
-    dependsOn: 
+    dependsOn:
+    - VulnerabilityChecks
     - BuildTestPublish
     displayName: "Devdeploy (inc terraform, webapp deploy)"
     jobs:
@@ -283,7 +307,7 @@ stages:
             
   - stage: Livedeploy
     dependsOn:
-      - QADeploy
+      - PreProdDeploy
     displayName: Livedeploy (inc terraform, webapp deploy)
     condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'),startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
     jobs:
@@ -344,7 +368,7 @@ stages:
       - job: PostDeploymentActions
         dependsOn:
         - LiveDeployApp
-        pool: $(WindowPool)
+        pool: $(WindowsPool1)
         displayName: Post Deployment Actions
         steps:
           - template: Deployment/templates/retain-pipeline.yml
