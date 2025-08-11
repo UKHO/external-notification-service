@@ -7,7 +7,10 @@ namespace UKHO.ExternalNotificationService.Common.Configuration
         public static readonly IEnumerable<string> BusinessUnit = new List<string>
         {
             "AVCSData",
-            "MaritimeSafetyInformation"
+            "MaritimeSafetyInformation",
+            "ADP",
+            "AENP",
+            "ARCS"
         };
     }
 }
