@@ -12,16 +12,16 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="FakeItEasy" Version="8.3.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.17" />
-    <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="8.0.17" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="9.0.6" />
-    <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="9.0.6" />
-    <PackageReference Include="NUnit" Version="4.3.2" />
-    <PackageReference Include="NUnit.Analyzers" Version="4.9.2">
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.19" />
+    <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="8.0.19" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="9.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="9.0.8" />
+    <PackageReference Include="NUnit" Version="4.4.0" />
+    <PackageReference Include="NUnit.Analyzers" Version="4.10.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="NUnit3TestAdapter" Version="5.0.0">
+    <PackageReference Include="NUnit3TestAdapter" Version="5.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
