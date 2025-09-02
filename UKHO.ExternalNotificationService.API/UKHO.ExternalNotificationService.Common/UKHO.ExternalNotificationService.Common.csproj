@@ -17,7 +17,7 @@
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="9.0.8" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="UKHO.Logging.EventHubLogProvider" Version="1.24163.8" />
+    <PackageReference Include="UKHO.Logging.EventHubLogProvider" Version="1.25196.1" />
   </ItemGroup>
 
 </Project>
