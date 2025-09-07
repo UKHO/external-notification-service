@@ -11,6 +11,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         public string FssAvcsPayloadFileName { get; set; }
         public string FssMsiPayloadFileName { get; set; }
         public string ScsPayloadFileName { get; set; }
+        public string ScsS100PayloadFileName { get; set; }
         public string EnsStorageConnectionString { get; set; }
         public string EnsStorageQueueName { get; set; }
         public int WaitingTimeForQueueInSeconds { get; set; }
@@ -27,6 +28,8 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         public int FailedStatusCode { get; set; }
         public string StubBaseUri { get; set; }
         public string ScsSource { get; set; }
+
+        public string ScsS100Source { get; set; }
         public string WebhookUrlExtension { get; set; }
 
         public TestConfiguration()
@@ -40,6 +43,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             FssAvcsPayloadFileName = ConfigurationRoot.GetSection("FssAvcsPayloadFileName").Value;
             FssMsiPayloadFileName = ConfigurationRoot.GetSection("FssMsiPayloadFileName").Value;
             ScsPayloadFileName = ConfigurationRoot.GetSection("ScsPayloadFileName").Value;
+            ScsS100PayloadFileName = ConfigurationRoot.GetSection("ScsS100PayloadFileName").Value;
             EnsStorageConnectionString = ConfigurationRoot.GetSection("EnsStorageConnectionString").Value;
             EnsStorageQueueName = ConfigurationRoot.GetSection("EnsStorageQueueName").Value;
             WaitingTimeForQueueInSeconds = int.Parse(ConfigurationRoot.GetSection("WaitingTimeForQueueInSeconds").Value);
@@ -55,6 +59,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             FailedStatusCode= int.Parse(ConfigurationRoot.GetSection("D365CallbackConfiguration:FailedStatusCode").Value);
             StubBaseUri = ConfigurationRoot.GetSection("StubConfiguration:BaseUri").Value;
             ScsSource = ConfigurationRoot.GetSection("ScsDataMappingConfiguration:Source").Value;
+            ScsS100Source = ConfigurationRoot.GetSection("ScsS100DataMappingConfiguration:Source").Value;
             WebhookUrlExtension = ConfigurationRoot.GetSection("WebhookUrlExtension").Value;
 
             IConfigurationSection sourcesSection = ConfigurationRoot.GetSection("FssDataMappingConfiguration:Sources");
