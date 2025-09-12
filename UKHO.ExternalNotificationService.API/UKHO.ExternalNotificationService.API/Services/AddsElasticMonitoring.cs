@@ -88,7 +88,7 @@ public class AddsElasticMonitoringService : IAddsMonitoringService
         }
         catch (Exception exception)
         {
-            _logger.LogError(EventIds.StopAddsElasticMonitoringProcessError.ToEventId(), "ADDS Monitoring Process: Failed. Document: {document}. _X-Correlation-ID: {correlationId}. Error Message:{Message}. Exception: {exception}", JsonConvert.SerializeObject(document), correlationId, exception.Message, exception);
+            _logger.LogError(EventIds.StopAddsElasticMonitoringProcessError.ToEventId(), exception, "ADDS Monitoring Process: Failed. Document: {document}. _X-Correlation-ID: {correlationId}. Error Message:{Message}. Exception: {exception}", JsonConvert.SerializeObject(document), correlationId, exception.Message, exception);
         }
     }
 
