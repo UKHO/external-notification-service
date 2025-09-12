@@ -72,7 +72,7 @@ public class AddsElasticMonitoringService : IAddsMonitoringService
                 document.IsAbnormal = false;
                 document.ImmediateRelease = startEventDocument.ImmediateRelease;
             } else {
-                _logger.LogInformation(EventIds.StopAddsElasticMonitoringProcessStartDocumentNotFound.ToEventId(), "ADDS Monitoring Process: Start document not found, logging abnormal stop document. _X-Correlation-ID: {correlationId}.", correlationId);
+                _logger.LogWarning(EventIds.StopAddsElasticMonitoringProcessStartDocumentNotFound.ToEventId(), "ADDS Monitoring Process: Start document not found, logging abnormal stop document. _X-Correlation-ID: {correlationId}.", correlationId);
             }
             var response = await _elasticSearchClient.IndexAsync(document, idx =>
                 idx.Index(_elasticApmConfiguration.IndexName), cancellationToken);
@@ -81,7 +81,7 @@ public class AddsElasticMonitoringService : IAddsMonitoringService
             {
                 _logger.LogInformation(EventIds.StopAddsElasticMonitoringProcessValidResponse.ToEventId(), "ADDS Monitoring Process: Document successfully indexed. Document: {document}. _X-Correlation-ID: {correlationId}.", JsonConvert.SerializeObject(document), correlationId);
             } else {
-                _logger.LogInformation(EventIds.StopAddsElasticMonitoringProcessInvalidResponse.ToEventId(), "ADDS Monitoring Process: Document failed to index. Document: {document}. Response Debug Information: {ResponseDebugInformation} _X-Correlation-ID: {correlationId}.", JsonConvert.SerializeObject(document), response.DebugInformation, correlationId);
+                _logger.LogWarning(EventIds.StopAddsElasticMonitoringProcessInvalidResponse.ToEventId(), "ADDS Monitoring Process: Document failed to index. Document: {document}. Response Debug Information: {ResponseDebugInformation} _X-Correlation-ID: {correlationId}.", JsonConvert.SerializeObject(document), response.DebugInformation, correlationId);
             }
 
             _logger.LogInformation(EventIds.StopAddsElasticMonitoringProcessCompleted.ToEventId(), "ADDS Monitoring Process: Completed. Document: {document}. _X-Correlation-ID: {correlationId}.", JsonConvert.SerializeObject(document), correlationId);
