@@ -293,7 +293,7 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         StopAddsElasticMonitoringProcessUpdatingStartDocument = 900072,
         /// <summary>
-        /// 900072 -  Stop ADDS Elastic Monitoring Process start document not found.
+        /// 900073 -  Stop ADDS Elastic Monitoring Process start document not found.
         /// </summary>
         StopAddsElasticMonitoringProcessStartDocumentNotFound = 900073
     }
