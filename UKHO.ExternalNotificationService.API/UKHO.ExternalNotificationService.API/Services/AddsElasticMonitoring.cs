@@ -25,8 +25,7 @@ public class AddsElasticMonitoringService : IAddsMonitoringService
     {
         if (_elasticSearchClient is null)
         {
-            _logger.LogWarning(EventIds.ElasticsearchClientNotConfigured.ToEventId(), "ElasticsearchClient is not configured, _X-Correlation-ID:{correlationId}.",
-                 correlationId);
+            _logger.LogWarning(EventIds.ElasticsearchClientNotConfigured.ToEventId(), "ADDS Monitoring Process: ElasticsearchClient is not configured. _X-Correlation-ID:{correlationId}.", correlationId);
             return;
         }
 
@@ -37,7 +36,7 @@ public class AddsElasticMonitoringService : IAddsMonitoringService
             EditionNumber = addsData.EditionNumber,
             UpdateNumber = addsData.UpdateNumber,
             StatusName = addsData.StatusName,
-            StatusDate = string.Empty,
+            StatusDate = null,
             EventType = addsData.Type,
             StartTimestamp = null,
             StopTimestamp = DateTime.UtcNow,
@@ -47,8 +46,7 @@ public class AddsElasticMonitoringService : IAddsMonitoringService
             IsAbnormal = true
         };
 
-        _logger.LogInformation(EventIds.StopAddsElasticMonitoringProcessStart.ToEventId(), "Process to stop ADDS monitoring started for document {document} and _X-Correlation-ID:{correlationId}.",
-            JsonConvert.SerializeObject(document), correlationId);
+        _logger.LogInformation(EventIds.StopAddsElasticMonitoringProcessStart.ToEventId(), "ADDS Monitoring Process: Started. Document: {document}. _X-Correlation-ID: {correlationId}.", JsonConvert.SerializeObject(document), correlationId);
 
         document.Id = GetHash(document);
         try
@@ -57,7 +55,10 @@ public class AddsElasticMonitoringService : IAddsMonitoringService
                 (document.Id, idx => idx.Index(_elasticApmConfiguration.IndexName), cancellationToken);
             if (startProcess is { Source: not null })
             {
-                document.StartTimestamp = startProcess.Source.StartTimestamp;
+                var startEventDocument = startProcess.Source;
+                _logger.LogInformation(EventIds.StopAddsElasticMonitoringProcessUpdatingStartDocument.ToEventId(), "ADDS Monitoring Process: Updating start document with stop metrics. Document: {document}. _X-Correlation-ID: {correlationId}.", JsonConvert.SerializeObject(startEventDocument), correlationId);
+
+                document.StartTimestamp = startEventDocument.StartTimestamp;
                 document.StopTimestamp = DateTime.UtcNow;
                 if (document.StartTimestamp != null)
                 {
@@ -65,22 +66,29 @@ public class AddsElasticMonitoringService : IAddsMonitoringService
                                    document.StartTimestamp.Value;
                     document.Duration = (int?)duration.TotalSeconds;
                 }
-                document.Timestamp = startProcess.Source.Timestamp;
-                document.StatusDate = startProcess.Source.StatusDate;
+                document.Timestamp = startEventDocument.Timestamp;
+                document.StatusDate = startEventDocument.StatusDate;
                 document.IsComplete = true;
                 document.IsAbnormal = false;
-                document.ImmediateRelease = startProcess.Source.ImmediateRelease;
+                document.ImmediateRelease = startEventDocument.ImmediateRelease;
+            } else {
+                _logger.LogInformation(EventIds.StopAddsElasticMonitoringProcessStartDocumentNotFound.ToEventId(), "ADDS Monitoring Process: Start document not found, logging abnormal stop document. Document: {document}. _X-Correlation-ID: {correlationId}.", JsonConvert.SerializeObject(startEventDocument), correlationId);
             }
-            await _elasticSearchClient.IndexAsync(document, idx =>
+            var response = await _elasticSearchClient.IndexAsync(document, idx =>
                 idx.Index(_elasticApmConfiguration.IndexName), cancellationToken);
 
-            _logger.LogInformation(EventIds.StopAddsElasticMonitoringProcessCompleted.ToEventId(), "Process to stop ADDS monitoring completed for document {document} and _X-Correlation-ID:{correlationId}.",
-                JsonConvert.SerializeObject(document), correlationId);
+            if (response.IsValidResponse)
+            {
+                _logger.LogInformation(EventIds.StopAddsElasticMonitoringProcessValidResponse.ToEventId(), "ADDS Monitoring Process: Document successfully indexed. Document: {document}. _X-Correlation-ID: {correlationId}.", JsonConvert.SerializeObject(document), correlationId);
+            } else {
+                _logger.LogInformation(EventIds.StopAddsElasticMonitoringProcessInvalidResponse.ToEventId(), "ADDS Monitoring Process: Document failed to index. Document: {document}. Response: {Response} _X-Correlation-ID: {correlationId}.", JsonConvert.SerializeObject(document), response, correlationId);
+            }
+
+            _logger.LogInformation(EventIds.StopAddsElasticMonitoringProcessCompleted.ToEventId(), "ADDS Monitoring Process: Completed. Document: {document}. _X-Correlation-ID: {correlationId}.", JsonConvert.SerializeObject(document), correlationId);
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(EventIds.StopAddsElasticMonitoringProcessError.ToEventId(), "Process to stop ADDS monitoring failed for document {document} and _X-Correlation-ID:{correlationId} with error:{Message}",
-                JsonConvert.SerializeObject(document), correlationId, ex.Message);
+            _logger.LogWarning(EventIds.StopAddsElasticMonitoringProcessError.ToEventId(), "ADDS Monitoring Process: Failed. Document: {document}. _X-Correlation-ID: {correlationId}. Error Message:{Message}.", JsonConvert.SerializeObject(document), correlationId, ex.Message);
         }
     }
 
