@@ -81,7 +81,7 @@ public class AddsElasticMonitoringService : IAddsMonitoringService
             {
                 _logger.LogInformation(EventIds.StopAddsElasticMonitoringProcessValidResponse.ToEventId(), "ADDS Monitoring Process: Document successfully indexed. Document: {document}. _X-Correlation-ID: {correlationId}.", JsonConvert.SerializeObject(document), correlationId);
             } else {
-                _logger.LogInformation(EventIds.StopAddsElasticMonitoringProcessInvalidResponse.ToEventId(), "ADDS Monitoring Process: Document failed to index. Document: {document}. Response: {Response} _X-Correlation-ID: {correlationId}.", JsonConvert.SerializeObject(document), response, correlationId);
+                _logger.LogInformation(EventIds.StopAddsElasticMonitoringProcessInvalidResponse.ToEventId(), "ADDS Monitoring Process: Document failed to index. Document: {document}. Response Debug Information: {ResponseDebugInformation} _X-Correlation-ID: {correlationId}.", JsonConvert.SerializeObject(document), response.DebugInformation, correlationId);
             }
 
             _logger.LogInformation(EventIds.StopAddsElasticMonitoringProcessCompleted.ToEventId(), "ADDS Monitoring Process: Completed. Document: {document}. _X-Correlation-ID: {correlationId}.", JsonConvert.SerializeObject(document), correlationId);
