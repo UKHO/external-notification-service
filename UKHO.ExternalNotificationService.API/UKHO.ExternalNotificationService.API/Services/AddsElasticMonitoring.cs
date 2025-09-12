@@ -72,7 +72,7 @@ public class AddsElasticMonitoringService : IAddsMonitoringService
                 document.IsAbnormal = false;
                 document.ImmediateRelease = startEventDocument.ImmediateRelease;
             } else {
-                _logger.LogInformation(EventIds.StopAddsElasticMonitoringProcessStartDocumentNotFound.ToEventId(), "ADDS Monitoring Process: Start document not found, logging abnormal stop document. Document: {document}. _X-Correlation-ID: {correlationId}.", JsonConvert.SerializeObject(startEventDocument), correlationId);
+                _logger.LogInformation(EventIds.StopAddsElasticMonitoringProcessStartDocumentNotFound.ToEventId(), "ADDS Monitoring Process: Start document not found, logging abnormal stop document. _X-Correlation-ID: {correlationId}.", correlationId);
             }
             var response = await _elasticSearchClient.IndexAsync(document, idx =>
                 idx.Index(_elasticApmConfiguration.IndexName), cancellationToken);
