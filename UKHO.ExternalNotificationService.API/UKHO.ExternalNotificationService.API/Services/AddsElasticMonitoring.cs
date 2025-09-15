@@ -77,10 +77,8 @@ public class AddsElasticMonitoringService : IAddsMonitoringService
             var response = await _elasticSearchClient.IndexAsync(document, idx =>
                 idx.Index(_elasticApmConfiguration.IndexName), cancellationToken);
 
-            if (response.IsValidResponse)
+            if (!response.IsValidResponse)
             {
-                _logger.LogInformation(EventIds.StopAddsElasticMonitoringProcessValidResponse.ToEventId(), "ADDS Monitoring Process: Document successfully indexed. Document: {Document}. _X-Correlation-ID: {CorrelationId}.", JsonConvert.SerializeObject(document), correlationId);
-            } else {
                 _logger.LogWarning(EventIds.StopAddsElasticMonitoringProcessInvalidResponse.ToEventId(), "ADDS Monitoring Process: Document failed to index. Document: {Document}. Response Debug Information: {ResponseDebugInformation} _X-Correlation-ID: {CorrelationId}.", JsonConvert.SerializeObject(document), response.DebugInformation, correlationId);
             }
 
