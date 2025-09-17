@@ -22,7 +22,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
 
         public static JsonObject GetScsS100EventBodyData(TestConfiguration testConfigure)
         {
-            JsonNode ensWebhookJson = JsonObject.Parse(@"{""type"":""uk.gov.UKHO.catalogue.s100ProductUpdated.v1""}");
+            JsonNode ensWebhookJson = JsonObject.Parse(@"{""type"":""uk.gov.ukho.catalogue.s100ProductUpdated.v1""}");
             ensWebhookJson["source"] = $"{testConfigure.ScsS100Source}";
             ensWebhookJson["id"] = "0d2f05f5-3691-476a-9011-6007bcaa9cbf";
             ensWebhookJson["subject"] = "GB53496A";

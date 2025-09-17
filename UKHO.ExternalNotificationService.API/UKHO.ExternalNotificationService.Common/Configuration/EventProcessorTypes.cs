@@ -5,6 +5,6 @@ namespace UKHO.ExternalNotificationService.Common.Configuration
     {
         public const string FSS = "uk.gov.UKHO.FileShareService.NewFilesPublished.v1";
         public const string SCS = "uk.gov.UKHO.catalogue.productUpdated.v1";
-        public const string SCSS100 = "uk.gov.UKHO.catalogue.s100ProductUpdated.v1";
+        public const string SCSS100 = "uk.gov.ukho.catalogue.s100ProductUpdated.v1";
     }
 }
