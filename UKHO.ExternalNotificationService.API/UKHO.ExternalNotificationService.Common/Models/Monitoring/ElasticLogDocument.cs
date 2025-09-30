@@ -11,7 +11,7 @@ public class ElasticLogDocument
     public int? EditionNumber { get; set; }
     public int UpdateNumber { get; set; }
     public string StatusName { get; set; } = string.Empty;
-    public string StatusDate { get; set; } = string.Empty;
+    public DateTime? StatusDate { get; set; }
     public string EventType { get; set; } = string.Empty;
     public string TraceId { get; set; } = string.Empty;
     public DateTime? StartTimestamp { get; set; }
