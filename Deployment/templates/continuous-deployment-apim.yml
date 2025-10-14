@@ -39,7 +39,7 @@ steps:
       TF_VAR_apim_api_service_url: $(SERVICE_DNS_URL)
       TF_VAR_ad_tenant_id: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-TENANT-ID)
       TF_VAR_client_credentials_client_id: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-CLIENT-ID)
-      TF_VAR_client_credentials_secret: $(EXTERNAL-NOTIFICATION-SERVICE-APIM-CLIENT-SECRET-VALUE)
+      TF_VAR_client_credentials_secret_id: $(APIM_CLIENT_CREDENTIALS_SECRET_ID)
       TF_VAR_client_credentials_scope: "$(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)/.default"
       TF_VAR_ens_app_client_id: $(EXTERNAL-NOTIFICATION-SERVICE-APP-REGISTRATION-CLIENT-ID)
       TF_VAR_d365_product_daily_quota_limit: $(d365productquotalimit)
