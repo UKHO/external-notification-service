@@ -98,6 +98,7 @@ resource "azurerm_api_management_named_value" "ens_token_secret_named_value" {
   resource_group_name  = data.azurerm_api_management.apim_instance.resource_group_name
   api_management_name  = data.azurerm_api_management.apim_instance.name
   display_name         = "ens-token-secret-${local.formatted_env}"
+  secret               = true
   value_from_key_vault {
       secret_id = var.client_credentials_secret_id
   }
