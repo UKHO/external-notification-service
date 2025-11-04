@@ -38,7 +38,7 @@ variable "client_credentials_client_id" {
    type    = string    
 }
 
-variable "client_credentials_secret" {
+variable "client_credentials_secret_id" {
   type    = string    
 }
 
