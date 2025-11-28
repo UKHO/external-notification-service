@@ -18,4 +18,10 @@ variables:
         - name: "ElasticAPM.ServiceName"
           value: $(elasticAPM-ServiceName)
         - name: "ElasticAPM.WebJobServiceName"
-          value: $(elasticAPM-WebJobServiceName)  
+          value: $(elasticAPM-WebJobServiceName)
+        - name: "ElasticAPM.CloudId"
+          value: $(elasticAPM-CloudId)
+        - name: "ElasticAPM.IndexName"
+          value: $(elasticAPM-IndexName)
+        - name: "ElasticAPM.ADDSApiKey"
+          value: $(elasticAPM-ADDSApiKey)

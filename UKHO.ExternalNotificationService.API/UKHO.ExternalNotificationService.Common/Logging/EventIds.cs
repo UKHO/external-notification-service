@@ -279,7 +279,19 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// <summary>
         /// 900069 -  Stop ADDS Elastic Monitoring Process error.
         /// </summary>
-        StopAddsElasticMonitoringProcessError = 900069
+        StopAddsElasticMonitoringProcessError = 900069,
+        /// <summary>
+        /// 900071 -  Stop ADDS Elastic Monitoring Process invalid response.
+        /// </summary>
+        StopAddsElasticMonitoringProcessInvalidResponse = 900070,
+        /// <summary>
+        /// 900072 -  Stop ADDS Elastic Monitoring Process updating start document.
+        /// </summary>
+        StopAddsElasticMonitoringProcessUpdatingStartDocument = 900071,
+        /// <summary>
+        /// 900073 -  Stop ADDS Elastic Monitoring Process start document not found.
+        /// </summary>
+        StopAddsElasticMonitoringProcessStartDocumentNotFound = 900072
     }
 
     public static class EventIdExtensions
