@@ -11,7 +11,7 @@ module "APIM" {
   d365_product_daily_quota_limit  = var.d365_product_daily_quota_limit
   ad_tenant_id                    = var.ad_tenant_id
   client_credentials_client_id    = var.client_credentials_client_id
-  client_credentials_secret       = var.client_credentials_secret
+  client_credentials_secret_id    = var.client_credentials_secret_id
   client_credentials_scope        = var.client_credentials_scope
   ens_app_client_id               = var.ens_app_client_id
   d365_product_call_limit         = var.d365_product_call_limit
