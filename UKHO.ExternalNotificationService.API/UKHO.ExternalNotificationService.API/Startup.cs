@@ -59,6 +59,8 @@ namespace UKHO.ExternalNotificationService.API
             services.Configure<FssDataMappingConfiguration>(_configuration.GetSection("FssDataMappingConfiguration"));
             services.Configure<ScsDataMappingConfiguration>(_configuration.GetSection("ScsDataMappingConfiguration"));
             services.Configure<EventProcessorConfiguration>(_configuration.GetSection("EventProcessorConfiguration"));
+            services.Configure<ScsS100DataMappingConfiguration>(_configuration.GetSection("ScsS100DataMappingConfiguration"));
+            
             services.Configure<ElasticApmConfiguration>(_configuration.GetSection("ElasticAPM"));
 
             services.AddApplicationInsightsTelemetry();
@@ -100,6 +102,9 @@ namespace UKHO.ExternalNotificationService.API
             services.AddScoped<IScsEventValidationAndMappingService, ScsEventValidationAndMappingService>();
             services.AddScoped<IScsEventDataValidator, ScsEventDataValidator>();
             services.AddScoped<IEventProcessor, ScsEventProcessor>();
+
+            services.AddScoped<IScsS100EventValidationAndMappingService, ScsS100EventValidationAndMappingService>();
+            services.AddScoped<IEventProcessor, ScsS100EventProcessor>();
 
             services.AddHealthChecks()
                 .AddCheck<EventHubLoggingHealthCheck>("EventHubLoggingHealthCheck")
