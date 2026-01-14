@@ -289,9 +289,17 @@ namespace UKHO.ExternalNotificationService.Common.Logging
         /// </summary>
         StopAddsElasticMonitoringProcessUpdatingStartDocument = 900071,
         /// <summary>
-        /// 900073 -  Stop ADDS Elastic Monitoring Process start document not found.
+        /// 900072 -  Stop ADDS Elastic Monitoring Process start document not found.
         /// </summary>
-        StopAddsElasticMonitoringProcessStartDocumentNotFound = 900072
+        StopAddsElasticMonitoringProcessStartDocumentNotFound = 900072,
+        /// <summary>
+        /// 900073 -  Sales catalogue service s100 event data mapping started.
+        /// </summary>
+        ScsS100EventDataMappingStart = 900073,
+        /// <summary>
+        /// 900074 -  Sales catalogue service s100 event data mapping Completed.
+        /// </summary>
+        ScsS100EventDataMappingCompleted = 900074,
     }
 
     public static class EventIdExtensions

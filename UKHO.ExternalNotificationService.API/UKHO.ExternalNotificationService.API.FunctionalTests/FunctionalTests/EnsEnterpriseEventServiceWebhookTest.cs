@@ -20,8 +20,23 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         private TestConfiguration TestConfig { get; set; }
         private string EnsToken { get; set; }
         private JsonObject FssEventBody { get; set; }
-        private JsonObject ScsEventBody { get; set; }
         private JsonSerializerOptions JOptions { get; set; }
+
+        // Test data object for SCS events
+        public sealed record ScsEventTestData(JsonObject EventBody, string CloudEventType, string CloudEventSource);
+
+        // TestCaseSource supplying SCS test data objects
+        public static IEnumerable<TestCaseData> ScsEventTestCases()
+        {
+            var cfg = new TestConfiguration();
+            yield return new TestCaseData(new ScsEventTestData(ScsEventDataBase.GetScsEventBodyData(cfg),
+                    "uk.co.admiralty.avcsData.contentPublished.v1", cfg.ScsSource))
+                .SetName("Valid Scs events for S63/S57 event");
+            yield return new TestCaseData(new ScsEventTestData(ScsEventDataBase.GetScsS100EventBodyData(cfg),
+                    "uk.co.admiralty.avcsData.s100ContentPublished.v1", cfg.ScsS100Source))
+                .SetName("Valid Scs events for S100 event");
+        }
+
 
         [SetUp]
         public async Task SetupAsync()
@@ -29,7 +44,6 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             TestConfig = new TestConfiguration();
             StubApiClient = new(TestConfig.StubApiUri);
             FssEventBody = FssEventDataBase.GetFssEventBodyData(TestConfig);
-            ScsEventBody = ScsEventDataBase.GetScsEventBodyData(TestConfig);
             EnsApiClient = new EnsApiClient(TestConfig.EnsApiBaseUrl);
             ADAuthTokenProvider adAuthTokenProvider = new();
             EnsToken = await adAuthTokenProvider.GetEnsAuthToken();
@@ -189,11 +203,12 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             Assert.That(getMatchingData.Count(), Is.GreaterThan(1));
         }
 
-        [Test]
-        public async Task WhenICallTheEnsWebhookApiWithAValidScsJObjectBody_ThenOkStatusIsReturned()
+        [TestCaseSource(nameof(ScsEventTestCases))]
+        public async Task WhenICallTheEnsWebhookApiWithAValidScsJObjectBody_ThenOkStatusIsReturned(ScsEventTestData scsEventTestData)
         {
             const string subject = "GB53496A";
-            JsonObject ensWebhookJson = ScsEventBody;
+            JsonObject ensWebhookJson = scsEventTestData.EventBody;
+            
             await StubApiClient.PostStubApiCommandToReturnStatusAsync(ensWebhookJson, subject, null);
             DateTime startTime = DateTime.UtcNow;
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsWebhookNewEventPublishedAsync(ensWebhookJson, EnsToken);
@@ -224,10 +239,10 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
             Assert.Multiple(() =>
             {
                 // Validating Event Source
-                Assert.That(getMatchingData.CloudEvent.Source, Is.EqualTo(TestConfig.ScsSource));
+                Assert.That(getMatchingData.CloudEvent.Source, Is.EqualTo(scsEventTestData.CloudEventSource));
 
                 // Validating Event Type
-                Assert.That(getMatchingData.CloudEvent.Type, Is.EqualTo("uk.co.admiralty.avcsData.contentPublished.v1"));
+                Assert.That(getMatchingData.CloudEvent.Type, Is.EqualTo(scsEventTestData.CloudEventType));
             });
         }
     }
