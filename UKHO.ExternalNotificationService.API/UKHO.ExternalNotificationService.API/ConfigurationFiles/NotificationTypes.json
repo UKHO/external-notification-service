@@ -1,15 +1,19 @@
 {
     "EnsConfiguration": {
 
-        "NotificationTypes": [
-            {
-                "Name": "File Share Service - AVCS Data",
-                "TopicName": "fss-filesPublished-AvcsData"
-            },
-            {
-                "Name": "File Share Service - Maritime Safety Information",
-                "TopicName": "fss-filesPublished-MaritimeSafetyInformation"
-            },
+      "NotificationTypes": [
+        {
+          "Name": "File Share Service - AVCS Data",
+          "TopicName": "fss-filesPublished-AvcsData"
+        },
+        {
+          "Name": "File Share Service - Maritime Safety Information",
+          "TopicName": "fss-filesPublished-MaritimeSafetyInformation"
+        },
+        {
+          "Name": "File Share Service - SENC",
+          "TopicName": "fss-filesPublished-SENC"
+        },        
           {
             "Name": "ADDS Data Pipeline",
             "TopicName": "avcs-contentPublished"
