@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="D365PayloadTestData\D365FssSENCSamplePayload.json" />
     <None Remove="D365PayloadTestData\D365ScsS100SamplePayload.json" />
   </ItemGroup>
 
@@ -15,6 +16,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="D365PayloadTestData\D365FssAvcsSamplePayload.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="D365PayloadTestData\D365FssSencSamplePayload.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="D365PayloadTestData\D365ScsS100SamplePayload.json">

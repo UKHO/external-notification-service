@@ -10,7 +10,8 @@ namespace UKHO.ExternalNotificationService.Common.Configuration
             "MaritimeSafetyInformation",
             "ADP",
             "AENP",
-            "ARCS"
+            "ARCS",
+            "SENC"
         };
     }
 }

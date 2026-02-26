@@ -10,6 +10,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
         public string PayloadFolder { get; set; }
         public string FssAvcsPayloadFileName { get; set; }
         public string FssMsiPayloadFileName { get; set; }
+        public string FssSencPayloadFileName { get; set; }
         public string ScsPayloadFileName { get; set; }
         public string ScsS100PayloadFileName { get; set; }
         public string EnsStorageConnectionString { get; set; }
@@ -42,6 +43,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.Helper
             PayloadFolder = ConfigurationRoot.GetSection("PayloadFolder").Value;
             FssAvcsPayloadFileName = ConfigurationRoot.GetSection("FssAvcsPayloadFileName").Value;
             FssMsiPayloadFileName = ConfigurationRoot.GetSection("FssMsiPayloadFileName").Value;
+            FssSencPayloadFileName = ConfigurationRoot.GetSection("FssSencPayloadFileName").Value;
             ScsPayloadFileName = ConfigurationRoot.GetSection("ScsPayloadFileName").Value;
             ScsS100PayloadFileName = ConfigurationRoot.GetSection("ScsS100PayloadFileName").Value;
             EnsStorageConnectionString = ConfigurationRoot.GetSection("EnsStorageConnectionString").Value;

@@ -16,6 +16,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         private TestConfiguration TestConfig { get; set; }
         private D365Payload D365FssAvcsPayload { get; set; }
         private D365Payload D365FssMsiPayload { get; set; }
+        private D365Payload D365FssSencPayload { get; set; }
         private D365Payload D365ScsPayload { get; set; }
         private D365Payload D365ScsS100Payload { get; set; }
         private string EnsToken { get; set; }
@@ -34,15 +35,18 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
 
             string filePathFssAvcs = Path.Combine(Directory.GetCurrentDirectory(), TestConfig.PayloadFolder, TestConfig.FssAvcsPayloadFileName);
             string filePathFssMsi = Path.Combine(Directory.GetCurrentDirectory(), TestConfig.PayloadFolder, TestConfig.FssMsiPayloadFileName);
+            string filePathFssSenc = Path.Combine(Directory.GetCurrentDirectory(), TestConfig.PayloadFolder, TestConfig.FssSencPayloadFileName);
             string filePathScs = Path.Combine(Directory.GetCurrentDirectory(), TestConfig.PayloadFolder, TestConfig.ScsPayloadFileName);
             string filePathScsS100 = Path.Combine(Directory.GetCurrentDirectory(), TestConfig.PayloadFolder, TestConfig.ScsS100PayloadFileName);
 
             D365FssAvcsPayload = JsonSerializer.Deserialize<D365Payload>(await File.ReadAllTextAsync(filePathFssAvcs), JOptions);
             D365FssMsiPayload = JsonSerializer.Deserialize<D365Payload>(await File.ReadAllTextAsync(filePathFssMsi), JOptions);
+            D365FssSencPayload = JsonSerializer.Deserialize<D365Payload>(await File.ReadAllTextAsync(filePathFssSenc), JOptions);
             D365ScsPayload = JsonSerializer.Deserialize<D365Payload>(await File.ReadAllTextAsync(filePathScs), JOptions);
             D365ScsS100Payload = JsonSerializer.Deserialize<D365Payload>(await File.ReadAllTextAsync(filePathScsS100), JOptions);
             D365FssAvcsPayload.InputParameters[0].Value.Attributes[9].Value = string.Concat(TestConfig.StubBaseUri, TestConfig.WebhookUrlExtension);
             D365FssMsiPayload.InputParameters[0].Value.Attributes[9].Value = string.Concat(TestConfig.StubBaseUri, TestConfig.WebhookUrlExtension);
+            D365FssSencPayload.InputParameters[0].Value.Attributes[9].Value = string.Concat(TestConfig.StubBaseUri, TestConfig.WebhookUrlExtension);
             D365ScsPayload.InputParameters[0].Value.Attributes[9].Value = string.Concat(TestConfig.StubBaseUri, TestConfig.WebhookUrlExtension);
             D365ScsS100Payload.InputParameters[0].Value.Attributes[9].Value = string.Concat(TestConfig.StubBaseUri, TestConfig.WebhookUrlExtension);
 
@@ -76,6 +80,13 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         public async Task WhenICallTheEnsSubscriptionApiWithAValidD365FssMsiPayload_ThenAcceptedStatusIsReturned()
         {
             HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365FssMsiPayload, EnsToken);
+            Assert.That((int)apiResponse.StatusCode, Is.EqualTo(202), $"Incorrect status code {apiResponse.StatusCode} is  returned, instead of the expected 202.");
+        }
+
+        [Test]
+        public async Task WhenICallTheEnsSubscriptionApiWithAValidD365FssSencPayload_ThenAcceptedStatusIsReturned()
+        {
+            HttpResponseMessage apiResponse = await EnsApiClient.PostEnsApiSubscriptionAsync(D365FssSencPayload, EnsToken);
             Assert.That((int)apiResponse.StatusCode, Is.EqualTo(202), $"Incorrect status code {apiResponse.StatusCode} is  returned, instead of the expected 202.");
         }
 

@@ -111,6 +111,7 @@ namespace UKHO.ExternalNotificationService.API.FunctionalTests.FunctionalTests
         [TestCase("AENP", "fss-filesPublished-AvcsData", TestName = "Valid AENP Business Unit event")]
         [TestCase("ARCS", "fss-filesPublished-AvcsData", TestName = "Valid ARCS Business Unit event")]
         [TestCase("MaritimeSafetyInformation", "fss-filesPublished-MaritimeSafetyInformation", TestName = "Valid MaritimeSafetyInformation Business Unit event")]
+        [TestCase("SENC", "fss-filesPublished-SENC", TestName = "Valid SENC Business Unit event")]
         public async Task WhenICallTheEnsWebhookApiWithAValidFssJObjectBody_ThenOkStatusIsReturned(string businessUnit, string source)
         {
             const string subject = "83d08093-7a67-4b3a-b431-92ba42feaea0";
