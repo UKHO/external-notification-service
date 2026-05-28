@@ -39,7 +39,6 @@ variable "env_suffix_text" {
   type = map(string)
   default = {
     "dev"     = "Dev"
-    "qa"      = "QA"
     "distdev" = "Dist Dev"
     "live"    = " "
     "vne"     = "VNE"

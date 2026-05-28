@@ -32,10 +32,6 @@ variable "app_service_sku" {
 	    tier = "PremiumV2"
 	    size = "P1v2"
         }
-    "qa"     = {
-	    tier = "PremiumV3"
-	    size = "P1v3"
-        }
     "live"   = {
 	    tier = "PremiumV3"
 	    size = "P1v3"
