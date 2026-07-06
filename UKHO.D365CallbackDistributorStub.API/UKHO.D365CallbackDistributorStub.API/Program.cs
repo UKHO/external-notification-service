@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using UKHO.D365CallbackDistributorStub.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);

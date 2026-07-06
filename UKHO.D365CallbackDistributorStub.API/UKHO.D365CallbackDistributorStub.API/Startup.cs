@@ -1,4 +1,4 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi;
 using UKHO.D365CallbackDistributorStub.API.Services;
 
 namespace UKHO.D365CallbackDistributorStub.API
