@@ -1,6 +1,9 @@
 parameters:
   - name: TestTitle
     type: string
+  - name: DotNetVersion
+    type: string
+    default: '10.0.x'
 
 steps:
   - task: DownloadBuildArtifacts@0
@@ -20,10 +23,10 @@ steps:
       jsonTargetFiles: '**/appsettings.json'
 
   - task: UseDotNet@2
-    displayName: 'Use .NET 10.0.x sdk'
+    displayName: 'Use .NET ${{ parameters.DotNetVersion }} sdk'
     inputs:
       packageType: sdk
-      version: '10.0.x'
+      version: '${{ parameters.DotNetVersion }}'
 
   - task: DotNetCoreCLI@2
     displayName: "Run Functional tests"
