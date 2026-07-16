@@ -20,10 +20,10 @@ steps:
       jsonTargetFiles: '**/appsettings.json'
 
   - task: UseDotNet@2
-    displayName: 'Use .NET 8.0.x sdk'
+    displayName: 'Use .NET 10.0.x sdk'
     inputs:
       packageType: sdk
-      version: '8.0.x'
+      version: '10.0.x'
 
   - task: DotNetCoreCLI@2
     displayName: "Run Functional tests"
