@@ -50,23 +50,23 @@ steps:
       enableXmlTransform: false
       jsonTargetFiles: '**/appsettings.json'
 
-  - task: AzureCLI@2
-    displayName: "Set App Service runtime to .NET 10 (prod + staging)"
-    inputs:
-      azureSubscription: "${{ parameters.AzureSubscription }}"
-      scriptType: pscore
-      scriptLocation: inlineScript
-      inlineScript: |
-        az webapp config set `
-          --resource-group "$(ResourceGroup)" `
-          --name "$(WEB_APP_NAME)" `
-          --windows-fx-version "DOTNET|10.0"
+  # - task: AzureCLI@2
+  #   displayName: "Set App Service runtime to .NET 10 (prod + staging)"
+  #   inputs:
+  #     azureSubscription: "${{ parameters.AzureSubscription }}"
+  #     scriptType: pscore
+  #     scriptLocation: inlineScript
+  #     inlineScript: |
+  #       az webapp config set `
+  #         --resource-group "$(ResourceGroup)" `
+  #         --name "$(WEB_APP_NAME)" `
+  #         --windows-fx-version "DOTNET|10.0"
 
-        az webapp config set `
-          --resource-group "$(ResourceGroup)" `
-          --name "$(WEB_APP_NAME)" `
-          --slot "$(WEB_APP_SLOT_NAME)" `
-          --windows-fx-version "DOTNET|10.0"
+  #       az webapp config set `
+  #         --resource-group "$(ResourceGroup)" `
+  #         --name "$(WEB_APP_NAME)" `
+  #         --slot "$(WEB_APP_SLOT_NAME)" `
+  #         --windows-fx-version "DOTNET|10.0"
 
   - task: AzureWebApp@1
     displayName: "Azure App Deploy: Staging slot"
