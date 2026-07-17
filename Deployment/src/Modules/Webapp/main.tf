@@ -18,8 +18,10 @@ resource "azurerm_windows_web_app" "webapp_service" {
   site_config {
     application_stack {
       current_stack = "dotnet"
-      dotnet_version = "v10.0"
+      dotnet_version = "v10.0"     
     }
+
+    windows_fx_version = "DOTNET|10.0"
     
     always_on         = true
     ftps_state        = "Disabled"
